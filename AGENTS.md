@@ -52,6 +52,20 @@
 - Hard cap: no source file may exceed 600 lines.
 - Soft cap: when a file approaches ~450 lines, plan a split before adding more.
 
+## App entrypoint rule (prevent app.js bloat)
+- app.js (and/or main.js) may contain ONLY:
+  - boot/config loading
+  - module initialization (sim, renderer, ui, input, metrics)
+  - wiring event handlers
+  - lifecycle control (start/pause/step)
+- app.js must NOT contain:
+  - simulation system logic (genetics, metabolism, perception, combat, reproduction, etc.)
+  - tick-order logic (that belongs in sim/sim.js)
+  - rendering draw logic (belongs in render/*)
+  - input gesture math (belongs in input/*)
+- If you need new logic, create a new file/module for that system and import it.
+- Stricter size cap for app.js: target < 300 lines. If it approaches 300, split wiring into app/* helper modules.
+
 ## 6) Simulation invariants (never break)
 - Determinism: simulation must be deterministic with a seed.
 - Central RNG: all randomness must go through a single rng module.
