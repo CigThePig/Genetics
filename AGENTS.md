@@ -16,7 +16,7 @@
 4) /context/architecture.md
 5) /context/workflow.md
 6) /context/planning-checklist.md
-7) /context/active_track.md
+7) /context/active-track.md
 8) Active track files (spec/blueprint/plan)
 
 ## 2) Track-index rule (the roadmap is the boss)
@@ -110,4 +110,4 @@ LOW RISK (auto):
 When a track is done:
 - Append a summary to /context/history.md (include Track N).
 - Update /context/tech-stack.md if dependencies/tools changed.
-- Clear /context/active_track.md.
+- Clear /context/active-track.md.

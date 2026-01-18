@@ -38,7 +38,7 @@ When asked "Create Track N":
    - blueprint.md (NO CODE)
    - plan.md
 3) Update:
-   - /context/active_track.md (point to the new folder)
+   - /context/active-track.md (point to the new folder)
    - /context/repo-map.md (add the new track folder entry)
 
 ### Codex prompt: CREATE TRACK N (NO CODE)
@@ -62,7 +62,7 @@ Rules:
 - Plan must include phases mapped to the "Includes" steps for Track N.
 - Each phase must include: tasks, files touched, verification, stop point.
 - Include a "Recon Summary" section at the top of plan.md (can be empty initially).
-- Update /context/active_track.md to point to this track.
+- Update /context/active-track.md to point to this track.
 - Update /context/repo-map.md with the new track folder entry.
 
 ---
@@ -135,5 +135,5 @@ Stop after Phase <N> is verified.
 ## Step E) Closeout (GC)
 When track complete:
 - Append summary to /context/history.md (include Track N).
-- Clear /context/active_track.md.
+- Clear /context/active-track.md.
 - Ensure /context/repo-map.md matches reality.

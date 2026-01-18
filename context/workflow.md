@@ -15,7 +15,7 @@ A Track is one ordered unit of work from track-index.md that produces a verifiab
 
 ## Planning sequence (scales with repo size)
 0) Select Track N from /context/track-index.md (or explicit custom track request)
-1) Create track folder and set /context/active_track.md
+1) Create track folder and set /context/active-track.md
 2) Recon (NO CODE): relevant files, risks, verification commands
 3) Spec (derived from Track Index + Recon)
 4) Blueprint (derived from Spec + Recon, NO CODE)
@@ -35,4 +35,4 @@ If new info changes the approach:
 
 ## GC (closeout)
 - Append summary to /context/history.md (Track N + verification)
-- Clear /context/active_track.md
+- Clear /context/active-track.md

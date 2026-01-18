@@ -13,6 +13,8 @@ Rules:
   - Role: agent rules + constraints + workflow gates
 
 ## Context
+- context/README.md
+  - Role: project overview, pillars, and workflow summary
 - context/track-index.md
   - Role: the ordered roadmap packaged into track definitions
   - Used by: planning to create tracks consistently
@@ -30,7 +32,7 @@ Rules:
   - Role: tools, build, deploy
 - context/code-style.md
   - Role: module boundaries + file rules (new system=new file, max 600 LOC)
-- context/active_track.md
+- context/active-track.md
   - Role: pointer to current track folder + current phase/task
 - context/history.md
   - Role: append-only track summaries + verification notes

@@ -59,7 +59,7 @@ Other helpful docs:
 - `context/architecture.md` (invariants like determinism + tick order)
 - `context/workflow.md` (lifecycle rules)
 - `context/history.md` (append-only log)
-- `context/active_track.md` (pointer to current track)
+- `context/active-track.md` (pointer to current track)
 
 ---
 
@@ -72,7 +72,7 @@ Pick the next Track from `context/track-index.md` and generate:
 - `tracks/YYYY-MM-DD-track-N-slug/plan.md`
 
 Update:
-- `context/active_track.md`
+- `context/active-track.md`
 - `context/repo-map.md`
 
 ### 2) Execute one phase at a time
@@ -86,7 +86,7 @@ Follow the track’s `plan.md`:
 ### 3) Close out
 When the track is done:
 - add a summary to `context/history.md`
-- clear `context/active_track.md`
+- clear `context/active-track.md`
 
 ---
 
