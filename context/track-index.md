@@ -23,12 +23,13 @@ Includes:
 3) Placeholder modules for future systems (stubs only)
 4) Decide test runner (Vitest preferred) and add a smoke test
 5) Basic npm scripts (dev/build/preview/test)
-6) GitHub Pages base-path note (document only if not configuring yet)
+6) GitHub Pages base-path configured in Vite for /Genetics/
+7) GitHub Actions deploy workflow publishes dist/ to Pages
 
 Acceptance:
 - npm run dev/build/preview/test work.
 - src/ contains sim/render/ui stubs and main entry.
-- Docs match the scaffolded structure.
+- Docs match the scaffolded structure and Pages setup.
 
 Risks:
 - Docs drift from actual tooling.
