@@ -10,18 +10,16 @@ Code:
 Build:
 - Vite (fast dev + build pipeline suitable for GitHub Pages).
 
+Testing:
+- Vitest for fast unit tests and smoke tests.
+- Prefer small deterministic tests with fixed seeds.
+
 Rendering:
 - 2D rendering with touch-first camera controls (drag-to-pan, pinch-to-zoom).
 - Renderer must be separated from sim logic.
 
 Sim performance:
 - If needed, run simulation in a Web Worker to keep UI responsive on mobile.
-
-Testing:
-- Unit tests for pure functions:
-  - deterministic RNG behavior
-  - key math (metabolism costs, contrast, targeting scores, trait mapping)
-- Prefer small deterministic tests with fixed seeds.
 
 Determinism:
 - Required: same seed + same config => same outcomes.

@@ -15,6 +15,29 @@ Rules:
 
 ---
 
+## Track 0 — Repo Bootstrap (Scaffolding)
+Goal: Establish a working dev loop and standard structure without sim logic.
+Includes:
+1) Vite init (or equivalent) with minimal app boot
+2) Standard src/ layout (sim/render/ui)
+3) Placeholder modules for future systems (stubs only)
+4) Decide test runner (Vitest preferred) and add a smoke test
+5) Basic npm scripts (dev/build/preview/test)
+6) GitHub Pages base-path note (document only if not configuring yet)
+
+Acceptance:
+- npm run dev/build/preview/test work.
+- src/ contains sim/render/ui stubs and main entry.
+- Docs match the scaffolded structure.
+
+Risks:
+- Docs drift from actual tooling.
+
+Verification:
+- Run dev/build/test successfully on a clean clone.
+
+---
+
 ## Track 1 — Developer Visibility & Control (Steps 1–5)
 Goal: Make iteration measurable and deterministic from day one.
 Includes:
@@ -221,29 +244,78 @@ Verification:
 
 ---
 
-## Track 10 — Combat + Reproduction + Genetics + Color + Stability (Steps 45–50)
-Goal: Finish the evolution engine and make it visible.
+## Track 10 — Reproduction Loop + Basic Genetics (Steps 45–47)
+Goal: Enable reproduction with inheritance and mutation.
 Includes:
-45) Multi-hit combat + cooldowns
-46) Hit probability + evasion
-47) Wounded + healing
-48) Reproduction loop
-49) Genome + inheritance + mutation + pleiotropy tradeoffs
-50) Universal color integration + stability controls + final observability polish
+45) Reproduction loop
+46) Genome + inheritance
+47) Mutation rules + pleiotropy tradeoffs
 
 Acceptance:
-- Evolution reliably produces visible divergence.
-- Color affects detection and mating across species.
-- Stability prevents trivial collapse/explosion.
-- Observability makes cause-and-effect legible.
+- Reproduction creates viable offspring.
+- Genetics and mutation produce visible trait drift.
 
 Risks:
-- Too many coupled systems cause instability or performance issues.
-- Color system dominates outcomes in unintended ways.
+- Coupled genetics balance causes runaway behavior.
 
 Verification:
-- Run long sim with a few seeds and confirm:
-  - trait distributions shift over time
-  - populations cycle rather than instantly collapse/explode
-  - color distributions and mate preferences drift
-  - death causes are plausible (not all starvation or all predation)
+- Manual: observe trait drift over time with fixed seed.
+- Automated: deterministic genetics smoke test.
+
+---
+
+## Track 11 — Color System + Mating Preferences (Steps 48–49)
+Goal: Add universal color and mating preference visibility.
+Includes:
+48) Universal color integration across species
+49) Color perception + mate preference inspector upgrades
+
+Acceptance:
+- Color affects detection and mating behavior.
+- Inspector exposes body color and mate preference.
+
+Risks:
+- Color dominates outcomes in unintended ways.
+
+Verification:
+- Manual: color distributions and preferences drift.
+- Metrics: color summaries update over time.
+
+---
+
+## Track 12 — Combat + Wounds + Healing (Steps 50–52)
+Goal: Make combat a visible, multi-hit loop.
+Includes:
+50) Multi-hit combat + cooldowns
+51) Hit probability + evasion
+52) Wounded + healing
+
+Acceptance:
+- Combat produces wounds and recovery cycles.
+- Death causes are legible and not all starvation.
+
+Risks:
+- Combat imbalance collapses populations.
+
+Verification:
+- Manual: observe combat arcs and recovery.
+- Metrics: deaths by cause show combat impact.
+
+---
+
+## Track 13 — Stability Controls + Long-Run Verification (Steps 53–54)
+Goal: Stabilize long-run outcomes and validate persistence.
+Includes:
+53) Stability controls
+54) Long-run verification suite
+
+Acceptance:
+- Long-run seeds avoid trivial collapse/explosion.
+- Verification suite captures regressions.
+
+Risks:
+- Over-correction reduces emergent dynamics.
+
+Verification:
+- Run long sim seeds and confirm stable cycles.
+- Automated: long-run summary hashes match expected.

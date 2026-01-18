@@ -5,8 +5,17 @@ Determinism:
 - All randomness must flow through a single RNG module.
 - Avoid time-based nondeterminism in sim logic.
 
+Deterministic iteration order:
+- Prefer arrays with explicit ordering for entity iteration.
+- Use stable sorting when ordering is required.
+- Do not rely on object key ordering for sim-critical steps.
+
 Tick order invariant:
 Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics → Render
+
+Tunable configuration:
+- Centralize tunables in src/sim/config.js.
+- Other systems should import from config rather than scattering constants.
 
 Core entities (eventual):
 - World grid:
