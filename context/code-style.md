@@ -5,9 +5,9 @@ Hard rules:
 - No file over 600 lines (soft limit ~450).
 
 Boundaries:
-- /sim = rules + state updates only (no rendering, no DOM)
-- /render = drawing only (no sim decisions)
-- /ui = input + panels only (no sim rules)
+- src/sim = rules + state updates only (no rendering, no DOM)
+- src/render = drawing only (no sim decisions)
+- src/ui = input + panels only (no sim rules)
 - Centralize randomness in a single rng module.
 
 Prefer:

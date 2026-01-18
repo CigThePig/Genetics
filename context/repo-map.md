@@ -11,6 +11,24 @@ Rules:
 ## Top-level
 - AGENTS.md
   - Role: agent rules + constraints + workflow gates
+- README.md
+  - Role: repo landing page + quickstart + deployment summary
+- LICENSE
+  - Role: licensing terms (MIT)
+- package.json
+  - Role: npm scripts + dependencies
+- package-lock.json
+  - Role: dependency lockfile for npm ci
+- vite.config.js
+  - Role: Vite config with GitHub Pages base path
+- index.html
+  - Role: app shell entry for Vite
+- .gitignore
+  - Role: ignore build output + node modules
+
+## GitHub
+- .github/workflows/deploy.yml
+  - Role: GitHub Pages build + deploy pipeline
 
 ## Context
 - context/README.md
@@ -25,7 +43,7 @@ Rules:
 - context/product.md
   - Role: pillars, goals, scope boundaries
 - context/architecture.md
-  - Role: invariants (determinism, tick order, entities)
+  - Role: invariants (determinism, tick order, config, iteration order)
 - context/workflow.md
   - Role: lifecycle rules (Track Index → Recon → Spec → Blueprint → Plan → Build → Verify → GC)
 - context/tech-stack.md
@@ -42,12 +60,18 @@ Rules:
   - Contains: spec.md, blueprint.md, plan.md
   - Rule: scope must match Track Index for Track N unless explicitly overridden
 
-## Source (will be filled as src/ is created)
+## Source
 - src/main.js
   - Role: app entry; wires sim + renderer + UI
-- src/sim/<system>.js
-  - Role: one system per file (hard rule)
+- src/sim/config.js
+  - Role: centralized tunable config (stub)
+- src/sim/sim.js
+  - Role: sim orchestration stub
 - src/render/renderer.js
-  - Role: drawing only
-- src/ui/*
-  - Role: touch-first controls + inspector
+  - Role: drawing only (stub)
+- src/ui/index.js
+  - Role: touch-first UI shell (stub)
+
+## Tests
+- tests/sim.test.js
+  - Role: Vitest smoke test for sim scaffold

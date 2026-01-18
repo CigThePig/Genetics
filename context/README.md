@@ -90,17 +90,15 @@ When the track is done:
 
 ---
 
-## Development (to be filled once tooling is added)
+## Development
 
-This repo is currently scaffolding-only. Once Vite is added, the commands below will apply:
+This repo is scaffolding-only but has a working dev loop:
 
 - Install: `npm install`
 - Dev: `npm run dev`
 - Build: `npm run build`
 - Preview: `npm run preview`
 - Tests: `npm test`
-
-(These are also listed in `AGENTS.md` and should be kept in sync.)
 
 ---
 
@@ -112,4 +110,4 @@ Target hosting is GitHub Pages (shareable link, mobile-first).
 
 ## License
 
-It's free real-estate.
+MIT. See `LICENSE`.

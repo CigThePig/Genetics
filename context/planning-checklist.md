@@ -11,7 +11,8 @@ Canonical Inputs (always read):
 3) /context/repo-map.md
 4) /context/product.md
 5) /context/architecture.md
-6) /context/history.md (optional but recommended once it has entries)
+6) /context/workflow.md
+7) /context/history.md (optional but recommended once it has entries)
 
 Golden rule:
 - Do NOT plan from memory.
