@@ -43,6 +43,7 @@ export const simConfig = {
   creatureBaseWater: 1,
   creatureBaseStamina: 1,
   creatureBaseHp: 1,
+  creatureBaseSpeed: 0.6,
   creatureBasalEnergyDrain: 0.002,
   creatureBasalWaterDrain: 0.0025,
   creatureBasalStaminaDrain: 0.0015,

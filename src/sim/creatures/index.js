@@ -1,3 +1,5 @@
+import { getTerrainEffectsAt } from '../terrain-effects.js';
+
 const fallbackLifeStages = [
   {
     id: 'juvenile',
@@ -111,6 +113,50 @@ export function updateCreatureBasalMetabolism({ creatures, config }) {
     meters.energy = clampMeter(meters.energy - energyDrain * scale);
     meters.water = clampMeter(meters.water - waterDrain * scale);
     meters.stamina = clampMeter(meters.stamina - staminaDrain * scale);
+  }
+}
+
+const resolveMovementSpeed = (config) =>
+  Number.isFinite(config?.creatureBaseSpeed)
+    ? Math.max(0, config.creatureBaseSpeed)
+    : 0;
+
+const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
+
+export function updateCreatureMovement({ creatures, config, rng, world }) {
+  if (!Array.isArray(creatures) || !rng || !world) {
+    return;
+  }
+  const baseSpeed = resolveMovementSpeed(config);
+  if (baseSpeed === 0) {
+    return;
+  }
+
+  const maxX = Number.isFinite(world.width) ? Math.max(0, world.width - 0.001) : 0;
+  const maxY = Number.isFinite(world.height) ? Math.max(0, world.height - 0.001) : 0;
+
+  for (const creature of creatures) {
+    if (!creature?.position) {
+      continue;
+    }
+    const scale = Number.isFinite(creature.lifeStage?.movementScale)
+      ? creature.lifeStage.movementScale
+      : 1;
+    const x = creature.position.x;
+    const y = creature.position.y;
+    const angle = rng.nextFloat() * Math.PI * 2;
+    const { friction } = getTerrainEffectsAt(
+      world,
+      Math.floor(x),
+      Math.floor(y)
+    );
+    const terrainFriction =
+      Number.isFinite(friction) && friction > 0 ? friction : 1;
+    const distance = (baseSpeed * scale) / terrainFriction;
+    const nextX = clampPosition(x + Math.cos(angle) * distance, 0, maxX);
+    const nextY = clampPosition(y + Math.sin(angle) * distance, 0, maxY);
+    creature.position.x = nextX;
+    creature.position.y = nextY;
   }
 }
 

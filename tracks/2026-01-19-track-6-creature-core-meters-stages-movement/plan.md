@@ -66,10 +66,10 @@
 
 ## Phase 4 — Movement with terrain friction (Step 29)
 ### Tasks
-- [ ] Implement movement step using terrain friction from terrain effects.
-- [ ] Ensure movement respects tick order and determinism.
-- [ ] Add/update automated test for friction-influenced movement (unit or scenario test).
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Implement movement step using terrain friction from terrain effects.
+- [x] Ensure movement respects tick order and determinism.
+- [x] Add/update automated test for friction-influenced movement (unit or scenario test).
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - `src/sim/creatures/*`
