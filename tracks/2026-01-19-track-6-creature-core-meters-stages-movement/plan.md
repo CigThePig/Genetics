@@ -26,10 +26,10 @@
 
 ## Phase 2 — Life stages scaling (Step 27)
 ### Tasks
-- [ ] Add life stage definitions and scaling factors.
-- [ ] Apply life stage scaling to creature effectiveness (movement/metabolism as defined).
-- [ ] Surface life stage in inspector.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Add life stage definitions and scaling factors.
+- [x] Apply life stage scaling to creature effectiveness (movement/metabolism as defined).
+- [x] Surface life stage in inspector.
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - `src/sim/creatures/*`

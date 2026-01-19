@@ -43,5 +43,28 @@ export const simConfig = {
   creatureBaseWater: 1,
   creatureBaseStamina: 1,
   creatureBaseHp: 1,
+  creatureLifeStages: [
+    {
+      id: 'juvenile',
+      label: 'Juvenile',
+      minAge: 0,
+      movementScale: 0.85,
+      metabolismScale: 0.9
+    },
+    {
+      id: 'adult',
+      label: 'Adult',
+      minAge: 120,
+      movementScale: 1,
+      metabolismScale: 1
+    },
+    {
+      id: 'elder',
+      label: 'Elder',
+      minAge: 300,
+      movementScale: 0.75,
+      metabolismScale: 1.1
+    }
+  ],
   creatureInspectRadius: 6
 };

@@ -4,7 +4,7 @@ import { createWorldGrid } from './world-grid.js';
 import { generateTerrain } from './terrain-generator.js';
 import { seedInitialPlants } from './plant-generator.js';
 import { updatePlants } from './plants/index.js';
-import { createCreatures } from './creatures/index.js';
+import { createCreatures, updateCreatureLifeStages } from './creatures/index.js';
 
 export function createSim(config = simConfig) {
   const resolvedConfig = { ...simConfig, ...config };
@@ -75,6 +75,7 @@ export function createSim(config = simConfig) {
     tick() {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
+      updateCreatureLifeStages({ creatures: state.creatures, config: resolvedConfig });
       updatePlants({ state, config: resolvedConfig, rng });
       return state.lastRoll;
     },
