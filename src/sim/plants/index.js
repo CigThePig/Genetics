@@ -6,6 +6,7 @@ export function updatePlants({ state, config }) {
     state.metrics = {};
   }
   state.metrics.grassAverage = grassSummary.average;
+  state.metrics.stressedCells = grassSummary.stressedCells;
 
   return state.metrics;
 }

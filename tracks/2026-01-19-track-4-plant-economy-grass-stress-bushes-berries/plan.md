@@ -80,9 +80,9 @@
 
 ## Phase 3 — Overgrazing stress (Step 18)
 **Tasks**
-- [ ] Add stress accumulation when grass is low/depleted.
-- [ ] Add metrics for stressed cells.
-- [ ] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
+- [x] Add stress accumulation when grass is low/depleted.
+- [x] Add metrics for stressed cells.
+- [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
 - `src/sim/world-grid.js`
@@ -92,8 +92,8 @@
 - `context/repo-map.md` (if needed)
 
 **Verification**
-- [ ] Manual: stress increases in overgrazed areas.
-- [ ] Metrics: stressed cell count updates.
+- [x] Manual: stress increases in overgrazed areas.
+- [x] Metrics: stressed cell count updates.
 
 **Stop point**
 - Stop after verifying stress accumulation and metrics.
