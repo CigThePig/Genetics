@@ -71,6 +71,8 @@ Rules:
   - Contains: Track 4 spec/blueprint/plan (Plant Economy: Grass, Stress, Bushes, Berries)
 - tracks/2026-01-19-track-5-plant-economy-recovery-rendering-metrics/
   - Contains: Track 5 spec/blueprint/plan (Plant Economy: Recovery, Rendering, Metrics)
+- tracks/2026-01-19-track-6-creature-core-meters-stages-movement/
+  - Contains: Track 6 spec/blueprint/plan (Creature Core: Meters, Stages, Movement)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
