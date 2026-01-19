@@ -45,10 +45,10 @@
 
 ## Phase 3 — Basal metabolism drains (Step 28)
 ### Tasks
-- [ ] Implement basal drain updates for energy/water/stamina.
-- [ ] Ensure drains are deterministic and tick-order compliant.
-- [ ] Add/update automated test for metabolism drains (deterministic scenario or unit test).
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Implement basal drain updates for energy/water/stamina.
+- [x] Ensure drains are deterministic and tick-order compliant.
+- [x] Add/update automated test for metabolism drains (deterministic scenario or unit test).
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - `src/sim/creatures/*`

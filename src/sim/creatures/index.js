@@ -83,6 +83,37 @@ export function updateCreatureLifeStages({ creatures, config }) {
   }
 }
 
+const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
+
+const resolveBasalDrain = (value) =>
+  Number.isFinite(value) ? Math.max(0, value) : 0;
+
+export function updateCreatureBasalMetabolism({ creatures, config }) {
+  if (!Array.isArray(creatures)) {
+    return;
+  }
+  const energyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
+  const waterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
+  const staminaDrain = resolveBasalDrain(config?.creatureBasalStaminaDrain);
+
+  if (energyDrain === 0 && waterDrain === 0 && staminaDrain === 0) {
+    return;
+  }
+
+  for (const creature of creatures) {
+    const meters = creature.meters;
+    if (!meters) {
+      continue;
+    }
+    const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
+      ? creature.lifeStage.metabolismScale
+      : 1;
+    meters.energy = clampMeter(meters.energy - energyDrain * scale);
+    meters.water = clampMeter(meters.water - waterDrain * scale);
+    meters.stamina = clampMeter(meters.stamina - staminaDrain * scale);
+  }
+}
+
 export function createCreatures({ config, rng, world }) {
   const count = Number.isFinite(config?.creatureCount)
     ? Math.max(0, Math.trunc(config.creatureCount))
