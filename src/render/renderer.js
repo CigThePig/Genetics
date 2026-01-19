@@ -58,7 +58,7 @@ export function createRenderer(container, { camera }) {
   const getTerrainColor = (terrain) =>
     terrainPalette[terrain] ?? terrainPalette.unknown;
 
-  const drawTerrain = (state, world) => {
+  const drawTerrain = (state, world, config) => {
     const { width, height } = canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
 
@@ -94,6 +94,14 @@ export function createRenderer(container, { camera }) {
     );
 
     const { cells } = world;
+    const grass = Array.isArray(world.grass) ? world.grass : null;
+    const grassStress = Array.isArray(world.grassStress)
+      ? world.grassStress
+      : null;
+    const grassCap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
+    const stressThreshold = Number.isFinite(config?.grassStressVisibleThreshold)
+      ? config.grassStressVisibleThreshold
+      : 0.25;
     for (let y = startRow; y < endRow; y += 1) {
       const rowOffset = y * world.width;
       const tileY = originY + y * tileSize;
@@ -101,6 +109,90 @@ export function createRenderer(container, { camera }) {
         const terrain = cells[rowOffset + x];
         ctx.fillStyle = getTerrainColor(terrain);
         ctx.fillRect(originX + x * tileSize, tileY, tileSize, tileSize);
+
+        if (grass) {
+          const grassValue = Number.isFinite(grass[rowOffset + x])
+            ? grass[rowOffset + x]
+            : 0;
+          const grassRatio =
+            grassCap > 0 ? Math.min(1, Math.max(0, grassValue / grassCap)) : 0;
+          if (grassRatio > 0) {
+            const alpha = 0.1 + grassRatio * 0.35;
+            ctx.fillStyle = `rgba(88, 180, 72, ${alpha})`;
+            ctx.fillRect(originX + x * tileSize, tileY, tileSize, tileSize);
+          }
+        }
+
+        if (grassStress) {
+          const stressValue = Number.isFinite(grassStress[rowOffset + x])
+            ? grassStress[rowOffset + x]
+            : 0;
+          if (stressValue >= stressThreshold) {
+            const stressAlpha = Math.min(0.5, 0.15 + stressValue * 0.35);
+            ctx.fillStyle = `rgba(196, 72, 60, ${stressAlpha})`;
+            ctx.fillRect(originX + x * tileSize, tileY, tileSize, tileSize);
+          }
+        }
+      }
+    }
+
+    if (Array.isArray(world.bushes) && world.bushes.length > 0) {
+      const bushRadiusBase = tileSize * 0.28;
+      const bushRadiusGrowth = tileSize * 0.18;
+      const berryRadiusBase = tileSize * 0.1;
+      const berryRadiusGrowth = tileSize * 0.12;
+      const maxBerryFallback = Number.isFinite(config?.bushBerryMax)
+        ? config.bushBerryMax
+        : 1;
+
+      for (const bush of world.bushes) {
+        const bushX = Number.isFinite(bush.x) ? bush.x : null;
+        const bushY = Number.isFinite(bush.y) ? bush.y : null;
+        if (bushX === null || bushY === null) {
+          continue;
+        }
+        if (
+          bushX < startCol ||
+          bushX >= endCol ||
+          bushY < startRow ||
+          bushY >= endRow
+        ) {
+          continue;
+        }
+
+        const health = Number.isFinite(bush.health) ? bush.health : 0;
+        const berries = Number.isFinite(bush.berries) ? bush.berries : 0;
+        const berryMax = Number.isFinite(bush.berryMax)
+          ? bush.berryMax
+          : maxBerryFallback;
+        const berryRatio =
+          berryMax > 0 ? Math.min(1, Math.max(0, berries / berryMax)) : 0;
+
+        const centerX = originX + (bushX + 0.5) * tileSize;
+        const centerY = originY + (bushY + 0.5) * tileSize;
+        const bushRadius = bushRadiusBase + bushRadiusGrowth * health;
+
+        ctx.beginPath();
+        ctx.fillStyle = `hsl(105, 28%, ${22 + health * 28}%)`;
+        ctx.arc(centerX, centerY, bushRadius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(10, 30, 12, 0.5)';
+        ctx.lineWidth = 1 / state.zoom;
+        ctx.stroke();
+
+        if (berryRatio > 0) {
+          const berryRadius = berryRadiusBase + berryRadiusGrowth * berryRatio;
+          ctx.beginPath();
+          ctx.fillStyle = `rgba(196, 64, 160, ${0.4 + berryRatio * 0.5})`;
+          ctx.arc(
+            centerX + bushRadius * 0.25,
+            centerY - bushRadius * 0.2,
+            berryRadius,
+            0,
+            Math.PI * 2
+          );
+          ctx.fill();
+        }
       }
     }
 
@@ -120,7 +212,7 @@ export function createRenderer(container, { camera }) {
     canvas,
     render(sim) {
       const state = camera?.getState?.() ?? { x: 0, y: 0, zoom: 1 };
-      drawTerrain(state, sim.state?.world);
+      drawTerrain(state, sim.state?.world, sim.config);
 
       const roll = Number.isFinite(sim.state?.lastRoll)
         ? sim.state.lastRoll.toFixed(4)
