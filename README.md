@@ -21,10 +21,10 @@ npm test
 
 ### Local preview vs. GitHub Pages
 
-Local preview (`npm run preview`) serves the built site at `/` by default. The GitHub Pages deployment uses a project-site base path (`/Genetics/`) configured via `VITE_BASE` in the deploy workflow. If you want to preview the GitHub Pages path locally, run:
+Vite’s base path defaults to `/Genetics/` to match the GitHub Pages project site. If you want to preview at `/` locally, override it:
 
 ```bash
-VITE_BASE=/Genetics/ npm run build
+VITE_BASE=/ npm run build
 npm run preview
 ```
 
