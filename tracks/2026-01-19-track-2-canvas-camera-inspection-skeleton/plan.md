@@ -60,7 +60,7 @@
 - `src/main.js`
 
 **Verification**
-- [ ] Manual: drag to pan and pinch to zoom works on touch device/emulation.
+- [x] Manual: drag to pan and pinch to zoom works on touch device/emulation.
 
 **Stop point**
 - Pause after verifying touch camera behavior.
@@ -70,10 +70,10 @@
 ## Phase 2 — Tap inspector stub (location or entity)
 
 **Tasks**
-- [ ] Add tap handling to input that routes to inspector.
-- [ ] Create inspector UI stub with minimal readable output.
-- [ ] Provide a read-only summary for a location/entity.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Add tap handling to input that routes to inspector.
+- [x] Create inspector UI stub with minimal readable output.
+- [x] Provide a read-only summary for a location/entity.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
 - `src/input/index.js`
@@ -81,7 +81,7 @@
 - `src/render/renderer.js` (if needed for read-only data handoff)
 
 **Verification**
-- [ ] Manual: tapping the canvas shows a location or entity summary.
+- [x] Manual: tapping the canvas shows a location or entity summary.
 
 **Stop point**
 - Pause after inspector stub is visible and updates on tap.

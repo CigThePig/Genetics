@@ -19,7 +19,6 @@ const sim = createSim();
 const camera = createCamera();
 const renderer = createRenderer(app, { camera });
 const metrics = createMetrics({ container: app });
-const input = createInput({ canvas: renderer.canvas, camera });
 let running = false;
 let speed = 1;
 let rafId = null;
@@ -79,6 +78,23 @@ const ui = createUI({
     ui.setSeed(sim.getSeed());
     renderer.render(sim);
     ui.setStatus(`Seed updated to ${sim.getSeed()}.`);
+  }
+});
+
+const input = createInput({
+  canvas: renderer.canvas,
+  camera,
+  onTap: ({ screen, world }) => {
+    const summary = sim.getSummary();
+    ui.setInspector({
+      title: 'Inspector',
+      rows: [
+        `World: ${world.x.toFixed(1)}, ${world.y.toFixed(1)}`,
+        `Screen: ${screen.x.toFixed(1)}, ${screen.y.toFixed(1)}`,
+        `Tick: ${summary.tick}`,
+        `Seed: ${summary.seed}`
+      ]
+    });
   }
 });
 

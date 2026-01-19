@@ -1,8 +1,15 @@
-export function createInput({ canvas, camera }) {
+export function createInput({ canvas, camera, onTap }) {
   let attached = false;
   let pinchStartDistance = 0;
   let pinchStartZoom = 1;
   const pointers = new Map();
+  const tapState = {
+    pointerId: null,
+    x: 0,
+    y: 0,
+    moved: false
+  };
+  const tapMoveThreshold = 8;
 
   const getViewport = () => {
     const rect = canvas.getBoundingClientRect();
@@ -18,6 +25,16 @@ export function createInput({ canvas, camera }) {
 
     canvas.setPointerCapture(event.pointerId);
     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (pointers.size === 1) {
+      tapState.pointerId = event.pointerId;
+      tapState.x = event.clientX;
+      tapState.y = event.clientY;
+      tapState.moved = false;
+    } else {
+      tapState.pointerId = null;
+      tapState.moved = true;
+    }
 
     if (pointers.size === 2) {
       const [first, second] = Array.from(pointers.values());
@@ -38,6 +55,15 @@ export function createInput({ canvas, camera }) {
     if (pointers.size === 1) {
       const dx = nextPoint.x - prevPoint.x;
       const dy = nextPoint.y - prevPoint.y;
+      if (tapState.pointerId === event.pointerId) {
+        const movedDistance = distance(nextPoint, {
+          x: tapState.x,
+          y: tapState.y
+        });
+        if (movedDistance > tapMoveThreshold) {
+          tapState.moved = true;
+        }
+      }
       camera.panBy(dx, dy);
       return;
     }
@@ -65,6 +91,32 @@ export function createInput({ canvas, camera }) {
     if (pointers.size < 2) {
       pinchStartDistance = 0;
       pinchStartZoom = camera.getState().zoom;
+    }
+
+    if (
+      onTap &&
+      tapState.pointerId === event.pointerId &&
+      !tapState.moved &&
+      pointers.size === 0
+    ) {
+      const rect = canvas.getBoundingClientRect();
+      const screenPoint = {
+        x: event.clientX - rect.left,
+        y: event.clientY - rect.top
+      };
+      const viewport = { width: rect.width, height: rect.height };
+      const state = camera.getState();
+      const originX = viewport.width / 2;
+      const originY = viewport.height / 2;
+      const worldPoint = {
+        x: (screenPoint.x - originX - state.x) / state.zoom,
+        y: (screenPoint.y - originY - state.y) / state.zoom
+      };
+      onTap({ screen: screenPoint, world: worldPoint, viewport });
+    }
+
+    if (tapState.pointerId === event.pointerId) {
+      tapState.pointerId = null;
     }
   };
 
@@ -98,6 +150,8 @@ export function createInput({ canvas, camera }) {
       canvas.removeEventListener('pointercancel', pointerUp);
       canvas.removeEventListener('wheel', wheelZoom);
       pointers.clear();
+      tapState.pointerId = null;
+      tapState.moved = false;
     }
   };
 }
