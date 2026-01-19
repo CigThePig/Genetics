@@ -26,6 +26,13 @@ export function createSim(config = simConfig) {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
       return state.lastRoll;
+    },
+    getSummary() {
+      return {
+        seed: resolvedConfig.seed,
+        tick: state.tick,
+        lastRoll: state.lastRoll
+      };
     }
   };
 }
