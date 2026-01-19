@@ -36,9 +36,9 @@
 ## Phase 2 — Tests + npm scripts (Steps 4–5)
 
 ### Tasks
-- [ ] Decide on Vitest and add a smoke test.
-- [ ] Ensure npm scripts exist for dev/build/preview/test.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Decide on Vitest and add a smoke test.
+- [x] Ensure npm scripts exist for dev/build/preview/test.
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files Touched
 - (planned) package.json
@@ -46,8 +46,8 @@
 - (planned) context/repo-map.md
 
 ### Verification Checklist
-- [ ] npm test passes.
-- [ ] npm run build completes.
+- [x] npm test passes.
+- [x] npm run build completes.
 
 ### Stop Point
 - Pause for review after tests and build succeed.
