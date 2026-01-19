@@ -15,17 +15,19 @@ A Track is one ordered unit of work from track-index.md that produces a verifiab
 
 ## Planning sequence (scales with repo size)
 0) Select Track N from /context/track-index.md (or explicit custom track request)
-1) Create track folder and set /context/active-track.md
-2) Recon (NO CODE): relevant files, risks, verification commands
-3) Spec (derived from Track Index + Recon)
-4) Blueprint (derived from Spec + Recon, NO CODE)
-5) Plan (derived from Blueprint; phased checklist)
+1) Set/update /context/active-track.md to the intended track (required before any planning or code)
+2) Create track folder (if new)
+3) Recon (NO CODE): relevant files, risks, verification commands
+4) Spec (derived from Track Index + Recon)
+5) Blueprint (derived from Spec + Recon, NO CODE)
+6) Plan (derived from Blueprint; phased checklist)
 
 ## Execution loop
 - Implement ONE phase
 - Verify
 - Update plan checkboxes
 - Update /context/repo-map.md if files were added or roles changed
+- Update /context/active-track.md (Current phase + Next task)
 - Stop for review
 
 ## Deviation protocol

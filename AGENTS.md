@@ -18,6 +18,18 @@
 7) /context/active-track.md
 8) Active track files (spec/blueprint/plan)
 
+## Active Track Discipline (MUST)
+- /context/active-track.md is the canonical pointer to current work.
+- BEFORE any planning or code changes, open it and confirm it matches the intended track.
+- If it does not match, update it first, then proceed.
+- MUST update /context/active-track.md when:
+  - starting a new track
+  - switching tracks
+  - changing scope in a way that affects plan/blueprint
+  - advancing phases
+- At end of each run/phase, update Current phase and Next task.
+- If doing non-track work, set Active track to “Maintenance” and note why + files touched.
+
 ## 2) Track-index rule (the roadmap is the boss)
 - /context/track-index.md defines the official track order and scope.
 - When asked to "Create Track N":
