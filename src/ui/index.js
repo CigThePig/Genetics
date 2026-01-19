@@ -4,7 +4,8 @@ export function createUI({
   onPlay,
   onPause,
   onStep,
-  onSpeedChange
+  onSpeedChange,
+  onSeedChange
 }) {
   const container = statusNode?.parentElement ?? document.body;
   const controls = document.createElement('div');
@@ -76,6 +77,49 @@ export function createUI({
     }
   });
 
+  const seedWrapper = document.createElement('div');
+  seedWrapper.style.display = 'flex';
+  seedWrapper.style.alignItems = 'center';
+  seedWrapper.style.gap = '6px';
+
+  const seedLabel = document.createElement('label');
+  seedLabel.textContent = 'Seed';
+  seedLabel.style.fontSize = '14px';
+
+  const seedInput = document.createElement('input');
+  const seedInputId = 'seed-input';
+  seedInput.id = seedInputId;
+  seedLabel.setAttribute('for', seedInputId);
+  seedInput.type = 'number';
+  seedInput.inputMode = 'numeric';
+  seedInput.style.padding = '10px 14px';
+  seedInput.style.minHeight = '44px';
+  seedInput.style.borderRadius = '10px';
+  seedInput.style.border = '1px solid #333';
+  seedInput.style.fontSize = '14px';
+  seedInput.style.width = '120px';
+
+  const seedApply = createButton('Apply');
+  seedApply.style.padding = '10px 12px';
+  seedApply.style.minWidth = '70px';
+
+  const commitSeedChange = () => {
+    if (onSeedChange) {
+      const value = Number(seedInput.value);
+      onSeedChange(Number.isFinite(value) ? Math.trunc(value) : 0);
+    }
+  };
+
+  seedApply.addEventListener('click', commitSeedChange);
+  seedInput.addEventListener('change', commitSeedChange);
+
+  if (!onSeedChange) {
+    seedInput.disabled = true;
+    seedApply.disabled = true;
+  }
+
+  seedWrapper.append(seedLabel, seedInput, seedApply);
+
   const fpsToggle = document.createElement('button');
   fpsToggle.type = 'button';
   fpsToggle.style.padding = '10px 14px';
@@ -108,7 +152,14 @@ export function createUI({
     setFpsVisible(true);
   }
 
-  controls.append(playButton, pauseButton, stepButton, speedSelect, fpsToggle);
+  controls.append(
+    playButton,
+    pauseButton,
+    stepButton,
+    speedSelect,
+    seedWrapper,
+    fpsToggle
+  );
   container.append(controls);
 
   return {
@@ -124,6 +175,12 @@ export function createUI({
       const value = String(speed);
       if (speedSelect.value !== value) {
         speedSelect.value = value;
+      }
+    },
+    setSeed(seed) {
+      const value = String(seed);
+      if (seedInput.value !== value) {
+        seedInput.value = value;
       }
     }
   };

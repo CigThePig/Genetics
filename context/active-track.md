@@ -7,4 +7,4 @@ When active:
 - Track title: Developer Visibility & Control (Steps 1–5)
 - Track path: tracks/2026-01-19-track-1-developer-visibility-control/
 - Current phase: Phase 3 — Seeded RNG module
-- Next task: Add a seeded RNG module with clear API.
+- Next task: Manual verify seed display and confirm seed changes affect outcomes.

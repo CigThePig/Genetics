@@ -71,8 +71,10 @@ Rules:
   - Role: app entry; wires sim + renderer + UI
 - src/sim/config.js
   - Role: centralized tunable config (stub)
+- src/sim/rng.js
+  - Role: seeded RNG module for deterministic randomness
 - src/sim/sim.js
-  - Role: sim orchestration stub
+  - Role: sim orchestration stub + RNG wiring
 - src/render/renderer.js
   - Role: drawing only (stub)
 - src/input/index.js
