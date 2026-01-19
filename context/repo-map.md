@@ -119,3 +119,5 @@ Rules:
 ## Tests
 - tests/sim.test.js
   - Role: Vitest smoke test for sim scaffold
+- tests/creatures.test.js
+  - Role: validates basal metabolism drains per tick
