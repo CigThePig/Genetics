@@ -6,18 +6,20 @@ import { generateTerrain } from './terrain-generator.js';
 export function createSim(config = simConfig) {
   const resolvedConfig = { ...simConfig, ...config };
   const rng = createRng(resolvedConfig.seed);
-  const world = createWorldGrid({
-    width: resolvedConfig.worldWidth,
-    height: resolvedConfig.worldHeight,
-    defaultTerrain: resolvedConfig.defaultTerrain
-  });
-
-  generateTerrain({ world, rng, config: resolvedConfig });
+  const buildWorld = () => {
+    const world = createWorldGrid({
+      width: resolvedConfig.worldWidth,
+      height: resolvedConfig.worldHeight,
+      defaultTerrain: resolvedConfig.defaultTerrain
+    });
+    generateTerrain({ world, rng, config: resolvedConfig });
+    return world;
+  };
 
   const state = {
     tick: 0,
     lastRoll: 0,
-    world
+    world: buildWorld()
   };
 
   return {
@@ -32,6 +34,7 @@ export function createSim(config = simConfig) {
       rng.setSeed(seedValue);
       state.tick = 0;
       state.lastRoll = 0;
+      state.world = buildWorld();
     },
     tick() {
       state.tick += 1;
