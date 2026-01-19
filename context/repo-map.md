@@ -84,7 +84,7 @@ Rules:
 - src/sim/sim.js
   - Role: sim orchestration stub + RNG wiring
 - src/sim/world-grid.js
-  - Role: world grid data structure + terrain/grass accessors
+  - Role: world grid data structure + terrain/grass/stress accessors
 - src/sim/terrain-generator.js
   - Role: deterministic terrain blob generator for world grid initialization
 - src/sim/terrain-effects.js

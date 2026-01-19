@@ -12,7 +12,8 @@ export function createSim(config = simConfig) {
       width: resolvedConfig.worldWidth,
       height: resolvedConfig.worldHeight,
       defaultTerrain: resolvedConfig.defaultTerrain,
-      defaultGrass: resolvedConfig.grassInitialAmount
+      defaultGrass: resolvedConfig.grassInitialAmount,
+      defaultGrassStress: 0
     });
     generateTerrain({ world, rng, config: resolvedConfig });
     return world;
@@ -23,7 +24,8 @@ export function createSim(config = simConfig) {
     lastRoll: 0,
     world: buildWorld(),
     metrics: {
-      grassAverage: 0
+      grassAverage: 0,
+      stressedCells: 0
     }
   };
 
@@ -40,7 +42,7 @@ export function createSim(config = simConfig) {
       state.tick = 0;
       state.lastRoll = 0;
       state.world = buildWorld();
-      state.metrics = { grassAverage: 0 };
+      state.metrics = { grassAverage: 0, stressedCells: 0 };
     },
     tick() {
       state.tick += 1;
@@ -53,7 +55,8 @@ export function createSim(config = simConfig) {
         seed: resolvedConfig.seed,
         tick: state.tick,
         lastRoll: state.lastRoll,
-        grassAverage: state.metrics.grassAverage
+        grassAverage: state.metrics.grassAverage,
+        stressedCells: state.metrics.stressedCells
       };
     }
   };
