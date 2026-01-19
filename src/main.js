@@ -1,5 +1,6 @@
 import { createSim } from './sim/sim.js';
 import { createSimWorkerStub } from './sim/worker.js';
+import { findNearestCreature } from './sim/creatures/index.js';
 import { createRenderer } from './render/renderer.js';
 import { createCamera } from './render/camera.js';
 import { createInput } from './input/index.js';
@@ -103,13 +104,28 @@ const input = createInput({
   camera,
   onTap: ({ screen, world }) => {
     const summary = sim.getSummary();
+    const creature = findNearestCreature(
+      sim.state?.creatures,
+      world,
+      sim.config?.creatureInspectRadius
+    );
+    const meterRows = creature
+      ? [
+          `Creature ${creature.id}`,
+          `Energy: ${creature.meters.energy.toFixed(2)}`,
+          `Water: ${creature.meters.water.toFixed(2)}`,
+          `Stamina: ${creature.meters.stamina.toFixed(2)}`,
+          `HP: ${creature.meters.hp.toFixed(2)}`
+        ]
+      : ['No creature nearby'];
     ui.setInspector({
       title: 'Inspector',
       rows: [
         `World: ${world.x.toFixed(1)}, ${world.y.toFixed(1)}`,
         `Screen: ${screen.x.toFixed(1)}, ${screen.y.toFixed(1)}`,
         `Tick: ${summary.tick}`,
-        `Seed: ${summary.seed}`
+        `Seed: ${summary.seed}`,
+        ...meterRows
       ]
     });
   }
