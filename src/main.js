@@ -4,6 +4,7 @@ import { createCamera } from './render/camera.js';
 import { createInput } from './input/index.js';
 import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
+import { createSettings } from './app/settings.js';
 
 const app = document.querySelector('#app');
 
@@ -15,12 +16,14 @@ status.textContent = 'Bootstrapped Vite app with sim/render/ui stubs.';
 
 app.append(title, status);
 
-const sim = createSim();
+const settings = createSettings();
+const initialSettings = settings.load();
+const sim = createSim({ seed: initialSettings.seed });
 const camera = createCamera();
 const renderer = createRenderer(app, { camera });
 const metrics = createMetrics({ container: app });
 let running = false;
-let speed = 1;
+let speed = initialSettings.speed;
 let rafId = null;
 
 const tickOnce = () => {
@@ -71,14 +74,20 @@ const ui = createUI({
   onSpeedChange: (nextSpeed) => {
     speed = Number.isFinite(nextSpeed) ? Math.max(1, nextSpeed) : 1;
     ui.setSpeed(speed);
+    settings.save({ speed });
   },
   onSeedChange: (nextSeed) => {
     pause();
     sim.setSeed(nextSeed);
     ui.setSeed(sim.getSeed());
     renderer.render(sim);
+    settings.save({ seed: sim.getSeed() });
     ui.setStatus(`Seed updated to ${sim.getSeed()}.`);
-  }
+  },
+  onFpsToggle: (visible) => {
+    settings.save({ fpsVisible: visible });
+  },
+  initialFpsVisible: initialSettings.fpsVisible
 });
 
 const input = createInput({
@@ -103,4 +112,5 @@ ui.setStatus('Ready for Track 2.');
 ui.setRunning(running);
 ui.setSpeed(speed);
 ui.setSeed(sim.getSeed());
+ui.setFpsVisible(initialSettings.fpsVisible);
 input.attach();

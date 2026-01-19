@@ -71,6 +71,8 @@ Rules:
 ## Source
 - src/main.js
   - Role: app entry; wires sim + renderer + UI
+- src/app/settings.js
+  - Role: settings persistence (seed, speed, toggles)
 - src/sim/config.js
   - Role: centralized tunable config (stub)
 - src/sim/rng.js
