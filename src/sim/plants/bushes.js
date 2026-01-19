@@ -2,7 +2,9 @@ const DEFAULT_BUSH_INIT = {
   count: 0,
   initialHealth: 1,
   berryMax: 0,
-  initialBerries: 0
+  initialBerries: 0,
+  recoveryRate: 0.01,
+  berryRegenRate: 0.2
 };
 
 export function updateBushes({ world, config, rng }) {
@@ -63,11 +65,39 @@ export function updateBushes({ world, config, rng }) {
     world.bushes = bushes;
   }
 
+  const recoveryRate = Number.isFinite(config?.bushRecoveryRate)
+    ? Math.max(0, config.bushRecoveryRate)
+    : DEFAULT_BUSH_INIT.recoveryRate;
+  const berryRegenRate = Number.isFinite(config?.bushBerryRegenRate)
+    ? Math.max(0, config.bushBerryRegenRate)
+    : DEFAULT_BUSH_INIT.berryRegenRate;
+  const fallbackBerryMax = Number.isFinite(config?.bushBerryMax)
+    ? Math.max(0, config.bushBerryMax)
+    : DEFAULT_BUSH_INIT.berryMax;
+
   let totalBerries = 0;
   let totalHealth = 0;
   for (const bush of bushes) {
-    const berries = Number.isFinite(bush.berries) ? bush.berries : 0;
-    const health = Number.isFinite(bush.health) ? bush.health : 0;
+    const berryMax = Number.isFinite(bush.berryMax) ? bush.berryMax : fallbackBerryMax;
+    let health = Number.isFinite(bush.health) ? bush.health : 0;
+    let berries = Number.isFinite(bush.berries) ? bush.berries : 0;
+
+    if (health < 1 && recoveryRate > 0) {
+      health = Math.min(1, Math.max(0, health + recoveryRate));
+    } else {
+      health = Math.min(1, Math.max(0, health));
+    }
+
+    if (berryMax > 0 && berryRegenRate > 0) {
+      const regen = berryRegenRate * Math.max(0, Math.min(1, health));
+      berries = Math.min(berryMax, Math.max(0, berries + regen));
+    } else {
+      berries = Math.min(berryMax, Math.max(0, berries));
+    }
+
+    bush.health = health;
+    bush.berries = berries;
+    bush.berryMax = berryMax;
     totalBerries += berries;
     totalHealth += health;
   }
