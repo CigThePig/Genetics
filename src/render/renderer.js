@@ -1,14 +1,22 @@
 export function createRenderer(container, { camera }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'renderer-shell';
+  wrapper.style.display = 'flex';
+  wrapper.style.flexDirection = 'column';
+  wrapper.style.width = '100%';
+  wrapper.style.height = '60vh';
+  wrapper.style.minHeight = '240px';
 
   const canvas = document.createElement('canvas');
   canvas.className = 'renderer-canvas';
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Simulation canvas');
+  canvas.style.flex = '1 1 auto';
 
   const footer = document.createElement('p');
   footer.className = 'renderer-footer';
+  footer.style.margin = '0';
+  footer.style.padding = '6px 0';
 
   wrapper.append(canvas, footer);
   container.append(wrapper);
@@ -16,7 +24,8 @@ export function createRenderer(container, { camera }) {
   const ctx = canvas.getContext('2d');
 
   const resizeToContainer = () => {
-    const { width, height } = wrapper.getBoundingClientRect();
+    const width = wrapper.clientWidth;
+    const height = wrapper.clientHeight;
     const footerHeight = footer.getBoundingClientRect().height;
     const canvasHeight = Math.max(1, height - footerHeight);
     const ratio = window.devicePixelRatio || 1;
