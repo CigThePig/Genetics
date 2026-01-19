@@ -86,17 +86,17 @@
 ## Phase 3 — Terrain effects table (Step 13)
 
 ### Tasks
-- [ ] Define terrain types and a lookup table for friction, perception, and plant cap.
-- [ ] Expose query helpers for sim systems to consume.
+- [x] Define terrain types and a lookup table for friction, perception, and plant cap.
+- [x] Expose query helpers for sim systems to consume.
 - [x] Rebuild world terrain when setSeed resets the RNG to keep terrain deterministic.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - src/sim/
 - /context/repo-map.md (if needed)
 
 ### Verification
-- [ ] Manual: inspect terrain effects table values in console or debug output.
+- [x] Manual: inspect terrain effects table values in console or debug output.
 
 ### Stop point
 - Pause for review after terrain effects are queryable.

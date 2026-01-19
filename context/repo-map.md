@@ -85,6 +85,8 @@ Rules:
   - Role: world grid data structure + terrain accessors
 - src/sim/terrain-generator.js
   - Role: deterministic terrain blob generator for world grid initialization
+- src/sim/terrain-effects.js
+  - Role: terrain effects lookup table (friction, perception, plant cap)
 - src/sim/worker.js
   - Role: worker-ready sim stub interface for future worker-backed loop
 - src/render/renderer.js
