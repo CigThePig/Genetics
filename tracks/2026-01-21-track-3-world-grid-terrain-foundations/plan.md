@@ -116,7 +116,7 @@
 - /context/repo-map.md (if needed)
 
 ### Verification
-- [ ] Manual: terrain is visible and distinct on canvas.
+- [x] Manual: terrain is visible and distinct on canvas.
 
 ### Stop point
 - Pause for review after terrain rendering is implemented.
@@ -126,9 +126,9 @@
 ## Phase 5 — Water + shore corridors (Step 15)
 
 ### Tasks
-- [ ] Add water terrain regions and shore corridors to the generator.
-- [ ] Update rendering to differentiate water vs shore.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Add water terrain regions and shore corridors to the generator.
+- [x] Update rendering to differentiate water vs shore.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - src/sim/
