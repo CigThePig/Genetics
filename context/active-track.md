@@ -7,4 +7,4 @@ When active:
 - Track title: World Grid & Terrain Foundations
 - Track path: tracks/2026-01-21-track-3-world-grid-terrain-foundations/
 - Current phase: Phase 3 — Terrain effects table (Step 13)
-- Next task: Define terrain types and effects table per the track plan.
+- Next task: Define terrain types and effects table per the track plan, then expose query helpers.

@@ -88,6 +88,7 @@
 ### Tasks
 - [ ] Define terrain types and a lookup table for friction, perception, and plant cap.
 - [ ] Expose query helpers for sim systems to consume.
+- [x] Rebuild world terrain when setSeed resets the RNG to keep terrain deterministic.
 - [ ] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
