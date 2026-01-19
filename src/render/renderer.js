@@ -48,6 +48,8 @@ export function createRenderer(container, { camera }) {
     forest: '#2d6a4f',
     rock: '#6c757d',
     sand: '#d9b68b',
+    shore: '#b5c98c',
+    water: '#3b6ea5',
     unknown: '#3b3b3b'
   };
 

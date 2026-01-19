@@ -18,6 +18,16 @@ const TERRAIN_EFFECTS = {
     friction: 1.25,
     perception: 0.95,
     plantCap: 0.6
+  },
+  shore: {
+    friction: 1.15,
+    perception: 0.9,
+    plantCap: 0.4
+  },
+  water: {
+    friction: 1.8,
+    perception: 0.75,
+    plantCap: 0
   }
 };
 
