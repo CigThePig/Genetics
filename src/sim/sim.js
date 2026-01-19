@@ -25,7 +25,10 @@ export function createSim(config = simConfig) {
     world: buildWorld(),
     metrics: {
       grassAverage: 0,
-      stressedCells: 0
+      stressedCells: 0,
+      bushCount: 0,
+      berryTotal: 0,
+      bushAverageHealth: 0
     }
   };
 
@@ -42,12 +45,18 @@ export function createSim(config = simConfig) {
       state.tick = 0;
       state.lastRoll = 0;
       state.world = buildWorld();
-      state.metrics = { grassAverage: 0, stressedCells: 0 };
+      state.metrics = {
+        grassAverage: 0,
+        stressedCells: 0,
+        bushCount: 0,
+        berryTotal: 0,
+        bushAverageHealth: 0
+      };
     },
     tick() {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
-      updatePlants({ state, config: resolvedConfig });
+      updatePlants({ state, config: resolvedConfig, rng });
       return state.lastRoll;
     },
     getSummary() {
@@ -56,7 +65,10 @@ export function createSim(config = simConfig) {
         tick: state.tick,
         lastRoll: state.lastRoll,
         grassAverage: state.metrics.grassAverage,
-        stressedCells: state.metrics.stressedCells
+        stressedCells: state.metrics.stressedCells,
+        bushCount: state.metrics.bushCount,
+        berryTotal: state.metrics.berryTotal,
+        bushAverageHealth: state.metrics.bushAverageHealth
       };
     }
   };

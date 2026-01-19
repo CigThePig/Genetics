@@ -91,6 +91,8 @@ Rules:
   - Role: terrain effects lookup table (friction, perception, plant cap)
 - src/sim/plants/grass.js
   - Role: grass regrowth update logic + summary stats
+- src/sim/plants/bushes.js
+  - Role: bush entity placement and berry pool summary updates
 - src/sim/plants/index.js
   - Role: plant system orchestrator for sim ticks
 - src/sim/worker.js

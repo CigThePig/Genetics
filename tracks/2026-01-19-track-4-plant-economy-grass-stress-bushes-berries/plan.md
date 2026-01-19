@@ -121,10 +121,10 @@
 
 ## Phase 5 — Bush entities + berry pool (Step 20)
 **Tasks**
-- [ ] Add bush entity structure with health and berries.
-- [ ] Add deterministic placement and initialization.
-- [ ] Expose bush/berry metrics.
-- [ ] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
+- [x] Add bush entity structure with health and berries.
+- [x] Add deterministic placement and initialization.
+- [x] Expose bush/berry metrics.
+- [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
 - `src/sim/plants/bushes.js` (new)
