@@ -57,10 +57,10 @@
 ## Phase 3 — Pages base path + deploy workflow + docs (Steps 6–7)
 
 ### Tasks
-- [ ] Configure Vite base path for /Genetics/.
-- [ ] Add GitHub Actions workflow to deploy dist/ to Pages.
-- [ ] Ensure docs reflect scaffolding + Pages setup.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Configure Vite base path for /Genetics/.
+- [x] Add GitHub Actions workflow to deploy dist/ to Pages.
+- [x] Ensure docs reflect scaffolding + Pages setup.
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files Touched
 - (planned) vite.config.js
@@ -69,7 +69,7 @@
 - (planned) context/repo-map.md
 
 ### Verification Checklist
-- [ ] npm run build completes with the Pages base path.
+- [x] npm run build completes with the Pages base path.
 
 ### Stop Point
 - Pause for review after docs and deploy workflow are in place.
