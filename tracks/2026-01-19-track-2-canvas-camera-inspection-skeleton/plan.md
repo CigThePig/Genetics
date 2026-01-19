@@ -132,17 +132,17 @@
 ## Phase 5 — Worker-ready architecture stub
 
 **Tasks**
-- [ ] Add worker stub module with clear interface shape.
-- [ ] Wire optional use in main without changing sim behavior.
-- [ ] Document how the stub will be activated later.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Add worker stub module with clear interface shape.
+- [x] Wire optional use in main without changing sim behavior.
+- [x] Document how the stub will be activated later.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
 - `src/sim/worker.js` (new)
 - `src/main.js`
 
 **Verification**
-- [ ] Manual: app boots and runs with current non-worker path.
+- [x] Manual: app boots and runs with current non-worker path.
 
 **Stop point**
 - Pause after confirming worker stub does not alter behavior.
