@@ -196,6 +196,58 @@ export function createUI({
   container.append(controls);
   container.append(inspectorSection);
 
+  const metricsSection = document.createElement('section');
+  metricsSection.style.border = '1px solid #333';
+  metricsSection.style.borderRadius = '12px';
+  metricsSection.style.padding = '12px';
+  metricsSection.style.marginBottom = '12px';
+  metricsSection.style.background = '#fff';
+
+  const metricsTitle = document.createElement('h2');
+  metricsTitle.textContent = 'Metrics';
+  metricsTitle.style.fontSize = '16px';
+  metricsTitle.style.margin = '0 0 8px';
+
+  const metricsBody = document.createElement('div');
+  metricsBody.style.display = 'grid';
+  metricsBody.style.gap = '12px';
+
+  const metricsSections = metrics?.getSkeletonSections
+    ? metrics.getSkeletonSections()
+    : [{ title: 'Coming soon', rows: ['Metrics will appear here.'] }];
+
+  for (const section of metricsSections) {
+    const sectionWrap = document.createElement('div');
+    sectionWrap.style.display = 'grid';
+    sectionWrap.style.gap = '6px';
+
+    const sectionTitle = document.createElement('h3');
+    sectionTitle.textContent = section.title;
+    sectionTitle.style.fontSize = '14px';
+    sectionTitle.style.margin = '0';
+
+    const sectionList = document.createElement('ul');
+    sectionList.style.listStyle = 'none';
+    sectionList.style.padding = '0';
+    sectionList.style.margin = '0';
+    sectionList.style.display = 'grid';
+    sectionList.style.gap = '4px';
+
+    for (const row of section.rows) {
+      const item = document.createElement('li');
+      item.textContent = row;
+      item.style.fontSize = '13px';
+      item.style.color = '#444';
+      sectionList.append(item);
+    }
+
+    sectionWrap.append(sectionTitle, sectionList);
+    metricsBody.append(sectionWrap);
+  }
+
+  metricsSection.append(metricsTitle, metricsBody);
+  container.append(metricsSection);
+
   return {
     setStatus(message) {
       statusNode.textContent = message;

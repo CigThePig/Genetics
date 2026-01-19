@@ -6,5 +6,5 @@ When active:
 - Track number: 2
 - Track title: Canvas + Camera + Inspection Skeleton
 - Track path: tracks/2026-01-19-track-2-canvas-camera-inspection-skeleton/
-- Current phase: Phase 3 (metrics panel skeleton)
-- Next task: Add metrics panel container with placeholder rows/sections in UI and metrics module.
+- Current phase: Phase 4 (save/load settings)
+- Next task: Create settings module for save/load defaults and wire UI seed/speed/toggles into persistence.
