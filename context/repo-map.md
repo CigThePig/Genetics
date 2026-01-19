@@ -63,6 +63,8 @@ Rules:
   - Contains: Track 0 spec/blueprint/plan (Repo Bootstrap)
 - tracks/2026-01-19-track-1-developer-visibility-control/
   - Contains: Track 1 spec/blueprint/plan (Developer Visibility & Control)
+- tracks/2026-01-19-track-2-canvas-camera-inspection-skeleton/
+  - Contains: Track 2 spec/blueprint/plan (Canvas + Camera + Inspection Skeleton)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
