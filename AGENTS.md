@@ -69,7 +69,8 @@
 - Determinism: simulation must be deterministic with a seed.
 - Central RNG: all randomness must go through a single rng module.
 - Tick order invariant:
-  Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics → Render
+  Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics
+  - Render is a post-tick, read-only view step outside the sim tick.
 - Observability is required: major system changes must expose at least one metric or inspector readout.
 
 ## 7) Mobile-first requirements

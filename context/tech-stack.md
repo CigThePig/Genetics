@@ -16,7 +16,7 @@ Testing:
 
 Rendering:
 - 2D rendering with touch-first camera controls (drag-to-pan, pinch-to-zoom).
-- Renderer must be separated from sim logic.
+- Renderer must be separated from sim logic and run as a read-only post-tick step.
 
 Sim performance:
 - If needed, run simulation in a Web Worker to keep UI responsive on mobile.

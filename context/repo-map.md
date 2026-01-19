@@ -20,7 +20,7 @@ Rules:
 - package-lock.json
   - Role: dependency lockfile for npm ci
 - vite.config.js
-  - Role: Vite config with GitHub Pages base path
+  - Role: Vite config with env-configured base path
 - index.html
   - Role: app shell entry for Vite
 - .gitignore
@@ -59,6 +59,8 @@ Rules:
 - tracks/YYYY-MM-DD-track-N-<slug>/
   - Contains: spec.md, blueprint.md, plan.md
   - Rule: scope must match Track Index for Track N unless explicitly overridden
+- tracks/.gitkeep
+  - Role: placeholder to keep the tracks directory in git
 
 ## Source
 - src/main.js
@@ -69,6 +71,10 @@ Rules:
   - Role: sim orchestration stub
 - src/render/renderer.js
   - Role: drawing only (stub)
+- src/input/index.js
+  - Role: input system entry point (stub)
+- src/metrics/index.js
+  - Role: metrics system entry point (stub)
 - src/ui/index.js
   - Role: touch-first UI shell (stub)
 

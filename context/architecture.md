@@ -11,7 +11,9 @@ Deterministic iteration order:
 - Do not rely on object key ordering for sim-critical steps.
 
 Tick order invariant:
-Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics → Render
+Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics
+
+Rendering is a post-tick, read-only view step outside the sim tick. Render must never mutate sim state; it only reads from the latest metrics/state snapshot.
 
 Tunable configuration:
 - Centralize tunables in src/sim/config.js.

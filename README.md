@@ -19,6 +19,15 @@ npm run preview
 npm test
 ```
 
+### Local preview vs. GitHub Pages
+
+Local preview (`npm run preview`) serves the built site at `/` by default. The GitHub Pages deployment uses a project-site base path (`/Genetics/`) configured via `VITE_BASE` in the deploy workflow. If you want to preview the GitHub Pages path locally, run:
+
+```bash
+VITE_BASE=/Genetics/ npm run build
+npm run preview
+```
+
 ## Repository map
 
 - Architecture + invariants: `context/architecture.md`
@@ -32,6 +41,11 @@ This repo deploys to GitHub Pages as a project site at:
 `https://CigThePig.github.io/Genetics/`
 
 The workflow in `.github/workflows/deploy.yml` builds the site and publishes `dist/`. Vite’s production base path is set to `/Genetics/` so assets resolve correctly on Pages.
+
+If you rename this repo, update:
+- The GitHub Pages URL in this README.
+- The `VITE_BASE` value in `.github/workflows/deploy.yml`.
+- Any other references to `/Genetics/` in deployment docs.
 
 ## License
 
