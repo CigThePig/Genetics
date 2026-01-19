@@ -78,9 +78,9 @@ Rules:
 - src/input/index.js
   - Role: input system entry point (stub)
 - src/metrics/index.js
-  - Role: metrics system entry point (stub)
+  - Role: metrics system entry point (FPS overlay + toggle support)
 - src/ui/index.js
-  - Role: touch-first UI shell (stub)
+  - Role: touch-first UI shell (FPS toggle + status updates)
 
 ## Tests
 - tests/sim.test.js

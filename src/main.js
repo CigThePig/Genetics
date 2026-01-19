@@ -1,5 +1,6 @@
 import { createSim } from './sim/sim.js';
 import { createRenderer } from './render/renderer.js';
+import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
 
 const app = document.querySelector('#app');
@@ -14,7 +15,8 @@ app.append(title, status);
 
 const sim = createSim();
 const renderer = createRenderer(app);
-const ui = createUI({ statusNode: status });
+const metrics = createMetrics({ container: app });
+const ui = createUI({ statusNode: status, metrics });
 
 renderer.render(sim);
 ui.setStatus('Ready for Track 1.');
