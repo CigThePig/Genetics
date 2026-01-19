@@ -1,10 +1,80 @@
-export function createUI({ statusNode, metrics }) {
+export function createUI({
+  statusNode,
+  metrics,
+  onPlay,
+  onPause,
+  onStep,
+  onSpeedChange
+}) {
   const container = statusNode?.parentElement ?? document.body;
   const controls = document.createElement('div');
   controls.style.display = 'flex';
   controls.style.flexWrap = 'wrap';
   controls.style.gap = '8px';
   controls.style.marginTop = '12px';
+
+  const createButton = (label) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.textContent = label;
+    button.style.padding = '10px 14px';
+    button.style.minHeight = '44px';
+    button.style.borderRadius = '10px';
+    button.style.border = '1px solid #333';
+    button.style.background = '#fff';
+    button.style.fontSize = '14px';
+    button.style.cursor = 'pointer';
+    return button;
+  };
+
+  const playButton = createButton('Play');
+  const pauseButton = createButton('Pause');
+  const stepButton = createButton('Step');
+
+  const speedSelect = document.createElement('select');
+  speedSelect.style.padding = '10px 14px';
+  speedSelect.style.minHeight = '44px';
+  speedSelect.style.borderRadius = '10px';
+  speedSelect.style.border = '1px solid #333';
+  speedSelect.style.background = '#fff';
+  speedSelect.style.fontSize = '14px';
+
+  const speedOptions = [
+    { label: 'Speed: 1x', value: '1' },
+    { label: 'Speed: 2x', value: '2' },
+    { label: 'Speed: 4x', value: '4' }
+  ];
+
+  for (const option of speedOptions) {
+    const entry = document.createElement('option');
+    entry.value = option.value;
+    entry.textContent = option.label;
+    speedSelect.append(entry);
+  }
+
+  playButton.addEventListener('click', () => {
+    if (onPlay) {
+      onPlay();
+    }
+  });
+
+  pauseButton.addEventListener('click', () => {
+    if (onPause) {
+      onPause();
+    }
+  });
+
+  stepButton.addEventListener('click', () => {
+    if (onStep) {
+      onStep();
+    }
+  });
+
+  speedSelect.addEventListener('change', () => {
+    if (onSpeedChange) {
+      onSpeedChange(Number(speedSelect.value));
+    }
+  });
 
   const fpsToggle = document.createElement('button');
   fpsToggle.type = 'button';
@@ -38,12 +108,23 @@ export function createUI({ statusNode, metrics }) {
     setFpsVisible(true);
   }
 
-  controls.append(fpsToggle);
+  controls.append(playButton, pauseButton, stepButton, speedSelect, fpsToggle);
   container.append(controls);
 
   return {
     setStatus(message) {
       statusNode.textContent = message;
+    },
+    setRunning(isRunning) {
+      playButton.disabled = isRunning;
+      pauseButton.disabled = !isRunning;
+      stepButton.disabled = isRunning;
+    },
+    setSpeed(speed) {
+      const value = String(speed);
+      if (speedSelect.value !== value) {
+        speedSelect.value = value;
+      }
     }
   };
 }

@@ -68,9 +68,9 @@ Recon completed; summary below reflects current repo state.
 ## Phase 2 — Minimal UI shell (play/pause/step/speed)
 
 ### Tasks
-- [ ] Implement minimal control shell for play/pause/step/speed.
-- [ ] Wire controls to sim lifecycle entry points (no sim logic in UI).
-- [ ] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
+- [x] Implement minimal control shell for play/pause/step/speed.
+- [x] Wire controls to sim lifecycle entry points (no sim logic in UI).
+- [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
 - src/ui/index.js
