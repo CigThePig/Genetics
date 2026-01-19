@@ -21,5 +21,7 @@ export const simConfig = {
   grassInitialAmount: 0.2,
   grassStressThreshold: 0.15,
   grassStressIncrease: 0.02,
+  grassStressRecoveryRate: 0.015,
+  grassStressRecoveryThreshold: 0.35,
   grassStressVisibleThreshold: 0.1
 };
