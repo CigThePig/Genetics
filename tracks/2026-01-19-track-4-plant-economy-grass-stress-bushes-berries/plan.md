@@ -134,7 +134,7 @@
 - `context/repo-map.md` (if needed)
 
 **Verification**
-- [ ] Manual: bushes exist and berry pools are visible in metrics.
+- [x] Manual: bushes exist and berry pools are visible in metrics.
 
 **Stop point**
 - Stop after verifying bushes + berries metrics.

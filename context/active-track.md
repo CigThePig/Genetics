@@ -7,4 +7,4 @@ When active:
 - Track title: Plant Economy: Grass, Stress, Bushes, Berries
 - Track path: tracks/2026-01-19-track-4-plant-economy-grass-stress-bushes-berries/
 - Current phase: Phase 5 (Bush entities + berry pool) — complete
-- Next task: Review Phase 5 results and decide on Track 4 closeout steps.
+- Next task: Decide on Track 4 closeout (history/clear active track) or proceed to Track 5.
