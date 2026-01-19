@@ -70,10 +70,11 @@ export function updateGrass({ world, config }) {
     const next = Math.min(cellCap, current + scaledRegrowth);
     grass[i] = next;
     total += next;
-    if (next >= coverageThreshold) {
+    const fullness = cellCap > 0 ? next / cellCap : 0;
+    if (fullness >= coverageThreshold) {
       coveredCells += 1;
     }
-    if (next >= hotspotThreshold) {
+    if (fullness >= hotspotThreshold) {
       hotspotCells += 1;
     }
 
