@@ -116,6 +116,7 @@ const input = createInput({
           `Age ticks: ${Number.isFinite(creature.ageTicks) ? creature.ageTicks : '--'}`,
           `Stage move scale: ${creature.lifeStage?.movementScale?.toFixed(2) ?? '--'}`,
           `Stage metabolism scale: ${creature.lifeStage?.metabolismScale?.toFixed(2) ?? '--'}`,
+          `Priority: ${creature.priority ?? 'Unknown'}`,
           `Energy: ${creature.meters.energy.toFixed(2)}`,
           `Water: ${creature.meters.water.toFixed(2)}`,
           `Stamina: ${creature.meters.stamina.toFixed(2)}`,

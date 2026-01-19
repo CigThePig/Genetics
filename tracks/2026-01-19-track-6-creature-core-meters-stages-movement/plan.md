@@ -88,9 +88,9 @@
 
 ## Phase 5 — Thirst/hunger priority (Step 30)
 ### Tasks
-- [ ] Implement priority logic to choose between thirst and hunger.
-- [ ] Add minimal state to show current priority in inspector.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Implement priority logic to choose between thirst and hunger.
+- [x] Add minimal state to show current priority in inspector.
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - `src/sim/creatures/*`
