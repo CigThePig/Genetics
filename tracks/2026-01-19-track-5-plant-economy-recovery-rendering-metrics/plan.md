@@ -39,9 +39,9 @@
 ## Phase 2 — Plant rendering (Step 23)
 
 ### Tasks
-- [ ] Extend renderer to visualize grass levels.
-- [ ] Render bushes with visuals keyed to health/berries.
-- [ ] Ensure renderer remains read-only.
+- [x] Extend renderer to visualize grass levels.
+- [x] Render bushes with visuals keyed to health/berries.
+- [x] Ensure renderer remains read-only.
 - [ ] ☐ Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
