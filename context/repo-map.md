@@ -78,17 +78,21 @@ Rules:
 - src/app/settings.js
   - Role: settings persistence (seed, speed, toggles)
 - src/sim/config.js
-  - Role: centralized tunable config (stub)
+  - Role: centralized tunable config (terrain + plant scaffolding)
 - src/sim/rng.js
   - Role: seeded RNG module for deterministic randomness
 - src/sim/sim.js
   - Role: sim orchestration stub + RNG wiring
 - src/sim/world-grid.js
-  - Role: world grid data structure + terrain accessors
+  - Role: world grid data structure + terrain/grass accessors
 - src/sim/terrain-generator.js
   - Role: deterministic terrain blob generator for world grid initialization
 - src/sim/terrain-effects.js
   - Role: terrain effects lookup table (friction, perception, plant cap)
+- src/sim/plants/grass.js
+  - Role: grass regrowth update logic + summary stats
+- src/sim/plants/index.js
+  - Role: plant system orchestrator for sim ticks
 - src/sim/worker.js
   - Role: worker-ready sim stub interface for future worker-backed loop
 - src/render/renderer.js

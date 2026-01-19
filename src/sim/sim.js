@@ -2,6 +2,7 @@ import { simConfig } from './config.js';
 import { createRng } from './rng.js';
 import { createWorldGrid } from './world-grid.js';
 import { generateTerrain } from './terrain-generator.js';
+import { updatePlants } from './plants/index.js';
 
 export function createSim(config = simConfig) {
   const resolvedConfig = { ...simConfig, ...config };
@@ -10,7 +11,8 @@ export function createSim(config = simConfig) {
     const world = createWorldGrid({
       width: resolvedConfig.worldWidth,
       height: resolvedConfig.worldHeight,
-      defaultTerrain: resolvedConfig.defaultTerrain
+      defaultTerrain: resolvedConfig.defaultTerrain,
+      defaultGrass: resolvedConfig.grassInitialAmount
     });
     generateTerrain({ world, rng, config: resolvedConfig });
     return world;
@@ -19,7 +21,10 @@ export function createSim(config = simConfig) {
   const state = {
     tick: 0,
     lastRoll: 0,
-    world: buildWorld()
+    world: buildWorld(),
+    metrics: {
+      grassAverage: 0
+    }
   };
 
   return {
@@ -35,17 +40,20 @@ export function createSim(config = simConfig) {
       state.tick = 0;
       state.lastRoll = 0;
       state.world = buildWorld();
+      state.metrics = { grassAverage: 0 };
     },
     tick() {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
+      updatePlants({ state, config: resolvedConfig });
       return state.lastRoll;
     },
     getSummary() {
       return {
         seed: resolvedConfig.seed,
         tick: state.tick,
-        lastRoll: state.lastRoll
+        lastRoll: state.lastRoll,
+        grassAverage: state.metrics.grassAverage
       };
     }
   };

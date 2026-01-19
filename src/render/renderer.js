@@ -125,7 +125,10 @@ export function createRenderer(container, { camera }) {
       const roll = Number.isFinite(sim.state?.lastRoll)
         ? sim.state.lastRoll.toFixed(4)
         : '--';
-      footer.textContent = `Seed: ${sim.config.seed} · Last roll: ${roll}`;
+      const grassAverage = Number.isFinite(sim.state?.metrics?.grassAverage)
+        ? sim.state.metrics.grassAverage.toFixed(2)
+        : '--';
+      footer.textContent = `Seed: ${sim.config.seed} · Last roll: ${roll} · Avg grass: ${grassAverage}`;
     }
   };
 }

@@ -1,13 +1,15 @@
 export function createWorldGrid({
   width,
   height,
-  defaultTerrain = 'plains'
+  defaultTerrain = 'plains',
+  defaultGrass = 0
 } = {}) {
   const resolvedWidth = Number.isFinite(width) ? Math.max(1, Math.trunc(width)) : 1;
   const resolvedHeight = Number.isFinite(height)
     ? Math.max(1, Math.trunc(height))
     : 1;
   const cells = new Array(resolvedWidth * resolvedHeight).fill(defaultTerrain);
+  const grass = new Array(resolvedWidth * resolvedHeight).fill(defaultGrass);
 
   const isInBounds = (x, y) =>
     Number.isInteger(x) &&
@@ -34,13 +36,30 @@ export function createWorldGrid({
     return true;
   };
 
+  const getGrassAt = (x, y) => {
+    const index = getIndex(x, y);
+    return index === -1 ? null : grass[index];
+  };
+
+  const setGrassAt = (x, y, amount) => {
+    const index = getIndex(x, y);
+    if (index === -1) {
+      return false;
+    }
+    grass[index] = amount;
+    return true;
+  };
+
   return {
     width: resolvedWidth,
     height: resolvedHeight,
     cells,
+    grass,
     isInBounds,
     getIndex,
     getTerrainAt,
-    setTerrainAt
+    setTerrainAt,
+    getGrassAt,
+    setGrassAt
   };
 }
