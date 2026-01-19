@@ -102,9 +102,9 @@
 
 ## Phase 4 — Stress recovery (Step 19)
 **Tasks**
-- [ ] Implement stress decay when grass recovers.
-- [ ] Ensure stress recovery respects determinism and tick order.
-- [ ] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
+- [x] Implement stress decay when grass recovers.
+- [x] Ensure stress recovery respects determinism and tick order.
+- [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
 - `src/sim/plants/grass.js`
@@ -112,7 +112,7 @@
 - `context/repo-map.md` (if needed)
 
 **Verification**
-- [ ] Manual: stressed areas recover over time as grass returns.
+- [x] Manual: stressed areas recover over time as grass returns.
 
 **Stop point**
 - Stop after verifying stress recovery.

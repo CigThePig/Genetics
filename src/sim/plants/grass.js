@@ -18,6 +18,14 @@ export function updateGrass({ world, config }) {
   const stressIncrease = Number.isFinite(config?.grassStressIncrease)
     ? config.grassStressIncrease
     : 0;
+  const stressRecoveryRate = Number.isFinite(config?.grassStressRecoveryRate)
+    ? config.grassStressRecoveryRate
+    : 0;
+  const stressRecoveryThreshold = Number.isFinite(
+    config?.grassStressRecoveryThreshold
+  )
+    ? config.grassStressRecoveryThreshold
+    : stressThreshold;
   const stressVisibleThreshold = Number.isFinite(
     config?.grassStressVisibleThreshold
   )
@@ -41,9 +49,13 @@ export function updateGrass({ world, config }) {
         ? grassStress[i]
         : 0;
       const shouldStress = next <= stressThreshold;
-      const nextStress = shouldStress
-        ? Math.min(1, currentStress + stressIncrease)
-        : currentStress;
+      const shouldRecover = next >= stressRecoveryThreshold;
+      let nextStress = currentStress;
+      if (shouldStress) {
+        nextStress = Math.min(1, currentStress + stressIncrease);
+      } else if (shouldRecover) {
+        nextStress = Math.max(0, currentStress - stressRecoveryRate);
+      }
       grassStress[i] = nextStress;
       if (nextStress >= stressVisibleThreshold) {
         stressedCells += 1;
