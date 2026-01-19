@@ -91,17 +91,17 @@
 ## Phase 3 — Metrics panel skeleton
 
 **Tasks**
-- [ ] Add a metrics panel container in the UI.
-- [ ] Add placeholder rows/sections for future metrics.
-- [ ] Ensure layout remains touch-friendly.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Add a metrics panel container in the UI.
+- [x] Add placeholder rows/sections for future metrics.
+- [x] Ensure layout remains touch-friendly.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
 - `src/ui/index.js`
 - `src/metrics/index.js`
 
 **Verification**
-- [ ] Manual: metrics panel skeleton is visible without breaking layout.
+- [x] Manual: metrics panel skeleton is visible without breaking layout.
 
 **Stop point**
 - Pause after metrics panel skeleton is in place.

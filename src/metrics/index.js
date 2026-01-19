@@ -37,11 +37,27 @@ export function createMetrics({ container } = {}) {
 
   rafId = requestAnimationFrame(updateOverlay);
 
+  const getSkeletonSections = () => [
+    {
+      title: 'Performance',
+      rows: ['FPS', 'Frame time', 'Render budget']
+    },
+    {
+      title: 'Simulation',
+      rows: ['Tick', 'Seed', 'Population']
+    },
+    {
+      title: 'Environment',
+      rows: ['Terrain', 'Plants', 'Weather']
+    }
+  ];
+
   return {
     update() {},
     snapshot() {
       return { fps, visible };
     },
+    getSkeletonSections,
     setVisible(nextVisible) {
       visible = Boolean(nextVisible);
       overlay.style.display = visible ? 'block' : 'none';
