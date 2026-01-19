@@ -1,8 +1,8 @@
-Active track: Track 0 — Repo Bootstrap (Scaffolding)
+Active track: None
 
 When active:
-- Track number: 0
-- Track title: Repo Bootstrap (Scaffolding)
-- Track path: tracks/2026-01-19-track-0-repo-bootstrap/
-- Current phase: Phase 3 — Pages base path + deploy workflow + docs
-- Next task: Configure Vite base path for /Genetics/.
+- Track number: N/A
+- Track title: N/A
+- Track path: N/A
+- Current phase: N/A
+- Next task: Use the planning checklist to create the next track.
