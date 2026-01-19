@@ -113,6 +113,7 @@ export function updateBushes({ world, config, rng }) {
 
   const count = bushes.length;
   const averageHealth = count > 0 ? totalHealth / count : 0;
+  const averageBerries = count > 0 ? totalBerries / count : 0;
 
-  return { count, totalBerries, averageHealth };
+  return { count, totalBerries, averageBerries, averageHealth };
 }

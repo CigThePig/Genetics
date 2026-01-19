@@ -1,5 +1,6 @@
 export const simConfig = {
   seed: 1,
+  hotspotSeed: 1337,
   ticksPerSecond: 1,
   worldWidth: 60,
   worldHeight: 40,
@@ -29,6 +30,8 @@ export const simConfig = {
   grassStressRecoveryRate: 0.015,
   grassStressRecoveryThreshold: 0.35,
   grassStressVisibleThreshold: 0.1,
+  grassCoverageThreshold: 0.1,
+  grassHotspotThreshold: 0.75,
   bushCount: 24,
   bushInitialHealth: 0.85,
   bushBerryMax: 12,

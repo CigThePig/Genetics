@@ -87,16 +87,19 @@
 ## Phase 4 — Plant metrics + known seed validation (Steps 24–25)
 
 ### Tasks
-- [ ] Add/extend plant metrics aggregation.
-- [ ] Surface metrics in metrics panel with clear labels.
-- [ ] Document or set known seed for hotspot validation.
-- [ ] ☐ Reminder: update /context/repo-map.md if files/roles change.
+- [x] Add/extend plant metrics aggregation.
+- [x] Surface metrics in metrics panel with clear labels.
+- [x] Document or set known seed for hotspot validation.
+- [x] ☐ Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
-- src/metrics/index.js
 - src/sim/plants/grass.js
 - src/sim/plants/bushes.js
+- src/sim/plants/index.js
 - src/sim/config.js
+- src/sim/sim.js
+- src/ui/index.js
+- src/main.js
 - context/active-track.md (phase tracking)
 
 ### Verification
