@@ -1,6 +1,7 @@
 import { simConfig } from './config.js';
 import { createRng } from './rng.js';
 import { createWorldGrid } from './world-grid.js';
+import { generateTerrain } from './terrain-generator.js';
 
 export function createSim(config = simConfig) {
   const resolvedConfig = { ...simConfig, ...config };
@@ -10,6 +11,9 @@ export function createSim(config = simConfig) {
     height: resolvedConfig.worldHeight,
     defaultTerrain: resolvedConfig.defaultTerrain
   });
+
+  generateTerrain({ world, rng, config: resolvedConfig });
+
   const state = {
     tick: 0,
     lastRoll: 0,
