@@ -1,19 +1,27 @@
 # Track 5 — Plan
 
 ## Recon Summary
-- (To be filled during recon.)
+- Files likely to change: src/sim/plants/bushes.js (add recovery + berry regen), src/sim/config.js (tuning knobs), src/sim/plants/index.js (metrics wiring already present). 
+- Key modules/functions: updateBushes (bush placement + per-tick updates), simConfig (tunable values). 
+- Invariants: determinism via seeded rng, tick order unchanged, render remains read-only. 
+- Cross-module side effects: plant metrics (bushAverageHealth, berryTotal) rely on updateBushes output. 
+- Tick order impact: none (still in plant update phase). 
+- Observability impact: existing metrics use average health + berry total; no new metric required for Phase 1. 
+- File rules impact: no new system; file sizes remain under limits. 
+- Risks/regressions: regen too fast or health never recovers if caps missed; ensure clamping. 
+- Verification: manual observation of bush health/berries increasing over time.
 
 ---
 
 ## Phase 1 — Bush recovery + berry regeneration (Steps 21–22)
 
 ### Tasks
-- [ ] Review current bush/berry state and identify needed recovery fields.
-- [ ] Implement bush recovery logic with tunable caps.
-- [ ] Tie berry regeneration rate to bush health.
-- [ ] Update config values for recovery/regen tuning.
-- [ ] Update plant system orchestration if needed.
-- [ ] ☐ Reminder: update /context/repo-map.md if files/roles change.
+- [x] Review current bush/berry state and identify needed recovery fields.
+- [x] Implement bush recovery logic with tunable caps.
+- [x] Tie berry regeneration rate to bush health.
+- [x] Update config values for recovery/regen tuning.
+- [x] Update plant system orchestration if needed.
+- [x] ☐ Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - src/sim/plants/bushes.js

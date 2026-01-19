@@ -6,5 +6,5 @@ When active:
 - Track number: 5
 - Track title: Plant Economy: Recovery, Rendering, Metrics
 - Track path: tracks/2026-01-19-track-5-plant-economy-recovery-rendering-metrics/
-- Current phase: Phase 1 — Bush recovery + berry regeneration (not started)
-- Next task: Begin Phase 1 recon and implementation.
+- Current phase: Phase 1 — Bush recovery + berry regeneration (complete; verification pending)
+- Next task: Run Phase 1 manual verification, then start Phase 2 plant rendering.

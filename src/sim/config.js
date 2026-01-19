@@ -27,5 +27,7 @@ export const simConfig = {
   bushCount: 24,
   bushInitialHealth: 0.85,
   bushBerryMax: 12,
-  bushInitialBerries: 6
+  bushInitialBerries: 6,
+  bushRecoveryRate: 0.01,
+  bushBerryRegenRate: 0.25
 };
