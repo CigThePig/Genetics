@@ -79,6 +79,8 @@ Rules:
   - Role: seeded RNG module for deterministic randomness
 - src/sim/sim.js
   - Role: sim orchestration stub + RNG wiring
+- src/sim/worker.js
+  - Role: worker-ready sim stub interface for future worker-backed loop
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js

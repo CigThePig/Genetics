@@ -1,4 +1,5 @@
 import { createSim } from './sim/sim.js';
+import { createSimWorkerStub } from './sim/worker.js';
 import { createRenderer } from './render/renderer.js';
 import { createCamera } from './render/camera.js';
 import { createInput } from './input/index.js';
@@ -18,7 +19,12 @@ app.append(title, status);
 
 const settings = createSettings();
 const initialSettings = settings.load();
-const sim = createSim({ seed: initialSettings.seed });
+// Flip to true once the worker-backed sim proxy is implemented.
+const useWorker = false;
+const simWorker = createSimWorkerStub({ enabled: useWorker });
+const sim = useWorker
+  ? simWorker.connect({ createSim, seed: initialSettings.seed })
+  : createSim({ seed: initialSettings.seed });
 const camera = createCamera();
 const renderer = createRenderer(app, { camera });
 const metrics = createMetrics({ container: app });
