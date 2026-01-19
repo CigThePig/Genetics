@@ -67,6 +67,8 @@ Rules:
   - Contains: Track 2 spec/blueprint/plan (Canvas + Camera + Inspection Skeleton)
 - tracks/2026-01-21-track-3-world-grid-terrain-foundations/
   - Contains: Track 3 spec/blueprint/plan (World Grid & Terrain Foundations)
+- tracks/2026-01-19-track-4-plant-economy-grass-stress-bushes-berries/
+  - Contains: Track 4 spec/blueprint/plan (Plant Economy: Grass, Stress, Bushes, Berries)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
