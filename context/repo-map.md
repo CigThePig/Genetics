@@ -78,9 +78,11 @@ Rules:
 - src/sim/sim.js
   - Role: sim orchestration stub + RNG wiring
 - src/render/renderer.js
-  - Role: drawing only (stub)
+  - Role: canvas renderer that draws the view using camera state
+- src/render/camera.js
+  - Role: camera state + pan/zoom helpers for renderer/input
 - src/input/index.js
-  - Role: input system entry point (stub)
+  - Role: input system entry point with touch pan/pinch camera controls
 - src/metrics/index.js
   - Role: metrics system entry point (FPS overlay + toggle support)
 - src/ui/index.js

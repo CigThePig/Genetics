@@ -1,6 +1,103 @@
-export function createInput() {
+export function createInput({ canvas, camera }) {
+  let attached = false;
+  let pinchStartDistance = 0;
+  let pinchStartZoom = 1;
+  const pointers = new Map();
+
+  const getViewport = () => {
+    const rect = canvas.getBoundingClientRect();
+    return { width: rect.width, height: rect.height };
+  };
+
+  const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+
+  const pointerDown = (event) => {
+    if (!canvas.contains(event.target)) {
+      return;
+    }
+
+    canvas.setPointerCapture(event.pointerId);
+    pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+
+    if (pointers.size === 2) {
+      const [first, second] = Array.from(pointers.values());
+      pinchStartDistance = distance(first, second);
+      pinchStartZoom = camera.getState().zoom;
+    }
+  };
+
+  const pointerMove = (event) => {
+    if (!pointers.has(event.pointerId)) {
+      return;
+    }
+
+    const nextPoint = { x: event.clientX, y: event.clientY };
+    const prevPoint = pointers.get(event.pointerId);
+    pointers.set(event.pointerId, nextPoint);
+
+    if (pointers.size === 1) {
+      const dx = nextPoint.x - prevPoint.x;
+      const dy = nextPoint.y - prevPoint.y;
+      camera.panBy(dx, dy);
+      return;
+    }
+
+    if (pointers.size === 2) {
+      const [first, second] = Array.from(pointers.values());
+      const midpoint = {
+        x: (first.x + second.x) / 2,
+        y: (first.y + second.y) / 2
+      };
+      const currentDistance = distance(first, second);
+      if (pinchStartDistance > 0) {
+        const nextZoom = pinchStartZoom * (currentDistance / pinchStartDistance);
+        camera.zoomAt(nextZoom, midpoint, getViewport());
+      }
+    }
+  };
+
+  const pointerUp = (event) => {
+    if (!pointers.has(event.pointerId)) {
+      return;
+    }
+
+    pointers.delete(event.pointerId);
+    if (pointers.size < 2) {
+      pinchStartDistance = 0;
+      pinchStartZoom = camera.getState().zoom;
+    }
+  };
+
+  const wheelZoom = (event) => {
+    event.preventDefault();
+    const scale = event.deltaY < 0 ? 1.1 : 0.9;
+    const nextZoom = camera.getState().zoom * scale;
+    camera.zoomAt(nextZoom, { x: event.clientX, y: event.clientY }, getViewport());
+  };
+
   return {
-    attach() {},
-    detach() {}
+    attach() {
+      if (attached) {
+        return;
+      }
+      attached = true;
+      canvas.addEventListener('pointerdown', pointerDown);
+      canvas.addEventListener('pointermove', pointerMove);
+      canvas.addEventListener('pointerup', pointerUp);
+      canvas.addEventListener('pointercancel', pointerUp);
+      canvas.addEventListener('wheel', wheelZoom, { passive: false });
+    },
+    detach() {
+      if (!attached) {
+        return;
+      }
+      attached = false;
+      canvas.removeEventListener('pointerdown', pointerDown);
+      canvas.removeEventListener('pointermove', pointerMove);
+      canvas.removeEventListener('pointerup', pointerUp);
+      canvas.removeEventListener('pointercancel', pointerUp);
+      canvas.removeEventListener('wheel', wheelZoom);
+      pointers.clear();
+    }
   };
 }
