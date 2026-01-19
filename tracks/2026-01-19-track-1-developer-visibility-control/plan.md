@@ -47,7 +47,7 @@ Recon completed; summary below reflects current repo state.
 - [x] Identify current render/metrics entry points for overlay placement.
 - [x] Implement FPS overlay display and toggle state (mobile + desktop).
 - [x] Wire metrics instance into app boot so UI can control overlay visibility.
-- [ ] Add/update docs or notes if new UI affordances are added.
+- [x] Add/update docs or notes if new UI affordances are added. (No additional docs needed for internal dev controls.)
 - [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
