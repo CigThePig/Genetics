@@ -17,5 +17,6 @@ export const simConfig = {
   waterCorridorTurnChance: 0.35,
   grassCap: 1,
   grassRegrowthRate: 0.02,
+  grassRegrowthDiminishPower: 1.5,
   grassInitialAmount: 0.2
 };

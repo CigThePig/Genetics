@@ -6,5 +6,5 @@ When active:
 - Track number: 4
 - Track title: Plant Economy: Grass, Stress, Bushes, Berries
 - Track path: tracks/2026-01-19-track-4-plant-economy-grass-stress-bushes-berries/
-- Current phase: Phase 2 (Diminishing regrowth near cap)
-- Next task: Implement Phase 2 (Diminishing regrowth near cap)
+- Current phase: Phase 3 (Overgrazing stress)
+- Next task: Implement Phase 3 (Overgrazing stress)

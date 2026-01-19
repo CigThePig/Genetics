@@ -61,9 +61,9 @@
 
 ## Phase 2 — Diminishing regrowth near cap (Step 17)
 **Tasks**
-- [ ] Implement diminishing returns as grass approaches cap.
-- [ ] Tune config values to keep visible but stable regrowth.
-- [ ] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
+- [x] Implement diminishing returns as grass approaches cap.
+- [x] Tune config values to keep visible but stable regrowth.
+- [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
 - `src/sim/plants/grass.js`
@@ -71,7 +71,7 @@
 - `context/repo-map.md` (if needed)
 
 **Verification**
-- [ ] Manual: regrowth slows near cap, no sudden jumps.
+- [x] Manual: regrowth slows near cap, no sudden jumps.
 
 **Stop point**
 - Stop after verifying diminishing regrowth behavior.
