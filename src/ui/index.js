@@ -236,9 +236,13 @@ export function createUI({
 
   const metricDefinitions = [
     { key: 'grassAverage', label: 'Grass avg' },
+    { key: 'grassTotal', label: 'Grass total' },
+    { key: 'grassCoverage', label: 'Grass coverage' },
+    { key: 'grassHotspotCells', label: 'Hotspot cells' },
     { key: 'stressedCells', label: 'Stressed cells' },
     { key: 'bushCount', label: 'Bush count' },
     { key: 'berryTotal', label: 'Berry total' },
+    { key: 'berryAverage', label: 'Berries per bush' },
     { key: 'bushAverageHealth', label: 'Bush avg health' }
   ];
 
@@ -298,6 +302,12 @@ export function createUI({
     switch (key) {
       case 'grassAverage':
         return value.toFixed(3);
+      case 'grassTotal':
+        return value.toFixed(1);
+      case 'grassCoverage':
+        return `${(value * 100).toFixed(1)}%`;
+      case 'berryAverage':
+        return value.toFixed(2);
       case 'bushAverageHealth':
         return value.toFixed(2);
       default:

@@ -116,7 +116,14 @@ const input = createInput({
 });
 
 renderer.render(sim);
-ui.setStatus('Ready for Track 2.');
+const hotspotSeed = Number.isFinite(sim.config?.hotspotSeed)
+  ? sim.config.hotspotSeed
+  : null;
+if (hotspotSeed !== null) {
+  ui.setStatus(`Ready for Track 5. Hotspot seed: ${hotspotSeed}.`);
+} else {
+  ui.setStatus('Ready for Track 5.');
+}
 ui.setRunning(running);
 ui.setSpeed(speed);
 ui.setSeed(sim.getSeed());

@@ -34,9 +34,17 @@ export function updateGrass({ world, config }) {
   )
     ? config.grassStressVisibleThreshold
     : 0.01;
+  const coverageThreshold = Number.isFinite(config?.grassCoverageThreshold)
+    ? config.grassCoverageThreshold
+    : 0.1;
+  const hotspotThreshold = Number.isFinite(config?.grassHotspotThreshold)
+    ? config.grassHotspotThreshold
+    : 0.7;
 
   let total = 0;
   let stressedCells = 0;
+  let coveredCells = 0;
+  let hotspotCells = 0;
   for (let i = 0; i < grass.length; i += 1) {
     const current = Number.isFinite(grass[i]) ? grass[i] : 0;
     let cellCap = cap;
@@ -62,6 +70,12 @@ export function updateGrass({ world, config }) {
     const next = Math.min(cellCap, current + scaledRegrowth);
     grass[i] = next;
     total += next;
+    if (next >= coverageThreshold) {
+      coveredCells += 1;
+    }
+    if (next >= hotspotThreshold) {
+      hotspotCells += 1;
+    }
 
     if (grassStress) {
       const currentStress = Number.isFinite(grassStress[i])
@@ -83,5 +97,13 @@ export function updateGrass({ world, config }) {
   }
 
   const average = grass.length ? total / grass.length : 0;
-  return { average, stressedCells };
+  const coverageRatio = grass.length ? coveredCells / grass.length : 0;
+  return {
+    average,
+    total,
+    stressedCells,
+    coveredCells,
+    coverageRatio,
+    hotspotCells
+  };
 }
