@@ -100,7 +100,7 @@ Recon completed; summary below reflects current repo state.
 - context/repo-map.md (if roles change)
 
 ### Verification
-- [ ] Manual: seed displayed and changes affect outcomes.
+- [x] Manual: seed displayed and changes affect outcomes.
 
 ### Stop Point
 - Pause for review after verifying seed usage.
@@ -110,9 +110,9 @@ Recon completed; summary below reflects current repo state.
 ## Phase 4 — Determinism smoke test
 
 ### Tasks
-- [ ] Add deterministic summary output for sim after N ticks.
-- [ ] Implement determinism smoke test (same seed => same summary).
-- [ ] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
+- [x] Add deterministic summary output for sim after N ticks.
+- [x] Implement determinism smoke test (same seed => same summary).
+- [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
 - src/sim/sim.js
@@ -120,7 +120,7 @@ Recon completed; summary below reflects current repo state.
 - context/repo-map.md (if roles change)
 
 ### Verification
-- [ ] Automated: determinism test passes.
+- [x] Automated: determinism test passes.
 
 ### Stop Point
 - Pause for review after test passes.
