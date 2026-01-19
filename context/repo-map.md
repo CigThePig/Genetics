@@ -69,6 +69,8 @@ Rules:
   - Contains: Track 3 spec/blueprint/plan (World Grid & Terrain Foundations)
 - tracks/2026-01-19-track-4-plant-economy-grass-stress-bushes-berries/
   - Contains: Track 4 spec/blueprint/plan (Plant Economy: Grass, Stress, Bushes, Berries)
+- tracks/2026-01-19-track-5-plant-economy-recovery-rendering-metrics/
+  - Contains: Track 5 spec/blueprint/plan (Plant Economy: Recovery, Rendering, Metrics)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
