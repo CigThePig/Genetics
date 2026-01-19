@@ -4,7 +4,10 @@ export function createRenderer(container) {
 
   return {
     render(sim) {
-      footer.textContent = `Seed: ${sim.config.seed}`;
+      const roll = Number.isFinite(sim.state?.lastRoll)
+        ? sim.state.lastRoll.toFixed(4)
+        : '--';
+      footer.textContent = `Seed: ${sim.config.seed} · Last roll: ${roll}`;
     }
   };
 }

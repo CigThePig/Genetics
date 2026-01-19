@@ -68,6 +68,13 @@ const ui = createUI({
   onSpeedChange: (nextSpeed) => {
     speed = Number.isFinite(nextSpeed) ? Math.max(1, nextSpeed) : 1;
     ui.setSpeed(speed);
+  },
+  onSeedChange: (nextSeed) => {
+    pause();
+    sim.setSeed(nextSeed);
+    ui.setSeed(sim.getSeed());
+    renderer.render(sim);
+    ui.setStatus(`Seed updated to ${sim.getSeed()}.`);
   }
 });
 
@@ -75,3 +82,4 @@ renderer.render(sim);
 ui.setStatus('Ready for Track 1.');
 ui.setRunning(running);
 ui.setSpeed(speed);
+ui.setSeed(sim.getSeed());

@@ -78,7 +78,7 @@ Recon completed; summary below reflects current repo state.
 - context/repo-map.md (if roles change)
 
 ### Verification
-- [ ] Manual: play/pause/step/speed controls function as expected.
+- [x] Manual: play/pause/step/speed controls function as expected.
 
 ### Stop Point
 - Pause for review after verifying controls behavior.
@@ -88,10 +88,10 @@ Recon completed; summary below reflects current repo state.
 ## Phase 3 — Seeded RNG module
 
 ### Tasks
-- [ ] Add a seeded RNG module with clear API.
-- [ ] Ensure sim uses the central RNG module (no Math.random in sim logic).
-- [ ] Display seed in UI or metrics panel as appropriate.
-- [ ] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
+- [x] Add a seeded RNG module with clear API.
+- [x] Ensure sim uses the central RNG module (no Math.random in sim logic).
+- [x] Display seed in UI or metrics panel as appropriate.
+- [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
 - src/sim/rng.js
