@@ -1,17 +1,19 @@
 # Track 0 — Plan (Repo Bootstrap)
 
 ## Recon Summary
-- (pending)
+- Relevant files already exist for Phase 1: index.html, src/main.js, and stub modules under src/{sim,render,ui,input,metrics}/.
+- No tick-order or determinism changes in this phase; scaffolding only.
+- Verification is limited to confirming the dev server boots.
 
 ---
 
 ## Phase 1 — Vite app boot + standard layout (Steps 1–3)
 
 ### Tasks
-- [ ] Scaffold Vite app boot with minimal entry.
-- [ ] Create standard src/ layout (sim/render/ui).
-- [ ] Add placeholder modules for future systems (stubs only).
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Scaffold Vite app boot with minimal entry.
+- [x] Create standard src/ layout (sim/render/ui).
+- [x] Add placeholder modules for future systems (stubs only).
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files Touched
 - (planned) index.html
@@ -24,7 +26,7 @@
 - (planned) context/repo-map.md
 
 ### Verification Checklist
-- [ ] npm run dev starts without errors.
+- [x] npm run dev starts without errors (verified via timeout 5s).
 
 ### Stop Point
 - Pause for review after confirming the dev server boots.
