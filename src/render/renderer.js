@@ -17,11 +17,13 @@ export function createRenderer(container, { camera }) {
 
   const resizeToContainer = () => {
     const { width, height } = wrapper.getBoundingClientRect();
+    const footerHeight = footer.getBoundingClientRect().height;
+    const canvasHeight = Math.max(1, height - footerHeight);
     const ratio = window.devicePixelRatio || 1;
     canvas.width = Math.max(1, Math.floor(width * ratio));
-    canvas.height = Math.max(1, Math.floor(height * ratio));
+    canvas.height = Math.max(1, Math.floor(canvasHeight * ratio));
     canvas.style.width = `${width}px`;
-    canvas.style.height = `${height}px`;
+    canvas.style.height = `${canvasHeight}px`;
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   };
 
