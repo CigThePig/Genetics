@@ -13,6 +13,7 @@ export function createUI({
   controls.style.flexWrap = 'wrap';
   controls.style.gap = '8px';
   controls.style.marginTop = '12px';
+  controls.style.marginBottom = '16px';
 
   const createButton = (label) => {
     const button = document.createElement('button');
@@ -160,7 +161,40 @@ export function createUI({
     seedWrapper,
     fpsToggle
   );
+
+  const inspectorSection = document.createElement('section');
+  inspectorSection.style.border = '1px solid #333';
+  inspectorSection.style.borderRadius = '12px';
+  inspectorSection.style.padding = '12px';
+  inspectorSection.style.marginBottom = '12px';
+  inspectorSection.style.background = '#fff';
+
+  const inspectorTitle = document.createElement('h2');
+  inspectorTitle.textContent = 'Inspector';
+  inspectorTitle.style.fontSize = '16px';
+  inspectorTitle.style.margin = '0 0 8px';
+
+  const inspectorBody = document.createElement('div');
+  inspectorBody.style.display = 'grid';
+  inspectorBody.style.gap = '6px';
+  inspectorBody.style.fontSize = '14px';
+
+  const setInspectorRows = (rows) => {
+    inspectorBody.innerHTML = '';
+    for (const row of rows) {
+      const line = document.createElement('p');
+      line.textContent = row;
+      line.style.margin = '0';
+      inspectorBody.append(line);
+    }
+  };
+
+  setInspectorRows(['Tap the canvas to inspect a location.']);
+
+  inspectorSection.append(inspectorTitle, inspectorBody);
+
   container.append(controls);
+  container.append(inspectorSection);
 
   return {
     setStatus(message) {
@@ -181,6 +215,14 @@ export function createUI({
       const value = String(seed);
       if (seedInput.value !== value) {
         seedInput.value = value;
+      }
+    },
+    setInspector({ title, rows }) {
+      if (title) {
+        inspectorTitle.textContent = title;
+      }
+      if (rows && rows.length) {
+        setInspectorRows(rows);
       }
     }
   };
