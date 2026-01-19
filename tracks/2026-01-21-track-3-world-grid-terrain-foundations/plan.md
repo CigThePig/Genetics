@@ -41,10 +41,10 @@
 ## Phase 1 — World grid data structure (Step 11)
 
 ### Tasks
-- [ ] Identify the module that will own world grid state (new module if needed).
-- [ ] Define the grid data structure and accessors for terrain type lookup.
-- [ ] Wire grid initialization into sim startup while preserving determinism.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Identify the module that will own world grid state (new module if needed).
+- [x] Define the grid data structure and accessors for terrain type lookup.
+- [x] Wire grid initialization into sim startup while preserving determinism.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - src/sim/
@@ -54,7 +54,7 @@
 - /context/repo-map.md (if needed)
 
 ### Verification
-- [ ] Manual: confirm a grid is initialized with stable dimensions on reload.
+- [x] Manual: confirm a grid is initialized with stable dimensions on reload.
 
 ### Stop point
 - Pause for review after grid structure and wiring exist.

@@ -81,6 +81,8 @@ Rules:
   - Role: seeded RNG module for deterministic randomness
 - src/sim/sim.js
   - Role: sim orchestration stub + RNG wiring
+- src/sim/world-grid.js
+  - Role: world grid data structure + terrain accessors
 - src/sim/worker.js
   - Role: worker-ready sim stub interface for future worker-backed loop
 - src/render/renderer.js
