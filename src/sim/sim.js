@@ -1,12 +1,19 @@
 import { simConfig } from './config.js';
 import { createRng } from './rng.js';
+import { createWorldGrid } from './world-grid.js';
 
 export function createSim(config = simConfig) {
   const resolvedConfig = { ...simConfig, ...config };
   const rng = createRng(resolvedConfig.seed);
+  const world = createWorldGrid({
+    width: resolvedConfig.worldWidth,
+    height: resolvedConfig.worldHeight,
+    defaultTerrain: resolvedConfig.defaultTerrain
+  });
   const state = {
     tick: 0,
-    lastRoll: 0
+    lastRoll: 0,
+    world
   };
 
   return {
