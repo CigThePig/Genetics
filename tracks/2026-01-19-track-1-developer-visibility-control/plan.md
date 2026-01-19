@@ -31,6 +31,7 @@
   - No file should approach 600 LOC in this track.
 - Risks/regressions:
   - Hidden nondeterminism if any Math.random/time usage slips into sim.
+  - Metrics uses performance.now for display; keep this isolated from sim logic to preserve determinism.
   - UI controls could accidentally mutate sim state if not carefully wired.
 - Verification commands/checks:
   - Manual: verify FPS overlay + toggle on desktop/mobile.
