@@ -97,6 +97,8 @@ Rules:
   - Role: bush entity placement and berry pool summary updates
 - src/sim/plants/index.js
   - Role: plant system orchestrator for sim ticks
+- src/sim/plant-generator.js
+  - Role: seeds initial grass patches for world generation
 - src/sim/worker.js
   - Role: worker-ready sim stub interface for future worker-backed loop
 - src/render/renderer.js

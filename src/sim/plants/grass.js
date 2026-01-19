@@ -1,3 +1,5 @@
+import { getTerrainEffectsAt } from '../terrain-effects.js';
+
 export function updateGrass({ world, config }) {
   if (!world?.grass) {
     return { average: 0, stressedCells: 0 };
@@ -5,6 +7,7 @@ export function updateGrass({ world, config }) {
 
   const grass = world.grass;
   const grassStress = Array.isArray(world.grassStress) ? world.grassStress : null;
+  const width = Number.isFinite(world.width) ? world.width : 0;
   const cap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
   const regrowth = Number.isFinite(config?.grassRegrowthRate)
     ? config.grassRegrowthRate
@@ -36,11 +39,27 @@ export function updateGrass({ world, config }) {
   let stressedCells = 0;
   for (let i = 0; i < grass.length; i += 1) {
     const current = Number.isFinite(grass[i]) ? grass[i] : 0;
-    const remaining = Math.max(0, cap - current);
-    const normalizedRemaining = cap > 0 ? remaining / cap : 0;
+    let cellCap = cap;
+    if (width > 0) {
+      const x = i % width;
+      const y = Math.floor(i / width);
+      const effects = getTerrainEffectsAt(world, x, y);
+      const plantCap = Number.isFinite(effects?.plantCap) ? effects.plantCap : 1;
+      cellCap = Math.max(0, cap * plantCap);
+    }
+    if (cellCap <= 0) {
+      grass[i] = 0;
+      if (grassStress) {
+        grassStress[i] = 0;
+      }
+      continue;
+    }
+
+    const remaining = Math.max(0, cellCap - current);
+    const normalizedRemaining = cellCap > 0 ? remaining / cellCap : 0;
     const scaledRegrowth =
       regrowth * Math.pow(normalizedRemaining, diminishPower);
-    const next = Math.min(cap, current + scaledRegrowth);
+    const next = Math.min(cellCap, current + scaledRegrowth);
     grass[i] = next;
     total += next;
 

@@ -31,22 +31,31 @@ export function updateBushes({ world, config, rng }) {
       ? Math.min(berryMax, Math.max(0, config.bushInitialBerries))
       : Math.min(berryMax, DEFAULT_BUSH_INIT.initialBerries);
 
+    const waterTerrain = config?.waterTerrain ?? 'water';
     const used = new Set();
     const placementAttempts = Math.max(count * 5, count);
 
     for (let i = 0; i < count && totalCells > 0; i += 1) {
       let index = -1;
+      let placed = false;
       for (let attempt = 0; attempt < placementAttempts; attempt += 1) {
         if (rng?.nextInt) {
           index = rng.nextInt(0, totalCells - 1);
         } else {
           index = (i * 131 + attempt * 17) % totalCells;
         }
-        if (!used.has(index)) {
-          break;
+        if (used.has(index)) {
+          continue;
         }
+        const x = width > 0 ? index % width : 0;
+        const y = width > 0 ? Math.floor(index / width) : 0;
+        if (world.getTerrainAt && world.getTerrainAt(x, y) === waterTerrain) {
+          continue;
+        }
+        placed = true;
+        break;
       }
-      if (index < 0 || used.has(index)) {
+      if (!placed || index < 0 || used.has(index)) {
         continue;
       }
       used.add(index);
