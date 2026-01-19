@@ -7,4 +7,4 @@ When active:
 - Track title: Developer Visibility & Control (Steps 1–5)
 - Track path: tracks/2026-01-19-track-1-developer-visibility-control/
 - Current phase: Phase 1 — FPS overlay + toggle
-- Next task: Run manual verification for the FPS overlay/toggle and update plan.md.
+- Next task: Run manual verification for the FPS overlay/toggle in a browser/device environment.
