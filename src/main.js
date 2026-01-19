@@ -16,7 +16,62 @@ app.append(title, status);
 const sim = createSim();
 const renderer = createRenderer(app);
 const metrics = createMetrics({ container: app });
-const ui = createUI({ statusNode: status, metrics });
+let running = false;
+let speed = 1;
+let rafId = null;
+
+const tickOnce = () => {
+  sim.tick();
+  renderer.render(sim);
+};
+
+const runFrame = () => {
+  for (let i = 0; i < speed; i += 1) {
+    sim.tick();
+  }
+  renderer.render(sim);
+  if (running) {
+    rafId = requestAnimationFrame(runFrame);
+  }
+};
+
+const start = () => {
+  if (running) {
+    return;
+  }
+  running = true;
+  ui.setRunning(true);
+  rafId = requestAnimationFrame(runFrame);
+};
+
+const pause = () => {
+  if (!running) {
+    return;
+  }
+  running = false;
+  ui.setRunning(false);
+  if (rafId) {
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  }
+};
+
+const ui = createUI({
+  statusNode: status,
+  metrics,
+  onPlay: start,
+  onPause: pause,
+  onStep: () => {
+    pause();
+    tickOnce();
+  },
+  onSpeedChange: (nextSpeed) => {
+    speed = Number.isFinite(nextSpeed) ? Math.max(1, nextSpeed) : 1;
+    ui.setSpeed(speed);
+  }
+});
 
 renderer.render(sim);
 ui.setStatus('Ready for Track 1.');
+ui.setRunning(running);
+ui.setSpeed(speed);
