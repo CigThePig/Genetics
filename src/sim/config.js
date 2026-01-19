@@ -14,5 +14,8 @@ export const simConfig = {
   waterCorridorMinLength: 10,
   waterCorridorMaxLength: 22,
   waterCorridorWidth: 3,
-  waterCorridorTurnChance: 0.35
+  waterCorridorTurnChance: 0.35,
+  grassCap: 1,
+  grassRegrowthRate: 0.02,
+  grassInitialAmount: 0.2
 };
