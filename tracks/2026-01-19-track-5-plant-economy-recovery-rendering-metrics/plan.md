@@ -34,7 +34,7 @@
 - src/sim/config.js
 
 ### Verification
-- [ ] Manual: observe bush health recovering and berry pools regenerating over time.
+- [x] Manual: observe bush health recovering and berry pools regenerating over time.
 
 ### Stop point
 - Pause after verifying recovery/regen behavior.
@@ -47,13 +47,13 @@
 - [x] Extend renderer to visualize grass levels.
 - [x] Render bushes with visuals keyed to health/berries.
 - [x] Ensure renderer remains read-only.
-- [ ] ☐ Reminder: update /context/repo-map.md if files/roles change.
+- [x] ☐ Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - src/render/renderer.js
 
 ### Verification
-- [ ] Manual: plant visuals update as sim runs.
+- [x] Manual: plant visuals update as sim runs.
 
 ### Stop point
 - Pause after validating plant rendering.
@@ -77,7 +77,7 @@
 - src/sim/config.js
 
 ### Verification
-- [ ] Manual: with a fixed seed, confirm grass appears in patches and no grass/bushes spawn on water tiles.
+- [x] Manual: with a fixed seed, confirm grass appears in patches and no grass/bushes spawn on water tiles.
 
 ### Stop point
 - Pause after verifying world generation corrections.
@@ -104,8 +104,8 @@
 - context/active-track.md (phase tracking)
 
 ### Verification
-- [ ] Manual: hotspot seed yields repeatable visible hotspots.
-- [ ] Metrics: berry totals and bush health change over time.
+- [x] Manual: hotspot seed yields repeatable visible hotspots.
+- [x] Metrics: berry totals and bush health change over time.
 
 ### Stop point
 - Pause after metrics + known seed validation.
