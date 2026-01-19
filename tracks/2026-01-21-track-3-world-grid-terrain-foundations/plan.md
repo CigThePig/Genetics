@@ -106,9 +106,9 @@
 ## Phase 4 — Terrain rendering (Step 14)
 
 ### Tasks
-- [ ] Extend renderer to draw terrain tiles from the world grid.
-- [ ] Choose a palette that makes terrain types visually distinct.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Extend renderer to draw terrain tiles from the world grid.
+- [x] Choose a palette that makes terrain types visually distinct.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - src/render/renderer.js

@@ -43,7 +43,20 @@ export function createRenderer(container, { camera }) {
 
   resizeToContainer();
 
-  const drawGrid = (state) => {
+  const terrainPalette = {
+    plains: '#5b8f4e',
+    forest: '#2d6a4f',
+    rock: '#6c757d',
+    sand: '#d9b68b',
+    unknown: '#3b3b3b'
+  };
+
+  const tileSize = 20;
+
+  const getTerrainColor = (terrain) =>
+    terrainPalette[terrain] ?? terrainPalette.unknown;
+
+  const drawTerrain = (state, world) => {
     const { width, height } = canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
 
@@ -54,34 +67,49 @@ export function createRenderer(container, { camera }) {
     ctx.fillStyle = '#0d1117';
     ctx.fillRect(-width, -height, width * 2, height * 2);
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.08)';
+    if (!world) {
+      ctx.restore();
+      return;
+    }
+
+    const originX = -(world.width * tileSize) / 2;
+    const originY = -(world.height * tileSize) / 2;
+
+    const minWorldX = -(width / 2 + state.x) / state.zoom;
+    const maxWorldX = (width / 2 - state.x) / state.zoom;
+    const minWorldY = -(height / 2 + state.y) / state.zoom;
+    const maxWorldY = (height / 2 - state.y) / state.zoom;
+
+    const startCol = Math.max(0, Math.floor((minWorldX - originX) / tileSize));
+    const endCol = Math.min(
+      world.width,
+      Math.ceil((maxWorldX - originX) / tileSize)
+    );
+    const startRow = Math.max(0, Math.floor((minWorldY - originY) / tileSize));
+    const endRow = Math.min(
+      world.height,
+      Math.ceil((maxWorldY - originY) / tileSize)
+    );
+
+    const { cells } = world;
+    for (let y = startRow; y < endRow; y += 1) {
+      const rowOffset = y * world.width;
+      const tileY = originY + y * tileSize;
+      for (let x = startCol; x < endCol; x += 1) {
+        const terrain = cells[rowOffset + x];
+        ctx.fillStyle = getTerrainColor(terrain);
+        ctx.fillRect(originX + x * tileSize, tileY, tileSize, tileSize);
+      }
+    }
+
+    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
     ctx.lineWidth = 1 / state.zoom;
-    const gridSize = 40;
-    const halfWidth = width / state.zoom;
-    const halfHeight = height / state.zoom;
-
-    for (let x = -halfWidth; x <= halfWidth; x += gridSize) {
-      ctx.beginPath();
-      ctx.moveTo(x, -halfHeight);
-      ctx.lineTo(x, halfHeight);
-      ctx.stroke();
-    }
-
-    for (let y = -halfHeight; y <= halfHeight; y += gridSize) {
-      ctx.beginPath();
-      ctx.moveTo(-halfWidth, y);
-      ctx.lineTo(halfWidth, y);
-      ctx.stroke();
-    }
-
-    ctx.strokeStyle = 'rgba(255,255,255,0.5)';
-    ctx.lineWidth = 2 / state.zoom;
-    ctx.beginPath();
-    ctx.moveTo(-10, 0);
-    ctx.lineTo(10, 0);
-    ctx.moveTo(0, -10);
-    ctx.lineTo(0, 10);
-    ctx.stroke();
+    ctx.strokeRect(
+      originX,
+      originY,
+      world.width * tileSize,
+      world.height * tileSize
+    );
 
     ctx.restore();
   };
@@ -90,7 +118,7 @@ export function createRenderer(container, { camera }) {
     canvas,
     render(sim) {
       const state = camera?.getState?.() ?? { x: 0, y: 0, zoom: 1 };
-      drawGrid(state);
+      drawTerrain(state, sim.state?.world);
 
       const roll = Number.isFinite(sim.state?.lastRoll)
         ? sim.state.lastRoll.toFixed(4)
