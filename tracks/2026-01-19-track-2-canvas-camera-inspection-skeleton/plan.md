@@ -111,10 +111,10 @@
 ## Phase 4 — Save/load settings (seed, speed, toggles)
 
 **Tasks**
-- [ ] Create settings module for save/load defaults.
-- [ ] Wire UI toggles/seed/speed into settings persistence.
-- [ ] Load settings on boot and apply to UI state.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Create settings module for save/load defaults.
+- [x] Wire UI toggles/seed/speed into settings persistence.
+- [x] Load settings on boot and apply to UI state.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
 - `src/app/settings.js` (new)
@@ -122,7 +122,7 @@
 - `src/ui/index.js`
 
 **Verification**
-- [ ] Manual: refresh preserves seed/speed/toggles.
+- [x] Manual: refresh preserves seed/speed/toggles.
 
 **Stop point**
 - Pause after settings persist across refresh.

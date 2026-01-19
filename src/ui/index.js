@@ -5,7 +5,9 @@ export function createUI({
   onPause,
   onStep,
   onSpeedChange,
-  onSeedChange
+  onSeedChange,
+  onFpsToggle,
+  initialFpsVisible = true
 }) {
   const container = statusNode?.parentElement ?? document.body;
   const controls = document.createElement('div');
@@ -142,7 +144,11 @@ export function createUI({
   };
 
   fpsToggle.addEventListener('click', () => {
-    setFpsVisible(!fpsVisible);
+    const nextVisible = !fpsVisible;
+    setFpsVisible(nextVisible);
+    if (onFpsToggle) {
+      onFpsToggle(nextVisible);
+    }
   });
 
   if (!metrics?.setVisible) {
@@ -150,7 +156,7 @@ export function createUI({
     fpsToggle.textContent = 'FPS: N/A';
     fpsToggle.setAttribute('aria-pressed', 'false');
   } else {
-    setFpsVisible(true);
+    setFpsVisible(Boolean(initialFpsVisible));
   }
 
   controls.append(
@@ -269,6 +275,7 @@ export function createUI({
         seedInput.value = value;
       }
     },
+    setFpsVisible,
     setInspector({ title, rows }) {
       if (title) {
         inspectorTitle.textContent = title;
