@@ -73,6 +73,8 @@ Rules:
   - Contains: Track 5 spec/blueprint/plan (Plant Economy: Recovery, Rendering, Metrics)
 - tracks/2026-01-19-track-6-creature-core-meters-stages-movement/
   - Contains: Track 6 spec/blueprint/plan (Creature Core: Meters, Stages, Movement)
+- tracks/2026-01-19-track-7-survival-actions-sprinting-death/
+  - Contains: Track 7 spec/blueprint/plan (Survival Actions + Sprinting + Death)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
