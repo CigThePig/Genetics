@@ -57,8 +57,8 @@ Recon completed; summary below reflects current repo state.
 - context/repo-map.md (if roles change)
 
 ### Verification
-- [ ] Manual: FPS overlay visible with toggle on desktop. (Pending: requires running dev server + browser.)
-- [ ] Manual: FPS overlay toggle works on mobile. (Pending: requires touch testing in a browser/device.)
+- [x] Manual: FPS overlay visible with toggle on desktop. (Completed by user.)
+- [x] Manual: FPS overlay toggle works on mobile. (Completed by user.)
 
 ### Stop Point
 - Pause for review after verifying overlay and toggle behavior.
