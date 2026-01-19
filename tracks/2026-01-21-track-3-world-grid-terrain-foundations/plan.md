@@ -136,7 +136,7 @@
 - /context/repo-map.md (if needed)
 
 ### Verification
-- [ ] Manual: water corridors and shore tiles appear in coherent patterns.
+- [x] Manual: water corridors and shore tiles appear in coherent patterns.
 
 ### Stop point
 - Pause for review after water and shore rendering is complete.
