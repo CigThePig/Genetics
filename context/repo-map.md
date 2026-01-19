@@ -61,6 +61,8 @@ Rules:
   - Rule: scope must match Track Index for Track N unless explicitly overridden
 - tracks/2026-01-19-track-0-repo-bootstrap/
   - Contains: Track 0 spec/blueprint/plan (Repo Bootstrap)
+- tracks/2026-01-19-track-1-developer-visibility-control/
+  - Contains: Track 1 spec/blueprint/plan (Developer Visibility & Control)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
