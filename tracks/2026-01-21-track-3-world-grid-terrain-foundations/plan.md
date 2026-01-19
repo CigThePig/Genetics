@@ -64,10 +64,10 @@
 ## Phase 2 — Terrain generator v1 (blobs) (Step 12)
 
 ### Tasks
-- [ ] Create terrain generation module using the central RNG.
-- [ ] Implement blob placement with deterministic iteration order.
-- [ ] Add configuration knobs for blob counts/sizes.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Create terrain generation module using the central RNG.
+- [x] Implement blob placement with deterministic iteration order.
+- [x] Add configuration knobs for blob counts/sizes.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - src/sim/
@@ -76,7 +76,7 @@
 - /context/repo-map.md (if needed)
 
 ### Verification
-- [ ] Manual: same seed produces the same terrain layout.
+- [x] Manual: same seed produces the same terrain layout.
 
 ### Stop point
 - Pause for review after terrain generation is in place.
