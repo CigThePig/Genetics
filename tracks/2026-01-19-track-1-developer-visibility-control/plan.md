@@ -1,6 +1,7 @@
 # Track 1 Plan — Developer Visibility & Control
 
 ## Recon Summary
+Recon completed; summary below reflects current repo state.
 - Files likely to change:
   - src/metrics/index.js (add FPS overlay + toggle and metrics snapshot plumbing).
   - src/ui/index.js (add control shell, seed display, FPS toggle wiring).
