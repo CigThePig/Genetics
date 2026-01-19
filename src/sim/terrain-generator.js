@@ -68,10 +68,12 @@ const generateWaterCorridors = ({ world, rng, config }) => {
     let y = rng.nextInt(0, height - 1);
     let direction = DIRECTIONS[rng.nextInt(0, DIRECTIONS.length - 1)];
     const length = rng.nextInt(minLength, maxLength);
-    const halfWidth = Math.floor(corridorWidth / 2);
+    const halfSpan = (corridorWidth - 1) / 2;
+    const minOffset = -Math.floor(halfSpan);
+    const maxOffset = Math.ceil(halfSpan);
 
     for (let step = 0; step < length; step += 1) {
-      for (let offset = -halfWidth; offset <= halfWidth; offset += 1) {
+      for (let offset = minOffset; offset <= maxOffset; offset += 1) {
         const dx = direction.y === 0 ? 0 : offset;
         const dy = direction.x === 0 ? 0 : offset;
         const tileX = clamp(x + dx, 0, width - 1);
