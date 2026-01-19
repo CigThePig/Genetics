@@ -37,5 +37,11 @@ export const simConfig = {
   bushBerryMax: 12,
   bushInitialBerries: 6,
   bushRecoveryRate: 0.01,
-  bushBerryRegenRate: 0.25
+  bushBerryRegenRate: 0.25,
+  creatureCount: 12,
+  creatureBaseEnergy: 1,
+  creatureBaseWater: 1,
+  creatureBaseStamina: 1,
+  creatureBaseHp: 1,
+  creatureInspectRadius: 6
 };

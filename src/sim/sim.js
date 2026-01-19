@@ -4,6 +4,7 @@ import { createWorldGrid } from './world-grid.js';
 import { generateTerrain } from './terrain-generator.js';
 import { seedInitialPlants } from './plant-generator.js';
 import { updatePlants } from './plants/index.js';
+import { createCreatures } from './creatures/index.js';
 
 export function createSim(config = simConfig) {
   const resolvedConfig = { ...simConfig, ...config };
@@ -21,10 +22,14 @@ export function createSim(config = simConfig) {
     return world;
   };
 
+  const spawnCreatures = (world) =>
+    createCreatures({ world, rng, config: resolvedConfig });
+
   const state = {
     tick: 0,
     lastRoll: 0,
     world: buildWorld(),
+    creatures: [],
     metrics: {
       grassAverage: 0,
       grassTotal: 0,
@@ -38,6 +43,7 @@ export function createSim(config = simConfig) {
       bushAverageHealth: 0
     }
   };
+  state.creatures = spawnCreatures(state.world);
 
   return {
     config: resolvedConfig,
@@ -52,6 +58,7 @@ export function createSim(config = simConfig) {
       state.tick = 0;
       state.lastRoll = 0;
       state.world = buildWorld();
+      state.creatures = spawnCreatures(state.world);
       state.metrics = {
         grassAverage: 0,
         grassTotal: 0,
@@ -85,7 +92,8 @@ export function createSim(config = simConfig) {
         bushCount: state.metrics.bushCount,
         berryTotal: state.metrics.berryTotal,
         berryAverage: state.metrics.berryAverage,
-        bushAverageHealth: state.metrics.bushAverageHealth
+        bushAverageHealth: state.metrics.bushAverageHealth,
+        creatureCount: state.creatures.length
       };
     }
   };

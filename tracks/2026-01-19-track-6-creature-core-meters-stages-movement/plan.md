@@ -5,11 +5,11 @@
 
 ## Phase 1 — Creature model + meters (Step 26)
 ### Tasks
-- [ ] Define creature data model and initial spawn list.
-- [ ] Add core meters (energy, water, stamina, HP) to creature state.
-- [ ] Wire creature system into sim state.
-- [ ] Add inspector fields for meters.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Define creature data model and initial spawn list.
+- [x] Add core meters (energy, water, stamina, HP) to creature state.
+- [x] Wire creature system into sim state.
+- [x] Add inspector fields for meters.
+- [x] Update /context/repo-map.md if files/roles change.
 
 ### Files touched
 - `src/sim/creatures/*` (new)
