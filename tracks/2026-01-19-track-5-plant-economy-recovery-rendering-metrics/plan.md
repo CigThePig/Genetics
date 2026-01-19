@@ -13,6 +13,11 @@
 
 ---
 
+## Deviation Note
+- Added a world generation correction phase to seed grass in patches and prevent grass/bush spawning on water, per user request. This is outside the original Track 5 steps but supports the hotspot validation goal by ensuring visible plant clustering.
+
+---
+
 ## Phase 1 — Bush recovery + berry regeneration (Steps 21–22)
 
 ### Tasks
@@ -55,7 +60,31 @@
 
 ---
 
-## Phase 3 — Plant metrics + known seed validation (Steps 24–25)
+## Phase 3 — World generation corrections (Grass patches + no water plants)
+
+### Tasks
+- [x] Seed initial grass into deterministic patches using the RNG.
+- [x] Ensure grass never spawns or regrows on water terrain.
+- [x] Prevent bush placement on water terrain.
+- [x] Update config with grass patch tuning values.
+- [x] ☐ Reminder: update /context/repo-map.md if files/roles change.
+
+### Files touched
+- src/sim/plant-generator.js
+- src/sim/sim.js
+- src/sim/plants/grass.js
+- src/sim/plants/bushes.js
+- src/sim/config.js
+
+### Verification
+- [ ] Manual: with a fixed seed, confirm grass appears in patches and no grass/bushes spawn on water tiles.
+
+### Stop point
+- Pause after verifying world generation corrections.
+
+---
+
+## Phase 4 — Plant metrics + known seed validation (Steps 24–25)
 
 ### Tasks
 - [ ] Add/extend plant metrics aggregation.
