@@ -59,6 +59,8 @@ Rules:
 - tracks/YYYY-MM-DD-track-N-<slug>/
   - Contains: spec.md, blueprint.md, plan.md
   - Rule: scope must match Track Index for Track N unless explicitly overridden
+- tracks/2026-01-19-track-0-repo-bootstrap/
+  - Contains: Track 0 spec/blueprint/plan (Repo Bootstrap)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
