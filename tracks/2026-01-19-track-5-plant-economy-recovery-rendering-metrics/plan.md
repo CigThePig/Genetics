@@ -90,6 +90,7 @@
 - [x] Add/extend plant metrics aggregation.
 - [x] Surface metrics in metrics panel with clear labels.
 - [x] Document or set known seed for hotspot validation.
+- [x] Compare coverage/hotspot thresholds against per-cell fullness.
 - [x] ☐ Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
