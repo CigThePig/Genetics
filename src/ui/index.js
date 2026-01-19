@@ -218,6 +218,43 @@ export function createUI({
   metricsBody.style.display = 'grid';
   metricsBody.style.gap = '12px';
 
+  const liveMetricsSection = document.createElement('div');
+  liveMetricsSection.style.display = 'grid';
+  liveMetricsSection.style.gap = '6px';
+
+  const liveMetricsTitle = document.createElement('h3');
+  liveMetricsTitle.textContent = 'Plants';
+  liveMetricsTitle.style.fontSize = '14px';
+  liveMetricsTitle.style.margin = '0';
+
+  const liveMetricsList = document.createElement('ul');
+  liveMetricsList.style.listStyle = 'none';
+  liveMetricsList.style.padding = '0';
+  liveMetricsList.style.margin = '0';
+  liveMetricsList.style.display = 'grid';
+  liveMetricsList.style.gap = '4px';
+
+  const metricDefinitions = [
+    { key: 'grassAverage', label: 'Grass avg' },
+    { key: 'stressedCells', label: 'Stressed cells' },
+    { key: 'bushCount', label: 'Bush count' },
+    { key: 'berryTotal', label: 'Berry total' },
+    { key: 'bushAverageHealth', label: 'Bush avg health' }
+  ];
+
+  const metricRows = new Map();
+  for (const metric of metricDefinitions) {
+    const item = document.createElement('li');
+    item.textContent = `${metric.label}: --`;
+    item.style.fontSize = '13px';
+    item.style.color = '#444';
+    liveMetricsList.append(item);
+    metricRows.set(metric.key, { label: metric.label, node: item });
+  }
+
+  liveMetricsSection.append(liveMetricsTitle, liveMetricsList);
+  metricsBody.append(liveMetricsSection);
+
   const metricsSections = metrics?.getSkeletonSections
     ? metrics.getSkeletonSections()
     : [{ title: 'Coming soon', rows: ['Metrics will appear here.'] }];
@@ -254,6 +291,27 @@ export function createUI({
   metricsSection.append(metricsTitle, metricsBody);
   container.append(metricsSection);
 
+  const formatMetricValue = (key, value) => {
+    if (!Number.isFinite(value)) {
+      return '--';
+    }
+    switch (key) {
+      case 'grassAverage':
+        return value.toFixed(3);
+      case 'bushAverageHealth':
+        return value.toFixed(2);
+      default:
+        return String(Math.round(value));
+    }
+  };
+
+  const setMetrics = (summary = {}) => {
+    metricRows.forEach(({ label, node }, key) => {
+      const value = formatMetricValue(key, summary[key]);
+      node.textContent = `${label}: ${value}`;
+    });
+  };
+
   return {
     setStatus(message) {
       statusNode.textContent = message;
@@ -276,6 +334,7 @@ export function createUI({
       }
     },
     setFpsVisible,
+    setMetrics,
     setInspector({ title, rows }) {
       if (title) {
         inspectorTitle.textContent = title;

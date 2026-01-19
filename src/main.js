@@ -35,6 +35,7 @@ let rafId = null;
 const tickOnce = () => {
   sim.tick();
   renderer.render(sim);
+  ui.setMetrics?.(sim.getSummary());
 };
 
 const runFrame = () => {
@@ -42,6 +43,7 @@ const runFrame = () => {
     sim.tick();
   }
   renderer.render(sim);
+  ui.setMetrics?.(sim.getSummary());
   if (running) {
     rafId = requestAnimationFrame(runFrame);
   }
@@ -119,4 +121,5 @@ ui.setRunning(running);
 ui.setSpeed(speed);
 ui.setSeed(sim.getSeed());
 ui.setFpsVisible(initialSettings.fpsVisible);
+ui.setMetrics?.(sim.getSummary());
 input.attach();
