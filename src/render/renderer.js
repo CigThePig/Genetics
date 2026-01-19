@@ -1,9 +1,10 @@
 export function createRenderer(container) {
+  const footer = document.createElement('p');
+  container.append(footer);
+
   return {
     render(sim) {
-      const footer = document.createElement('p');
       footer.textContent = `Seed: ${sim.config.seed}`;
-      container.append(footer);
     }
   };
 }

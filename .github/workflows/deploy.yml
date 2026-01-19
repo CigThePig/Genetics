@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -31,6 +32,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_BASE: /Genetics/
         run: npm run build
 
       - name: Setup Pages
