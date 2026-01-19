@@ -1,6 +1,6 @@
-Active track: Maintenance — Creature Render Pass
-Path: tracks/2026-01-22-track-maintenance-creature-render-pass/
-Current phase: Phase 1 — Add creature render pass (complete)
-Next task: Review creature render pass changes
-Last updated: 2026-01-22
-Notes: Maintenance task requested outside roadmap. Files: src/render/renderer.js
+Active track: Maintenance — Metrics Population Display
+Path: tracks/2026-01-23-track-maintenance-metrics-population/
+Current phase: Phase 1 — Add creature population metric (complete)
+Next task: Review metrics population display changes
+Last updated: 2026-01-23
+Notes: Maintenance task requested outside roadmap. Files: src/ui/index.js

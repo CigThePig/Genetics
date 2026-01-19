@@ -77,6 +77,8 @@ Rules:
   - Contains: Track 7 spec/blueprint/plan (Survival Actions + Sprinting + Death)
 - tracks/2026-01-22-track-maintenance-creature-render-pass/
   - Contains: Maintenance spec/blueprint/plan (Creature render pass)
+- tracks/2026-01-23-track-maintenance-metrics-population/
+  - Contains: Maintenance spec/blueprint/plan (Metrics population display)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 

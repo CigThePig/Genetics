@@ -218,46 +218,63 @@ export function createUI({
   metricsBody.style.display = 'grid';
   metricsBody.style.gap = '12px';
 
-  const liveMetricsSection = document.createElement('div');
-  liveMetricsSection.style.display = 'grid';
-  liveMetricsSection.style.gap = '6px';
-
-  const liveMetricsTitle = document.createElement('h3');
-  liveMetricsTitle.textContent = 'Plants';
-  liveMetricsTitle.style.fontSize = '14px';
-  liveMetricsTitle.style.margin = '0';
-
-  const liveMetricsList = document.createElement('ul');
-  liveMetricsList.style.listStyle = 'none';
-  liveMetricsList.style.padding = '0';
-  liveMetricsList.style.margin = '0';
-  liveMetricsList.style.display = 'grid';
-  liveMetricsList.style.gap = '4px';
-
   const metricDefinitions = [
-    { key: 'grassAverage', label: 'Grass avg' },
-    { key: 'grassTotal', label: 'Grass total' },
-    { key: 'grassCoverage', label: 'Grass coverage' },
-    { key: 'grassHotspotCells', label: 'Hotspot cells' },
-    { key: 'stressedCells', label: 'Stressed cells' },
-    { key: 'bushCount', label: 'Bush count' },
-    { key: 'berryTotal', label: 'Berry total' },
-    { key: 'berryAverage', label: 'Berries per bush' },
-    { key: 'bushAverageHealth', label: 'Bush avg health' }
+    { key: 'creatureCount', label: 'Creatures', section: 'population' },
+    { key: 'grassAverage', label: 'Grass avg', section: 'plants' },
+    { key: 'grassTotal', label: 'Grass total', section: 'plants' },
+    { key: 'grassCoverage', label: 'Grass coverage', section: 'plants' },
+    { key: 'grassHotspotCells', label: 'Hotspot cells', section: 'plants' },
+    { key: 'stressedCells', label: 'Stressed cells', section: 'plants' },
+    { key: 'bushCount', label: 'Bush count', section: 'plants' },
+    { key: 'berryTotal', label: 'Berry total', section: 'plants' },
+    { key: 'berryAverage', label: 'Berries per bush', section: 'plants' },
+    { key: 'bushAverageHealth', label: 'Bush avg health', section: 'plants' }
   ];
 
   const metricRows = new Map();
-  for (const metric of metricDefinitions) {
-    const item = document.createElement('li');
-    item.textContent = `${metric.label}: --`;
-    item.style.fontSize = '13px';
-    item.style.color = '#444';
-    liveMetricsList.append(item);
-    metricRows.set(metric.key, { label: metric.label, node: item });
+  const createMetricSection = (title, definitions) => {
+    const section = document.createElement('div');
+    section.style.display = 'grid';
+    section.style.gap = '6px';
+
+    const sectionTitle = document.createElement('h3');
+    sectionTitle.textContent = title;
+    sectionTitle.style.fontSize = '14px';
+    sectionTitle.style.margin = '0';
+
+    const sectionList = document.createElement('ul');
+    sectionList.style.listStyle = 'none';
+    sectionList.style.padding = '0';
+    sectionList.style.margin = '0';
+    sectionList.style.display = 'grid';
+    sectionList.style.gap = '4px';
+
+    for (const metric of definitions) {
+      const item = document.createElement('li');
+      item.textContent = `${metric.label}: --`;
+      item.style.fontSize = '13px';
+      item.style.color = '#444';
+      sectionList.append(item);
+      metricRows.set(metric.key, { label: metric.label, node: item });
+    }
+
+    section.append(sectionTitle, sectionList);
+    return section;
+  };
+
+  const populationMetrics = metricDefinitions.filter(
+    (metric) => metric.section === 'population'
+  );
+  if (populationMetrics.length) {
+    metricsBody.append(createMetricSection('Population', populationMetrics));
   }
 
-  liveMetricsSection.append(liveMetricsTitle, liveMetricsList);
-  metricsBody.append(liveMetricsSection);
+  const plantMetrics = metricDefinitions.filter(
+    (metric) => metric.section === 'plants'
+  );
+  if (plantMetrics.length) {
+    metricsBody.append(createMetricSection('Plants', plantMetrics));
+  }
 
   const metricsSections = metrics?.getSkeletonSections
     ? metrics.getSkeletonSections()
