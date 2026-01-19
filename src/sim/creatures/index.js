@@ -90,6 +90,54 @@ const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
 const resolveBasalDrain = (value) =>
   Number.isFinite(value) ? Math.max(0, value) : 0;
 
+const resolveNeedSwitchMargin = (config) =>
+  Number.isFinite(config?.creatureNeedSwitchMargin)
+    ? Math.max(0, config.creatureNeedSwitchMargin)
+    : 0.05;
+
+const resolveNeedMeterBase = (value) =>
+  Number.isFinite(value) && value > 0 ? value : 1;
+
+const normalizeNeedRatio = (value, base) => {
+  const ratio = value / base;
+  if (!Number.isFinite(ratio)) {
+    return 0;
+  }
+  return Math.min(1, Math.max(0, ratio));
+};
+
+export function updateCreaturePriority({ creatures, config }) {
+  if (!Array.isArray(creatures)) {
+    return;
+  }
+  const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
+  const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
+  const margin = resolveNeedSwitchMargin(config);
+
+  for (const creature of creatures) {
+    const meters = creature?.meters;
+    if (!meters) {
+      continue;
+    }
+    const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
+    const waterRatio = normalizeNeedRatio(meters.water, baseWater);
+    const hungerScore = 1 - energyRatio;
+    const thirstScore = 1 - waterRatio;
+    const current = creature.priority;
+    const scoreGap = Math.abs(thirstScore - hungerScore);
+
+    if (current && scoreGap < margin) {
+      continue;
+    }
+
+    if (thirstScore >= hungerScore) {
+      creature.priority = 'thirst';
+    } else {
+      creature.priority = 'hunger';
+    }
+  }
+}
+
 export function updateCreatureBasalMetabolism({ creatures, config }) {
   if (!Array.isArray(creatures)) {
     return;
@@ -176,6 +224,7 @@ export function createCreatures({ config, rng, world }) {
       position,
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
+      priority: 'thirst',
       meters: {
         energy: config.creatureBaseEnergy,
         water: config.creatureBaseWater,

@@ -8,7 +8,8 @@ import {
   createCreatures,
   updateCreatureBasalMetabolism,
   updateCreatureLifeStages,
-  updateCreatureMovement
+  updateCreatureMovement,
+  updateCreaturePriority
 } from './creatures/index.js';
 
 export function createSim(config = simConfig) {
@@ -80,6 +81,10 @@ export function createSim(config = simConfig) {
     tick() {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
+      updateCreaturePriority({
+        creatures: state.creatures,
+        config: resolvedConfig
+      });
       updateCreatureMovement({
         creatures: state.creatures,
         config: resolvedConfig,

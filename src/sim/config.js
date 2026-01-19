@@ -47,6 +47,7 @@ export const simConfig = {
   creatureBasalEnergyDrain: 0.002,
   creatureBasalWaterDrain: 0.0025,
   creatureBasalStaminaDrain: 0.0015,
+  creatureNeedSwitchMargin: 0.05,
   creatureLifeStages: [
     {
       id: 'juvenile',
