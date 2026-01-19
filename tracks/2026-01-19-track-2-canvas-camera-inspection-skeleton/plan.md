@@ -48,10 +48,10 @@
 ## Phase 1 — Canvas renderer + camera pan/zoom (touch)
 
 **Tasks**
-- [ ] Add camera module to hold pan/zoom state and helpers.
-- [ ] Extend renderer to draw to canvas with camera transforms.
-- [ ] Wire touch drag and pinch gestures to camera controls in input.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Add camera module to hold pan/zoom state and helpers.
+- [x] Extend renderer to draw to canvas with camera transforms.
+- [x] Wire touch drag and pinch gestures to camera controls in input.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
 - `src/render/renderer.js`

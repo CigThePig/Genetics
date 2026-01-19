@@ -1,5 +1,7 @@
 import { createSim } from './sim/sim.js';
 import { createRenderer } from './render/renderer.js';
+import { createCamera } from './render/camera.js';
+import { createInput } from './input/index.js';
 import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
 
@@ -14,8 +16,10 @@ status.textContent = 'Bootstrapped Vite app with sim/render/ui stubs.';
 app.append(title, status);
 
 const sim = createSim();
-const renderer = createRenderer(app);
+const camera = createCamera();
+const renderer = createRenderer(app, { camera });
 const metrics = createMetrics({ container: app });
+const input = createInput({ canvas: renderer.canvas, camera });
 let running = false;
 let speed = 1;
 let rafId = null;
@@ -79,7 +83,8 @@ const ui = createUI({
 });
 
 renderer.render(sim);
-ui.setStatus('Ready for Track 1.');
+ui.setStatus('Ready for Track 2.');
 ui.setRunning(running);
 ui.setSpeed(speed);
 ui.setSeed(sim.getSeed());
+input.attach();
