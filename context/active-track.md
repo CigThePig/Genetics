@@ -1,4 +1,6 @@
 Active track: Track 1 — Developer Visibility & Control
+Status: Building
+Last updated: 2026-01-19
 
 When active:
 - Track number: 1
