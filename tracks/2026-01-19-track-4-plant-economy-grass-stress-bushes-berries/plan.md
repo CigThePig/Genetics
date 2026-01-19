@@ -1,7 +1,37 @@
 # Track 4 — Plan
 
 ## Recon Summary
-- (Pending)
+- Files likely to change:
+  - `src/sim/world-grid.js` to add per-cell grass/stress fields or a parallel buffer for plant state.
+  - `src/sim/sim.js` to hook plant system updates into the Regen phase (without changing tick order).
+  - `src/sim/config.js` to add tunables for grass regrowth/stress and bush parameters.
+  - `src/metrics/index.js` to expose grass/stress/bush metrics in the metrics snapshot or UI.
+  - New plant modules (per blueprint): `src/sim/plants/grass.js`, `src/sim/plants/bushes.js`, `src/sim/plants/index.js`.
+  - Tests: `tests/plant-economy.test.js` if we add determinism checks for plant logic.
+- Key modules/functions involved:
+  - `createWorldGrid` cell storage (currently terrain-only array).
+  - `createSim` tick loop (currently increments tick and RNG roll only).
+  - Metrics overlay for new plant metrics summary.
+- Invariants to respect:
+  - Determinism (all randomness via central RNG in `src/sim/rng.js`).
+  - Tick order invariant (Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics).
+  - Rendering remains read-only and post-tick.
+- Cross-module side effects:
+  - Expanding cell data shape affects any terrain accessors and renderers that assume terrain-only cells.
+  - Adding plant metrics may require UI changes if metrics panel renders a fixed set.
+- Tick order impact:
+  - Plant updates should live in Regen or a dedicated plant step inside Regen; do not change order.
+- Observability impact:
+  - Add metrics for average grass and stressed cell count; later add bush/berry totals.
+- File rules impact:
+  - New plant system should be new files under `src/sim/plants/` to comply with “new system = new file”.
+  - Watch file lengths; no file currently near 600 LOC.
+- Risks/regressions:
+  - Changing `world-grid` cell representation could break terrain rendering if not updated.
+  - Plant logic could inadvertently introduce nondeterminism if RNG not passed explicitly.
+- Verification commands/checks:
+  - Manual: observe grass/stress metrics updating during sim ticks.
+  - Automated: add determinism test if required by plan phase touching core formulas.
 
 ---
 
