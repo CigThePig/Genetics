@@ -130,16 +130,16 @@ Recon completed; summary below reflects current repo state.
 ## Phase 5 — Context pack + repo-map validation
 
 ### Tasks
-- [ ] Validate context pack alignment (track artifacts, repo-map updates).
-- [ ] Ensure repo-map matches actual file roles.
-- [ ] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
+- [x] Validate context pack alignment (track artifacts, repo-map updates).
+- [x] Ensure repo-map matches actual file roles.
+- [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
 - context/repo-map.md
 - context/active-track.md (if needed)
 
 ### Verification
-- [ ] Manual: repo-map reflects current file roles and new modules.
+- [x] Manual: repo-map reflects current file roles and new modules.
 
 ### Stop Point
 - Pause for review after repo-map validation.
