@@ -22,6 +22,9 @@ export function createInput({ canvas, camera, onTap }) {
     if (!canvas.contains(event.target)) {
       return;
     }
+    if (event.pointerType === 'touch') {
+      event.preventDefault();
+    }
 
     canvas.setPointerCapture(event.pointerId);
     pointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
@@ -46,6 +49,9 @@ export function createInput({ canvas, camera, onTap }) {
   const pointerMove = (event) => {
     if (!pointers.has(event.pointerId)) {
       return;
+    }
+    if (event.pointerType === 'touch') {
+      event.preventDefault();
     }
 
     const nextPoint = { x: event.clientX, y: event.clientY };
@@ -85,6 +91,9 @@ export function createInput({ canvas, camera, onTap }) {
   const pointerUp = (event) => {
     if (!pointers.has(event.pointerId)) {
       return;
+    }
+    if (event.pointerType === 'touch') {
+      event.preventDefault();
     }
 
     pointers.delete(event.pointerId);
