@@ -224,6 +224,8 @@ export function createUI({
     { key: 'trianglesCount', label: 'Triangles', section: 'population' },
     { key: 'circlesCount', label: 'Circles', section: 'population' },
     { key: 'octagonsCount', label: 'Octagons', section: 'population' },
+    { key: 'birthsLastTick', label: 'Births (tick)', section: 'population' },
+    { key: 'birthsTotal', label: 'Births total', section: 'population' },
     { key: 'deathsTotal', label: 'Deaths total', section: 'deaths' },
     { key: 'deathsAge', label: 'Deaths (age)', section: 'deaths' },
     { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths' },

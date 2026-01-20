@@ -17,12 +17,14 @@ import {
   startCreatureChase,
   updateCreatureChase
 } from './chase.js';
+import { updateCreatureReproduction } from './reproduction.js';
 
 export {
   updateCreaturePerception,
   updateCreatureAlertness,
   updateCreatureMemory,
-  updateCreatureChase
+  updateCreatureChase,
+  updateCreatureReproduction
 };
 import {
   FOOD_TYPES,
@@ -880,7 +882,8 @@ export function createCreatures({ config, rng, world }) {
         stamina: config.creatureBaseStamina,
         hp: config.creatureBaseHp
       },
-      memory: { entries: [] }
+      memory: { entries: [] },
+      reproduction: { cooldownTicks: 0 }
     });
   }
 

@@ -20,6 +20,7 @@ import {
   updateCreatureMovement,
   updateCreaturePerception,
   updateCreaturePriority,
+  updateCreatureReproduction,
   updateCreatureSprintDecision
 } from './creatures/index.js';
 
@@ -78,6 +79,8 @@ export function createSim(config = simConfig) {
       chaseAttempts: 0,
       chaseSuccesses: 0,
       chaseLosses: 0,
+      birthsTotal: 0,
+      birthsLastTick: 0,
       deathsTotal: 0,
       deathsByCause: {
         age: 0,
@@ -118,6 +121,8 @@ export function createSim(config = simConfig) {
         chaseAttempts: 0,
         chaseSuccesses: 0,
         chaseLosses: 0,
+        birthsTotal: 0,
+        birthsLastTick: 0,
         deathsTotal: 0,
         deathsByCause: {
           age: 0,
@@ -185,6 +190,13 @@ export function createSim(config = simConfig) {
         config: resolvedConfig
       });
       updateCreatureLifeStages({ creatures: state.creatures, config: resolvedConfig });
+      updateCreatureReproduction({
+        creatures: state.creatures,
+        config: resolvedConfig,
+        rng,
+        world: state.world,
+        metrics: state.metrics
+      });
       applyCreatureDeaths({
         creatures: state.creatures,
         config: resolvedConfig,
@@ -216,6 +228,8 @@ export function createSim(config = simConfig) {
         chaseAttempts: state.metrics.chaseAttempts,
         chaseSuccesses: state.metrics.chaseSuccesses,
         chaseLosses: state.metrics.chaseLosses,
+        birthsTotal: state.metrics.birthsTotal,
+        birthsLastTick: state.metrics.birthsLastTick,
         deathsTotal: state.metrics.deathsTotal,
         deathsAge: state.metrics.deathsByCause?.age ?? 0,
         deathsStarvation: state.metrics.deathsByCause?.starvation ?? 0,
