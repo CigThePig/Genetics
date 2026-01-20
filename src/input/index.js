@@ -1,4 +1,4 @@
-export function createInput({ canvas, camera, onTap }) {
+export function createInput({ canvas, camera, onTap, onCameraChange }) {
   let attached = false;
   let pinchStartDistance = 0;
   let pinchStartZoom = 1;
@@ -17,6 +17,11 @@ export function createInput({ canvas, camera, onTap }) {
   };
 
   const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+  const notifyCameraChange = () => {
+    if (onCameraChange) {
+      onCameraChange();
+    }
+  };
 
   const pointerDown = (event) => {
     if (!canvas.contains(event.target)) {
@@ -71,6 +76,7 @@ export function createInput({ canvas, camera, onTap }) {
         }
       }
       camera.panBy(dx, dy);
+      notifyCameraChange();
       return;
     }
 
@@ -85,6 +91,7 @@ export function createInput({ canvas, camera, onTap }) {
       if (pinchStartDistance > 0) {
         const nextZoom = pinchStartZoom * (currentDistance / pinchStartDistance);
         camera.zoomAt(nextZoom, midpoint, { width: rect.width, height: rect.height });
+        notifyCameraChange();
       }
     }
   };
@@ -140,6 +147,7 @@ export function createInput({ canvas, camera, onTap }) {
       y: event.clientY - rect.top
     };
     camera.zoomAt(nextZoom, anchor, { width: rect.width, height: rect.height });
+    notifyCameraChange();
   };
 
   return {
