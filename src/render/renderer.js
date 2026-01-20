@@ -1,3 +1,5 @@
+import { SPECIES } from '../sim/species.js';
+
 export function createRenderer(container, { camera }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'renderer-shell';
@@ -245,6 +247,44 @@ export function createRenderer(container, { camera }) {
     ctx.strokeStyle = 'rgba(30, 30, 30, 0.35)';
     ctx.lineWidth = 1 / state.zoom;
 
+    const drawCreatureShape = (species, x, y, radius) => {
+      switch (species) {
+        case SPECIES.SQUARE: {
+          const size = radius * 1.6;
+          ctx.rect(x - size / 2, y - size / 2, size, size);
+          return;
+        }
+        case SPECIES.TRIANGLE: {
+          const height = radius * 1.7;
+          ctx.moveTo(x, y - height / 2);
+          ctx.lineTo(x + radius, y + height / 2);
+          ctx.lineTo(x - radius, y + height / 2);
+          ctx.closePath();
+          return;
+        }
+        case SPECIES.OCTAGON: {
+          const sides = 8;
+          const angleStep = (Math.PI * 2) / sides;
+          const inset = radius * 0.85;
+          for (let i = 0; i < sides; i += 1) {
+            const angle = Math.PI / 8 + i * angleStep;
+            const px = x + Math.cos(angle) * inset;
+            const py = y + Math.sin(angle) * inset;
+            if (i === 0) {
+              ctx.moveTo(px, py);
+            } else {
+              ctx.lineTo(px, py);
+            }
+          }
+          ctx.closePath();
+          return;
+        }
+        case SPECIES.CIRCLE:
+        default:
+          ctx.arc(x, y, radius, 0, Math.PI * 2);
+      }
+    };
+
     for (const creature of creatures) {
       const position = creature?.position;
       const x = Number.isFinite(position?.x) ? position.x : null;
@@ -259,7 +299,7 @@ export function createRenderer(container, { camera }) {
       const centerX = originX + (x + 0.5) * tileSize;
       const centerY = originY + (y + 0.5) * tileSize;
       ctx.beginPath();
-      ctx.arc(centerX, centerY, markerRadius, 0, Math.PI * 2);
+      drawCreatureShape(creature.species, centerX, centerY, markerRadius);
       ctx.fill();
       ctx.stroke();
     }

@@ -1,4 +1,5 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
+import { pickSpawnSpecies } from '../species.js';
 
 const fallbackLifeStages = [
   {
@@ -222,6 +223,7 @@ export function createCreatures({ config, rng, world }) {
     creatures.push({
       id: i,
       position,
+      species: pickSpawnSpecies(i),
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
       priority: 'thirst',

@@ -19,6 +19,11 @@ The goal is not scripted behavior. The goal is **emergent outcomes** you can see
 
 ---
 
+## Canonical ecosystem (locked)
+The authoritative canon is defined in context/architecture.md → “Canonical Ecosystem (Locked)”. Future tracks must reference that section and avoid generic species placeholders.
+
+---
+
 ## Project pillars (non-negotiable)
 
 1) **Evolution is emergent**  

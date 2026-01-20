@@ -3,9 +3,13 @@
 ## Overview
 Implement survival actions (drink/eat), stamina + sprinting, death conditions, and population counters while preserving determinism, tick order, and observability.
 
+## Canon References (Required)
+- Canonical species + food web definitions: context/architecture.md (“Canonical Ecosystem (Locked)”).
+- This track must use the canonical species/resource names (Squares, Triangles, Circles, Octagons; Grass, Bushes, Berries, Meat) and must not introduce generic species placeholders.
+
 ## Scope (from Track Index)
 - Drinking behavior
-- Grass eating
+- Grass eating (Circles only; other species skip)
 - Stamina + sprinting
 - Death conditions
 - Population counters
@@ -33,7 +37,7 @@ Implement survival actions (drink/eat), stamina + sprinting, death conditions, a
   - action intent (drink/eat/sprint)
   - deathCause (starvation/thirst/age/other) for metrics.
 - Metrics:
-  - population counts per species
+  - population counts per species (Squares, Triangles, Circles, Octagons)
   - deaths by cause
 
 ## Tick Order Alignment

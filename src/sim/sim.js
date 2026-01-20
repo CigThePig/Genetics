@@ -4,6 +4,7 @@ import { createWorldGrid } from './world-grid.js';
 import { generateTerrain } from './terrain-generator.js';
 import { seedInitialPlants } from './plant-generator.js';
 import { updatePlants } from './plants/index.js';
+import { SPECIES } from './species.js';
 import {
   createCreatures,
   updateCreatureBasalMetabolism,
@@ -15,6 +16,23 @@ import {
 export function createSim(config = simConfig) {
   const resolvedConfig = { ...simConfig, ...config };
   const rng = createRng(resolvedConfig.seed);
+  const countSpecies = (creatures) => {
+    const counts = {
+      [SPECIES.SQUARE]: 0,
+      [SPECIES.TRIANGLE]: 0,
+      [SPECIES.CIRCLE]: 0,
+      [SPECIES.OCTAGON]: 0
+    };
+    if (!Array.isArray(creatures)) {
+      return counts;
+    }
+    for (const creature of creatures) {
+      if (counts[creature?.species] !== undefined) {
+        counts[creature.species] += 1;
+      }
+    }
+    return counts;
+  };
   const buildWorld = () => {
     const world = createWorldGrid({
       width: resolvedConfig.worldWidth,
@@ -100,6 +118,7 @@ export function createSim(config = simConfig) {
       return state.lastRoll;
     },
     getSummary() {
+      const speciesCounts = countSpecies(state.creatures);
       return {
         seed: resolvedConfig.seed,
         tick: state.tick,
@@ -114,7 +133,11 @@ export function createSim(config = simConfig) {
         berryTotal: state.metrics.berryTotal,
         berryAverage: state.metrics.berryAverage,
         bushAverageHealth: state.metrics.bushAverageHealth,
-        creatureCount: state.creatures.length
+        creatureCount: state.creatures.length,
+        squaresCount: speciesCounts[SPECIES.SQUARE],
+        trianglesCount: speciesCounts[SPECIES.TRIANGLE],
+        circlesCount: speciesCounts[SPECIES.CIRCLE],
+        octagonsCount: speciesCounts[SPECIES.OCTAGON]
       };
     }
   };

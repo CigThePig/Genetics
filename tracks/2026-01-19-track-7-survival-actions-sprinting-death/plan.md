@@ -26,6 +26,7 @@
   - Must add Sense/Decide/Act/Costs/LifeHistory/Regen phases in sim tick; ensure basal drains and action costs align.
 - Observability impact:
   - Add inspector fields for action intent and meters; add metrics for population counts and death causes.
+  - Grass eating applies only to Circles per canon (context/architecture.md).
 - File rules impact:
   - No new system expected; keep files under 600 LOC; if new system emerges, create new module file.
 - Risks/regressions:
@@ -42,7 +43,7 @@
 
 ### Tasks
 - [ ] Implement drink action selection based on thirst and nearby water access.
-- [ ] Implement grass eating action selection based on hunger and grass availability.
+- [ ] Implement grass eating action selection for Circles only, based on hunger and grass availability.
 - [ ] Update grass consumption hooks in plant system.
 - [ ] Add/extend inspector fields for current action intent and meters.
 - [ ] Update /context/repo-map.md if any files/roles change.
