@@ -85,6 +85,8 @@ Rules:
   - Contains: Track 10 spec/blueprint/plan (Reproduction Loop + Basic Genetics)
 - tracks/2026-01-27-track-maintenance-touch-gesture-guardrails/
   - Contains: Maintenance spec/blueprint/plan (Touch gesture guardrails)
+- tracks/2026-01-28-track-maintenance-camera-change-callback/
+  - Contains: Maintenance spec/blueprint/plan (Camera change callback)
 - tracks/2026-01-22-track-maintenance-creature-render-pass/
   - Contains: Maintenance spec/blueprint/plan (Creature render pass)
 - tracks/2026-01-23-track-maintenance-metrics-population/

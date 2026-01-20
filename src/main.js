@@ -104,6 +104,12 @@ const ui = createUI({
 const input = createInput({
   canvas: renderer.canvas,
   camera,
+  onCameraChange: () => {
+    if (!running) {
+      renderer.render(sim);
+      ui.setMetrics?.(sim.getSummary());
+    }
+  },
   onTap: ({ screen, world }) => {
     const summary = sim.getSummary();
     const creature = findNearestCreature(
