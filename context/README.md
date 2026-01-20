@@ -22,6 +22,9 @@ The goal is not scripted behavior. The goal is **emergent outcomes** you can see
 ## Canonical ecosystem (locked)
 The authoritative canon is defined in context/architecture.md → “Canonical Ecosystem (Locked)”. Future tracks must reference that section and avoid generic species placeholders.
 
+## Anti-drift (engine vs traits)
+Do not create separate code paths per species unless explicitly required by design; prefer tables + traits.
+
 ---
 
 ## Project pillars (non-negotiable)

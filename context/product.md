@@ -20,6 +20,9 @@ Non-negotiable pillars:
 ## Canonical ecosystem (locked)
 The authoritative canon (species roster, resource nouns, food web, and efficiency bias) is defined in **context/architecture.md → “Canonical Ecosystem (Locked)”**. All tracks must reference that section and avoid generic species placeholders.
 
+## Creature architecture (engine vs traits)
+The canonical guardrails for the generic creature engine versus species/traits data live in **context/architecture.md → “Creature Architecture: Engine vs Species Traits”**. Refer to that section instead of duplicating rules here.
+
 Out of scope early:
 - Fancy art/polish
 - Multiplayer/server features

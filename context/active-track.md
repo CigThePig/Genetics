@@ -1,6 +1,6 @@
-Active track: Track 7 — Survival Actions + Sprinting + Death
-Path: tracks/2026-01-19-track-7-survival-actions-sprinting-death
-Current phase: Phase 2 — Stamina + Sprinting (Step 33)
-Next task: Add stamina meter and sprint decision rules tied to movement.
+Active track: Maintenance
+Path: N/A (documentation guardrails update)
+Current phase: Engine vs Traits guardrails documentation
+Next task: Review updated guardrails and resume Track 7 afterward.
 Last updated: 2026-01-23
-Notes: Phase 1 complete; Phase 1.5 traits scaffolding complete.
+Notes: Non-track docs update to add Engine vs Traits guardrails. Files touched: context/architecture.md, context/product.md, context/track-index.md, context/README.md.
