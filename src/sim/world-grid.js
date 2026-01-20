@@ -31,6 +31,19 @@ export function createWorldGrid({
     return index === -1 ? null : cells[index];
   };
 
+  const isTerrainAt = (x, y, terrainType) =>
+    getTerrainAt(x, y) === terrainType;
+
+  const isWaterAt = (
+    x,
+    y,
+    waterTerrain = 'water',
+    shoreTerrain = 'shore'
+  ) => {
+    const terrain = getTerrainAt(x, y);
+    return terrain === waterTerrain || terrain === shoreTerrain;
+  };
+
   const setTerrainAt = (x, y, terrainType) => {
     const index = getIndex(x, y);
     if (index === -1) {
@@ -77,6 +90,8 @@ export function createWorldGrid({
     isInBounds,
     getIndex,
     getTerrainAt,
+    isTerrainAt,
+    isWaterAt,
     setTerrainAt,
     getGrassAt,
     setGrassAt,

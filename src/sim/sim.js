@@ -7,7 +7,9 @@ import { updatePlants } from './plants/index.js';
 import { SPECIES } from './species.js';
 import {
   createCreatures,
+  applyCreatureActions,
   updateCreatureBasalMetabolism,
+  updateCreatureIntent,
   updateCreatureLifeStages,
   updateCreatureMovement,
   updateCreaturePriority
@@ -103,10 +105,20 @@ export function createSim(config = simConfig) {
         creatures: state.creatures,
         config: resolvedConfig
       });
+      updateCreatureIntent({
+        creatures: state.creatures,
+        config: resolvedConfig,
+        world: state.world
+      });
       updateCreatureMovement({
         creatures: state.creatures,
         config: resolvedConfig,
         rng,
+        world: state.world
+      });
+      applyCreatureActions({
+        creatures: state.creatures,
+        config: resolvedConfig,
         world: state.world
       });
       updateCreatureBasalMetabolism({

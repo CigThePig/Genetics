@@ -37,21 +37,27 @@
   - Manual: observe drink/eat/sprint behaviors, population changes, death cause counts.
   - Automated: npm test if tests added/updated.
 
+## Deviation Note
+- Phase 1 needs wiring in `src/sim/sim.js` to add the drink/eat intent and action steps to the tick order, so that behavior executes deterministically.
+
 ---
 
 ## Phase 1 — Drinking behavior + Grass eating (Steps 31–32)
 
 ### Tasks
-- [ ] Implement drink action selection based on thirst and nearby water access.
-- [ ] Implement grass eating action selection for Circles only, based on hunger and grass availability.
-- [ ] Update grass consumption hooks in plant system.
-- [ ] Add/extend inspector fields for current action intent and meters.
-- [ ] Update /context/repo-map.md if any files/roles change.
+- [x] Implement drink action selection based on thirst and nearby water access.
+- [x] Implement grass eating action selection for Circles only, based on hunger and grass availability.
+- [x] Update grass consumption hooks in plant system.
+- [x] Wire drink/eat intent and action steps into the sim tick order.
+- [x] Add/extend inspector fields for current action intent and meters.
+- [x] Update /context/repo-map.md if any files/roles change.
 
 ### Files touched
 - src/sim/creatures/index.js
+- src/sim/sim.js
 - src/sim/world-grid.js
 - src/sim/plants/grass.js
+- src/main.js
 - src/ui/index.js
 - context/repo-map.md (if roles/files change)
 
