@@ -9,6 +9,7 @@ import {
   createCreatures,
   applyCreatureActions,
   applyCreatureSprintCosts,
+  applyCreatureDeaths,
   regenerateCreatureStamina,
   updateCreatureBasalMetabolism,
   updateCreatureIntent,
@@ -69,7 +70,15 @@ export function createSim(config = simConfig) {
       bushCount: 0,
       berryTotal: 0,
       berryAverage: 0,
-      bushAverageHealth: 0
+      bushAverageHealth: 0,
+      deathsTotal: 0,
+      deathsByCause: {
+        age: 0,
+        starvation: 0,
+        thirst: 0,
+        injury: 0,
+        other: 0
+      }
     }
   };
   state.creatures = spawnCreatures(state.world);
@@ -98,7 +107,15 @@ export function createSim(config = simConfig) {
         bushCount: 0,
         berryTotal: 0,
         berryAverage: 0,
-        bushAverageHealth: 0
+        bushAverageHealth: 0,
+        deathsTotal: 0,
+        deathsByCause: {
+          age: 0,
+          starvation: 0,
+          thirst: 0,
+          injury: 0,
+          other: 0
+        }
       };
     },
     tick() {
@@ -137,6 +154,11 @@ export function createSim(config = simConfig) {
         config: resolvedConfig
       });
       updateCreatureLifeStages({ creatures: state.creatures, config: resolvedConfig });
+      applyCreatureDeaths({
+        creatures: state.creatures,
+        config: resolvedConfig,
+        metrics: state.metrics
+      });
       regenerateCreatureStamina({
         creatures: state.creatures,
         config: resolvedConfig
@@ -160,6 +182,12 @@ export function createSim(config = simConfig) {
         berryTotal: state.metrics.berryTotal,
         berryAverage: state.metrics.berryAverage,
         bushAverageHealth: state.metrics.bushAverageHealth,
+        deathsTotal: state.metrics.deathsTotal,
+        deathsAge: state.metrics.deathsByCause?.age ?? 0,
+        deathsStarvation: state.metrics.deathsByCause?.starvation ?? 0,
+        deathsThirst: state.metrics.deathsByCause?.thirst ?? 0,
+        deathsInjury: state.metrics.deathsByCause?.injury ?? 0,
+        deathsOther: state.metrics.deathsByCause?.other ?? 0,
         creatureCount: state.creatures.length,
         squaresCount: speciesCounts[SPECIES.SQUARE],
         trianglesCount: speciesCounts[SPECIES.TRIANGLE],

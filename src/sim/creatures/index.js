@@ -88,6 +88,41 @@ export function updateCreatureLifeStages({ creatures, config }) {
   }
 }
 
+export function applyCreatureDeaths({ creatures, config, metrics }) {
+  if (!Array.isArray(creatures)) {
+    return;
+  }
+  const maxAgeTicks = resolveMaxAgeTicks(
+    config?.creatureMaxAgeTicks,
+    Infinity
+  );
+  const counts = metrics?.deathsByCause;
+  let totalDeaths = 0;
+  let writeIndex = 0;
+
+  for (let i = 0; i < creatures.length; i += 1) {
+    const creature = creatures[i];
+    const cause = selectDeathCause({ creature, maxAgeTicks });
+    if (!cause) {
+      creatures[writeIndex] = creature;
+      writeIndex += 1;
+      continue;
+    }
+    creature.deathCause = cause;
+    totalDeaths += 1;
+    if (counts && counts[cause] !== undefined) {
+      counts[cause] += 1;
+    } else if (counts) {
+      counts.other += 1;
+    }
+  }
+
+  creatures.length = writeIndex;
+  if (metrics) {
+    metrics.deathsTotal = (metrics.deathsTotal ?? 0) + totalDeaths;
+  }
+}
+
 const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
 
 const resolveBasalDrain = (value) =>
@@ -119,6 +154,37 @@ const resolveSprintMultiplier = (value, fallback) =>
 
 const resolveStaminaRegen = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
+
+const resolveMaxAgeTicks = (value, fallback) => {
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+  return Math.max(0, Math.trunc(value));
+};
+
+const isMeterEmpty = (value) => Number.isFinite(value) && value <= 0;
+
+const selectDeathCause = ({ creature, maxAgeTicks }) => {
+  if (Number.isFinite(maxAgeTicks) && maxAgeTicks > 0) {
+    if (Number.isFinite(creature.ageTicks) && creature.ageTicks >= maxAgeTicks) {
+      return 'age';
+    }
+  }
+  const meters = creature?.meters;
+  if (!meters) {
+    return null;
+  }
+  if (isMeterEmpty(meters.hp)) {
+    return 'injury';
+  }
+  if (isMeterEmpty(meters.water)) {
+    return 'thirst';
+  }
+  if (isMeterEmpty(meters.energy)) {
+    return 'starvation';
+  }
+  return null;
+};
 
 const normalizeNeedRatio = (value, base) => {
   const ratio = value / base;

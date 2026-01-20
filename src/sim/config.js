@@ -58,6 +58,7 @@ export const simConfig = {
   creatureEatThreshold: 0.8,
   creatureEatAmount: 0.08,
   creatureGrassEatMin: 0.05,
+  creatureMaxAgeTicks: 600,
   creatureLifeStages: [
     {
       id: 'juvenile',
