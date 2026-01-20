@@ -79,6 +79,8 @@ Rules:
   - Contains: Track 7 spec/blueprint/plan (Survival Actions + Sprinting + Death)
 - tracks/2026-01-24-track-8-food-web-perception-memory/
   - Contains: Track 8 spec/blueprint/plan (Food Web + Perception + Memory)
+- tracks/2026-01-25-track-9-predation-chase-dynamics/
+  - Contains: Track 9 spec/blueprint/plan (Predation + Chase Dynamics)
 - tracks/2026-01-22-track-maintenance-creature-render-pass/
   - Contains: Maintenance spec/blueprint/plan (Creature render pass)
 - tracks/2026-01-23-track-maintenance-metrics-population/
