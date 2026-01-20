@@ -4,8 +4,10 @@ import { createRng } from '../src/sim/rng.js';
 import { createWorldGrid } from '../src/sim/world-grid.js';
 import {
   applyCreatureSprintCosts,
+  updateCreatureAlertness,
   regenerateCreatureStamina,
   updateCreatureMovement,
+  updateCreaturePerception,
   updateCreatureSprintDecision
 } from '../src/sim/creatures/index.js';
 
@@ -200,5 +202,56 @@ describe('creature stamina sprinting', () => {
     creature.motion.isSprinting = false;
     regenerateCreatureStamina({ creatures: [creature], config });
     expect(creature.meters.stamina).toBeCloseTo(0.45, 5);
+  });
+});
+
+describe('creature perception and alertness', () => {
+  it('detects nearby resources and applies reaction delay', () => {
+    const world = createWorldGrid({
+      width: 6,
+      height: 1,
+      defaultTerrain: 'plains'
+    });
+    world.setTerrainAt(4, 0, 'water');
+    world.setGrassAt(2, 0, 0.2);
+
+    const creature = {
+      species: 'circle',
+      position: { x: 0.5, y: 0.5 },
+      traits: {
+        perceptionRange: 4,
+        grassEatMin: 0.05,
+        berryEatMin: 0.1,
+        alertness: 0.4,
+        reactionDelayTicks: 3
+      },
+      perception: null,
+      alertness: null
+    };
+    const config = {
+      creaturePerceptionRange: 3,
+      creaturePerceptionRangeMax: 6,
+      creatureAlertnessBase: 0.5,
+      creatureReactionDelayTicks: 2,
+      creatureGrassEatMin: 0.05,
+      creatureBerryEatMin: 0.1,
+      waterTerrain: 'water',
+      shoreTerrain: 'shore'
+    };
+
+    updateCreaturePerception({ creatures: [creature], config, world });
+    updateCreatureAlertness({ creatures: [creature], config });
+
+    expect(creature.perception.foodType).toBe('grass');
+    expect(creature.perception.waterDistance).toBe(4);
+    expect(creature.alertness.canReact).toBe(false);
+
+    for (let i = 0; i < 2; i += 1) {
+      updateCreaturePerception({ creatures: [creature], config, world });
+      updateCreatureAlertness({ creatures: [creature], config });
+    }
+
+    expect(creature.alertness.reactionCooldown).toBeGreaterThanOrEqual(0);
+    expect(creature.alertness.canReact).toBe(true);
   });
 });

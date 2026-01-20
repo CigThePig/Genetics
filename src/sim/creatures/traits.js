@@ -18,6 +18,18 @@ export const createCreatureTraits = ({ config, species } = {}) => {
 
   return {
     speed: applyMultiplier(config?.creatureBaseSpeed, multipliers.speed),
+    perceptionRange: applyMultiplier(
+      config?.creaturePerceptionRange,
+      multipliers.perceptionRange
+    ),
+    alertness: applyMultiplier(
+      config?.creatureAlertnessBase,
+      multipliers.alertness
+    ),
+    reactionDelayTicks: applyMultiplier(
+      config?.creatureReactionDelayTicks,
+      multipliers.reactionDelayTicks
+    ),
     basalEnergyDrain: applyMultiplier(
       config?.creatureBasalEnergyDrain,
       multipliers.basalEnergyDrain

@@ -11,10 +11,12 @@ import {
   applyCreatureSprintCosts,
   applyCreatureDeaths,
   regenerateCreatureStamina,
+  updateCreatureAlertness,
   updateCreatureBasalMetabolism,
   updateCreatureIntent,
   updateCreatureLifeStages,
   updateCreatureMovement,
+  updateCreaturePerception,
   updateCreaturePriority,
   updateCreatureSprintDecision
 } from './creatures/index.js';
@@ -122,6 +124,15 @@ export function createSim(config = simConfig) {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
       updateCreaturePriority({
+        creatures: state.creatures,
+        config: resolvedConfig
+      });
+      updateCreaturePerception({
+        creatures: state.creatures,
+        config: resolvedConfig,
+        world: state.world
+      });
+      updateCreatureAlertness({
         creatures: state.creatures,
         config: resolvedConfig
       });

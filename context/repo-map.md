@@ -121,6 +121,10 @@ Rules:
   - Role: per-creature trait defaults derived from config
 - src/sim/creatures/food.js
   - Role: canonical diet preferences, food properties, and efficiency helpers
+- src/sim/creatures/perception.js
+  - Role: perception scanning for nearby food/water with terrain modifiers
+- src/sim/creatures/alertness.js
+  - Role: alertness and reaction delay updates driven by perception changes
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js
