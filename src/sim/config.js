@@ -116,6 +116,33 @@ export const simConfig = {
       foodEfficiency: { meat: 1.2, grass: 0.75, berries: 0.7 }
     }
   },
+  creatureGenomeDefaults: {
+    default: {
+      speed: 0.5,
+      perceptionRange: 0.5,
+      alertness: 0.5,
+      reactionDelayTicks: 0.5,
+      basalEnergyDrain: 0.5,
+      basalWaterDrain: 0.5,
+      basalStaminaDrain: 0.5,
+      sprintStartThreshold: 0.5,
+      sprintStopThreshold: 0.5,
+      sprintSpeedMultiplier: 0.5,
+      sprintStaminaDrain: 0.5,
+      staminaRegen: 0.5,
+      drinkThreshold: 0.5,
+      drinkAmount: 0.5,
+      eatThreshold: 0.5,
+      eatAmount: 0.5,
+      grassEatMin: 0.5,
+      berryEatMin: 0.5
+    },
+    square: {},
+    triangle: {},
+    circle: {},
+    octagon: {}
+  },
+  creatureGenomeJitter: 0.08,
   creatureMaxAgeTicks: 600,
   creatureLifeStages: [
     {

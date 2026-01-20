@@ -1,90 +1,117 @@
+import { mapGenomeToTraitMultipliers } from './genetics.js';
+
 const resolveMultiplier = (value) => (Number.isFinite(value) ? value : 1);
 
-const applyMultiplier = (value, multiplier) => {
+const applyMultipliers = (value, ...multipliers) => {
   if (!Number.isFinite(value)) {
     return value;
   }
-  return value * resolveMultiplier(multiplier);
+  return multipliers.reduce(
+    (result, multiplier) => result * resolveMultiplier(multiplier),
+    value
+  );
 };
 
 const resolveFoodEfficiency = (baseEfficiency, multipliers = {}) => ({
-  grass: applyMultiplier(baseEfficiency?.grass, multipliers.grass),
-  berries: applyMultiplier(baseEfficiency?.berries, multipliers.berries),
-  meat: applyMultiplier(baseEfficiency?.meat, multipliers.meat)
+  grass: applyMultipliers(baseEfficiency?.grass, multipliers.grass),
+  berries: applyMultipliers(baseEfficiency?.berries, multipliers.berries),
+  meat: applyMultipliers(baseEfficiency?.meat, multipliers.meat)
 });
 
-export const createCreatureTraits = ({ config, species } = {}) => {
+export const createCreatureTraits = ({ config, species, genome } = {}) => {
   const multipliers = config?.creatureTraitMultipliers?.[species] ?? {};
+  const genomeMultipliers = mapGenomeToTraitMultipliers(genome, config);
 
   return {
-    speed: applyMultiplier(config?.creatureBaseSpeed, multipliers.speed),
-    perceptionRange: applyMultiplier(
+    speed: applyMultipliers(
+      config?.creatureBaseSpeed,
+      multipliers.speed,
+      genomeMultipliers.speed
+    ),
+    perceptionRange: applyMultipliers(
       config?.creaturePerceptionRange,
-      multipliers.perceptionRange
+      multipliers.perceptionRange,
+      genomeMultipliers.perceptionRange
     ),
-    alertness: applyMultiplier(
+    alertness: applyMultipliers(
       config?.creatureAlertnessBase,
-      multipliers.alertness
+      multipliers.alertness,
+      genomeMultipliers.alertness
     ),
-    reactionDelayTicks: applyMultiplier(
+    reactionDelayTicks: applyMultipliers(
       config?.creatureReactionDelayTicks,
-      multipliers.reactionDelayTicks
+      multipliers.reactionDelayTicks,
+      genomeMultipliers.reactionDelayTicks
     ),
-    basalEnergyDrain: applyMultiplier(
+    basalEnergyDrain: applyMultipliers(
       config?.creatureBasalEnergyDrain,
-      multipliers.basalEnergyDrain
+      multipliers.basalEnergyDrain,
+      genomeMultipliers.basalEnergyDrain
     ),
-    basalWaterDrain: applyMultiplier(
+    basalWaterDrain: applyMultipliers(
       config?.creatureBasalWaterDrain,
-      multipliers.basalWaterDrain
+      multipliers.basalWaterDrain,
+      genomeMultipliers.basalWaterDrain
     ),
-    basalStaminaDrain: applyMultiplier(
+    basalStaminaDrain: applyMultipliers(
       config?.creatureBasalStaminaDrain,
-      multipliers.basalStaminaDrain
+      multipliers.basalStaminaDrain,
+      genomeMultipliers.basalStaminaDrain
     ),
-    sprintStartThreshold: applyMultiplier(
+    sprintStartThreshold: applyMultipliers(
       config?.creatureSprintStartThreshold,
-      multipliers.sprintStartThreshold
+      multipliers.sprintStartThreshold,
+      genomeMultipliers.sprintStartThreshold
     ),
-    sprintStopThreshold: applyMultiplier(
+    sprintStopThreshold: applyMultipliers(
       config?.creatureSprintStopThreshold,
-      multipliers.sprintStopThreshold
+      multipliers.sprintStopThreshold,
+      genomeMultipliers.sprintStopThreshold
     ),
-    sprintSpeedMultiplier: applyMultiplier(
+    sprintSpeedMultiplier: applyMultipliers(
       config?.creatureSprintSpeedMultiplier,
-      multipliers.sprintSpeedMultiplier
+      multipliers.sprintSpeedMultiplier,
+      genomeMultipliers.sprintSpeedMultiplier
     ),
-    sprintStaminaDrain: applyMultiplier(
+    sprintStaminaDrain: applyMultipliers(
       config?.creatureSprintStaminaDrain,
-      multipliers.sprintStaminaDrain
+      multipliers.sprintStaminaDrain,
+      genomeMultipliers.sprintStaminaDrain
     ),
-    staminaRegen: applyMultiplier(
+    staminaRegen: applyMultipliers(
       config?.creatureStaminaRegen,
-      multipliers.staminaRegen
+      multipliers.staminaRegen,
+      genomeMultipliers.staminaRegen
     ),
-    drinkThreshold: applyMultiplier(
+    drinkThreshold: applyMultipliers(
       config?.creatureDrinkThreshold,
-      multipliers.drinkThreshold
+      multipliers.drinkThreshold,
+      genomeMultipliers.drinkThreshold
     ),
-    drinkAmount: applyMultiplier(
+    drinkAmount: applyMultipliers(
       config?.creatureDrinkAmount,
-      multipliers.drinkAmount
+      multipliers.drinkAmount,
+      genomeMultipliers.drinkAmount
     ),
-    eatThreshold: applyMultiplier(
+    eatThreshold: applyMultipliers(
       config?.creatureEatThreshold,
-      multipliers.eatThreshold
+      multipliers.eatThreshold,
+      genomeMultipliers.eatThreshold
     ),
-    eatAmount: applyMultiplier(
+    eatAmount: applyMultipliers(
       config?.creatureEatAmount,
-      multipliers.eatAmount
+      multipliers.eatAmount,
+      genomeMultipliers.eatAmount
     ),
-    grassEatMin: applyMultiplier(
+    grassEatMin: applyMultipliers(
       config?.creatureGrassEatMin,
-      multipliers.grassEatMin
+      multipliers.grassEatMin,
+      genomeMultipliers.grassEatMin
     ),
-    berryEatMin: applyMultiplier(
+    berryEatMin: applyMultipliers(
       config?.creatureBerryEatMin,
-      multipliers.berryEatMin
+      multipliers.berryEatMin,
+      genomeMultipliers.berryEatMin
     ),
     foodEfficiency: resolveFoodEfficiency(
       config?.creatureFoodEfficiency,

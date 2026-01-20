@@ -1,4 +1,5 @@
 import { createCreatureTraits } from './traits.js';
+import { inheritCreatureGenome } from './genetics.js';
 
 const fallbackLifeStages = [
   {
@@ -348,11 +349,22 @@ export function updateCreatureReproduction({
       config
     });
 
+    const genome = inheritCreatureGenome({
+      parentA: creature,
+      parentB: mate,
+      config
+    });
+
     newborns.push({
       id: nextId,
       position,
       species: creature.species,
-      traits: createCreatureTraits({ config, species: creature.species }),
+      genome,
+      traits: createCreatureTraits({
+        config,
+        species: creature.species,
+        genome
+      }),
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
       priority: 'thirst',

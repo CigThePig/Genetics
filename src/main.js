@@ -126,6 +126,18 @@ const input = createInput({
         : '--';
       return `Grass ${grass}, Berries ${berries}, Meat ${meat}`;
     };
+    const formatGenomeValue = (value) =>
+      Number.isFinite(value) ? value.toFixed(2) : '--';
+    const formatGenomeSummary = (genome) => {
+      if (!genome) {
+        return 'Genome: --';
+      }
+      return `Genome: spd ${formatGenomeValue(genome.speed)}, perc ${formatGenomeValue(
+        genome.perceptionRange
+      )}, alert ${formatGenomeValue(genome.alertness)}, drain ${formatGenomeValue(
+        genome.basalEnergyDrain
+      )}`;
+    };
     const formatMemoryEntry = (entry) => {
       const type = entry?.type ?? 'unknown';
       const typeLabel =
@@ -225,6 +237,10 @@ const input = createInput({
           `Alertness: ${Number.isFinite(creature.alertness?.level) ? creature.alertness.level.toFixed(2) : '--'}`,
           `Reaction delay: ${Number.isFinite(creature.alertness?.reactionDelay) ? creature.alertness.reactionDelay : '--'}`,
           `Reaction cooldown: ${Number.isFinite(creature.alertness?.reactionCooldown) ? creature.alertness.reactionCooldown : '--'}`,
+          formatGenomeSummary(creature.genome),
+          `Trait speed: ${Number.isFinite(creature.traits?.speed) ? creature.traits.speed.toFixed(2) : '--'}`,
+          `Trait alertness: ${Number.isFinite(creature.traits?.alertness) ? creature.traits.alertness.toFixed(2) : '--'}`,
+          `Trait basal drain: E ${Number.isFinite(creature.traits?.basalEnergyDrain) ? creature.traits.basalEnergyDrain.toFixed(3) : '--'}, W ${Number.isFinite(creature.traits?.basalWaterDrain) ? creature.traits.basalWaterDrain.toFixed(3) : '--'}`,
           ...formatTargetingRows(creature.targeting),
           ...formatChaseRows(creature.chase),
           `Food efficiency: ${formatEfficiency(creature.traits?.foodEfficiency)}`,
