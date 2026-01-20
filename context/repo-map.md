@@ -77,6 +77,8 @@ Rules:
   - Contains: Track 6.5 spec/blueprint/plan (Canon Lock + Species Retrofit)
 - tracks/2026-01-19-track-7-survival-actions-sprinting-death/
   - Contains: Track 7 spec/blueprint/plan (Survival Actions + Sprinting + Death)
+- tracks/2026-01-24-track-8-food-web-perception-memory/
+  - Contains: Track 8 spec/blueprint/plan (Food Web + Perception + Memory)
 - tracks/2026-01-22-track-maintenance-creature-render-pass/
   - Contains: Maintenance spec/blueprint/plan (Creature render pass)
 - tracks/2026-01-23-track-maintenance-metrics-population/
