@@ -54,6 +54,12 @@ export const simConfig = {
     triangle: { circle: 1, octagon: 0.85 },
     octagon: { square: 1 }
   },
+  creatureChaseStartThreshold: 0.6,
+  creatureChaseStopThreshold: 0.25,
+  creatureChaseLoseDistance: 6,
+  creatureChaseLoseTicks: 6,
+  creatureChaseCatchDistance: 0.6,
+  creatureChaseRestTicks: 6,
   creatureMemoryMaxEntries: 12,
   creatureMemoryDecay: 0.02,
   creatureMemoryMinStrength: 0.05,

@@ -41,10 +41,10 @@ Stop point:
 ## Phase 2 — Chase Loop (Step 44)
 
 Tasks:
-- [ ] Implement chase loop with stamina gating and target loss rules.
-- [ ] Add metrics for chase attempts/outcomes.
-- [ ] Surface chase state/target in inspector for observability.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Implement chase loop with stamina gating and target loss rules.
+- [x] Add metrics for chase attempts/outcomes.
+- [x] Surface chase state/target in inspector for observability.
+- [x] Update /context/repo-map.md if files/roles change.
 
 Files touched (expected):
 - src/sim/creatures/ (chase state/logic)

@@ -169,6 +169,29 @@ const input = createInput({
         `Target distance: ${distance}`
       ];
     };
+    const formatChaseRows = (chase) => {
+      if (!chase) {
+        return ['Chase: none'];
+      }
+      const status = chase.status ?? 'idle';
+      const targetId = Number.isFinite(chase.targetId) ? chase.targetId : '--';
+      const prey = chase.preySpecies
+        ? getSpeciesLabel(chase.preySpecies)
+        : 'Unknown';
+      const distance = Number.isFinite(chase.distance)
+        ? chase.distance.toFixed(2)
+        : '--';
+      const restTicks = Number.isFinite(chase.restTicks) ? chase.restTicks : '--';
+      const outcome = chase.lastOutcome ?? 'none';
+      return [
+        `Chase status: ${status}`,
+        `Chase target: ${targetId}`,
+        `Chase prey: ${prey}`,
+        `Chase distance: ${distance}`,
+        `Chase rest ticks: ${restTicks}`,
+        `Chase last outcome: ${outcome}`
+      ];
+    };
     const memoryRows = (creature) => {
       const entries = creature?.memory?.entries;
       if (!Array.isArray(entries) || entries.length === 0) {
@@ -203,6 +226,7 @@ const input = createInput({
           `Reaction delay: ${Number.isFinite(creature.alertness?.reactionDelay) ? creature.alertness.reactionDelay : '--'}`,
           `Reaction cooldown: ${Number.isFinite(creature.alertness?.reactionCooldown) ? creature.alertness.reactionCooldown : '--'}`,
           ...formatTargetingRows(creature.targeting),
+          ...formatChaseRows(creature.chase),
           `Food efficiency: ${formatEfficiency(creature.traits?.foodEfficiency)}`,
           ...memoryRows(creature),
           `Energy: ${creature.meters.energy.toFixed(2)}`,

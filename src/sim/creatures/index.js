@@ -12,8 +12,18 @@ import {
   MEMORY_TYPES
 } from './memory.js';
 import { selectPredatorTarget } from './targeting.js';
+import {
+  getChaseTarget,
+  startCreatureChase,
+  updateCreatureChase
+} from './chase.js';
 
-export { updateCreaturePerception, updateCreatureAlertness, updateCreatureMemory };
+export {
+  updateCreaturePerception,
+  updateCreatureAlertness,
+  updateCreatureMemory,
+  updateCreatureChase
+};
 import {
   FOOD_TYPES,
   getDietPreferences,
@@ -553,7 +563,7 @@ const getGrassAtCell = (world, cell) => {
   return Number.isFinite(amount) ? amount : 0;
 };
 
-export function updateCreatureIntent({ creatures, config, world }) {
+export function updateCreatureIntent({ creatures, config, world, metrics, tick }) {
   if (!Array.isArray(creatures) || !world) {
     return;
   }
@@ -620,35 +630,56 @@ export function updateCreatureIntent({ creatures, config, world }) {
     if (creature.priority === 'thirst' && canDrink) {
       intent = 'drink';
     } else if (creature.priority === 'hunger' && canEat) {
-      const choice = selectFoodChoice({
-        species: creature.species,
-        availability: foodAvailability,
-        minimums: foodMinimums
-      });
-      if (choice) {
-        intent = 'eat';
-        foodType = choice.type;
+      const chaseTarget = getChaseTarget(creature, creatures);
+      if (chaseTarget && creature.chase?.lastKnownPosition) {
+        intent = 'hunt';
+        target = { ...creature.chase.lastKnownPosition };
+        targeting = {
+          targetId: chaseTarget.id ?? null,
+          preySpecies: chaseTarget.species ?? null,
+          score: creature.targeting?.score ?? null,
+          distance: creature.chase.distance ?? null
+        };
       } else {
-        const predatorTarget = selectPredatorTarget({
-          predator: creature,
-          creatures,
-          config
+        const choice = selectFoodChoice({
+          species: creature.species,
+          availability: foodAvailability,
+          minimums: foodMinimums
         });
-        if (predatorTarget) {
-          intent = 'hunt';
-          target = { ...predatorTarget.target.position };
-          targeting = {
-            targetId: predatorTarget.target?.id ?? null,
-            preySpecies: predatorTarget.preySpecies,
-            score: predatorTarget.score,
-            distance: predatorTarget.distance
-          };
+        if (choice) {
+          intent = 'eat';
+          foodType = choice.type;
         } else {
-          memoryEntry = selectMemoryTarget({
-            creature,
-            type: MEMORY_TYPES.FOOD,
-            foodTypes: getDietPreferences(creature.species)
+          const predatorTarget = selectPredatorTarget({
+            predator: creature,
+            creatures,
+            config
           });
+          if (predatorTarget) {
+            const started = startCreatureChase({
+              creature,
+              target: predatorTarget.target,
+              metrics,
+              config,
+              tick
+            });
+            if (started) {
+              intent = 'hunt';
+              target = { ...predatorTarget.target.position };
+              targeting = {
+                targetId: predatorTarget.target?.id ?? null,
+                preySpecies: predatorTarget.preySpecies,
+                score: predatorTarget.score,
+                distance: predatorTarget.distance
+              };
+            }
+          } else {
+            memoryEntry = selectMemoryTarget({
+              creature,
+              type: MEMORY_TYPES.FOOD,
+              foodTypes: getDietPreferences(creature.species)
+            });
+          }
         }
       }
     } else if (creature.priority === 'thirst' && waterRatio < drinkThreshold) {
