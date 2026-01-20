@@ -238,7 +238,10 @@ export function createUI({
     { key: 'bushCount', label: 'Bush count', section: 'plants' },
     { key: 'berryTotal', label: 'Berry total', section: 'plants' },
     { key: 'berryAverage', label: 'Berries per bush', section: 'plants' },
-    { key: 'bushAverageHealth', label: 'Bush avg health', section: 'plants' }
+    { key: 'bushAverageHealth', label: 'Bush avg health', section: 'plants' },
+    { key: 'chaseAttempts', label: 'Chase attempts', section: 'chase' },
+    { key: 'chaseSuccesses', label: 'Chase successes', section: 'chase' },
+    { key: 'chaseLosses', label: 'Chase losses', section: 'chase' }
   ];
 
   const metricRows = new Map();
@@ -291,6 +294,13 @@ export function createUI({
   );
   if (plantMetrics.length) {
     metricsBody.append(createMetricSection('Plants', plantMetrics));
+  }
+
+  const chaseMetrics = metricDefinitions.filter(
+    (metric) => metric.section === 'chase'
+  );
+  if (chaseMetrics.length) {
+    metricsBody.append(createMetricSection('Chase', chaseMetrics));
   }
 
   const metricsSections = metrics?.getSkeletonSections

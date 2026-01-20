@@ -131,6 +131,8 @@ Rules:
   - Role: memory records for food/water locations with decay and selection helpers
 - src/sim/creatures/targeting.js
   - Role: deterministic predator target scoring helpers
+- src/sim/creatures/chase.js
+  - Role: chase state updates, stamina gating, and loss rules
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js

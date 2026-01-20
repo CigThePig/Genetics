@@ -13,6 +13,7 @@ import {
   regenerateCreatureStamina,
   updateCreatureAlertness,
   updateCreatureBasalMetabolism,
+  updateCreatureChase,
   updateCreatureIntent,
   updateCreatureLifeStages,
   updateCreatureMemory,
@@ -74,6 +75,9 @@ export function createSim(config = simConfig) {
       berryTotal: 0,
       berryAverage: 0,
       bushAverageHealth: 0,
+      chaseAttempts: 0,
+      chaseSuccesses: 0,
+      chaseLosses: 0,
       deathsTotal: 0,
       deathsByCause: {
         age: 0,
@@ -111,6 +115,9 @@ export function createSim(config = simConfig) {
         berryTotal: 0,
         berryAverage: 0,
         bushAverageHealth: 0,
+        chaseAttempts: 0,
+        chaseSuccesses: 0,
+        chaseLosses: 0,
         deathsTotal: 0,
         deathsByCause: {
           age: 0,
@@ -141,10 +148,18 @@ export function createSim(config = simConfig) {
         creatures: state.creatures,
         config: resolvedConfig
       });
+      updateCreatureChase({
+        creatures: state.creatures,
+        config: resolvedConfig,
+        metrics: state.metrics,
+        tick: state.tick
+      });
       updateCreatureIntent({
         creatures: state.creatures,
         config: resolvedConfig,
-        world: state.world
+        world: state.world,
+        metrics: state.metrics,
+        tick: state.tick
       });
       updateCreatureSprintDecision({
         creatures: state.creatures,
@@ -198,6 +213,9 @@ export function createSim(config = simConfig) {
         berryTotal: state.metrics.berryTotal,
         berryAverage: state.metrics.berryAverage,
         bushAverageHealth: state.metrics.bushAverageHealth,
+        chaseAttempts: state.metrics.chaseAttempts,
+        chaseSuccesses: state.metrics.chaseSuccesses,
+        chaseLosses: state.metrics.chaseLosses,
         deathsTotal: state.metrics.deathsTotal,
         deathsAge: state.metrics.deathsByCause?.age ?? 0,
         deathsStarvation: state.metrics.deathsByCause?.starvation ?? 0,
