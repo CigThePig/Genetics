@@ -93,11 +93,11 @@
 ## Phase 2 — Stamina + Sprinting (Step 33)
 
 ### Tasks
-- [ ] Add stamina meter and sprint decision rules tied to movement.
-- [ ] Apply stamina drain/regen aligned to tick order.
-- [ ] Ensure deterministic selection for sprint usage.
-- [ ] Add/update automated test for determinism-sensitive movement costs (if changed).
-- [ ] Update /context/repo-map.md if any files/roles change.
+- [x] Add stamina meter and sprint decision rules tied to movement.
+- [x] Apply stamina drain/regen aligned to tick order.
+- [x] Ensure deterministic selection for sprint usage.
+- [x] Add/update automated test for determinism-sensitive movement costs (if changed).
+- [x] Update /context/repo-map.md if any files/roles change.
 
 ### Files touched
 - src/sim/creatures/index.js

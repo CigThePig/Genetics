@@ -8,11 +8,14 @@ import { SPECIES } from './species.js';
 import {
   createCreatures,
   applyCreatureActions,
+  applyCreatureSprintCosts,
+  regenerateCreatureStamina,
   updateCreatureBasalMetabolism,
   updateCreatureIntent,
   updateCreatureLifeStages,
   updateCreatureMovement,
-  updateCreaturePriority
+  updateCreaturePriority,
+  updateCreatureSprintDecision
 } from './creatures/index.js';
 
 export function createSim(config = simConfig) {
@@ -110,6 +113,10 @@ export function createSim(config = simConfig) {
         config: resolvedConfig,
         world: state.world
       });
+      updateCreatureSprintDecision({
+        creatures: state.creatures,
+        config: resolvedConfig
+      });
       updateCreatureMovement({
         creatures: state.creatures,
         config: resolvedConfig,
@@ -125,7 +132,15 @@ export function createSim(config = simConfig) {
         creatures: state.creatures,
         config: resolvedConfig
       });
+      applyCreatureSprintCosts({
+        creatures: state.creatures,
+        config: resolvedConfig
+      });
       updateCreatureLifeStages({ creatures: state.creatures, config: resolvedConfig });
+      regenerateCreatureStamina({
+        creatures: state.creatures,
+        config: resolvedConfig
+      });
       updatePlants({ state, config: resolvedConfig, rng });
       return state.lastRoll;
     },

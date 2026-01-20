@@ -114,6 +114,12 @@ const resolveActionThreshold = (value, fallback) => {
 const resolveActionAmount = (value, fallback) =>
   Number.isFinite(value) && value > 0 ? value : fallback;
 
+const resolveSprintMultiplier = (value, fallback) =>
+  Number.isFinite(value) && value > 0 ? value : fallback;
+
+const resolveStaminaRegen = (value, fallback) =>
+  Number.isFinite(value) ? Math.max(0, value) : fallback;
+
 const normalizeNeedRatio = (value, base) => {
   const ratio = value / base;
   if (!Number.isFinite(ratio)) {
@@ -190,6 +196,103 @@ export function updateCreatureBasalMetabolism({ creatures, config }) {
   }
 }
 
+export function updateCreatureSprintDecision({ creatures, config }) {
+  if (!Array.isArray(creatures)) {
+    return;
+  }
+  const baseStamina = resolveNeedMeterBase(config?.creatureBaseStamina);
+  const fallbackStart = resolveActionThreshold(
+    config?.creatureSprintStartThreshold,
+    0.7
+  );
+  const fallbackStop = resolveActionThreshold(
+    config?.creatureSprintStopThreshold,
+    0.4
+  );
+
+  for (const creature of creatures) {
+    const meters = creature?.meters;
+    if (!meters) {
+      continue;
+    }
+    if (!creature.motion) {
+      creature.motion = {};
+    }
+    const intentType = creature.intent?.type;
+    if (intentType === 'drink' || intentType === 'eat') {
+      creature.motion.isSprinting = false;
+      continue;
+    }
+    const startThreshold = resolveActionThreshold(
+      creature?.traits?.sprintStartThreshold,
+      fallbackStart
+    );
+    const stopThreshold = resolveActionThreshold(
+      creature?.traits?.sprintStopThreshold,
+      fallbackStop
+    );
+    const effectiveStop = Math.min(startThreshold, stopThreshold);
+    const staminaRatio = normalizeNeedRatio(meters.stamina, baseStamina);
+    if (creature.motion.isSprinting) {
+      creature.motion.isSprinting = staminaRatio > effectiveStop;
+    } else {
+      creature.motion.isSprinting = staminaRatio >= startThreshold;
+    }
+  }
+}
+
+export function applyCreatureSprintCosts({ creatures, config }) {
+  if (!Array.isArray(creatures)) {
+    return;
+  }
+  const fallbackDrain = resolveBasalDrain(
+    config?.creatureSprintStaminaDrain
+  );
+
+  for (const creature of creatures) {
+    const meters = creature?.meters;
+    if (!meters || !creature.motion?.isSprinting) {
+      continue;
+    }
+    const sprintDrain = resolveTraitDrain(
+      creature?.traits?.sprintStaminaDrain,
+      fallbackDrain
+    );
+    const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
+      ? creature.lifeStage.metabolismScale
+      : 1;
+    meters.stamina = clampMeter(meters.stamina - sprintDrain * scale);
+  }
+}
+
+export function regenerateCreatureStamina({ creatures, config }) {
+  if (!Array.isArray(creatures)) {
+    return;
+  }
+  const baseStamina = resolveNeedMeterBase(config?.creatureBaseStamina);
+  const fallbackRegen = resolveStaminaRegen(
+    config?.creatureStaminaRegen,
+    0
+  );
+
+  for (const creature of creatures) {
+    const meters = creature?.meters;
+    if (!meters || creature.motion?.isSprinting) {
+      continue;
+    }
+    const regen = resolveStaminaRegen(
+      creature?.traits?.staminaRegen,
+      fallbackRegen
+    );
+    const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
+      ? creature.lifeStage.metabolismScale
+      : 1;
+    meters.stamina = clampMeter(
+      Math.min(baseStamina, meters.stamina + regen * scale)
+    );
+  }
+}
+
 const resolveMovementSpeed = (config) =>
   Number.isFinite(config?.creatureBaseSpeed)
     ? Math.max(0, config.creatureBaseSpeed)
@@ -254,6 +357,12 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const scale = Number.isFinite(creature.lifeStage?.movementScale)
       ? creature.lifeStage.movementScale
       : 1;
+    const sprintMultiplier = creature.motion?.isSprinting
+      ? resolveSprintMultiplier(
+          creature?.traits?.sprintSpeedMultiplier,
+          resolveSprintMultiplier(config?.creatureSprintSpeedMultiplier, 1)
+        )
+      : 1;
     const x = creature.position.x;
     const y = creature.position.y;
     const heading = resolveHeading(creature, rng);
@@ -265,7 +374,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     );
     const terrainFriction =
       Number.isFinite(friction) && friction > 0 ? friction : 1;
-    const distance = (baseSpeed * scale) / terrainFriction;
+    const distance = (baseSpeed * scale * sprintMultiplier) / terrainFriction;
     let nextX = clampPosition(
       x + Math.cos(updatedHeading) * distance,
       0,

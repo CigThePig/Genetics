@@ -24,6 +24,26 @@ export const createCreatureTraits = ({ config, species } = {}) => {
       config?.creatureBasalStaminaDrain,
       multipliers.basalStaminaDrain
     ),
+    sprintStartThreshold: applyMultiplier(
+      config?.creatureSprintStartThreshold,
+      multipliers.sprintStartThreshold
+    ),
+    sprintStopThreshold: applyMultiplier(
+      config?.creatureSprintStopThreshold,
+      multipliers.sprintStopThreshold
+    ),
+    sprintSpeedMultiplier: applyMultiplier(
+      config?.creatureSprintSpeedMultiplier,
+      multipliers.sprintSpeedMultiplier
+    ),
+    sprintStaminaDrain: applyMultiplier(
+      config?.creatureSprintStaminaDrain,
+      multipliers.sprintStaminaDrain
+    ),
+    staminaRegen: applyMultiplier(
+      config?.creatureStaminaRegen,
+      multipliers.staminaRegen
+    ),
     drinkThreshold: applyMultiplier(
       config?.creatureDrinkThreshold,
       multipliers.drinkThreshold
