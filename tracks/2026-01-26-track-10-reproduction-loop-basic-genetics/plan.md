@@ -1,18 +1,26 @@
 # Plan — Track 10: Reproduction Loop + Basic Genetics
 
 ## Recon Summary
-- (To be completed during recon.)
+- Files likely to change: src/sim/creatures/index.js (creature state + exports), src/sim/sim.js (tick wiring), src/sim/config.js (reproduction tunables), src/ui/index.js + sim summary (metrics visibility), context/repo-map.md (new module entry), src/sim/creatures/reproduction.js (new system).
+- Key modules/functions: createCreatures, updateCreatureLifeStages, applyCreatureDeaths, sim tick order, UI metrics renderer.
+- Invariants to respect: determinism via rng, tick order (LifeHistory slot), central RNG usage only, new system in new file, no file > 600 LOC.
+- Cross-module side effects: sim summary feeds UI metrics; reproduction metrics must be surfaced in getSummary.
+- Tick order impact: insert reproduction step in LifeHistory after age updates.
+- Observability impact: add reproduction metrics (births per tick/total) to summary + UI.
+- File rules impact: new system requires src/sim/creatures/reproduction.js; ensure no file exceeds 600 LOC.
+- Risks/regressions: nondeterministic mate selection or offspring ordering; runaway births if thresholds too low.
+- Verification: manual fixed-seed run to confirm deterministic births and metrics update.
 
 ---
 
 ## Phase 1 — Reproduction Loop (Step 45)
 
 ### Tasks
-- [ ] Define reproduction readiness/cooldowns and mating trigger in creature state.
-- [ ] Implement deterministic reproduction flow (select mate, spawn offspring, apply costs).
-- [ ] Add observability: metrics or inspector fields for reproduction events.
-- [ ] Add/confirm central RNG usage for any reproduction randomness.
-- [ ] Reminder: update /context/repo-map.md if any files are added or roles change.
+- [x] Define reproduction readiness/cooldowns and mating trigger in creature state.
+- [x] Implement deterministic reproduction flow (select mate, spawn offspring, apply costs).
+- [x] Add observability: metrics or inspector fields for reproduction events.
+- [x] Add/confirm central RNG usage for any reproduction randomness.
+- [x] Reminder: update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
 - src/sim/creatures/reproduction.js (new)

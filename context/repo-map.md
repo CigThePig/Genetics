@@ -135,6 +135,8 @@ Rules:
   - Role: deterministic predator target scoring helpers
 - src/sim/creatures/chase.js
   - Role: chase state updates, stamina gating, and loss rules
+- src/sim/creatures/reproduction.js
+  - Role: deterministic reproduction loop + offspring spawning
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js
