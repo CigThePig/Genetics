@@ -42,6 +42,22 @@ const DEFAULT_GENE_RANGES = {
   berryEatMin: { min: 0.85, max: 1.2 }
 };
 
+const PLEIOTROPY_BENEFITS = {
+  speed: 1,
+  perceptionRange: 1,
+  alertness: 1,
+  sprintSpeedMultiplier: 1,
+  staminaRegen: 1,
+  reactionDelayTicks: -1
+};
+
+const PLEIOTROPY_COST_GENES = [
+  'basalEnergyDrain',
+  'basalWaterDrain',
+  'basalStaminaDrain',
+  'sprintStaminaDrain'
+];
+
 const resolveGenomeDefaults = (config, species) => {
   const defaults = config?.creatureGenomeDefaults ?? {};
   return {
@@ -67,6 +83,27 @@ const resolveGeneRange = (config, key) => {
   const min = Number.isFinite(range.min) ? range.min : 1;
   const max = Number.isFinite(range.max) ? range.max : min;
   return { min, max };
+};
+
+const resolveMutationRate = (config) => {
+  if (!Number.isFinite(config?.creatureGenomeMutationRate)) {
+    return 0;
+  }
+  return Math.min(1, Math.max(0, config.creatureGenomeMutationRate));
+};
+
+const resolveMutationStrength = (config) => {
+  if (!Number.isFinite(config?.creatureGenomeMutationStrength)) {
+    return 0;
+  }
+  return Math.min(0.5, Math.max(0, config.creatureGenomeMutationStrength));
+};
+
+const resolvePleiotropyScale = (config) => {
+  if (!Number.isFinite(config?.creatureGenomePleiotropyScale)) {
+    return 0;
+  }
+  return Math.min(1, Math.max(0, config.creatureGenomePleiotropyScale));
 };
 
 const normalizeGenome = (genome = {}) => {
@@ -138,4 +175,106 @@ export const mapGenomeToTraitMultipliers = (genome, config) => {
   }
 
   return multipliers;
+};
+
+const getBenefitContribution = (key, delta) => {
+  const direction = PLEIOTROPY_BENEFITS[key];
+  if (!Number.isFinite(direction) || !Number.isFinite(delta)) {
+    return 0;
+  }
+  if (direction > 0) {
+    return Math.max(0, delta);
+  }
+  if (direction < 0) {
+    return Math.max(0, -delta);
+  }
+  return 0;
+};
+
+const updateMutationMetrics = ({
+  metrics,
+  mutationCount,
+  mutationStrength,
+  pleiotropyStrength
+}) => {
+  if (!metrics) {
+    return;
+  }
+  metrics.mutationsLastTick = (metrics.mutationsLastTick ?? 0) + mutationCount;
+  metrics.mutationStrengthLastTick =
+    (metrics.mutationStrengthLastTick ?? 0) + mutationStrength;
+  metrics.mutationTotal = (metrics.mutationTotal ?? 0) + mutationCount;
+  metrics.mutationStrengthTotal =
+    (metrics.mutationStrengthTotal ?? 0) + mutationStrength;
+  metrics.pleiotropyStrengthLastTick =
+    (metrics.pleiotropyStrengthLastTick ?? 0) + pleiotropyStrength;
+  metrics.pleiotropyStrengthTotal =
+    (metrics.pleiotropyStrengthTotal ?? 0) + pleiotropyStrength;
+};
+
+export const mutateCreatureGenome = ({
+  genome,
+  rng,
+  config,
+  metrics
+} = {}) => {
+  if (!genome) {
+    return genome;
+  }
+
+  const mutationRate = resolveMutationRate(config);
+  const mutationStrength = resolveMutationStrength(config);
+  const pleiotropyScale = resolvePleiotropyScale(config);
+  const normalized = normalizeGenome(genome);
+
+  if (!rng || mutationRate <= 0 || mutationStrength <= 0) {
+    return normalized;
+  }
+
+  let mutationCount = 0;
+  let mutationStrengthTotal = 0;
+  let benefitTotal = 0;
+
+  for (const key of Object.keys(normalized).sort()) {
+    if (rng.nextFloat() > mutationRate) {
+      continue;
+    }
+    const delta = (rng.nextFloat() * 2 - 1) * mutationStrength;
+    const nextValue = clamp01(normalized[key] + delta);
+    const appliedDelta = nextValue - normalized[key];
+    if (!Number.isFinite(appliedDelta) || appliedDelta === 0) {
+      continue;
+    }
+    normalized[key] = nextValue;
+    mutationCount += 1;
+    mutationStrengthTotal += Math.abs(appliedDelta);
+    benefitTotal += getBenefitContribution(key, appliedDelta);
+  }
+
+  let pleiotropyStrength = 0;
+  if (benefitTotal > 0 && pleiotropyScale > 0) {
+    const perGeneDelta =
+      (benefitTotal * pleiotropyScale) / PLEIOTROPY_COST_GENES.length;
+    for (const key of PLEIOTROPY_COST_GENES) {
+      if (!Object.prototype.hasOwnProperty.call(normalized, key)) {
+        continue;
+      }
+      const nextValue = clamp01(normalized[key] + perGeneDelta);
+      const appliedDelta = nextValue - normalized[key];
+      if (!Number.isFinite(appliedDelta) || appliedDelta === 0) {
+        continue;
+      }
+      normalized[key] = nextValue;
+      pleiotropyStrength += Math.abs(appliedDelta);
+    }
+  }
+
+  updateMutationMetrics({
+    metrics,
+    mutationCount,
+    mutationStrength: mutationStrengthTotal,
+    pleiotropyStrength
+  });
+
+  return normalized;
 };

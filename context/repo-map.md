@@ -153,6 +153,8 @@ Rules:
 ## Tests
 - tests/sim.test.js
   - Role: Vitest smoke test for sim scaffold
+- tests/genetics.test.js
+  - Role: deterministic genetics mutation smoke test
 - tests/creatures.test.js
   - Role: validates basal metabolism drains per tick
 - tests/targeting.test.js
