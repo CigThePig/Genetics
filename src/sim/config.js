@@ -58,6 +58,31 @@ export const simConfig = {
   creatureEatThreshold: 0.8,
   creatureEatAmount: 0.08,
   creatureGrassEatMin: 0.05,
+  creatureBerryEatMin: 0.1,
+  creatureFoodProperties: {
+    grass: { nutrition: 1, handling: 1, risk: 0.02 },
+    berries: { nutrition: 1.1, handling: 1, risk: 0.04 },
+    meat: { nutrition: 1.35, handling: 1.1, risk: 0.12 }
+  },
+  creatureFoodEfficiency: {
+    grass: 1,
+    berries: 1,
+    meat: 1
+  },
+  creatureTraitMultipliers: {
+    square: {
+      foodEfficiency: { berries: 1.25, grass: 0.75, meat: 0.65 }
+    },
+    triangle: {
+      foodEfficiency: { meat: 1.25, grass: 0.7, berries: 0.7 }
+    },
+    circle: {
+      foodEfficiency: { grass: 1.25, berries: 0.8, meat: 0.6 }
+    },
+    octagon: {
+      foodEfficiency: { meat: 1.2, grass: 0.75, berries: 0.7 }
+    }
+  },
   creatureMaxAgeTicks: 600,
   creatureLifeStages: [
     {
