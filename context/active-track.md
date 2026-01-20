@@ -1,6 +1,6 @@
-Active track: Maintenance — Metrics Population Display
-Path: tracks/2026-01-23-track-maintenance-metrics-population/
-Current phase: Phase 1 — Add creature population metric (complete)
-Next task: Review metrics population display changes
-Last updated: 2026-01-23
-Notes: Maintenance task requested outside roadmap. Files: src/ui/index.js
+Active track: Track 6.5 — Canon Lock + Species Retrofit
+Path: tracks/2026-01-19-track-6p5-canon-lock/
+Current phase: Phase 1 — Canon alignment + species retrofit (in progress)
+Next task: Wire canonical species into creatures, rendering, inspector, and metrics
+Last updated: 2026-01-19
+Notes: Correcting Track 6 implementation to lock canonical species and observability before Track 7.

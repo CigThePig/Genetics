@@ -38,6 +38,26 @@ Core entities (eventual):
   - memory records
   - targets + cooldowns
 
+## Canonical Ecosystem (Locked)
+Species roster (baseline):
+- Squares
+- Triangles
+- Circles
+- Octagons
+
+Resource/food entities (baseline):
+- Grass (distributed on world grid cells)
+- Bushes (discrete entities with health 0..1)
+- Berries (stored on bushes as bush.berries, the berry pool; regeneration tied to bush health)
+- Meat (produced by predation outcomes)
+
+Food web + efficiency bias (authoritative):
+- Squares prefer berries; fallback eat triangles only under severe hunger/berry scarcity.
+- Triangles eat circles and octagons (predatory).
+- Circles prefer grass; fallback eat bushes when grass scarce.
+- Octagons prefer squares; fallback eat grass when squares scarce.
+- Digestive bias: circles best at grass, squares best at berries, predators best at meat; fallback foods are less efficient and/or higher risk.
+
 Observability (must remain intact):
 - population counts per species
 - deaths by cause

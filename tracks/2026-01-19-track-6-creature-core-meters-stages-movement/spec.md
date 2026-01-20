@@ -11,8 +11,10 @@ Creatures exist as the universal machine with core meters, life stages, and basi
 5) Thirst/hunger priority
 
 ## Acceptance
+- Creatures have canonical species identifiers (Square/Triangle/Circle/Octagon).
 - Creatures move, drain, and choose basic priorities.
 - Life stage affects effectiveness.
+- Inspector/renderer make species observable.
 
 ## Risks
 - Priority logic thrashes between needs.

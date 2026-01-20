@@ -5,6 +5,7 @@ Introduce the first real creature loop: a creature data model with meters, life 
 
 ## Systems & Data
 - Creature state
+  - Canonical species identifier (Square/Triangle/Circle/Octagon).
   - Core meters: energy, water, stamina, HP (exact fields defined in plan).
   - Life stage scale factors (e.g., juvenile/adult/elder) derived from age or growth.
   - Simple intent/state (wander vs seek water/food) driven by priority rules.
@@ -33,7 +34,8 @@ Introduce the first real creature loop: a creature data model with meters, life 
 - Creature updates should align to Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics.
 
 ## Observability
-- Inspector should show per-creature meters and life stage.
+- Inspector should show per-creature species, meters, and life stage.
+- Renderer should make species visually distinct (shape-based markers).
 - Metrics may include aggregate averages for energy/water or counts by priority state.
 
 ## Risks & Mitigations

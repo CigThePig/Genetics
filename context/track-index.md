@@ -165,8 +165,10 @@ Includes:
 30) Thirst/hunger priority
 
 Acceptance:
+- Creatures have a canonical species field (Square/Triangle/Circle/Octagon).
 - Creatures move, drain, and choose basic priorities.
 - Life stage affects effectiveness.
+- Renderer/inspector make species observable.
 
 Risks:
 - Priority logic thrashes between needs.
@@ -178,11 +180,34 @@ Verification:
 
 ---
 
+## Track 6.5 — Canon Lock + Species Retrofit
+Goal: Correct Track 6 implementation to lock canonical species in code and align docs before Track 7.
+Includes:
+1) Canonical species module + deterministic spawn assignment
+2) Render distinct shapes per species + show species in inspector
+3) Metrics include per-species population counts
+4) Single canon source-of-truth section in context/architecture.md
+5) Track 7 docs patched to reference canon and avoid generic species
+
+Acceptance:
+- Canon species are first-class in code and observable (renderer + inspector + metrics).
+- Canon definitions are explicit in context docs and referenced by future tracks.
+- Track 7 docs use canonical names and reference the canon section.
+
+Risks:
+- Inconsistent language across docs if canon is repeated without a single source.
+
+Verification:
+- “Squares/Triangles/Circles/Octagons” appear in a canonical definition section.
+- “bush health”, “berry pool”, and “food web” are explicitly defined.
+
+---
+
 ## Track 7 — Survival Actions + Sprinting + Death (Steps 31–35)
 Goal: The loop becomes “alive.”
 Includes:
 31) Drinking behavior
-32) Grass eating
+32) Grass eating (Circles only; other species skip)
 33) Stamina + sprinting
 34) Death conditions
 35) Population counters
@@ -204,9 +229,9 @@ Verification:
 ## Track 8 — Food Web + Perception + Memory (Steps 36–42)
 Goal: Turn wandering dots into ecology participants.
 Includes:
-36) Diet ranking + fallback rules
-37) Food properties (nutrition/handling/risk)
-38) Digestive efficiency biases
+36) Canonical diet ranking + fallback rules (Squares/Triangles/Circles/Octagons)
+37) Food properties (nutrition/handling/risk) aligned to canon resources
+38) Digestive efficiency biases (canon anti-omnivore rules)
 39) Perception v1 (sight + terrain)
 40) Alertness + reaction delay
 41) Memory records (food/water/danger/mate spots)
@@ -229,7 +254,7 @@ Verification:
 ## Track 9 — Predation + Chase Dynamics (Steps 43–44)
 Goal: Chases matter before combat exists.
 Includes:
-43) Target scoring
+43) Target scoring (Triangles hunt Circles/Octagons; Octagons hunt Squares)
 44) Chase loop (stamina + losing target)
 
 Acceptance:
@@ -268,7 +293,7 @@ Verification:
 ## Track 11 — Color System + Mating Preferences (Steps 48–49)
 Goal: Add universal color and mating preference visibility.
 Includes:
-48) Universal color integration across species
+48) Universal color integration across all canonical species
 49) Color perception + mate preference inspector upgrades
 
 Acceptance:

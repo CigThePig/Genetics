@@ -220,6 +220,10 @@ export function createUI({
 
   const metricDefinitions = [
     { key: 'creatureCount', label: 'Creatures', section: 'population' },
+    { key: 'squaresCount', label: 'Squares', section: 'population' },
+    { key: 'trianglesCount', label: 'Triangles', section: 'population' },
+    { key: 'circlesCount', label: 'Circles', section: 'population' },
+    { key: 'octagonsCount', label: 'Octagons', section: 'population' },
     { key: 'grassAverage', label: 'Grass avg', section: 'plants' },
     { key: 'grassTotal', label: 'Grass total', section: 'plants' },
     { key: 'grassCoverage', label: 'Grass coverage', section: 'plants' },

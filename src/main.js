@@ -7,6 +7,7 @@ import { createInput } from './input/index.js';
 import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
 import { createSettings } from './app/settings.js';
+import { getSpeciesLabel } from './sim/species.js';
 
 const app = document.querySelector('#app');
 
@@ -112,6 +113,7 @@ const input = createInput({
     const meterRows = creature
       ? [
           `Creature ${creature.id}`,
+          `Species: ${getSpeciesLabel(creature.species)}`,
           `Life stage: ${creature.lifeStage?.label ?? 'Unknown'}`,
           `Age ticks: ${Number.isFinite(creature.ageTicks) ? creature.ageTicks : '--'}`,
           `Stage move scale: ${creature.lifeStage?.movementScale?.toFixed(2) ?? '--'}`,

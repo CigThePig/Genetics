@@ -73,6 +73,8 @@ Rules:
   - Contains: Track 5 spec/blueprint/plan (Plant Economy: Recovery, Rendering, Metrics)
 - tracks/2026-01-19-track-6-creature-core-meters-stages-movement/
   - Contains: Track 6 spec/blueprint/plan (Creature Core: Meters, Stages, Movement)
+- tracks/2026-01-19-track-6p5-canon-lock/
+  - Contains: Track 6.5 spec/blueprint/plan (Canon Lock + Species Retrofit)
 - tracks/2026-01-19-track-7-survival-actions-sprinting-death/
   - Contains: Track 7 spec/blueprint/plan (Survival Actions + Sprinting + Death)
 - tracks/2026-01-22-track-maintenance-creature-render-pass/
@@ -99,6 +101,8 @@ Rules:
   - Role: deterministic terrain blob generator for world grid initialization
 - src/sim/terrain-effects.js
   - Role: terrain effects lookup table (friction, perception, plant cap)
+- src/sim/species.js
+  - Role: canonical species identifiers + deterministic spawn assignment
 - src/sim/plants/grass.js
   - Role: grass regrowth update logic + summary stats
 - src/sim/plants/bushes.js

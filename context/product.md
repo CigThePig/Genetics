@@ -17,6 +17,9 @@ Non-negotiable pillars:
 - Causes of death (starvation, thirst, predation, age)
 - Creature inspection explaining current state/needs/threats/targets
 
+## Canonical ecosystem (locked)
+The authoritative canon (species roster, resource nouns, food web, and efficiency bias) is defined in **context/architecture.md → “Canonical Ecosystem (Locked)”**. All tracks must reference that section and avoid generic species placeholders.
+
 Out of scope early:
 - Fancy art/polish
 - Multiplayer/server features
