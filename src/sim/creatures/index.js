@@ -11,6 +11,7 @@ import {
   updateCreatureMemory,
   MEMORY_TYPES
 } from './memory.js';
+import { selectPredatorTarget } from './targeting.js';
 
 export { updateCreaturePerception, updateCreatureAlertness, updateCreatureMemory };
 import {
@@ -615,6 +616,7 @@ export function updateCreatureIntent({ creatures, config, world }) {
     let foodType = null;
     let target = null;
     let memoryEntry = null;
+    let targeting = null;
     if (creature.priority === 'thirst' && canDrink) {
       intent = 'drink';
     } else if (creature.priority === 'hunger' && canEat) {
@@ -627,11 +629,27 @@ export function updateCreatureIntent({ creatures, config, world }) {
         intent = 'eat';
         foodType = choice.type;
       } else {
-        memoryEntry = selectMemoryTarget({
-          creature,
-          type: MEMORY_TYPES.FOOD,
-          foodTypes: getDietPreferences(creature.species)
+        const predatorTarget = selectPredatorTarget({
+          predator: creature,
+          creatures,
+          config
         });
+        if (predatorTarget) {
+          intent = 'hunt';
+          target = { ...predatorTarget.target.position };
+          targeting = {
+            targetId: predatorTarget.target?.id ?? null,
+            preySpecies: predatorTarget.preySpecies,
+            score: predatorTarget.score,
+            distance: predatorTarget.distance
+          };
+        } else {
+          memoryEntry = selectMemoryTarget({
+            creature,
+            type: MEMORY_TYPES.FOOD,
+            foodTypes: getDietPreferences(creature.species)
+          });
+        }
       }
     } else if (creature.priority === 'thirst' && waterRatio < drinkThreshold) {
       memoryEntry = selectMemoryTarget({
@@ -670,6 +688,7 @@ export function updateCreatureIntent({ creatures, config, world }) {
     }
 
     creature.intent = { type: intent, foodType, target };
+    creature.targeting = targeting;
   }
 }
 

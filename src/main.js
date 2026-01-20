@@ -146,6 +146,29 @@ const input = createInput({
       const age = Number.isFinite(entry?.ageTicks) ? entry.ageTicks : '--';
       return `${typeLabel} @ ${x}, ${y} (strength ${strength}, age ${age})`;
     };
+    const formatTargetingRows = (targeting) => {
+      if (!targeting) {
+        return ['Target: none'];
+      }
+      const targetId = Number.isFinite(targeting.targetId)
+        ? targeting.targetId
+        : '--';
+      const species = targeting.preySpecies
+        ? getSpeciesLabel(targeting.preySpecies)
+        : 'Unknown';
+      const score = Number.isFinite(targeting.score)
+        ? targeting.score.toFixed(2)
+        : '--';
+      const distance = Number.isFinite(targeting.distance)
+        ? targeting.distance.toFixed(2)
+        : '--';
+      return [
+        `Target: ${targetId}`,
+        `Target species: ${species}`,
+        `Target score: ${score}`,
+        `Target distance: ${distance}`
+      ];
+    };
     const memoryRows = (creature) => {
       const entries = creature?.memory?.entries;
       if (!Array.isArray(entries) || entries.length === 0) {
@@ -179,6 +202,7 @@ const input = createInput({
           `Alertness: ${Number.isFinite(creature.alertness?.level) ? creature.alertness.level.toFixed(2) : '--'}`,
           `Reaction delay: ${Number.isFinite(creature.alertness?.reactionDelay) ? creature.alertness.reactionDelay : '--'}`,
           `Reaction cooldown: ${Number.isFinite(creature.alertness?.reactionCooldown) ? creature.alertness.reactionCooldown : '--'}`,
+          ...formatTargetingRows(creature.targeting),
           `Food efficiency: ${formatEfficiency(creature.traits?.foodEfficiency)}`,
           ...memoryRows(creature),
           `Energy: ${creature.meters.energy.toFixed(2)}`,

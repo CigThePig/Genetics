@@ -48,6 +48,12 @@ export const simConfig = {
   creaturePerceptionRangeMax: 7,
   creatureAlertnessBase: 0.55,
   creatureReactionDelayTicks: 2,
+  creatureTargetingRange: 5,
+  creatureTargetingDistanceWeight: 0.12,
+  creatureTargetingPreferences: {
+    triangle: { circle: 1, octagon: 0.85 },
+    octagon: { square: 1 }
+  },
   creatureMemoryMaxEntries: 12,
   creatureMemoryDecay: 0.02,
   creatureMemoryMinStrength: 0.05,
