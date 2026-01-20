@@ -13,10 +13,10 @@ export const SPECIES_LIST = Object.freeze([
 ]);
 
 export const SPECIES_LABELS = Object.freeze({
-  [SPECIES.SQUARE]: 'Square',
-  [SPECIES.TRIANGLE]: 'Triangle',
-  [SPECIES.CIRCLE]: 'Circle',
-  [SPECIES.OCTAGON]: 'Octagon'
+  [SPECIES.SQUARE]: 'Squares',
+  [SPECIES.TRIANGLE]: 'Triangles',
+  [SPECIES.CIRCLE]: 'Circles',
+  [SPECIES.OCTAGON]: 'Octagons'
 });
 
 export const pickSpawnSpecies = (index) =>

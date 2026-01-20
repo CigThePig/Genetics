@@ -11,16 +11,16 @@
 ## Phase 1 — Canon alignment + species retrofit
 
 ### Tasks
-- [ ] Add canonical species module (src/sim/species.js) with deterministic spawn helper.
-- [ ] Assign species on creature creation (src/sim/creatures/index.js).
-- [ ] Render canonical shapes per species (src/render/renderer.js).
-- [ ] Display species in inspector (src/main.js).
-- [ ] Expose per-species counts in sim summary + UI metrics (src/sim/sim.js, src/ui/index.js).
-- [ ] Define a single canon source of truth in context docs and reference it elsewhere.
-- [ ] Update track-index + Track 7 spec/blueprint to reference canon and avoid generic species.
-- [ ] Update context/repo-map.md for new module/role changes.
-- [ ] Update context/active-track.md with current phase status.
-- [ ] Reminder: update /context/repo-map.md when files/roles change.
+- [x] Add canonical species module (src/sim/species.js) with deterministic spawn helper.
+- [x] Assign species on creature creation (src/sim/creatures/index.js).
+- [x] Render canonical shapes per species (src/render/renderer.js).
+- [x] Display species in inspector (src/main.js).
+- [x] Expose per-species counts in sim summary + UI metrics (src/sim/sim.js, src/ui/index.js).
+- [x] Define a single canon source of truth in context docs and reference it elsewhere.
+- [x] Update track-index + Track 7 spec/blueprint to reference canon and avoid generic species.
+- [x] Update context/repo-map.md for new module/role changes.
+- [x] Update context/active-track.md with current phase status.
+- [x] Reminder: update /context/repo-map.md when files/roles change.
 
 ### Files touched
 - src/sim/species.js
@@ -39,12 +39,12 @@
 - context/active-track.md
 
 ### Verification
-- [ ] Species appears on creature objects (deterministic assignment).
-- [ ] Canvas shows distinct shapes per species.
-- [ ] Inspector shows species.
-- [ ] Metrics show total creatures + counts by species.
-- [ ] Track 7 docs reference canon and avoid generic species phrasing.
-- [ ] ✅ Tests: npm test.
+- [x] Species appears on creature objects (deterministic assignment).
+- [x] Canvas shows distinct shapes per species.
+- [x] Inspector shows species.
+- [x] Metrics show total creatures + counts by species.
+- [x] Track 7 docs reference canon and avoid generic species phrasing.
+- [x] ✅ Tests: npm test.
 
 ### Stop point
 - Pause after Phase 1 verification for review before any further scope.
