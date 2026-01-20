@@ -1,6 +1,6 @@
-Active track: None
-Path: N/A
-Current phase: N/A
-Next task: N/A
-Last updated: 2026-01-19
-Notes: Track 6.5 closeout completed; ready to select the next track.
+Active track: Track 7 — Survival Actions + Sprinting + Death
+Path: tracks/2026-01-19-track-7-survival-actions-sprinting-death
+Current phase: Phase 2 — Stamina + Sprinting (Step 33)
+Next task: Add stamina meter and sprint decision rules tied to movement.
+Last updated: 2026-01-23
+Notes: Phase 1 complete; ready for Phase 2.

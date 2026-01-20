@@ -1,5 +1,6 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
-import { pickSpawnSpecies } from '../species.js';
+import { consumeGrassAt } from '../plants/grass.js';
+import { SPECIES, pickSpawnSpecies } from '../species.js';
 
 const fallbackLifeStages = [
   {
@@ -99,6 +100,16 @@ const resolveNeedSwitchMargin = (config) =>
 const resolveNeedMeterBase = (value) =>
   Number.isFinite(value) && value > 0 ? value : 1;
 
+const resolveActionThreshold = (value, fallback) => {
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+  return Math.min(1, Math.max(0, value));
+};
+
+const resolveActionAmount = (value, fallback) =>
+  Number.isFinite(value) && value > 0 ? value : fallback;
+
 const normalizeNeedRatio = (value, base) => {
   const ratio = value / base;
   if (!Number.isFinite(ratio)) {
@@ -188,6 +199,10 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     if (!creature?.position) {
       continue;
     }
+    const intentType = creature.intent?.type;
+    if (intentType === 'drink' || intentType === 'eat') {
+      continue;
+    }
     const scale = Number.isFinite(creature.lifeStage?.movementScale)
       ? creature.lifeStage.movementScale
       : 1;
@@ -209,6 +224,124 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   }
 }
 
+const getCreatureCell = (creature) => ({
+  x: Math.floor(creature.position.x),
+  y: Math.floor(creature.position.y)
+});
+
+const hasNearbyWater = (world, cell, config) => {
+  if (!world?.isWaterAt) {
+    return false;
+  }
+  const waterTerrain = config?.waterTerrain ?? 'water';
+  const shoreTerrain = config?.shoreTerrain ?? 'shore';
+  for (let dy = -1; dy <= 1; dy += 1) {
+    for (let dx = -1; dx <= 1; dx += 1) {
+      if (world.isWaterAt(cell.x + dx, cell.y + dy, waterTerrain, shoreTerrain)) {
+        return true;
+      }
+    }
+  }
+  return false;
+};
+
+const getGrassAtCell = (world, cell) => {
+  if (!world?.getGrassAt) {
+    return 0;
+  }
+  const amount = world.getGrassAt(cell.x, cell.y);
+  return Number.isFinite(amount) ? amount : 0;
+};
+
+export function updateCreatureIntent({ creatures, config, world }) {
+  if (!Array.isArray(creatures) || !world) {
+    return;
+  }
+  const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
+  const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
+  const drinkThreshold = resolveActionThreshold(
+    config?.creatureDrinkThreshold,
+    0.8
+  );
+  const eatThreshold = resolveActionThreshold(
+    config?.creatureEatThreshold,
+    0.8
+  );
+  const grassEatMin = resolveActionAmount(
+    config?.creatureGrassEatMin,
+    0.05
+  );
+
+  for (const creature of creatures) {
+    const meters = creature?.meters;
+    if (!meters || !creature.position) {
+      continue;
+    }
+    const cell = getCreatureCell(creature);
+    const waterRatio = normalizeNeedRatio(meters.water, baseWater);
+    const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
+    const canDrink = waterRatio < drinkThreshold && hasNearbyWater(world, cell, config);
+    const canEatGrass =
+      creature.species === SPECIES.CIRCLE &&
+      energyRatio < eatThreshold &&
+      getGrassAtCell(world, cell) >= grassEatMin;
+
+    let intent = 'wander';
+    if (creature.priority === 'thirst' && canDrink) {
+      intent = 'drink';
+    } else if (creature.priority === 'hunger' && canEatGrass) {
+      intent = 'eat';
+    }
+
+    creature.intent = { type: intent };
+  }
+}
+
+export function applyCreatureActions({ creatures, config, world }) {
+  if (!Array.isArray(creatures) || !world) {
+    return;
+  }
+  const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
+  const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
+  const drinkAmount = resolveActionAmount(config?.creatureDrinkAmount, 0.08);
+  const eatAmount = resolveActionAmount(config?.creatureEatAmount, 0.08);
+  const grassEatMin = resolveActionAmount(
+    config?.creatureGrassEatMin,
+    0.05
+  );
+
+  for (const creature of creatures) {
+    const meters = creature?.meters;
+    if (!meters || !creature.position) {
+      continue;
+    }
+    const cell = getCreatureCell(creature);
+    const intentType = creature.intent?.type;
+
+    if (intentType === 'drink' && hasNearbyWater(world, cell, config)) {
+      meters.water = clampMeter(Math.min(baseWater, meters.water + drinkAmount));
+      continue;
+    }
+
+    if (intentType === 'eat' && creature.species === SPECIES.CIRCLE) {
+      const availableGrass = getGrassAtCell(world, cell);
+      if (availableGrass >= grassEatMin) {
+        const consumed = consumeGrassAt({
+          world,
+          x: cell.x,
+          y: cell.y,
+          amount: Math.min(availableGrass, eatAmount)
+        });
+        if (consumed > 0) {
+          meters.energy = clampMeter(
+            Math.min(baseEnergy, meters.energy + consumed)
+          );
+        }
+      }
+    }
+  }
+}
+
 export function createCreatures({ config, rng, world }) {
   const count = Number.isFinite(config?.creatureCount)
     ? Math.max(0, Math.trunc(config.creatureCount))
@@ -227,6 +360,7 @@ export function createCreatures({ config, rng, world }) {
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
       priority: 'thirst',
+      intent: { type: 'wander' },
       meters: {
         energy: config.creatureBaseEnergy,
         water: config.creatureBaseWater,

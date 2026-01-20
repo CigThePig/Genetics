@@ -1,5 +1,26 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
 
+export function consumeGrassAt({ world, x, y, amount }) {
+  if (!world?.grass || !world?.getIndex) {
+    return 0;
+  }
+  const resolvedAmount =
+    Number.isFinite(amount) && amount > 0 ? amount : 0;
+  if (resolvedAmount === 0) {
+    return 0;
+  }
+  const index = world.getIndex(x, y);
+  if (index === -1) {
+    return 0;
+  }
+  const current = Number.isFinite(world.grass[index])
+    ? world.grass[index]
+    : 0;
+  const next = Math.max(0, current - resolvedAmount);
+  world.grass[index] = next;
+  return current - next;
+}
+
 export function updateGrass({ world, config }) {
   if (!world?.grass) {
     return { average: 0, stressedCells: 0 };

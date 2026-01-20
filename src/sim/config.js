@@ -48,6 +48,11 @@ export const simConfig = {
   creatureBasalWaterDrain: 0.0025,
   creatureBasalStaminaDrain: 0.0015,
   creatureNeedSwitchMargin: 0.05,
+  creatureDrinkThreshold: 0.8,
+  creatureDrinkAmount: 0.08,
+  creatureEatThreshold: 0.8,
+  creatureEatAmount: 0.08,
+  creatureGrassEatMin: 0.05,
   creatureLifeStages: [
     {
       id: 'juvenile',

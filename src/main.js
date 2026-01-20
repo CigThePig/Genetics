@@ -119,6 +119,7 @@ const input = createInput({
           `Stage move scale: ${creature.lifeStage?.movementScale?.toFixed(2) ?? '--'}`,
           `Stage metabolism scale: ${creature.lifeStage?.metabolismScale?.toFixed(2) ?? '--'}`,
           `Priority: ${creature.priority ?? 'Unknown'}`,
+          `Intent: ${creature.intent?.type ?? 'Unknown'}`,
           `Energy: ${creature.meters.energy.toFixed(2)}`,
           `Water: ${creature.meters.water.toFixed(2)}`,
           `Stamina: ${creature.meters.stamina.toFixed(2)}`,
