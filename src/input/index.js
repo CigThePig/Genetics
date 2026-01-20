@@ -76,14 +76,15 @@ export function createInput({ canvas, camera, onTap }) {
 
     if (pointers.size === 2) {
       const [first, second] = Array.from(pointers.values());
+      const rect = canvas.getBoundingClientRect();
       const midpoint = {
-        x: (first.x + second.x) / 2,
-        y: (first.y + second.y) / 2
+        x: (first.x + second.x) / 2 - rect.left,
+        y: (first.y + second.y) / 2 - rect.top
       };
       const currentDistance = distance(first, second);
       if (pinchStartDistance > 0) {
         const nextZoom = pinchStartZoom * (currentDistance / pinchStartDistance);
-        camera.zoomAt(nextZoom, midpoint, getViewport());
+        camera.zoomAt(nextZoom, midpoint, { width: rect.width, height: rect.height });
       }
     }
   };
@@ -133,7 +134,12 @@ export function createInput({ canvas, camera, onTap }) {
     event.preventDefault();
     const scale = event.deltaY < 0 ? 1.1 : 0.9;
     const nextZoom = camera.getState().zoom * scale;
-    camera.zoomAt(nextZoom, { x: event.clientX, y: event.clientY }, getViewport());
+    const rect = canvas.getBoundingClientRect();
+    const anchor = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top
+    };
+    camera.zoomAt(nextZoom, anchor, { width: rect.width, height: rect.height });
   };
 
   return {
