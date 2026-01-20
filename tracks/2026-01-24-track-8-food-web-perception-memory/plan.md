@@ -64,11 +64,11 @@ Stop point:
 ## Phase 2 — Perception + Alertness (Steps 39–40)
 
 Tasks:
-- [ ] Implement perception v1 (sight + terrain modifiers) respecting tick order.
-- [ ] Add alertness + reaction delay mechanism.
-- [ ] Add deterministic test for perception/alertness behavior (seeded scenario).
-- [ ] Update inspector/metrics to expose alertness/perception hints.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Implement perception v1 (sight + terrain modifiers) respecting tick order.
+- [x] Add alertness + reaction delay mechanism.
+- [x] Add deterministic test for perception/alertness behavior (seeded scenario).
+- [x] Update inspector/metrics to expose alertness/perception hints.
+- [x] Update /context/repo-map.md if files/roles change.
 
 Files touched (expected):
 - src/sim/creatures/ (perception + alertness modules)

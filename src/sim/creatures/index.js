@@ -3,6 +3,10 @@ import { consumeGrassAt } from '../plants/grass.js';
 import { consumeBerriesAt } from '../plants/bushes.js';
 import { pickSpawnSpecies } from '../species.js';
 import { createCreatureTraits } from './traits.js';
+import { updateCreaturePerception } from './perception.js';
+import { updateCreatureAlertness } from './alertness.js';
+
+export { updateCreaturePerception, updateCreatureAlertness };
 import {
   FOOD_TYPES,
   getDietPreferences,
@@ -558,6 +562,9 @@ export function updateCreatureIntent({ creatures, config, world }) {
   for (const creature of creatures) {
     const meters = creature?.meters;
     if (!meters || !creature.position) {
+      continue;
+    }
+    if (creature.alertness && !creature.alertness.canReact) {
       continue;
     }
     const drinkThreshold = resolveActionThreshold(
