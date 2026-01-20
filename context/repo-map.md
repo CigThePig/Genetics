@@ -123,6 +123,8 @@ Rules:
   - Role: creature data model creation + basic inspection helpers
 - src/sim/creatures/traits.js
   - Role: per-creature trait defaults derived from config
+- src/sim/creatures/genetics.js
+  - Role: genome defaults, inheritance, and genome-to-trait multipliers
 - src/sim/creatures/food.js
   - Role: canonical diet preferences, food properties, and efficiency helpers
 - src/sim/creatures/perception.js

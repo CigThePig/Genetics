@@ -41,11 +41,11 @@
 ## Phase 2 — Genome + Inheritance (Step 46)
 
 ### Tasks
-- [ ] Add genome data to creatures and seed from species defaults.
-- [ ] Implement genome → traits mapping (traits derived from genome and defaults).
-- [ ] Ensure determinism: stable iteration order when generating offspring genomes.
-- [ ] Add/confirm inspector fields for genome/trait visibility where appropriate.
-- [ ] Reminder: update /context/repo-map.md if any files are added or roles change.
+- [x] Add genome data to creatures and seed from species defaults.
+- [x] Implement genome → traits mapping (traits derived from genome and defaults).
+- [x] Ensure determinism: stable iteration order when generating offspring genomes.
+- [x] Add/confirm inspector fields for genome/trait visibility where appropriate.
+- [x] Reminder: update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
 - src/sim/creatures/genetics.js (new)

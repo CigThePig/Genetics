@@ -3,6 +3,7 @@ import { consumeGrassAt } from '../plants/grass.js';
 import { consumeBerriesAt } from '../plants/bushes.js';
 import { pickSpawnSpecies } from '../species.js';
 import { createCreatureTraits } from './traits.js';
+import { createCreatureGenome } from './genetics.js';
 import { updateCreaturePerception } from './perception.js';
 import { updateCreatureAlertness } from './alertness.js';
 import {
@@ -867,11 +868,13 @@ export function createCreatures({ config, rng, world }) {
       };
     }
     const species = pickSpawnSpecies(i);
+    const genome = createCreatureGenome({ config, species, rng });
     creatures.push({
       id: i,
       position,
       species,
-      traits: createCreatureTraits({ config, species }),
+      genome,
+      traits: createCreatureTraits({ config, species, genome }),
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
       priority: 'thirst',
