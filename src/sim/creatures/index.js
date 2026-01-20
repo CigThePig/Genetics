@@ -202,6 +202,25 @@ const resolveCreatureSpeed = (creature, config) =>
 
 const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
 
+const resolveWaterTerrain = (config) => config?.waterTerrain ?? 'water';
+
+const isWaterTile = (world, x, y, waterTerrain) =>
+  typeof world?.getTerrainAt === 'function' &&
+  world.getTerrainAt(x, y) === waterTerrain;
+
+const resolveHeading = (creature, rng) => {
+  if (!creature.motion) {
+    creature.motion = {};
+  }
+  if (!Number.isFinite(creature.motion.heading)) {
+    creature.motion.heading = rng.nextFloat() * Math.PI * 2;
+  }
+  return creature.motion.heading;
+};
+
+const applyHeadingNoise = (heading, rng, maxDelta) =>
+  heading + (rng.nextFloat() * 2 - 1) * maxDelta;
+
 export function updateCreatureMovement({ creatures, config, rng, world }) {
   if (!Array.isArray(creatures) || !rng || !world) {
     return;
@@ -209,6 +228,16 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
 
   const maxX = Number.isFinite(world.width) ? Math.max(0, world.width - 0.001) : 0;
   const maxY = Number.isFinite(world.height) ? Math.max(0, world.height - 0.001) : 0;
+  const waterTerrain = resolveWaterTerrain(config);
+  const headingNoise = 0.25;
+  const alternateOffsets = [
+    Math.PI / 4,
+    -Math.PI / 4,
+    Math.PI / 2,
+    -Math.PI / 2,
+    (3 * Math.PI) / 4,
+    (-3 * Math.PI) / 4
+  ];
 
   for (const creature of creatures) {
     if (!creature?.position) {
@@ -227,7 +256,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       : 1;
     const x = creature.position.x;
     const y = creature.position.y;
-    const angle = rng.nextFloat() * Math.PI * 2;
+    const heading = resolveHeading(creature, rng);
+    const updatedHeading = applyHeadingNoise(heading, rng, headingNoise);
     const { friction } = getTerrainEffectsAt(
       world,
       Math.floor(x),
@@ -236,8 +266,54 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const terrainFriction =
       Number.isFinite(friction) && friction > 0 ? friction : 1;
     const distance = (baseSpeed * scale) / terrainFriction;
-    const nextX = clampPosition(x + Math.cos(angle) * distance, 0, maxX);
-    const nextY = clampPosition(y + Math.sin(angle) * distance, 0, maxY);
+    let nextX = clampPosition(
+      x + Math.cos(updatedHeading) * distance,
+      0,
+      maxX
+    );
+    let nextY = clampPosition(
+      y + Math.sin(updatedHeading) * distance,
+      0,
+      maxY
+    );
+
+    let chosenHeading = updatedHeading;
+    if (isWaterTile(world, Math.floor(nextX), Math.floor(nextY), waterTerrain)) {
+      let found = false;
+      for (const offset of alternateOffsets) {
+        const candidateHeading = updatedHeading + offset;
+        const candidateX = clampPosition(
+          x + Math.cos(candidateHeading) * distance,
+          0,
+          maxX
+        );
+        const candidateY = clampPosition(
+          y + Math.sin(candidateHeading) * distance,
+          0,
+          maxY
+        );
+        if (
+          !isWaterTile(
+            world,
+            Math.floor(candidateX),
+            Math.floor(candidateY),
+            waterTerrain
+          )
+        ) {
+          nextX = candidateX;
+          nextY = candidateY;
+          chosenHeading = candidateHeading;
+          found = true;
+          break;
+        }
+      }
+      if (!found) {
+        creature.motion.heading = updatedHeading;
+        continue;
+      }
+    }
+
+    creature.motion.heading = chosenHeading;
     creature.position.x = nextX;
     creature.position.y = nextY;
   }
@@ -396,12 +472,25 @@ export function createCreatures({ config, rng, world }) {
     ? Math.max(0, Math.trunc(config.creatureCount))
     : 0;
   const creatures = [];
+  const waterTerrain = resolveWaterTerrain(config);
+  const spawnRetries = 20;
 
   for (let i = 0; i < count; i += 1) {
-    const position = {
+    let position = {
       x: rng.nextFloat() * world.width,
       y: rng.nextFloat() * world.height
     };
+    for (let attempt = 0; attempt < spawnRetries; attempt += 1) {
+      const cellX = Math.floor(position.x);
+      const cellY = Math.floor(position.y);
+      if (!isWaterTile(world, cellX, cellY, waterTerrain)) {
+        break;
+      }
+      position = {
+        x: rng.nextFloat() * world.width,
+        y: rng.nextFloat() * world.height
+      };
+    }
     const species = pickSpawnSpecies(i);
     creatures.push({
       id: i,

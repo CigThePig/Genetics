@@ -42,16 +42,16 @@ describe('creature movement', () => {
       height: 1,
       defaultTerrain: 'plains'
     });
-    world.setTerrainAt(1, 0, 'water');
+    world.setTerrainAt(1, 0, 'rock');
 
     const baseCreature = {
       position: { x: 0.5, y: 0.5 },
-      lifeStage: { movementScale: 1 }
+      lifeStage: { movementScale: 1 },
+      motion: { heading: 0 }
     };
 
     const config = { creatureBaseSpeed: 1 };
-    const rngPlains = createRng(7);
-    const rngWater = createRng(7);
+    const rngStub = { nextFloat: () => 0.5 };
 
     const plainsCreature = JSON.parse(JSON.stringify(baseCreature));
     const waterCreature = JSON.parse(JSON.stringify(baseCreature));
@@ -60,13 +60,13 @@ describe('creature movement', () => {
     updateCreatureMovement({
       creatures: [plainsCreature],
       config,
-      rng: rngPlains,
+      rng: rngStub,
       world
     });
     updateCreatureMovement({
       creatures: [waterCreature],
       config,
-      rng: rngWater,
+      rng: rngStub,
       world
     });
 
@@ -74,11 +74,38 @@ describe('creature movement', () => {
       plainsCreature.position.x - baseCreature.position.x,
       plainsCreature.position.y - baseCreature.position.y
     );
-    const waterDistance = Math.hypot(
+    const rockDistance = Math.hypot(
       waterCreature.position.x - 1.5,
       waterCreature.position.y - baseCreature.position.y
     );
 
-    expect(waterDistance).toBeLessThan(plainsDistance);
+    expect(rockDistance).toBeLessThan(plainsDistance);
+  });
+
+  it('does not move into water tiles', () => {
+    const world = createWorldGrid({
+      width: 3,
+      height: 1,
+      defaultTerrain: 'plains'
+    });
+    world.setTerrainAt(1, 0, 'water');
+
+    const creature = {
+      position: { x: 0.5, y: 0.5 },
+      lifeStage: { movementScale: 1 },
+      motion: { heading: 0 }
+    };
+
+    const config = { creatureBaseSpeed: 1 };
+    const rngStub = { nextFloat: () => 0.5 };
+
+    updateCreatureMovement({
+      creatures: [creature],
+      config,
+      rng: rngStub,
+      world
+    });
+
+    expect(Math.floor(creature.position.x)).not.toBe(1);
   });
 });
