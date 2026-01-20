@@ -1,7 +1,39 @@
 # Plan — Track 8: Food Web + Perception + Memory
 
 ## Recon Summary
-- (pending)
+- Files likely to change:
+  - src/sim/creatures/index.js (intent/behavior flow will need to consume new diet, perception, alertness, memory outputs).
+  - src/sim/creatures/traits.js (new diet/perception/alertness traits seeded from species defaults).
+  - src/sim/config.js (new tunables for food properties, perception, alertness, memory limits).
+  - src/sim/species.js (species tables for canonical diet rankings/fallbacks).
+  - src/metrics/index.js + src/ui/index.js (expose new summaries for observability).
+  - tests/ (deterministic scenario test for perception/alertness).
+- Key modules/functions involved:
+  - updateCreatureIntent/applyCreatureActions (diet decisions and resource consumption).
+  - createCreatures/createCreatureTraits (species/trait seeding).
+  - sim tick in src/sim/sim.js (must respect tick order).
+  - world-grid/terrain-effects (terrain modifiers for perception).
+- Invariants to respect:
+  - Determinism (all randomness through rng module).
+  - Tick order: Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics.
+  - No new system logic in src/main.js; add new modules under src/sim/creatures/.
+- Cross-module side effects:
+  - New diet/food logic touches plants (grass/bushes) and metrics; ensure renderer/UI reads remain intact.
+  - Perception/memory additions may require new inspector fields to keep behavior explainable.
+- Tick order impact:
+  - Perception should run in Sense stage before intent selection.
+  - Alertness/reaction delay should affect Decide stage timing without changing the global tick order.
+- Observability impact:
+  - Add minimal inspector summary for memory entries and alertness state; metrics if behavior is opaque.
+- File rules impact:
+  - New system modules (food logic, perception, memory, alertness) should be new files in src/sim/creatures/.
+  - Ensure no file exceeds 600 LOC; split if index.js grows too large.
+- Risks/regressions:
+  - Over-strong perception can destabilize movement; keep tunables in config.
+  - Memory lists can grow too large; cap length and decay deterministically.
+- Verification commands/checks:
+  - Automated: add/extend a deterministic test in tests/ (vitest) for perception/alertness if implemented.
+  - Manual: run npm run dev and verify diet behavior + inspector memory entries visually.
 
 ---
 
