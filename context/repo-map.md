@@ -129,6 +129,8 @@ Rules:
   - Role: alertness and reaction delay updates driven by perception changes
 - src/sim/creatures/memory.js
   - Role: memory records for food/water locations with decay and selection helpers
+- src/sim/creatures/targeting.js
+  - Role: deterministic predator target scoring helpers
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js
@@ -145,3 +147,5 @@ Rules:
   - Role: Vitest smoke test for sim scaffold
 - tests/creatures.test.js
   - Role: validates basal metabolism drains per tick
+- tests/targeting.test.js
+  - Role: validates predator target scoring determinism
