@@ -19,6 +19,29 @@ Tunable configuration:
 - Centralize tunables in src/sim/config.js.
 - Other systems should import from config rather than scattering constants.
 
+## Creature Architecture: Engine vs Species Traits
+
+Generic Creature Engine (shared logic for every creature):
+- time step
+- movement integration
+- meters drain/recovery
+- intent selection
+- action execution (drink/eat/rest/etc)
+
+Species + Traits Layer (data-driven differences):
+- creature.species ∈ {square, triangle, circle, octagon}
+- creature.traits (per-individual phenotype values)
+- species defaults seed traits at spawn
+- genes/mutation (later) modify traits per creature, never globally
+
+Non-negotiable rule:
+- Once a trait exists in creature.traits, the simulation must read from creature.traits first,
+  and treat config values only as defaults/fallbacks.
+
+Examples:
+- Speed affects cost per creature, not per species globally.
+- Circles eating grass is a species rule, but efficiency is trait-driven.
+
 Core entities (eventual):
 - World grid:
   - terrain type

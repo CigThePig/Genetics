@@ -13,6 +13,21 @@ Rules:
 - Each track should be achievable without touching more than a handful of systems.
 - New system = new file. No file > 600 LOC.
 
+Implementation Guardrail (applies to all future tracks):
+- New behavior that differs by species must be implemented as species tables + trait usage, not forked systems.
+- New biological parameters should be added to creature.traits and seeded from species defaults.
+- If a track introduces a new trait, it must also update:
+  - trait creation/seeding
+  - inspector/summary visibility (when relevant)
+  - tests or verification notes
+
+Engine vs Traits Checklist (include in specs/blueprints when relevant):
+- Is this change universal engine logic or species/traits data?
+- If species-specific, did we add/extend species tables?
+- If trait-based, did we add it to creature.traits and seed it?
+- Are config values defaults only?
+- Did we expose it in summary/inspector where needed?
+
 ---
 
 ## Track 0 — Repo Bootstrap (Scaffolding)
