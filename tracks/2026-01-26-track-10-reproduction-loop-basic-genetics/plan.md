@@ -65,11 +65,11 @@
 ## Phase 3 — Mutation + Pleiotropy Tradeoffs (Step 47)
 
 ### Tasks
-- [ ] Implement deterministic mutation rules in genetics system.
-- [ ] Add pleiotropy tradeoffs (e.g., improvement in one trait increases cost elsewhere).
-- [ ] Add/update automated deterministic genetics smoke test.
-- [ ] Surface mutation/trait drift metrics in metrics or inspector.
-- [ ] Reminder: update /context/repo-map.md if any files are added or roles change.
+- [x] Implement deterministic mutation rules in genetics system.
+- [x] Add pleiotropy tradeoffs (e.g., improvement in one trait increases cost elsewhere).
+- [x] Add/update automated deterministic genetics smoke test.
+- [x] Surface mutation/trait drift metrics in metrics or inspector.
+- [x] Reminder: update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
 - src/sim/creatures/genetics.js

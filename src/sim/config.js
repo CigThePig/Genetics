@@ -143,6 +143,9 @@ export const simConfig = {
     octagon: {}
   },
   creatureGenomeJitter: 0.08,
+  creatureGenomeMutationRate: 0.18,
+  creatureGenomeMutationStrength: 0.1,
+  creatureGenomePleiotropyScale: 0.18,
   creatureMaxAgeTicks: 600,
   creatureLifeStages: [
     {

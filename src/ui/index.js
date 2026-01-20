@@ -226,6 +226,10 @@ export function createUI({
     { key: 'octagonsCount', label: 'Octagons', section: 'population' },
     { key: 'birthsLastTick', label: 'Births (tick)', section: 'population' },
     { key: 'birthsTotal', label: 'Births total', section: 'population' },
+    { key: 'mutationsLastTick', label: 'Mutations (tick)', section: 'genetics' },
+    { key: 'mutationStrengthLastTick', label: 'Mutation drift', section: 'genetics' },
+    { key: 'pleiotropyStrengthLastTick', label: 'Pleiotropy drift', section: 'genetics' },
+    { key: 'mutationTotal', label: 'Mutations total', section: 'genetics' },
     { key: 'deathsTotal', label: 'Deaths total', section: 'deaths' },
     { key: 'deathsAge', label: 'Deaths (age)', section: 'deaths' },
     { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths' },
@@ -305,6 +309,13 @@ export function createUI({
     metricsBody.append(createMetricSection('Chase', chaseMetrics));
   }
 
+  const geneticsMetrics = metricDefinitions.filter(
+    (metric) => metric.section === 'genetics'
+  );
+  if (geneticsMetrics.length) {
+    metricsBody.append(createMetricSection('Genetics', geneticsMetrics));
+  }
+
   const metricsSections = metrics?.getSkeletonSections
     ? metrics.getSkeletonSections()
     : [{ title: 'Coming soon', rows: ['Metrics will appear here.'] }];
@@ -356,6 +367,9 @@ export function createUI({
         return value.toFixed(2);
       case 'bushAverageHealth':
         return value.toFixed(2);
+      case 'mutationStrengthLastTick':
+      case 'pleiotropyStrengthLastTick':
+        return value.toFixed(3);
       default:
         return String(Math.round(value));
     }

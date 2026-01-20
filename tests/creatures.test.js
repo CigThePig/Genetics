@@ -22,6 +22,12 @@ describe('creature metabolism', () => {
       creatureBasalEnergyDrain: 0.1,
       creatureBasalWaterDrain: 0.2,
       creatureBasalStaminaDrain: 0.05,
+      creatureGenomeJitter: 0,
+      creatureGenomeRanges: {
+        basalEnergyDrain: { min: 1, max: 1 },
+        basalWaterDrain: { min: 1, max: 1 },
+        basalStaminaDrain: { min: 1, max: 1 }
+      },
       creatureSprintStaminaDrain: 0,
       creatureStaminaRegen: 0,
       creatureLifeStages: [
