@@ -14,6 +14,7 @@ export function createRenderer(container, { camera }) {
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Simulation canvas');
   canvas.style.flex = '1 1 auto';
+  canvas.style.touchAction = 'none';
 
   const footer = document.createElement('p');
   footer.className = 'renderer-footer';

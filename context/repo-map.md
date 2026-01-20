@@ -83,6 +83,8 @@ Rules:
   - Contains: Track 9 spec/blueprint/plan (Predation + Chase Dynamics)
 - tracks/2026-01-26-track-10-reproduction-loop-basic-genetics/
   - Contains: Track 10 spec/blueprint/plan (Reproduction Loop + Basic Genetics)
+- tracks/2026-01-27-track-maintenance-touch-gesture-guardrails/
+  - Contains: Maintenance spec/blueprint/plan (Touch gesture guardrails)
 - tracks/2026-01-22-track-maintenance-creature-render-pass/
   - Contains: Maintenance spec/blueprint/plan (Creature render pass)
 - tracks/2026-01-23-track-maintenance-metrics-population/
