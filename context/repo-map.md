@@ -125,6 +125,8 @@ Rules:
   - Role: perception scanning for nearby food/water with terrain modifiers
 - src/sim/creatures/alertness.js
   - Role: alertness and reaction delay updates driven by perception changes
+- src/sim/creatures/memory.js
+  - Role: memory records for food/water locations with decay and selection helpers
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js

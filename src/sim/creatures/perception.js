@@ -49,6 +49,7 @@ export function updateCreaturePerception({ creatures, config, world }) {
     const range = Math.min(rawRange, maxRange);
 
     let waterDistance = null;
+    let waterCell = null;
     let foodDistance = null;
     let foodType = null;
     let foodCell = null;
@@ -81,6 +82,7 @@ export function updateCreaturePerception({ creatures, config, world }) {
             world.isWaterAt(x, y, waterTerrain, shoreTerrain)
           ) {
             waterDistance = distance;
+            waterCell = { x, y };
           }
 
           const availability = getFoodAvailabilityAtCell({
@@ -109,6 +111,7 @@ export function updateCreaturePerception({ creatures, config, world }) {
       range,
       terrainModifier,
       waterDistance,
+      waterCell,
       foodDistance,
       foodType,
       foodCell,
