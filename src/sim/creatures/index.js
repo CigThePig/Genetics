@@ -1,7 +1,16 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
 import { consumeGrassAt } from '../plants/grass.js';
-import { SPECIES, pickSpawnSpecies } from '../species.js';
+import { consumeBerriesAt } from '../plants/bushes.js';
+import { pickSpawnSpecies } from '../species.js';
 import { createCreatureTraits } from './traits.js';
+import {
+  FOOD_TYPES,
+  getDietPreferences,
+  getDigestiveEfficiency,
+  getFoodAvailabilityAtCell,
+  getFoodProperties,
+  selectFoodChoice
+} from './food.js';
 
 const fallbackLifeStages = [
   {
@@ -541,6 +550,10 @@ export function updateCreatureIntent({ creatures, config, world }) {
     config?.creatureGrassEatMin,
     0.05
   );
+  const fallbackBerryEatMin = resolveActionAmount(
+    config?.creatureBerryEatMin,
+    0.1
+  );
 
   for (const creature of creatures) {
     const meters = creature?.meters;
@@ -559,23 +572,39 @@ export function updateCreatureIntent({ creatures, config, world }) {
       creature?.traits?.grassEatMin,
       fallbackGrassEatMin
     );
+    const berryEatMin = resolveActionAmount(
+      creature?.traits?.berryEatMin,
+      fallbackBerryEatMin
+    );
     const cell = getCreatureCell(creature);
     const waterRatio = normalizeNeedRatio(meters.water, baseWater);
     const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
     const canDrink = waterRatio < drinkThreshold && hasNearbyWater(world, cell, config);
-    const canEatGrass =
-      creature.species === SPECIES.CIRCLE &&
-      energyRatio < eatThreshold &&
-      getGrassAtCell(world, cell) >= grassEatMin;
+    const canEat = energyRatio < eatThreshold;
+    const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
+    const foodMinimums = {
+      grass: grassEatMin,
+      berries: berryEatMin,
+      meat: 0
+    };
 
     let intent = 'wander';
+    let foodType = null;
     if (creature.priority === 'thirst' && canDrink) {
       intent = 'drink';
-    } else if (creature.priority === 'hunger' && canEatGrass) {
-      intent = 'eat';
+    } else if (creature.priority === 'hunger' && canEat) {
+      const choice = selectFoodChoice({
+        species: creature.species,
+        availability: foodAvailability,
+        minimums: foodMinimums
+      });
+      if (choice) {
+        intent = 'eat';
+        foodType = choice.type;
+      }
     }
 
-    creature.intent = { type: intent };
+    creature.intent = { type: intent, foodType };
   }
 }
 
@@ -597,6 +626,10 @@ export function applyCreatureActions({ creatures, config, world }) {
     config?.creatureGrassEatMin,
     0.05
   );
+  const fallbackBerryEatMin = resolveActionAmount(
+    config?.creatureBerryEatMin,
+    0.1
+  );
 
   for (const creature of creatures) {
     const meters = creature?.meters;
@@ -615,15 +648,24 @@ export function applyCreatureActions({ creatures, config, world }) {
       creature?.traits?.grassEatMin,
       fallbackGrassEatMin
     );
+    const berryEatMin = resolveActionAmount(
+      creature?.traits?.berryEatMin,
+      fallbackBerryEatMin
+    );
     const cell = getCreatureCell(creature);
     const intentType = creature.intent?.type;
+    const intentFoodType = creature.intent?.foodType;
 
     if (intentType === 'drink' && hasNearbyWater(world, cell, config)) {
       meters.water = clampMeter(Math.min(baseWater, meters.water + drinkAmount));
       continue;
     }
 
-    if (intentType === 'eat' && creature.species === SPECIES.CIRCLE) {
+    if (intentType !== 'eat' || !intentFoodType) {
+      continue;
+    }
+
+    if (intentFoodType === FOOD_TYPES.GRASS) {
       const availableGrass = getGrassAtCell(world, cell);
       if (availableGrass >= grassEatMin) {
         const consumed = consumeGrassAt({
@@ -633,10 +675,51 @@ export function applyCreatureActions({ creatures, config, world }) {
           amount: Math.min(availableGrass, eatAmount)
         });
         if (consumed > 0) {
+          const props = getFoodProperties(config, FOOD_TYPES.GRASS);
+          const efficiency = getDigestiveEfficiency(
+            creature,
+            FOOD_TYPES.GRASS,
+            config
+          );
+          const energyGain = consumed * props.nutrition * efficiency;
           meters.energy = clampMeter(
-            Math.min(baseEnergy, meters.energy + consumed)
+            Math.min(baseEnergy, meters.energy + energyGain)
           );
         }
+      }
+      continue;
+    }
+
+    if (intentFoodType === FOOD_TYPES.BERRIES) {
+      const availability = getFoodAvailabilityAtCell({ world, cell });
+      const availableBerries = availability.berries;
+      if (availableBerries >= berryEatMin) {
+        const consumed = consumeBerriesAt({
+          world,
+          x: cell.x,
+          y: cell.y,
+          amount: Math.min(availableBerries, eatAmount)
+        });
+        if (consumed > 0) {
+          const props = getFoodProperties(config, FOOD_TYPES.BERRIES);
+          const efficiency = getDigestiveEfficiency(
+            creature,
+            FOOD_TYPES.BERRIES,
+            config
+          );
+          const energyGain = consumed * props.nutrition * efficiency;
+          meters.energy = clampMeter(
+            Math.min(baseEnergy, meters.energy + energyGain)
+          );
+        }
+      }
+      continue;
+    }
+
+    if (intentFoodType === FOOD_TYPES.MEAT) {
+      const dietPreferences = getDietPreferences(creature.species);
+      if (dietPreferences.includes(FOOD_TYPES.MEAT)) {
+        creature.intent = { type: 'wander', foodType: null };
       }
     }
   }

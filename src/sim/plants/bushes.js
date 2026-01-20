@@ -7,6 +7,36 @@ const DEFAULT_BUSH_INIT = {
   berryRegenRate: 0.2
 };
 
+export function findBushAt(world, x, y) {
+  if (!world || !Array.isArray(world.bushes)) {
+    return null;
+  }
+  for (const bush of world.bushes) {
+    if (bush?.x === x && bush?.y === y) {
+      return bush;
+    }
+  }
+  return null;
+}
+
+export function consumeBerriesAt({ world, x, y, amount }) {
+  if (!world) {
+    return 0;
+  }
+  const bush = findBushAt(world, x, y);
+  if (!bush) {
+    return 0;
+  }
+  const available = Number.isFinite(bush.berries) ? bush.berries : 0;
+  if (available <= 0) {
+    return 0;
+  }
+  const toConsume = Number.isFinite(amount) ? Math.max(0, amount) : 0;
+  const consumed = Math.min(available, toConsume);
+  bush.berries = available - consumed;
+  return consumed;
+}
+
 export function updateBushes({ world, config, rng }) {
   if (!world) {
     return { count: 0, totalBerries: 0, averageHealth: 0 };

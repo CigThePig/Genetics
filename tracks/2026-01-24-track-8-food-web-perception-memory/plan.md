@@ -40,12 +40,12 @@
 ## Phase 1 — Canonical Food Logic (Steps 36–38)
 
 Tasks:
-- [ ] Implement canonical diet ranking + fallback rules for all species.
-- [ ] Define food properties (nutrition/handling/risk) for canonical resources.
-- [ ] Add digestive efficiency biases aligned to canon anti-omnivore rules.
-- [ ] Update creature traits/species tables for any new diet-related traits (if needed).
-- [ ] Expose diet-related summaries in inspector/metrics if behavior is opaque.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Implement canonical diet ranking + fallback rules for all species.
+- [x] Define food properties (nutrition/handling/risk) for canonical resources.
+- [x] Add digestive efficiency biases aligned to canon anti-omnivore rules.
+- [x] Update creature traits/species tables for any new diet-related traits (if needed).
+- [x] Expose diet-related summaries in inspector/metrics if behavior is opaque.
+- [x] Update /context/repo-map.md if files/roles change.
 
 Files touched (expected):
 - src/sim/creatures/ (food logic modules)

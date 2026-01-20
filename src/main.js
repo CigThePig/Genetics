@@ -8,6 +8,7 @@ import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
 import { createSettings } from './app/settings.js';
 import { getSpeciesLabel } from './sim/species.js';
+import { FOOD_LABELS } from './sim/creatures/food.js';
 
 const app = document.querySelector('#app');
 
@@ -110,6 +111,21 @@ const input = createInput({
       world,
       sim.config?.creatureInspectRadius
     );
+    const formatEfficiency = (efficiency) => {
+      if (!efficiency) {
+        return 'Unknown';
+      }
+      const grass = Number.isFinite(efficiency.grass)
+        ? efficiency.grass.toFixed(2)
+        : '--';
+      const berries = Number.isFinite(efficiency.berries)
+        ? efficiency.berries.toFixed(2)
+        : '--';
+      const meat = Number.isFinite(efficiency.meat)
+        ? efficiency.meat.toFixed(2)
+        : '--';
+      return `Grass ${grass}, Berries ${berries}, Meat ${meat}`;
+    };
     const meterRows = creature
       ? [
           `Creature ${creature.id}`,
@@ -120,6 +136,8 @@ const input = createInput({
           `Stage metabolism scale: ${creature.lifeStage?.metabolismScale?.toFixed(2) ?? '--'}`,
           `Priority: ${creature.priority ?? 'Unknown'}`,
           `Intent: ${creature.intent?.type ?? 'Unknown'}`,
+          `Food target: ${FOOD_LABELS[creature.intent?.foodType] ?? 'None'}`,
+          `Food efficiency: ${formatEfficiency(creature.traits?.foodEfficiency)}`,
           `Energy: ${creature.meters.energy.toFixed(2)}`,
           `Water: ${creature.meters.water.toFixed(2)}`,
           `Stamina: ${creature.meters.stamina.toFixed(2)}`,

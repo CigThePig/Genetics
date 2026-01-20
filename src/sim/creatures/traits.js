@@ -7,6 +7,12 @@ const applyMultiplier = (value, multiplier) => {
   return value * resolveMultiplier(multiplier);
 };
 
+const resolveFoodEfficiency = (baseEfficiency, multipliers = {}) => ({
+  grass: applyMultiplier(baseEfficiency?.grass, multipliers.grass),
+  berries: applyMultiplier(baseEfficiency?.berries, multipliers.berries),
+  meat: applyMultiplier(baseEfficiency?.meat, multipliers.meat)
+});
+
 export const createCreatureTraits = ({ config, species } = {}) => {
   const multipliers = config?.creatureTraitMultipliers?.[species] ?? {};
 
@@ -63,6 +69,14 @@ export const createCreatureTraits = ({ config, species } = {}) => {
     grassEatMin: applyMultiplier(
       config?.creatureGrassEatMin,
       multipliers.grassEatMin
+    ),
+    berryEatMin: applyMultiplier(
+      config?.creatureBerryEatMin,
+      multipliers.berryEatMin
+    ),
+    foodEfficiency: resolveFoodEfficiency(
+      config?.creatureFoodEfficiency,
+      multipliers.foodEfficiency
     )
   };
 };
