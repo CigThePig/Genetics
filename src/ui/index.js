@@ -224,6 +224,12 @@ export function createUI({
     { key: 'trianglesCount', label: 'Triangles', section: 'population' },
     { key: 'circlesCount', label: 'Circles', section: 'population' },
     { key: 'octagonsCount', label: 'Octagons', section: 'population' },
+    { key: 'deathsTotal', label: 'Deaths total', section: 'deaths' },
+    { key: 'deathsAge', label: 'Deaths (age)', section: 'deaths' },
+    { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths' },
+    { key: 'deathsThirst', label: 'Deaths (thirst)', section: 'deaths' },
+    { key: 'deathsInjury', label: 'Deaths (injury)', section: 'deaths' },
+    { key: 'deathsOther', label: 'Deaths (other)', section: 'deaths' },
     { key: 'grassAverage', label: 'Grass avg', section: 'plants' },
     { key: 'grassTotal', label: 'Grass total', section: 'plants' },
     { key: 'grassCoverage', label: 'Grass coverage', section: 'plants' },
@@ -271,6 +277,13 @@ export function createUI({
   );
   if (populationMetrics.length) {
     metricsBody.append(createMetricSection('Population', populationMetrics));
+  }
+
+  const deathMetrics = metricDefinitions.filter(
+    (metric) => metric.section === 'deaths'
+  );
+  if (deathMetrics.length) {
+    metricsBody.append(createMetricSection('Deaths', deathMetrics));
   }
 
   const plantMetrics = metricDefinitions.filter(

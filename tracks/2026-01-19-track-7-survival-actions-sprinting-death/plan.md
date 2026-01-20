@@ -117,11 +117,11 @@
 ## Phase 3 — Death conditions + Population counters (Steps 34–35)
 
 ### Tasks
-- [ ] Implement death conditions tied to meters/age.
-- [ ] Record death causes for metrics.
-- [ ] Add population counters and death cause metrics output.
-- [ ] Surface counters in UI panel.
-- [ ] Update /context/repo-map.md if any files/roles change.
+- [x] Implement death conditions tied to meters/age.
+- [x] Record death causes for metrics.
+- [x] Add population counters and death cause metrics output.
+- [x] Surface counters in UI panel.
+- [x] Update /context/repo-map.md if any files/roles change.
 
 ### Files touched
 - src/sim/creatures/index.js
