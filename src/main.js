@@ -126,6 +126,41 @@ const input = createInput({
         : '--';
       return `Grass ${grass}, Berries ${berries}, Meat ${meat}`;
     };
+    const formatMemoryEntry = (entry) => {
+      const type = entry?.type ?? 'unknown';
+      const typeLabel =
+        type === 'food'
+          ? `Food (${FOOD_LABELS[entry?.foodType] ?? entry?.foodType ?? 'Unknown'})`
+          : type === 'water'
+            ? 'Water'
+            : type === 'danger'
+              ? 'Danger'
+              : type === 'mate'
+                ? 'Mate'
+                : 'Unknown';
+      const x = Number.isFinite(entry?.x) ? entry.x.toFixed(1) : '--';
+      const y = Number.isFinite(entry?.y) ? entry.y.toFixed(1) : '--';
+      const strength = Number.isFinite(entry?.strength)
+        ? entry.strength.toFixed(2)
+        : '--';
+      const age = Number.isFinite(entry?.ageTicks) ? entry.ageTicks : '--';
+      return `${typeLabel} @ ${x}, ${y} (strength ${strength}, age ${age})`;
+    };
+    const memoryRows = (creature) => {
+      const entries = creature?.memory?.entries;
+      if (!Array.isArray(entries) || entries.length === 0) {
+        return ['Memory: none'];
+      }
+      const sorted = [...entries].sort((a, b) => {
+        const strengthGap = (b?.strength ?? 0) - (a?.strength ?? 0);
+        if (strengthGap !== 0) {
+          return strengthGap;
+        }
+        return (a?.ageTicks ?? 0) - (b?.ageTicks ?? 0);
+      });
+      const top = sorted.slice(0, 3);
+      return ['Memory entries:', ...top.map(formatMemoryEntry)];
+    };
     const meterRows = creature
       ? [
           `Creature ${creature.id}`,
@@ -145,6 +180,7 @@ const input = createInput({
           `Reaction delay: ${Number.isFinite(creature.alertness?.reactionDelay) ? creature.alertness.reactionDelay : '--'}`,
           `Reaction cooldown: ${Number.isFinite(creature.alertness?.reactionCooldown) ? creature.alertness.reactionCooldown : '--'}`,
           `Food efficiency: ${formatEfficiency(creature.traits?.foodEfficiency)}`,
+          ...memoryRows(creature),
           `Energy: ${creature.meters.energy.toFixed(2)}`,
           `Water: ${creature.meters.water.toFixed(2)}`,
           `Stamina: ${creature.meters.stamina.toFixed(2)}`,

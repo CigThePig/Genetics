@@ -15,6 +15,7 @@ import {
   updateCreatureBasalMetabolism,
   updateCreatureIntent,
   updateCreatureLifeStages,
+  updateCreatureMemory,
   updateCreatureMovement,
   updateCreaturePerception,
   updateCreaturePriority,
@@ -133,6 +134,10 @@ export function createSim(config = simConfig) {
         world: state.world
       });
       updateCreatureAlertness({
+        creatures: state.creatures,
+        config: resolvedConfig
+      });
+      updateCreatureMemory({
         creatures: state.creatures,
         config: resolvedConfig
       });

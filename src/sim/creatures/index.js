@@ -5,8 +5,14 @@ import { pickSpawnSpecies } from '../species.js';
 import { createCreatureTraits } from './traits.js';
 import { updateCreaturePerception } from './perception.js';
 import { updateCreatureAlertness } from './alertness.js';
+import {
+  applyMemoryPenalty,
+  selectMemoryTarget,
+  updateCreatureMemory,
+  MEMORY_TYPES
+} from './memory.js';
 
-export { updateCreaturePerception, updateCreatureAlertness };
+export { updateCreaturePerception, updateCreatureAlertness, updateCreatureMemory };
 import {
   FOOD_TYPES,
   getDietPreferences,
@@ -445,7 +451,17 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const x = creature.position.x;
     const y = creature.position.y;
     const heading = resolveHeading(creature, rng);
-    const updatedHeading = applyHeadingNoise(heading, rng, headingNoise);
+    const target = creature.intent?.target;
+    let desiredHeading = heading;
+    if (target && Number.isFinite(target.x) && Number.isFinite(target.y)) {
+      const dx = target.x - x;
+      const dy = target.y - y;
+      if (dx !== 0 || dy !== 0) {
+        desiredHeading = Math.atan2(dy, dx);
+      }
+    }
+    const noise = target ? headingNoise * 0.4 : headingNoise;
+    const updatedHeading = applyHeadingNoise(desiredHeading, rng, noise);
     const { friction } = getTerrainEffectsAt(
       world,
       Math.floor(x),
@@ -597,6 +613,8 @@ export function updateCreatureIntent({ creatures, config, world }) {
 
     let intent = 'wander';
     let foodType = null;
+    let target = null;
+    let memoryEntry = null;
     if (creature.priority === 'thirst' && canDrink) {
       intent = 'drink';
     } else if (creature.priority === 'hunger' && canEat) {
@@ -608,10 +626,50 @@ export function updateCreatureIntent({ creatures, config, world }) {
       if (choice) {
         intent = 'eat';
         foodType = choice.type;
+      } else {
+        memoryEntry = selectMemoryTarget({
+          creature,
+          type: MEMORY_TYPES.FOOD,
+          foodTypes: getDietPreferences(creature.species)
+        });
+      }
+    } else if (creature.priority === 'thirst' && waterRatio < drinkThreshold) {
+      memoryEntry = selectMemoryTarget({
+        creature,
+        type: MEMORY_TYPES.WATER
+      });
+    }
+
+    if (memoryEntry) {
+      intent = 'seek';
+      target = { x: memoryEntry.x, y: memoryEntry.y };
+      foodType = memoryEntry.foodType ?? null;
+    }
+
+    const targetDistanceSq =
+      target && creature.position
+        ? (creature.position.x - target.x) ** 2 +
+          (creature.position.y - target.y) ** 2
+        : null;
+    if (memoryEntry && targetDistanceSq !== null && targetDistanceSq <= 1) {
+      const missingWater =
+        memoryEntry.type === MEMORY_TYPES.WATER &&
+        !hasNearbyWater(world, cell, config);
+      const missingFood =
+        memoryEntry.type === MEMORY_TYPES.FOOD &&
+        !selectFoodChoice({
+          species: creature.species,
+          availability: foodAvailability,
+          minimums: foodMinimums
+        });
+      if (missingWater || missingFood) {
+        applyMemoryPenalty(memoryEntry, config);
+        intent = 'wander';
+        target = null;
       }
     }
 
-    creature.intent = { type: intent, foodType };
+    creature.intent = { type: intent, foodType, target };
   }
 }
 
@@ -771,7 +829,8 @@ export function createCreatures({ config, rng, world }) {
         water: config.creatureBaseWater,
         stamina: config.creatureBaseStamina,
         hp: config.creatureBaseHp
-      }
+      },
+      memory: { entries: [] }
     });
   }
 

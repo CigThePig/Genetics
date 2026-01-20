@@ -89,10 +89,10 @@ Stop point:
 ## Phase 3 — Memory + Emergent Foraging Styles (Steps 41–42)
 
 Tasks:
-- [ ] Add memory records for food/water/danger/mate with decay/cap.
-- [ ] Wire memory into behavior selection to enable scout vs route-runner emergence.
-- [ ] Surface memory summary in inspector.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Add memory records for food/water/danger/mate with decay/cap.
+- [x] Wire memory into behavior selection to enable scout vs route-runner emergence.
+- [x] Surface memory summary in inspector.
+- [x] Update /context/repo-map.md if files/roles change.
 
 Files touched (expected):
 - src/sim/creatures/ (memory modules)
