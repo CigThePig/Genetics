@@ -69,6 +69,27 @@
 
 ---
 
+## Phase 1.5 — Per-creature traits scaffolding (Track 7 follow-up)
+
+### Tasks
+- [x] Add per-creature traits helper module for baseline trait values.
+- [x] Attach per-creature traits to each creature on creation.
+- [x] Read movement/metabolism/action thresholds from traits with config fallbacks.
+- [x] Update /context/repo-map.md for the new traits module.
+
+### Files touched
+- src/sim/creatures/traits.js
+- src/sim/creatures/index.js
+- context/repo-map.md
+
+### Verification
+- Manual: confirm behavior unchanged with default traits.
+
+### Stop point
+- Pause for review after Phase 1.5 verification.
+
+---
+
 ## Phase 2 — Stamina + Sprinting (Step 33)
 
 ### Tasks

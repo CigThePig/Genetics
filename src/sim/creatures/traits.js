@@ -1,0 +1,48 @@
+const resolveMultiplier = (value) => (Number.isFinite(value) ? value : 1);
+
+const applyMultiplier = (value, multiplier) => {
+  if (!Number.isFinite(value)) {
+    return value;
+  }
+  return value * resolveMultiplier(multiplier);
+};
+
+export const createCreatureTraits = ({ config, species } = {}) => {
+  const multipliers = config?.creatureTraitMultipliers?.[species] ?? {};
+
+  return {
+    speed: applyMultiplier(config?.creatureBaseSpeed, multipliers.speed),
+    basalEnergyDrain: applyMultiplier(
+      config?.creatureBasalEnergyDrain,
+      multipliers.basalEnergyDrain
+    ),
+    basalWaterDrain: applyMultiplier(
+      config?.creatureBasalWaterDrain,
+      multipliers.basalWaterDrain
+    ),
+    basalStaminaDrain: applyMultiplier(
+      config?.creatureBasalStaminaDrain,
+      multipliers.basalStaminaDrain
+    ),
+    drinkThreshold: applyMultiplier(
+      config?.creatureDrinkThreshold,
+      multipliers.drinkThreshold
+    ),
+    drinkAmount: applyMultiplier(
+      config?.creatureDrinkAmount,
+      multipliers.drinkAmount
+    ),
+    eatThreshold: applyMultiplier(
+      config?.creatureEatThreshold,
+      multipliers.eatThreshold
+    ),
+    eatAmount: applyMultiplier(
+      config?.creatureEatAmount,
+      multipliers.eatAmount
+    ),
+    grassEatMin: applyMultiplier(
+      config?.creatureGrassEatMin,
+      multipliers.grassEatMin
+    )
+  };
+};

@@ -1,6 +1,7 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
 import { consumeGrassAt } from '../plants/grass.js';
 import { SPECIES, pickSpawnSpecies } from '../species.js';
+import { createCreatureTraits } from './traits.js';
 
 const fallbackLifeStages = [
   {
@@ -92,6 +93,9 @@ const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
 const resolveBasalDrain = (value) =>
   Number.isFinite(value) ? Math.max(0, value) : 0;
 
+const resolveTraitDrain = (value, fallback) =>
+  Number.isFinite(value) ? Math.max(0, value) : fallback;
+
 const resolveNeedSwitchMargin = (config) =>
   Number.isFinite(config?.creatureNeedSwitchMargin)
     ? Math.max(0, config.creatureNeedSwitchMargin)
@@ -154,19 +158,29 @@ export function updateCreatureBasalMetabolism({ creatures, config }) {
   if (!Array.isArray(creatures)) {
     return;
   }
-  const energyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
-  const waterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
-  const staminaDrain = resolveBasalDrain(config?.creatureBasalStaminaDrain);
-
-  if (energyDrain === 0 && waterDrain === 0 && staminaDrain === 0) {
-    return;
-  }
+  const fallbackEnergyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
+  const fallbackWaterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
+  const fallbackStaminaDrain = resolveBasalDrain(
+    config?.creatureBasalStaminaDrain
+  );
 
   for (const creature of creatures) {
     const meters = creature.meters;
     if (!meters) {
       continue;
     }
+    const energyDrain = resolveTraitDrain(
+      creature?.traits?.basalEnergyDrain,
+      fallbackEnergyDrain
+    );
+    const waterDrain = resolveTraitDrain(
+      creature?.traits?.basalWaterDrain,
+      fallbackWaterDrain
+    );
+    const staminaDrain = resolveTraitDrain(
+      creature?.traits?.basalStaminaDrain,
+      fallbackStaminaDrain
+    );
     const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
       ? creature.lifeStage.metabolismScale
       : 1;
@@ -181,14 +195,15 @@ const resolveMovementSpeed = (config) =>
     ? Math.max(0, config.creatureBaseSpeed)
     : 0;
 
+const resolveCreatureSpeed = (creature, config) =>
+  Number.isFinite(creature?.traits?.speed)
+    ? Math.max(0, creature.traits.speed)
+    : resolveMovementSpeed(config);
+
 const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
 
 export function updateCreatureMovement({ creatures, config, rng, world }) {
   if (!Array.isArray(creatures) || !rng || !world) {
-    return;
-  }
-  const baseSpeed = resolveMovementSpeed(config);
-  if (baseSpeed === 0) {
     return;
   }
 
@@ -201,6 +216,10 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     }
     const intentType = creature.intent?.type;
     if (intentType === 'drink' || intentType === 'eat') {
+      continue;
+    }
+    const baseSpeed = resolveCreatureSpeed(creature, config);
+    if (baseSpeed === 0) {
       continue;
     }
     const scale = Number.isFinite(creature.lifeStage?.movementScale)
@@ -259,15 +278,15 @@ export function updateCreatureIntent({ creatures, config, world }) {
   }
   const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
   const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
-  const drinkThreshold = resolveActionThreshold(
+  const fallbackDrinkThreshold = resolveActionThreshold(
     config?.creatureDrinkThreshold,
     0.8
   );
-  const eatThreshold = resolveActionThreshold(
+  const fallbackEatThreshold = resolveActionThreshold(
     config?.creatureEatThreshold,
     0.8
   );
-  const grassEatMin = resolveActionAmount(
+  const fallbackGrassEatMin = resolveActionAmount(
     config?.creatureGrassEatMin,
     0.05
   );
@@ -277,6 +296,18 @@ export function updateCreatureIntent({ creatures, config, world }) {
     if (!meters || !creature.position) {
       continue;
     }
+    const drinkThreshold = resolveActionThreshold(
+      creature?.traits?.drinkThreshold,
+      fallbackDrinkThreshold
+    );
+    const eatThreshold = resolveActionThreshold(
+      creature?.traits?.eatThreshold,
+      fallbackEatThreshold
+    );
+    const grassEatMin = resolveActionAmount(
+      creature?.traits?.grassEatMin,
+      fallbackGrassEatMin
+    );
     const cell = getCreatureCell(creature);
     const waterRatio = normalizeNeedRatio(meters.water, baseWater);
     const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
@@ -303,9 +334,15 @@ export function applyCreatureActions({ creatures, config, world }) {
   }
   const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
   const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
-  const drinkAmount = resolveActionAmount(config?.creatureDrinkAmount, 0.08);
-  const eatAmount = resolveActionAmount(config?.creatureEatAmount, 0.08);
-  const grassEatMin = resolveActionAmount(
+  const fallbackDrinkAmount = resolveActionAmount(
+    config?.creatureDrinkAmount,
+    0.08
+  );
+  const fallbackEatAmount = resolveActionAmount(
+    config?.creatureEatAmount,
+    0.08
+  );
+  const fallbackGrassEatMin = resolveActionAmount(
     config?.creatureGrassEatMin,
     0.05
   );
@@ -315,6 +352,18 @@ export function applyCreatureActions({ creatures, config, world }) {
     if (!meters || !creature.position) {
       continue;
     }
+    const drinkAmount = resolveActionAmount(
+      creature?.traits?.drinkAmount,
+      fallbackDrinkAmount
+    );
+    const eatAmount = resolveActionAmount(
+      creature?.traits?.eatAmount,
+      fallbackEatAmount
+    );
+    const grassEatMin = resolveActionAmount(
+      creature?.traits?.grassEatMin,
+      fallbackGrassEatMin
+    );
     const cell = getCreatureCell(creature);
     const intentType = creature.intent?.type;
 
@@ -353,10 +402,12 @@ export function createCreatures({ config, rng, world }) {
       x: rng.nextFloat() * world.width,
       y: rng.nextFloat() * world.height
     };
+    const species = pickSpawnSpecies(i);
     creatures.push({
       id: i,
       position,
-      species: pickSpawnSpecies(i),
+      species,
+      traits: createCreatureTraits({ config, species }),
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
       priority: 'thirst',

@@ -115,6 +115,8 @@ Rules:
   - Role: worker-ready sim stub interface for future worker-backed loop
 - src/sim/creatures/index.js
   - Role: creature data model creation + basic inspection helpers
+- src/sim/creatures/traits.js
+  - Role: per-creature trait defaults derived from config
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js
