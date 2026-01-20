@@ -11,6 +11,9 @@
 - Risks/regressions: blocking pointer behavior outside canvas if preventDefault is too broad.
 - Verification: manual touch/scroll test in browser.
 
+## Deviation Note
+- Added canvas-local zoom anchor alignment to keep pinch and wheel zoom centered on the map canvas.
+
 ---
 
 ## Phase 1 — Apply touch gesture guardrails
@@ -32,3 +35,23 @@
 
 ### Stop Point
 - Pause after touch guardrails are in place and manually verified.
+
+---
+
+## Phase 2 — Align zoom anchors to canvas coordinates
+
+### Tasks
+- [x] Convert pinch midpoint to canvas-local coordinates before camera zoom.
+- [x] Convert wheel zoom anchor to canvas-local coordinates before camera zoom.
+- [x] Update /context/active-track.md with current phase/next task.
+- [x] Reminder: update /context/repo-map.md if any files are added or roles change.
+
+### Files Touched
+- src/input/index.js
+- context/active-track.md
+
+### Verification
+- Manual: pinch and wheel zoom anchors align with canvas position rather than page position.
+
+### Stop Point
+- Pause after zoom anchor alignment is implemented and manually checked.
