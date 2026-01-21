@@ -910,15 +910,25 @@ export function createCreatures({ config, rng, world }) {
     return !isWaterTile(world, cellX, cellY, waterTerrain);
   };
 
-  const findRandomLandPosition = () => {
-    let position = randomPosition();
-    for (let attempt = 0; attempt < spawnRetries; attempt += 1) {
+  const findFallbackLandPosition = () => {
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        if (!isWaterTile(world, x, y, waterTerrain)) {
+          return { x: x + 0.5, y: y + 0.5 };
+        }
+      }
+    }
+    return randomPosition();
+  };
+
+  const findRandomLandPosition = (attempts = spawnRetries) => {
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const position = randomPosition();
       if (resolveLandPosition(position)) {
         return position;
       }
-      position = randomPosition();
     }
-    return position;
+    return findFallbackLandPosition();
   };
 
   const clampToWorld = (value, max) =>
@@ -928,12 +938,15 @@ export function createCreatures({ config, rng, world }) {
     if (!origin || radius <= 0 || !Number.isFinite(width) || !Number.isFinite(height)) {
       return findRandomLandPosition();
     }
+    const baseOrigin = resolveLandPosition(origin)
+      ? origin
+      : findRandomLandPosition(anchorRetries);
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       const offsetX = (rng.nextFloat() * 2 - 1) * radius;
       const offsetY = (rng.nextFloat() * 2 - 1) * radius;
       const candidate = {
-        x: clampToWorld(origin.x + offsetX, width),
-        y: clampToWorld(origin.y + offsetY, height)
+        x: clampToWorld(baseOrigin.x + offsetX, width),
+        y: clampToWorld(baseOrigin.y + offsetY, height)
       };
       if (resolveLandPosition(candidate)) {
         return candidate;
@@ -943,7 +956,7 @@ export function createCreatures({ config, rng, world }) {
   };
 
   const createAnchors = () => {
-    const baseAnchor = findRandomLandPosition();
+    const baseAnchor = findRandomLandPosition(anchorRetries);
     const anchors = {};
     for (const species of SPECIES_LIST) {
       anchors[species] = findNearbyLandPosition(baseAnchor, clusterSpread, anchorRetries);

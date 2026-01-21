@@ -171,28 +171,31 @@ const ui = createUI({
   initialFpsVisible: initialSettings.fpsVisible
 });
 
+const resolveTilePoint = (worldPoint) => {
+  const worldState = sim.state?.world;
+  const tileSize = Number.isFinite(sim.config?.tileSize) ? sim.config.tileSize : 20;
+  if (!worldState || !Number.isFinite(worldState.width) || !Number.isFinite(worldState.height)) {
+    return worldPoint;
+  }
+  return {
+    x: (worldPoint.x + (worldState.width * tileSize) / 2) / tileSize,
+    y: (worldPoint.y + (worldState.height * tileSize) / 2) / tileSize
+  };
+};
+
 const input = createInput({
   canvas: renderer.canvas,
   camera,
+  worldToTile: (worldPoint) => resolveTilePoint(worldPoint),
   onCameraChange: () => {
     if (!running) {
       renderer.render(sim);
       ui.setMetrics?.(sim.getSummary());
     }
   },
-  onTap: ({ screen, world: worldPoint }) => {
+  onTap: ({ screen, world: worldPoint, tile }) => {
     const summary = sim.getSummary();
-    const worldState = sim.state?.world;
-    const tileSize = Number.isFinite(sim.config?.tileSize)
-      ? sim.config.tileSize
-      : 20;
-    const tilePoint =
-      worldState && Number.isFinite(worldState.width) && Number.isFinite(worldState.height)
-        ? {
-            x: (worldPoint.x + (worldState.width * tileSize) / 2) / tileSize,
-            y: (worldPoint.y + (worldState.height * tileSize) / 2) / tileSize
-          }
-        : worldPoint;
+    const tilePoint = tile ?? resolveTilePoint(worldPoint);
     const creature = findNearestCreature(
       sim.state?.creatures,
       tilePoint,
