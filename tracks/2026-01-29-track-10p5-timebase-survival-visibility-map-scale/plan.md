@@ -3,48 +3,27 @@
 ## Recon Summary
 
 ### A) Timebase
-- Root-cause candidates:
-  - RAF loop drives ticks via `for (i < speed) sim.tick()` in `src/main.js`.
-  - `ticksPerSecond` exists in `src/sim/config.js` but is unused.
-- Most likely cause: frame-driven tick scheduling (ticks per frame rather than fixed timestep).
-- Files/variables to confirm:
-  - `src/main.js` RAF loop and speed multiplier.
-  - `src/sim/config.js` → `ticksPerSecond`.
-  - `src/sim/sim.js` tick entrypoint.
+- Confirmed frame-driven loop: `runFrame` in `src/main.js` advances `sim.tick()` in a `for (i < speed)` loop once per RAF, tying ticks to display refresh. (`speed` is the UI speed multiplier.) 
+- `ticksPerSecond` is defined in `src/sim/config.js` (default `1`) but unused in the RAF loop or sim tick scheduling.
+- Tick entrypoint is `sim.tick()` in `src/sim/sim.js`, with tick count incremented per call (no real-time delta usage).
 
 ### B) Survival pacing
-- Root-cause candidates:
-  - Basal drains applied per tick in `src/sim/creatures/index.js`.
-  - Drain values defined in `src/sim/config.js` (water/energy).
-  - Drink/seek thresholds and perception/memory range may amplify failure when ticks are too fast.
-- Most likely cause: per-tick drains amplified by frame-driven tick rate.
-- Files/variables to confirm:
-  - `src/sim/creatures/index.js` → basal drain logic and death checks.
-  - `src/sim/config.js` → `creatureBasalWaterDrain`, `creatureBasalEnergyDrain`, `creatureDrinkThreshold`.
-  - `src/sim/creatures/perception.js` and `src/sim/creatures/memory.js` for seek path inputs.
+- Basal drains are applied per tick in `updateCreatureBasalMetabolism` (`energy/water/stamina`), scaled by life stage metabolism. Sprint drain and stamina regen are per tick. Death checks are per tick in `applyCreatureDeaths`.
+- Drain/threshold tunables live in `src/sim/config.js` (e.g., `creatureBasalEnergyDrain`, `creatureBasalWaterDrain`, `creatureDrinkThreshold`, `creatureEatThreshold`, `creatureSprintStaminaDrain`, `creatureStaminaRegen`), all currently interpreted per tick.
+- Age/reproduction timing is in ticks (`creatureMaxAgeTicks`, `creatureReproductionMinAgeTicks`, cooldown ticks), so timebase change will alter perceived seconds unless converted.
+- Perception/memory ranges and seek behavior are in tile units, but action thresholds are meter ratios per tick.
 
 ### C) Creature visibility
-- Root-cause candidates:
-  - Render radius too small relative to `tileSize` (`baseRadius = tileSize * 0.18`).
-  - Renderer centers creatures at `(x + 0.5) * tileSize` while sim positions are continuous.
-  - Input/inspect unit mismatch when comparing worldPoint (pixels) to tile coords.
-- Most likely cause: render scale too small, with latent alignment/unit coupling.
-- Files/variables to confirm:
-  - `src/render/renderer.js` → `tileSize`, `baseRadius`, centering math, culling.
-  - `src/input/index.js` → worldPoint conversion.
-  - `src/sim/creatures/index.js` or inspector helpers → `findNearestCreature`.
+- Render constants: `tileSize = 20`, `baseRadius = tileSize * 0.18` (with a min radius of `3/state.zoom`). Creature centers are drawn at `(x + 0.5) * tileSize` and culled by tile coordinates against `startCol/endCol`.
+- Sim positions are continuous tile-space coordinates (`position.x/y` in `createCreatures` and movement).
+- Input converts screen to `world` in pixel coordinates (camera transform), but `findNearestCreature` compares this directly to tile-space coordinates, so tap/inspect uses mismatched units.
+- Alignment/culling assumptions will be stressed when size increases (current culling ignores marker radius).
 
 ### D) Map scale + density + spawning
-- Root-cause candidates:
-  - `worldWidth` / `worldHeight` in `src/sim/config.js` are small.
-  - Resource generators use absolute counts (bushes, grass patches, terrain blobs, water corridors).
-- Most likely cause: map dimensions are set for a small test map and generators are count-based.
-- Files/variables to confirm:
-  - `src/sim/config.js` → `worldWidth`, `worldHeight`, population count.
-  - `src/sim/plants/bushes.js` → `bushCount`.
-  - `src/sim/plant-generator.js` → `grassPatchCount`.
-  - `src/sim/terrain-generator.js` → `terrainBlobCount`, `waterCorridorCount`.
-  - Spawn logic in `src/sim/creatures/index.js` or `src/sim/species.js`.
+- Map dimensions are set in `src/sim/config.js` (`worldWidth: 60`, `worldHeight: 40`).
+- Resource generators are count-based: `bushCount` in `src/sim/plants/bushes.js`, `grassPatchCount` in `src/sim/plant-generator.js`, `terrainBlobCount` and `waterCorridorCount` in `src/sim/terrain-generator.js`.
+- Creature population uses `creatureCount` in config (currently 12).
+- Spawn logic in `createCreatures` uses random tile-space positions with up to 20 retries to avoid water tiles; species assignment is deterministic by index via `pickSpawnSpecies`.
 
 ### Decision points
 - Final ticks/sec target at 1x (configurable default).
@@ -65,11 +44,11 @@
 ## Phase 0 — Recon / Units Audit
 
 **Tasks**
-- [ ] Trace timebase and tick scheduling in RAF loop; document units (per-tick vs per-second).
-- [ ] Inventory all tick-based drains, cooldowns, and growth timers tied to survival pacing.
-- [ ] Capture render size and alignment math; list unit conversions for input/inspect.
-- [ ] Document map dimension and generator count variables; note spawn logic location.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Trace timebase and tick scheduling in RAF loop; document units (per-tick vs per-second).
+- [x] Inventory all tick-based drains, cooldowns, and growth timers tied to survival pacing.
+- [x] Capture render size and alignment math; list unit conversions for input/inspect.
+- [x] Document map dimension and generator count variables; note spawn logic location.
+- [x] Update /context/repo-map.md if files/roles change. (No changes needed.)
 
 **Likely files to change**
 - `src/main.js`
@@ -82,10 +61,10 @@
 - `src/sim/terrain-generator.js`
 
 **Verification checklist**
-- [ ] Confirm tick scheduling and timebase units.
-- [ ] Confirm drain/threshold units and default values.
-- [ ] Confirm render/input unit conversions.
-- [ ] Confirm generator counts and spawn logic location.
+- [x] Confirm tick scheduling and timebase units.
+- [x] Confirm drain/threshold units and default values.
+- [x] Confirm render/input unit conversions.
+- [x] Confirm generator counts and spawn logic location.
 
 **Stop point**
 - Pause after recon notes are captured and hypotheses are locked.
