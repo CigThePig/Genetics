@@ -81,12 +81,14 @@ export const simConfig = {
   creatureReproductionMinEnergyRatio: 0.8,
   creatureReproductionMinWaterRatio: 0.8,
   creatureReproductionCooldownTicks: 180,
+  creatureReproductionFailedCooldownTicks: 20, // cooldown (seconds) when conception fails
+  creatureReproductionFailedCostMultiplier: 0.5, // scale energy/water/stamina costs on failure
   creatureReproductionRange: 2.5,
   creatureSexEnabled: true, // enable male/female assignment
   creaturePregnancyEnabled: true, // allow pregnancy/gestation pipeline
   creatureSexInitialSplitMode: 'exact', // exact 50/50 split for initial spawn
-  creatureConceptionChance: 0.35, // base conception probability per pairing
-  creatureGestationBaseTicks: 240, // base gestation length (ticks)
+  creatureConceptionChance: 0.5, // base conception probability per pairing
+  creatureGestationBaseTicks: 3600, // base gestation length (ticks, at 60 TPS ~60 seconds)
   creatureGestationTraitEnabled: true, // enable trait-based gestation length
   creaturePregnancyMetabolismMultiplier: 1.15, // hunger/water drain multiplier while pregnant
   creaturePregnancyMoveSpeedMultiplier: 0.9, // move speed multiplier while pregnant
