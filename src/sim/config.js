@@ -1,7 +1,7 @@
 export const simConfig = {
   seed: 1,
   hotspotSeed: 1337,
-  ticksPerSecond: 1,
+  ticksPerSecond: 60,
   worldWidth: 60,
   worldHeight: 40,
   defaultTerrain: 'plains',

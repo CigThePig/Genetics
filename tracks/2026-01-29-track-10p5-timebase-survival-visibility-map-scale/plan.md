@@ -74,10 +74,10 @@
 ## Phase 1 — Timebase / Speed Normalization
 
 **Tasks**
-- [ ] Implement fixed timestep accumulator using `ticksPerSecond` and speed multiplier.
-- [ ] Guard against pause/resume time debt (cap accumulated delta).
-- [ ] Add or update a metric to track ticks/sec at 1x.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Implement fixed timestep accumulator using `ticksPerSecond` and speed multiplier.
+- [x] Guard against pause/resume time debt (cap accumulated delta).
+- [x] Add or update a metric to track ticks/sec at 1x.
+- [x] Update /context/repo-map.md if files/roles change. (No changes needed.)
 
 **Likely files to change**
 - `src/main.js`
