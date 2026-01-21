@@ -53,6 +53,33 @@ describe('creature metabolism', () => {
   });
 });
 
+describe('creature sex assignment', () => {
+  it('assigns exact 50/50 split per species on initial spawn', () => {
+    const sim = createSim({
+      seed: 42,
+      creatureCount: 8,
+      creatureSexEnabled: true,
+      creatureSexInitialSplitMode: 'exact'
+    });
+
+    const counts = {};
+    for (const species of Object.values(SPECIES)) {
+      counts[species] = { male: 0, female: 0, total: 0 };
+    }
+
+    for (const creature of sim.state.creatures) {
+      counts[creature.species].total += 1;
+      counts[creature.species][creature.sex] += 1;
+    }
+
+    for (const species of Object.values(SPECIES)) {
+      expect(counts[species].total).toBe(2);
+      expect(counts[species].male).toBe(1);
+      expect(counts[species].female).toBe(1);
+    }
+  });
+});
+
 describe('creature movement', () => {
   it('moves slower on higher-friction terrain', () => {
     const world = createWorldGrid({

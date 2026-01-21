@@ -23,17 +23,17 @@ Stop point:
 
 ## Phase 2 — Sex assignment at spawn (exact 50/50 per species)
 Tasks:
-- [ ] Update createCreatures() to assign sex with exact per-species 50/50 split.
-- [ ] Ensure child creation assigns sex as well.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Update createCreatures() to assign sex with exact per-species 50/50 split.
+- [x] Ensure child creation assigns sex as well.
+- [x] Update /context/repo-map.md if files/roles change.
 
 Files touched:
 - src/sim/creatures/index.js
 - context/repo-map.md (if needed)
 
 Verification checklist:
-- [ ] Tests for sex split are added and pass.
-- [ ] Deterministic spawn ordering preserved.
+- [x] Tests for sex split are added and pass.
+- [x] Deterministic spawn ordering preserved.
 
 Stop point:
 - Pause after sex assignment changes for review.
