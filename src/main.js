@@ -180,11 +180,22 @@ const input = createInput({
       ui.setMetrics?.(sim.getSummary());
     }
   },
-  onTap: ({ screen, world }) => {
+  onTap: ({ screen, world: worldPoint }) => {
     const summary = sim.getSummary();
+    const worldState = sim.state?.world;
+    const tileSize = Number.isFinite(sim.config?.tileSize)
+      ? sim.config.tileSize
+      : 20;
+    const tilePoint =
+      worldState && Number.isFinite(worldState.width) && Number.isFinite(worldState.height)
+        ? {
+            x: (worldPoint.x + (worldState.width * tileSize) / 2) / tileSize,
+            y: (worldPoint.y + (worldState.height * tileSize) / 2) / tileSize
+          }
+        : worldPoint;
     const creature = findNearestCreature(
       sim.state?.creatures,
-      world,
+      tilePoint,
       sim.config?.creatureInspectRadius
     );
     const formatEfficiency = (efficiency) => {
@@ -330,7 +341,7 @@ const input = createInput({
     ui.setInspector({
       title: 'Inspector',
       rows: [
-        `World: ${world.x.toFixed(1)}, ${world.y.toFixed(1)}`,
+        `World: ${worldPoint.x.toFixed(1)}, ${worldPoint.y.toFixed(1)}`,
         `Screen: ${screen.x.toFixed(1)}, ${screen.y.toFixed(1)}`,
         `Tick: ${summary.tick}`,
         `Seed: ${summary.seed}`,

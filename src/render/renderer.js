@@ -56,12 +56,18 @@ export function createRenderer(container, { camera }) {
     unknown: '#3b3b3b'
   };
 
-  const tileSize = 20;
+  const defaultTileSize = 20;
+
+  const resolveTileSize = (config) =>
+    Number.isFinite(config?.tileSize)
+      ? Math.max(1, config.tileSize)
+      : defaultTileSize;
 
   const getTerrainColor = (terrain) =>
     terrainPalette[terrain] ?? terrainPalette.unknown;
 
   const drawTerrain = (state, world, config) => {
+    const tileSize = resolveTileSize(config);
     const { width, height } = canvas.getBoundingClientRect();
     ctx.clearRect(0, 0, width, height);
 
@@ -211,10 +217,11 @@ export function createRenderer(container, { camera }) {
     ctx.restore();
   };
 
-  const drawCreatures = (state, world, creatures) => {
+  const drawCreatures = (state, world, creatures, config) => {
     if (!world || !Array.isArray(creatures) || creatures.length === 0) {
       return;
     }
+    const tileSize = resolveTileSize(config);
     const { width, height } = canvas.getBoundingClientRect();
 
     ctx.save();
@@ -224,10 +231,14 @@ export function createRenderer(container, { camera }) {
     const originX = -(world.width * tileSize) / 2;
     const originY = -(world.height * tileSize) / 2;
 
-    const minWorldX = -(width / 2 + state.x) / state.zoom;
-    const maxWorldX = (width / 2 - state.x) / state.zoom;
-    const minWorldY = -(height / 2 + state.y) / state.zoom;
-    const maxWorldY = (height / 2 - state.y) / state.zoom;
+    const baseRadius = tileSize * 0.45;
+    const minRadius = 4 / state.zoom;
+    const markerRadius = Math.max(baseRadius, minRadius);
+
+    const minWorldX = -(width / 2 + state.x) / state.zoom - markerRadius;
+    const maxWorldX = (width / 2 - state.x) / state.zoom + markerRadius;
+    const minWorldY = -(height / 2 + state.y) / state.zoom - markerRadius;
+    const maxWorldY = (height / 2 - state.y) / state.zoom + markerRadius;
 
     const startCol = Math.max(0, Math.floor((minWorldX - originX) / tileSize));
     const endCol = Math.min(
@@ -239,10 +250,6 @@ export function createRenderer(container, { camera }) {
       world.height,
       Math.ceil((maxWorldY - originY) / tileSize)
     );
-
-    const baseRadius = tileSize * 0.18;
-    const minRadius = 3 / state.zoom;
-    const markerRadius = Math.max(baseRadius, minRadius);
 
     ctx.fillStyle = 'rgba(248, 232, 120, 0.9)';
     ctx.strokeStyle = 'rgba(30, 30, 30, 0.35)';
@@ -297,8 +304,8 @@ export function createRenderer(container, { camera }) {
         continue;
       }
 
-      const centerX = originX + (x + 0.5) * tileSize;
-      const centerY = originY + (y + 0.5) * tileSize;
+      const centerX = originX + x * tileSize;
+      const centerY = originY + y * tileSize;
       ctx.beginPath();
       drawCreatureShape(creature.species, centerX, centerY, markerRadius);
       ctx.fill();
@@ -313,7 +320,7 @@ export function createRenderer(container, { camera }) {
     render(sim) {
       const state = camera?.getState?.() ?? { x: 0, y: 0, zoom: 1 };
       drawTerrain(state, sim.state?.world, sim.config);
-      drawCreatures(state, sim.state?.world, sim.state?.creatures);
+      drawCreatures(state, sim.state?.world, sim.state?.creatures, sim.config);
 
       const roll = Number.isFinite(sim.state?.lastRoll)
         ? sim.state.lastRoll.toFixed(4)
