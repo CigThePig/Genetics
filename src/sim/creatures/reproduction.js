@@ -146,7 +146,7 @@ const isWaterTile = (world, x, y, waterTerrain) =>
   typeof world?.getTerrainAt === 'function' &&
   world.getTerrainAt(x, y) === waterTerrain;
 
-const isReadyToReproduce = ({
+export const isReadyToReproduce = ({
   creature,
   baseEnergy,
   baseWater,
@@ -176,9 +176,55 @@ const isReadyToReproduce = ({
   return energyRatio >= minEnergyRatio && waterRatio >= minWaterRatio;
 };
 
-const findMate = ({
+const isMateCandidate = ({
+  candidate,
+  source,
+  baseEnergy,
+  baseWater,
+  minEnergyRatio,
+  minWaterRatio,
+  minAgeTicks,
+  pairedIds,
+  sexEnabled,
+  pregnancyEnabled
+}) => {
+  if (!candidate || candidate.species !== source.species) {
+    return false;
+  }
+  if (sexEnabled) {
+    if (!candidate.sex || !source.sex || candidate.sex === source.sex) {
+      return false;
+    }
+    if (
+      pregnancyEnabled &&
+      candidate.sex === 'female' &&
+      candidate.reproduction?.pregnancy?.isPregnant
+    ) {
+      return false;
+    }
+  }
+  if (pairedIds?.has(candidate.id)) {
+    return false;
+  }
+  const cooldown = candidate.reproduction?.cooldownTicks ?? 0;
+  if (cooldown > 0) {
+    return false;
+  }
+  return isReadyToReproduce({
+    creature: candidate,
+    baseEnergy,
+    baseWater,
+    minEnergyRatio,
+    minWaterRatio,
+    minAgeTicks,
+    sexEnabled,
+    pregnancyEnabled
+  });
+};
+
+export const selectMateTarget = ({
   creatures,
-  startIndex,
+  startIndex = -1,
   source,
   maxDistanceSq,
   baseEnergy,
@@ -193,38 +239,19 @@ const findMate = ({
   let chosen = null;
   let closestDistance = Infinity;
 
-  for (let i = startIndex + 1; i < creatures.length; i += 1) {
+  const offset = Math.max(-1, Number.isFinite(startIndex) ? startIndex : -1);
+  for (let i = offset + 1; i < creatures.length; i += 1) {
     const candidate = creatures[i];
-    if (!candidate || candidate.species !== source.species) {
-      continue;
-    }
-    if (sexEnabled) {
-      if (!candidate.sex || !source.sex || candidate.sex === source.sex) {
-        continue;
-      }
-      if (
-        pregnancyEnabled &&
-        candidate.sex === 'female' &&
-        candidate.reproduction?.pregnancy?.isPregnant
-      ) {
-        continue;
-      }
-    }
-    if (pairedIds.has(candidate.id)) {
-      continue;
-    }
-    const cooldown = candidate.reproduction?.cooldownTicks ?? 0;
-    if (cooldown > 0) {
-      continue;
-    }
     if (
-      !isReadyToReproduce({
-        creature: candidate,
+      !isMateCandidate({
+        candidate,
+        source,
         baseEnergy,
         baseWater,
         minEnergyRatio,
         minWaterRatio,
         minAgeTicks,
+        pairedIds,
         sexEnabled,
         pregnancyEnabled
       })
@@ -245,6 +272,8 @@ const findMate = ({
 
   return chosen;
 };
+
+const findMate = (options) => selectMateTarget(options);
 
 const spawnOffset = (rng) => (rng.nextFloat() * 2 - 1) * 0.35;
 
@@ -372,6 +401,10 @@ export function updateCreatureReproduction({
     ticksPerSecond
   );
   const range = resolveDistance(config?.creatureReproductionRange, 2.5);
+  const rangeWhileSeeking = resolveDistance(
+    config?.creatureReproductionRangeWhileSeeking,
+    range
+  );
   const energyCost = resolveCost(
     config?.creatureReproductionEnergyCost,
     0.2
@@ -400,7 +433,6 @@ export function updateCreatureReproduction({
     config?.creatureOffspringHp,
     baseHp * 0.8
   );
-  const maxDistanceSq = range * range;
   const tickScale = 1 / ticksPerSecond;
   const fallbackEnergyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
   const fallbackWaterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
@@ -595,11 +627,13 @@ export function updateCreatureReproduction({
       continue;
     }
 
+    const activeRange =
+      creature.intent?.type === 'mate' ? rangeWhileSeeking : range;
     const mate = findMate({
       creatures,
       startIndex: i,
       source: creature,
-      maxDistanceSq,
+      maxDistanceSq: activeRange * activeRange,
       baseEnergy,
       baseWater,
       minEnergyRatio,

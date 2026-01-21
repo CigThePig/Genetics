@@ -69,12 +69,12 @@ Stop point:
 
 ## Phase 4 — Mate seeking + adjusted ranges
 Tasks:
-- [ ] Add mate selection helper with rangeSq scanning.
-- [ ] Set mate-seeking intent with commit timer and invalidation rules.
-- [ ] Update movement to support intent.type === "mate".
-- [ ] Use reproduction range while seeking for pairing checks.
-- [ ] Add tests for mate-seeking intent selection.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Add mate selection helper with rangeSq scanning.
+- [x] Set mate-seeking intent with commit timer and invalidation rules.
+- [x] Update movement to support intent.type === "mate".
+- [x] Use reproduction range while seeking for pairing checks.
+- [x] Add tests for mate-seeking intent selection.
+- [x] Update /context/repo-map.md if files/roles change.
 
 Files touched:
 - src/sim/creatures/reproduction.js
@@ -83,10 +83,10 @@ Files touched:
 - context/repo-map.md (if needed)
 
 Verification checklist:
-- [ ] Mate intent does not override eat/drink unless configured.
-- [ ] Commit timer prevents thrashing.
-- [ ] Mate target invalidation resets intent safely.
-- [ ] Range while seeking applied only to seeking pairs.
+- [x] Mate intent does not override eat/drink unless configured.
+- [x] Commit timer prevents thrashing.
+- [x] Mate target invalidation resets intent safely.
+- [x] Range while seeking applied only to seeking pairs.
 
 Stop point:
 - Pause after mate seeking changes for review.
@@ -101,8 +101,8 @@ Phase 3 (pregnancy/birth):
 - [ ] Gestation multiplier defaults to 1.0 and clamps correctly.
 
 Phase 4 (activation layer):
-- [ ] Mate intent does not permanently override drink/eat unless configured.
-- [ ] Commit timer prevents target thrashing.
-- [ ] Mate target invalidation resets intent safely.
-- [ ] Seeking range does not apply globally.
-- [ ] Performance: scanning uses rangeSq and skips non-candidates early.
+- [x] Mate intent does not permanently override drink/eat unless configured.
+- [x] Commit timer prevents target thrashing.
+- [x] Mate target invalidation resets intent safely.
+- [x] Seeking range does not apply globally.
+- [x] Performance: scanning uses rangeSq and skips non-candidates early.

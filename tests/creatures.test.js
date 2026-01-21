@@ -9,6 +9,7 @@ import {
   regenerateCreatureStamina,
   updateCreatureMovement,
   updateCreaturePerception,
+  updateCreatureIntent,
   updateCreatureSprintDecision,
   updateCreatureReproduction
 } from '../src/sim/creatures/index.js';
@@ -210,6 +211,114 @@ describe('creature pregnancy', () => {
     const newborn = creatures[2];
     expect(newborn.meters.energy).toBeCloseTo(0.3, 5);
     expect(metrics.birthsLastTick).toBe(1);
+  });
+});
+
+describe('creature mate seeking', () => {
+  it('assigns mate intent when a ready mate is in range', () => {
+    const world = createWorldGrid({
+      width: 5,
+      height: 5,
+      defaultTerrain: 'plains'
+    });
+    const config = {
+      creatureSexEnabled: true,
+      creaturePregnancyEnabled: true,
+      creatureMateSeekingEnabled: true,
+      creatureMateSeekRange: 5,
+      creatureMateSeekCommitTicks: 4,
+      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinEnergyRatio: 0,
+      creatureReproductionMinWaterRatio: 0,
+      creatureBaseEnergy: 1,
+      creatureBaseWater: 1
+    };
+    const female = {
+      id: 1,
+      species: SPECIES.SQUARE,
+      sex: 'female',
+      position: { x: 1, y: 1 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      priority: 'thirst',
+      traits: { drinkThreshold: 0.8, eatThreshold: 0.8 },
+      reproduction: { cooldownTicks: 0 }
+    };
+    const male = {
+      id: 2,
+      species: SPECIES.SQUARE,
+      sex: 'male',
+      position: { x: 1.5, y: 1.5 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      priority: 'thirst',
+      traits: { drinkThreshold: 0.8, eatThreshold: 0.8 },
+      reproduction: { cooldownTicks: 0 }
+    };
+
+    updateCreatureIntent({
+      creatures: [female, male],
+      config,
+      world,
+      metrics: {},
+      tick: 1
+    });
+
+    expect(female.intent.type).toBe('mate');
+    expect(male.intent.type).toBe('mate');
+    expect(female.reproduction.mate.commitTicksRemaining).toBe(4);
+  });
+
+  it('does not override drink intent unless configured', () => {
+    const world = createWorldGrid({
+      width: 5,
+      height: 5,
+      defaultTerrain: 'plains'
+    });
+    world.setTerrainAt(1, 1, 'water');
+    const config = {
+      creatureSexEnabled: true,
+      creaturePregnancyEnabled: true,
+      creatureMateSeekingEnabled: true,
+      creatureMateSeekRange: 5,
+      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinEnergyRatio: 0,
+      creatureReproductionMinWaterRatio: 0,
+      creatureBaseEnergy: 1,
+      creatureBaseWater: 1
+    };
+    const female = {
+      id: 1,
+      species: SPECIES.SQUARE,
+      sex: 'female',
+      position: { x: 1, y: 1 },
+      meters: { energy: 1, water: 0.1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      priority: 'thirst',
+      traits: { drinkThreshold: 0.8, eatThreshold: 0.8 },
+      reproduction: { cooldownTicks: 0 }
+    };
+    const male = {
+      id: 2,
+      species: SPECIES.SQUARE,
+      sex: 'male',
+      position: { x: 1.5, y: 1.5 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      priority: 'thirst',
+      traits: { drinkThreshold: 0.8, eatThreshold: 0.8 },
+      reproduction: { cooldownTicks: 0 }
+    };
+
+    updateCreatureIntent({
+      creatures: [female, male],
+      config,
+      world,
+      metrics: {},
+      tick: 1
+    });
+
+    expect(female.intent.type).toBe('drink');
   });
 });
 
