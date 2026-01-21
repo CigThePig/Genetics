@@ -34,9 +34,12 @@ const metrics = createMetrics({ container: app });
 let running = false;
 let speed = initialSettings.speed;
 let rafId = null;
+let tickTimerId = null;
 let lastFrameTime = null;
+let lastTickTime = null;
 let accumulatorMs = 0;
 const maxFrameDeltaMs = 250;
+const maxTickDeltaMs = 250;
 
 const tickOnce = () => {
   sim.tick();
@@ -45,8 +48,12 @@ const tickOnce = () => {
   metrics.update({ ticks: 1 });
 };
 
-const resetTimebase = () => {
+const resetRenderTimebase = () => {
   lastFrameTime = performance.now();
+};
+
+const resetTickTimebase = () => {
+  lastTickTime = performance.now();
   accumulatorMs = 0;
 };
 
@@ -57,20 +64,54 @@ const runFrame = (time) => {
   }
   const deltaMs = Math.min(now - lastFrameTime, maxFrameDeltaMs);
   lastFrameTime = now;
-  accumulatorMs += deltaMs;
+  renderer.render(sim);
+  ui.setMetrics?.(sim.getSummary());
+  if (running) {
+    rafId = requestAnimationFrame(runFrame);
+  }
+};
+
+const getTickIntervalMs = () => {
   const ticksPerSecond = sim.config?.ticksPerSecond ?? 1;
-  const tickIntervalMs = 1000 / (ticksPerSecond * speed);
-  let ticksThisFrame = 0;
+  return 1000 / Math.max(1, ticksPerSecond);
+};
+
+const runTicks = () => {
+  if (!running) {
+    return;
+  }
+  const now = performance.now();
+  if (lastTickTime === null) {
+    lastTickTime = now;
+    return;
+  }
+  const deltaMs = Math.min(now - lastTickTime, maxTickDeltaMs);
+  lastTickTime = now;
+  accumulatorMs += deltaMs * speed;
+  const tickIntervalMs = getTickIntervalMs();
+  let ticksThisInterval = 0;
   while (accumulatorMs >= tickIntervalMs) {
     sim.tick();
     accumulatorMs -= tickIntervalMs;
-    ticksThisFrame += 1;
+    ticksThisInterval += 1;
   }
-  renderer.render(sim);
-  ui.setMetrics?.(sim.getSummary());
-  metrics.update({ ticks: ticksThisFrame, time: now });
-  if (running) {
-    rafId = requestAnimationFrame(runFrame);
+  if (ticksThisInterval > 0) {
+    metrics.update({ ticks: ticksThisInterval, time: now });
+  }
+};
+
+const startTickLoop = () => {
+  if (tickTimerId) {
+    return;
+  }
+  const tickIntervalMs = getTickIntervalMs();
+  tickTimerId = window.setInterval(runTicks, tickIntervalMs);
+};
+
+const stopTickLoop = () => {
+  if (tickTimerId) {
+    clearInterval(tickTimerId);
+    tickTimerId = null;
   }
 };
 
@@ -80,7 +121,9 @@ const start = () => {
   }
   running = true;
   ui.setRunning(true);
-  resetTimebase();
+  resetRenderTimebase();
+  resetTickTimebase();
+  startTickLoop();
   rafId = requestAnimationFrame(runFrame);
 };
 
@@ -90,11 +133,13 @@ const pause = () => {
   }
   running = false;
   ui.setRunning(false);
+  stopTickLoop();
   if (rafId) {
     cancelAnimationFrame(rafId);
     rafId = null;
   }
-  resetTimebase();
+  resetRenderTimebase();
+  resetTickTimebase();
 };
 
 const ui = createUI({
@@ -110,6 +155,7 @@ const ui = createUI({
     speed = Number.isFinite(nextSpeed) ? Math.max(1, nextSpeed) : 1;
     ui.setSpeed(speed);
     settings.save({ speed });
+    resetTickTimebase();
   },
   onSeedChange: (nextSeed) => {
     pause();
