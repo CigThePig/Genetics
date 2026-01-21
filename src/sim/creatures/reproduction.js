@@ -227,6 +227,7 @@ export function updateCreatureReproduction({
   const baseWater = resolveBaseMeter(config?.creatureBaseWater);
   const baseStamina = resolveBaseMeter(config?.creatureBaseStamina);
   const baseHp = resolveBaseMeter(config?.creatureBaseHp);
+  const sexEnabled = config?.creatureSexEnabled !== false;
   const minEnergyRatio = resolveRatio(
     config?.creatureReproductionMinEnergyRatio,
     0.9
@@ -385,11 +386,13 @@ export function updateCreatureReproduction({
       species: creature.species,
       genome
     });
+    const sex = sexEnabled ? (rng.nextFloat() < 0.5 ? 'male' : 'female') : null;
 
     newborns.push({
       id: nextId,
       position,
       species: creature.species,
+      sex,
       genome,
       traits,
       ageTicks: 0,

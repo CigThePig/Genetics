@@ -41,6 +41,43 @@ const resolveTicksPerSecond = (config) =>
     ? Math.max(1, config.ticksPerSecond)
     : 60;
 
+const resolveSexEnabled = (config) => config?.creatureSexEnabled !== false;
+
+const resolveSexInitialSplitMode = (config) =>
+  config?.creatureSexInitialSplitMode ?? 'exact';
+
+const buildExactSexQueues = (count) => {
+  const counts = {};
+  for (const species of SPECIES_LIST) {
+    counts[species] = 0;
+  }
+  for (let i = 0; i < count; i += 1) {
+    const species = pickSpawnSpecies(i);
+    counts[species] += 1;
+  }
+
+  const queues = {};
+  for (const species of SPECIES_LIST) {
+    const total = counts[species];
+    const queue = [];
+    let maleRemaining = Math.floor(total / 2);
+    let femaleRemaining = total - maleRemaining;
+    let useMale = true;
+    for (let i = 0; i < total; i += 1) {
+      if ((useMale && maleRemaining > 0) || femaleRemaining === 0) {
+        queue.push('male');
+        maleRemaining -= 1;
+      } else {
+        queue.push('female');
+        femaleRemaining -= 1;
+      }
+      useMale = !useMale;
+    }
+    queues[species] = queue;
+  }
+  return queues;
+};
+
 const fallbackLifeStages = [
   {
     id: 'juvenile',
@@ -898,6 +935,18 @@ export function createCreatures({ config, rng, world }) {
     : 4;
   const width = Number.isFinite(world?.width) ? world.width : 0;
   const height = Number.isFinite(world?.height) ? world.height : 0;
+  const sexEnabled = resolveSexEnabled(config);
+  const sexSplitMode = resolveSexInitialSplitMode(config);
+  const sexQueues =
+    sexEnabled && sexSplitMode === 'exact'
+      ? buildExactSexQueues(count)
+      : null;
+  const sexIndices = {};
+  if (sexEnabled) {
+    for (const species of SPECIES_LIST) {
+      sexIndices[species] = 0;
+    }
+  }
 
   const randomPosition = () => ({
     x: rng.nextFloat() * width,
@@ -983,10 +1032,22 @@ export function createCreatures({ config, rng, world }) {
       }
     }
     const genome = createCreatureGenome({ config, species, rng });
+    const sexIndex = sexEnabled ? sexIndices[species] ?? 0 : 0;
+    if (sexEnabled) {
+      sexIndices[species] = sexIndex + 1;
+    }
+    const sex = sexEnabled
+      ? sexQueues
+        ? sexQueues[species][sexIndex]
+        : sexIndex % 2 === 0
+          ? 'male'
+          : 'female'
+      : null;
     creatures.push({
       id: i,
       position,
       species,
+      sex,
       genome,
       traits: createCreatureTraits({ config, species, genome }),
       ageTicks: 0,
