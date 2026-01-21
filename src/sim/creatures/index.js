@@ -1,7 +1,7 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
 import { consumeGrassAt } from '../plants/grass.js';
 import { consumeBerriesAt } from '../plants/bushes.js';
-import { pickSpawnSpecies } from '../species.js';
+import { pickSpawnSpecies, SPECIES_LIST } from '../species.js';
 import { createCreatureTraits } from './traits.js';
 import { createCreatureGenome } from './genetics.js';
 import { updateCreaturePerception } from './perception.js';
@@ -889,24 +889,86 @@ export function createCreatures({ config, rng, world }) {
   const creatures = [];
   const waterTerrain = resolveWaterTerrain(config);
   const spawnRetries = 20;
+  const anchorRetries = 30;
+  const clusterSpread = Number.isFinite(config?.creatureSpawnClusterSpread)
+    ? Math.max(0, config.creatureSpawnClusterSpread)
+    : 12;
+  const clusterJitter = Number.isFinite(config?.creatureSpawnClusterJitter)
+    ? Math.max(0, config.creatureSpawnClusterJitter)
+    : 4;
+  const width = Number.isFinite(world?.width) ? world.width : 0;
+  const height = Number.isFinite(world?.height) ? world.height : 0;
+
+  const randomPosition = () => ({
+    x: rng.nextFloat() * width,
+    y: rng.nextFloat() * height
+  });
+
+  const resolveLandPosition = (position) => {
+    const cellX = Math.floor(position.x);
+    const cellY = Math.floor(position.y);
+    return !isWaterTile(world, cellX, cellY, waterTerrain);
+  };
+
+  const findRandomLandPosition = () => {
+    let position = randomPosition();
+    for (let attempt = 0; attempt < spawnRetries; attempt += 1) {
+      if (resolveLandPosition(position)) {
+        return position;
+      }
+      position = randomPosition();
+    }
+    return position;
+  };
+
+  const clampToWorld = (value, max) =>
+    Math.max(0, Math.min(max - 0.001, value));
+
+  const findNearbyLandPosition = (origin, radius, attempts) => {
+    if (!origin || radius <= 0 || !Number.isFinite(width) || !Number.isFinite(height)) {
+      return findRandomLandPosition();
+    }
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const offsetX = (rng.nextFloat() * 2 - 1) * radius;
+      const offsetY = (rng.nextFloat() * 2 - 1) * radius;
+      const candidate = {
+        x: clampToWorld(origin.x + offsetX, width),
+        y: clampToWorld(origin.y + offsetY, height)
+      };
+      if (resolveLandPosition(candidate)) {
+        return candidate;
+      }
+    }
+    return findRandomLandPosition();
+  };
+
+  const createAnchors = () => {
+    const baseAnchor = findRandomLandPosition();
+    const anchors = {};
+    for (const species of SPECIES_LIST) {
+      anchors[species] = findNearbyLandPosition(baseAnchor, clusterSpread, anchorRetries);
+    }
+    return anchors;
+  };
+
+  const anchors = createAnchors();
 
   for (let i = 0; i < count; i += 1) {
-    let position = {
-      x: rng.nextFloat() * world.width,
-      y: rng.nextFloat() * world.height
-    };
+    const species = pickSpawnSpecies(i);
+    const anchor = anchors[species] ?? findRandomLandPosition();
+    let position = anchor;
     for (let attempt = 0; attempt < spawnRetries; attempt += 1) {
-      const cellX = Math.floor(position.x);
-      const cellY = Math.floor(position.y);
-      if (!isWaterTile(world, cellX, cellY, waterTerrain)) {
+      const angle = rng.nextFloat() * Math.PI * 2;
+      const distance = rng.nextFloat() * clusterJitter;
+      const candidate = {
+        x: clampToWorld(anchor.x + Math.cos(angle) * distance, width),
+        y: clampToWorld(anchor.y + Math.sin(angle) * distance, height)
+      };
+      if (resolveLandPosition(candidate)) {
+        position = candidate;
         break;
       }
-      position = {
-        x: rng.nextFloat() * world.width,
-        y: rng.nextFloat() * world.height
-      };
     }
-    const species = pickSpawnSpecies(i);
     const genome = createCreatureGenome({ config, species, rng });
     creatures.push({
       id: i,

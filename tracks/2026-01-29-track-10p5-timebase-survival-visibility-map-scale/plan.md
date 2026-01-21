@@ -164,11 +164,11 @@
 ## Phase 4 — Map Scale 4× With Density Preserved + Population Increase
 
 **Tasks**
-- [ ] Scale `worldWidth` / `worldHeight` to 2× each (4× area).
-- [ ] Scale generator counts to preserve density (bushes, grass patches, terrain blobs, water corridors).
-- [ ] Increase population to 20 per species (80 total).
-- [ ] Implement clustered spawning around four nearby centers (one per species).
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Scale `worldWidth` / `worldHeight` to 2× each (4× area).
+- [x] Scale generator counts to preserve density (bushes, grass patches, terrain blobs, water corridors).
+- [x] Increase population to 20 per species (80 total).
+- [x] Implement clustered spawning around four nearby centers (one per species).
+- [x] Update /context/repo-map.md if files/roles change. (No changes needed.)
 
 **Likely files to change**
 - `src/sim/config.js`
@@ -178,10 +178,10 @@
 - `src/sim/creatures/index.js` or `src/sim/species.js` (spawn logic)
 
 **Verification checklist**
-- [ ] World dimensions are 120×80 (or equivalent 4× area).
-- [ ] Resource counts scale to preserve density.
-- [ ] Population is 80 total with four nearby species clusters.
-- [ ] Spawns avoid water and remain deterministic by seed.
+- [x] World dimensions are 120×80 (or equivalent 4× area).
+- [x] Resource counts scale to preserve density.
+- [x] Population is 80 total with four nearby species clusters.
+- [x] Spawns avoid water and remain deterministic by seed.
 
 **Stop point**
 - Stop after map scale and density checks pass.
