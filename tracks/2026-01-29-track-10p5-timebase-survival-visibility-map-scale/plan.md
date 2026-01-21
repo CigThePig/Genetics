@@ -98,9 +98,12 @@
 
 **Tasks**
 - [x] Convert basal drains/thresholds to per-second targets (or apply deterministic conversion).
+- [x] Time-scale movement and calibrate base speed to 0.25× prior per-tick feel (0.6 * 60 * 0.25 = 9 tiles/sec).
+- [x] Update diets to remove MEAT dependence; gate hunting on MEAT diet; add perception-based seek fallback for food/water.
 - [ ] Tune starting reserves and seek/drink thresholds after timebase fix.
 - [x] Review reproduction age/cost pacing for timebase impact.
 - [x] Add/update automated test covering survival pacing or deterministic drain conversion (required for core formula changes).
+- [x] Add automated tests for movement time-scaling and diet foraging fallback.
 - [x] Update /context/repo-map.md if files/roles change. (No changes needed.)
 
 **Likely files to change**
@@ -113,9 +116,24 @@
 - [ ] % deaths in first 60s reduced to target.
 - [ ] Median time-to-death aligns with expected seconds-based tuning.
 - [x] Automated test passes and validates drain conversion or survival pacing.
+- [x] Automated tests cover movement time-scaling and diet fallback.
 
 **Stop point**
 - Stop after survival metrics and test coverage are validated.
+
+### Change Log + Preempt Notes (Phase 2 hotfixes)
+**Files changed**
+- `src/sim/config.js` (base speed now in tiles/sec and calibrated to 0.25× old per-tick movement)
+- `src/sim/creatures/index.js` (movement time-scaling; hunt gating on MEAT diet; perception-based seek fallback)
+- `src/sim/creatures/food.js` (temporary diet preferences exclude MEAT)
+- `tests/creatures.test.js` (movement time-scaling + diet fallback tests)
+
+**Preempt notes**
+- Chases and pursuit/escape dynamics will feel slower in wall-time.
+- Slower movement increases time spent near resources; should improve eating/drinking reliability.
+- Sprinting remains a multiplier; verify sprint still feels meaningfully faster than walk.
+- Triangles/Octagons will forage rather than hunt until meat exists, reducing “Circles always win” bias.
+- When MEAT is implemented, re-adding MEAT to diets will re-enable hunting via the gate.
 
 ---
 
