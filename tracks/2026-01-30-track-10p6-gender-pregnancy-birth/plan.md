@@ -40,26 +40,29 @@ Stop point:
 
 ## Phase 3 — Pregnancy + conception + birth pipeline
 Tasks:
-- [ ] Add gestationMultiplier trait default + clamping.
-- [ ] Update readiness rules to block pregnant females.
-- [ ] Implement conception chance and pregnancy state.
-- [ ] Add gestation ticking, miscarriage checks, and birth events.
-- [ ] Apply newborn meter tradeoffs based on gestation multiplier.
-- [ ] Add pregnancy/miscarriage metrics.
-- [ ] Add deterministic tests for pregnancy start and births.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Add gestationMultiplier trait default + clamping.
+- [x] Update readiness rules to block pregnant females.
+- [x] Implement conception chance and pregnancy state.
+- [x] Add gestation ticking, miscarriage checks, and birth events.
+- [x] Apply newborn meter tradeoffs based on gestation multiplier.
+- [x] Apply pregnancy move-speed and metabolism tradeoffs.
+- [x] Add pregnancy/miscarriage metrics.
+- [x] Add deterministic tests for pregnancy start and births.
+- [x] Update /context/repo-map.md if files/roles change.
 
 Files touched:
 - src/sim/creatures/reproduction.js
 - src/sim/creatures/traits.js
+- src/sim/creatures/index.js
+- src/sim/sim.js
 - tests/creatures.test.js
 - context/repo-map.md (if needed)
 
 Verification checklist:
-- [ ] Pregnancy clears on birth and miscarriage.
-- [ ] Gestation ticks down regardless of cooldown.
-- [ ] Newborn sex assignment exists for births.
-- [ ] Metrics increments match events per tick.
+- [x] Pregnancy clears on birth and miscarriage.
+- [x] Gestation ticks down regardless of cooldown.
+- [x] Newborn sex assignment exists for births.
+- [x] Metrics increments match events per tick.
 
 Stop point:
 - Pause after pregnancy/birth pipeline changes for review.

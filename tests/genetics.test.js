@@ -8,6 +8,7 @@ describe('genetics mutation determinism', () => {
     const config = {
       seed,
       creatureCount: 8,
+      creaturePregnancyEnabled: false,
       creatureReproductionMinAgeTicks: 0,
       creatureReproductionMinEnergyRatio: 0,
       creatureReproductionMinWaterRatio: 0,
