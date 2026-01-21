@@ -334,6 +334,34 @@ Verification:
 
 ---
 
+## Track 10.6 — Gender + Pregnancy + Birth (Mate Seeking)
+Goal: Fix “no births” by adding sex, pregnancy/gestation, and mate-seeking so reproduction reliably occurs.
+Includes:
+1) Sex assignment (male/female) with exact 50/50 initial split per species
+2) Conception chance and pregnancy state with gestation timer
+3) Birth event spawns child with inherited genetics + mutation
+4) Mate-seeking activation layer with configurable search range and adjusted reproduction range
+5) Pregnancy tradeoffs + miscarriage rules (configurable)
+6) Gestation trait with newborn meter tradeoffs
+7) Metrics for pregnancies and miscarriages
+
+Acceptance:
+- Starting creatures spawn with exact 50/50 sex split per species (even counts).
+- Pregnancies and births occur under default config.
+- Mate seeking visibly increases pair formation.
+- Metrics include pregnancies started and miscarriages.
+
+Risks:
+- Mate seeking overrides survival needs unexpectedly.
+- Pregnancy timing/miscarriage checks introduce nondeterminism if RNG leaks.
+- Gestation tradeoffs cause unintended balance shifts.
+
+Verification:
+- Automated tests for sex split, pregnancy/birth, mate seeking intent.
+- Manual: observe mate-seeking convergence and births with default seed.
+
+---
+
 ## Track 11 — Color System + Mating Preferences (Steps 48–49)
 Goal: Add universal color and mating preference visibility.
 Includes:

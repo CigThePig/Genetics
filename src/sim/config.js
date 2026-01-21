@@ -81,6 +81,26 @@ export const simConfig = {
   creatureReproductionMinWaterRatio: 0.9,
   creatureReproductionCooldownTicks: 180,
   creatureReproductionRange: 2.5,
+  creatureSexEnabled: true, // enable male/female assignment
+  creaturePregnancyEnabled: true, // allow pregnancy/gestation pipeline
+  creatureSexInitialSplitMode: 'exact', // exact 50/50 split for initial spawn
+  creatureConceptionChance: 0.35, // base conception probability per pairing
+  creatureGestationBaseTicks: 240, // base gestation length (ticks)
+  creatureGestationTraitEnabled: true, // enable trait-based gestation length
+  creaturePregnancyMetabolismMultiplier: 1.15, // hunger/water drain multiplier while pregnant
+  creaturePregnancyMoveSpeedMultiplier: 0.9, // move speed multiplier while pregnant
+  creaturePregnancyMiscarriageEnabled: true, // enable miscarriage checks
+  creaturePregnancyMiscarriageEnergyRatio: 0.15, // energy ratio threshold for miscarriage risk
+  creaturePregnancyMiscarriageChancePerTick: 0.01, // miscarriage roll per tick when below energy ratio
+  creatureMateSeekingEnabled: true, // enable mate-seeking intent
+  creatureMateSeekRange: 25, // max distance to notice and seek a mate
+  creatureMateSeekCommitTicks: 60, // ticks to commit to a mate target
+  creatureReproductionRangeWhileSeeking: 6, // expanded range when seeking a mate
+  creatureMateSeekPriorityOverridesNeeds: false, // allow mate intent to override eat/drink
+  creatureBirthChildStartingMetersFastMultiplier: 0.85, // newborn meters when gestation is fast
+  creatureBirthChildStartingMetersSlowMultiplier: 1.1, // newborn meters when gestation is slow
+  creatureBirthChildStartingMetersFastIfMultiplierBelow: 0.9, // fast gestation threshold
+  creatureBirthChildStartingMetersSlowIfMultiplierAbove: 1.1, // slow gestation threshold
   creatureReproductionEnergyCost: 0.2,
   creatureReproductionWaterCost: 0.15,
   creatureReproductionStaminaCost: 0.05,

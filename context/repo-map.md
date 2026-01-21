@@ -85,6 +85,8 @@ Rules:
   - Contains: Track 10 spec/blueprint/plan (Reproduction Loop + Basic Genetics)
 - tracks/2026-01-29-track-10p5-timebase-survival-visibility-map-scale/
   - Contains: Track 10.5 spec/blueprint/plan (Timebase + Survival + Visibility + Map Scale)
+- tracks/2026-01-30-track-10p6-gender-pregnancy-birth/
+  - Contains: Track 10.6 spec/blueprint/plan (Gender + Pregnancy + Birth)
 - tracks/2026-01-27-track-maintenance-touch-gesture-guardrails/
   - Contains: Maintenance spec/blueprint/plan (Touch gesture guardrails)
 - tracks/2026-01-28-track-maintenance-camera-change-callback/
