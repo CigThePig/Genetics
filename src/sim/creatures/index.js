@@ -36,6 +36,11 @@ import {
   selectFoodChoice
 } from './food.js';
 
+const resolveTicksPerSecond = (config) =>
+  Number.isFinite(config?.ticksPerSecond)
+    ? Math.max(1, config.ticksPerSecond)
+    : 60;
+
 const fallbackLifeStages = [
   {
     id: 'juvenile',
@@ -61,6 +66,7 @@ const fallbackLifeStages = [
 ];
 
 const getLifeStageDefinitions = (config) => {
+  const ticksPerSecond = resolveTicksPerSecond(config);
   const stages = Array.isArray(config?.creatureLifeStages)
     ? config.creatureLifeStages
     : fallbackLifeStages;
@@ -69,7 +75,7 @@ const getLifeStageDefinitions = (config) => {
     .map((stage) => ({
       id: stage.id ?? stage.label ?? 'stage',
       label: stage.label ?? stage.id ?? 'Stage',
-      minAge: Math.max(0, Math.trunc(stage.minAge)),
+      minAge: Math.max(0, Math.trunc(stage.minAge * ticksPerSecond)),
       movementScale: Number.isFinite(stage.movementScale)
         ? stage.movementScale
         : 1,
@@ -125,9 +131,11 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
   if (!Array.isArray(creatures)) {
     return;
   }
+  const ticksPerSecond = resolveTicksPerSecond(config);
   const maxAgeTicks = resolveMaxAgeTicks(
     config?.creatureMaxAgeTicks,
-    Infinity
+    Infinity,
+    ticksPerSecond
   );
   const counts = metrics?.deathsByCause;
   let totalDeaths = 0;
@@ -157,6 +165,8 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
 }
 
 const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
+
+const resolveTickScale = (config) => 1 / resolveTicksPerSecond(config);
 
 const resolveBasalDrain = (value) =>
   Number.isFinite(value) ? Math.max(0, value) : 0;
@@ -188,11 +198,11 @@ const resolveSprintMultiplier = (value, fallback) =>
 const resolveStaminaRegen = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
 
-const resolveMaxAgeTicks = (value, fallback) => {
+const resolveMaxAgeTicks = (value, fallback, ticksPerSecond) => {
   if (!Number.isFinite(value)) {
     return fallback;
   }
-  return Math.max(0, Math.trunc(value));
+  return Math.max(0, Math.trunc(value * ticksPerSecond));
 };
 
 const isMeterEmpty = (value) => Number.isFinite(value) && value <= 0;
@@ -263,6 +273,7 @@ export function updateCreatureBasalMetabolism({ creatures, config }) {
   if (!Array.isArray(creatures)) {
     return;
   }
+  const tickScale = resolveTickScale(config);
   const fallbackEnergyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
   const fallbackWaterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
   const fallbackStaminaDrain = resolveBasalDrain(
@@ -274,18 +285,15 @@ export function updateCreatureBasalMetabolism({ creatures, config }) {
     if (!meters) {
       continue;
     }
-    const energyDrain = resolveTraitDrain(
-      creature?.traits?.basalEnergyDrain,
-      fallbackEnergyDrain
-    );
-    const waterDrain = resolveTraitDrain(
-      creature?.traits?.basalWaterDrain,
-      fallbackWaterDrain
-    );
-    const staminaDrain = resolveTraitDrain(
-      creature?.traits?.basalStaminaDrain,
-      fallbackStaminaDrain
-    );
+    const energyDrain =
+      resolveTraitDrain(creature?.traits?.basalEnergyDrain, fallbackEnergyDrain) *
+      tickScale;
+    const waterDrain =
+      resolveTraitDrain(creature?.traits?.basalWaterDrain, fallbackWaterDrain) *
+      tickScale;
+    const staminaDrain =
+      resolveTraitDrain(creature?.traits?.basalStaminaDrain, fallbackStaminaDrain) *
+      tickScale;
     const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
       ? creature.lifeStage.metabolismScale
       : 1;
@@ -344,6 +352,7 @@ export function applyCreatureSprintCosts({ creatures, config }) {
   if (!Array.isArray(creatures)) {
     return;
   }
+  const tickScale = resolveTickScale(config);
   const fallbackDrain = resolveBasalDrain(
     config?.creatureSprintStaminaDrain
   );
@@ -353,10 +362,9 @@ export function applyCreatureSprintCosts({ creatures, config }) {
     if (!meters || !creature.motion?.isSprinting) {
       continue;
     }
-    const sprintDrain = resolveTraitDrain(
-      creature?.traits?.sprintStaminaDrain,
-      fallbackDrain
-    );
+    const sprintDrain =
+      resolveTraitDrain(creature?.traits?.sprintStaminaDrain, fallbackDrain) *
+      tickScale;
     const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
       ? creature.lifeStage.metabolismScale
       : 1;
@@ -368,6 +376,7 @@ export function regenerateCreatureStamina({ creatures, config }) {
   if (!Array.isArray(creatures)) {
     return;
   }
+  const tickScale = resolveTickScale(config);
   const baseStamina = resolveNeedMeterBase(config?.creatureBaseStamina);
   const fallbackRegen = resolveStaminaRegen(
     config?.creatureStaminaRegen,
@@ -379,10 +388,9 @@ export function regenerateCreatureStamina({ creatures, config }) {
     if (!meters || creature.motion?.isSprinting) {
       continue;
     }
-    const regen = resolveStaminaRegen(
-      creature?.traits?.staminaRegen,
-      fallbackRegen
-    );
+    const regen =
+      resolveStaminaRegen(creature?.traits?.staminaRegen, fallbackRegen) *
+      tickScale;
     const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
       ? creature.lifeStage.metabolismScale
       : 1;
@@ -730,6 +738,7 @@ export function applyCreatureActions({ creatures, config, world }) {
   if (!Array.isArray(creatures) || !world) {
     return;
   }
+  const tickScale = resolveTickScale(config);
   const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
   const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
   const fallbackDrinkAmount = resolveActionAmount(
@@ -762,6 +771,8 @@ export function applyCreatureActions({ creatures, config, world }) {
       creature?.traits?.eatAmount,
       fallbackEatAmount
     );
+    const drinkAmountPerTick = drinkAmount * tickScale;
+    const eatAmountPerTick = eatAmount * tickScale;
     const grassEatMin = resolveActionAmount(
       creature?.traits?.grassEatMin,
       fallbackGrassEatMin
@@ -775,7 +786,9 @@ export function applyCreatureActions({ creatures, config, world }) {
     const intentFoodType = creature.intent?.foodType;
 
     if (intentType === 'drink' && hasNearbyWater(world, cell, config)) {
-      meters.water = clampMeter(Math.min(baseWater, meters.water + drinkAmount));
+      meters.water = clampMeter(
+        Math.min(baseWater, meters.water + drinkAmountPerTick)
+      );
       continue;
     }
 
@@ -790,7 +803,7 @@ export function applyCreatureActions({ creatures, config, world }) {
           world,
           x: cell.x,
           y: cell.y,
-          amount: Math.min(availableGrass, eatAmount)
+          amount: Math.min(availableGrass, eatAmountPerTick)
         });
         if (consumed > 0) {
           const props = getFoodProperties(config, FOOD_TYPES.GRASS);
@@ -816,7 +829,7 @@ export function applyCreatureActions({ creatures, config, world }) {
           world,
           x: cell.x,
           y: cell.y,
-          amount: Math.min(availableBerries, eatAmount)
+          amount: Math.min(availableBerries, eatAmountPerTick)
         });
         if (consumed > 0) {
           const props = getFoodProperties(config, FOOD_TYPES.BERRIES);
