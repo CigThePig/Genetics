@@ -18,7 +18,11 @@ import {
   startCreatureChase,
   updateCreatureChase
 } from './chase.js';
-import { updateCreatureReproduction } from './reproduction.js';
+import {
+  isReadyToReproduce,
+  selectMateTarget,
+  updateCreatureReproduction
+} from './reproduction.js';
 
 export {
   updateCreaturePerception,
@@ -229,11 +233,35 @@ const resolveActionThreshold = (value, fallback) => {
 const resolveActionAmount = (value, fallback) =>
   Number.isFinite(value) && value > 0 ? value : fallback;
 
+const resolveRatio = (value, fallback) => {
+  if (!Number.isFinite(value)) {
+    return fallback;
+  }
+  return Math.min(1, Math.max(0, value));
+};
+
+const resolveDistance = (value, fallback) =>
+  Number.isFinite(value) ? Math.max(0, value) : fallback;
+
+const resolveCommitTicks = (value, fallback) => {
+  if (!Number.isFinite(value)) {
+    return Math.max(0, Math.trunc(fallback));
+  }
+  return Math.max(0, Math.trunc(value));
+};
+
 const resolveSprintMultiplier = (value, fallback) =>
   Number.isFinite(value) && value > 0 ? value : fallback;
 
 const resolveStaminaRegen = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
+
+const resolveMinAgeTicks = (value, fallback, ticksPerSecond) => {
+  if (!Number.isFinite(value)) {
+    return Math.max(0, Math.trunc(fallback * ticksPerSecond));
+  }
+  return Math.max(0, Math.trunc(value * ticksPerSecond));
+};
 
 const resolveMaxAgeTicks = (value, fallback, ticksPerSecond) => {
   if (!Number.isFinite(value)) {
@@ -635,8 +663,33 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
   if (!Array.isArray(creatures) || !world) {
     return;
   }
+  const ticksPerSecond = resolveTicksPerSecond(config);
   const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
   const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
+  const minEnergyRatio = resolveRatio(
+    config?.creatureReproductionMinEnergyRatio,
+    0.9
+  );
+  const minWaterRatio = resolveRatio(
+    config?.creatureReproductionMinWaterRatio,
+    0.9
+  );
+  const minAgeTicks = resolveMinAgeTicks(
+    config?.creatureReproductionMinAgeTicks,
+    90,
+    ticksPerSecond
+  );
+  const sexEnabled = config?.creatureSexEnabled !== false;
+  const pregnancyEnabled = config?.creaturePregnancyEnabled !== false;
+  const mateSeekingEnabled = config?.creatureMateSeekingEnabled !== false;
+  const mateSeekRange = resolveDistance(config?.creatureMateSeekRange, 25);
+  const mateSeekRangeSq = mateSeekRange * mateSeekRange;
+  const mateSeekCommitTicks = resolveCommitTicks(
+    config?.creatureMateSeekCommitTicks,
+    60
+  );
+  const mateSeekOverridesNeeds =
+    config?.creatureMateSeekPriorityOverridesNeeds === true;
   const fallbackDrinkThreshold = resolveActionThreshold(
     config?.creatureDrinkThreshold,
     0.8
@@ -653,6 +706,14 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     config?.creatureBerryEatMin,
     0.1
   );
+  const creaturesById = mateSeekingEnabled ? new Map() : null;
+  if (creaturesById) {
+    for (const creature of creatures) {
+      if (Number.isFinite(creature?.id)) {
+        creaturesById.set(creature.id, creature);
+      }
+    }
+  }
 
   for (const creature of creatures) {
     const meters = creature?.meters;
@@ -698,13 +759,113 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
       berries: berryEatMin,
       meat: 0
     };
+    const reproductionState = creature.reproduction ?? { cooldownTicks: 0 };
+    if (!creature.reproduction) {
+      creature.reproduction = reproductionState;
+    }
+    if (mateSeekingEnabled && sexEnabled && !reproductionState.mate) {
+      reproductionState.mate = { targetId: null, commitTicksRemaining: 0 };
+    }
+    const canSeekMate =
+      mateSeekingEnabled &&
+      sexEnabled &&
+      reproductionState.cooldownTicks <= 0 &&
+      isReadyToReproduce({
+        creature,
+        baseEnergy,
+        baseWater,
+        minEnergyRatio,
+        minWaterRatio,
+        minAgeTicks,
+        sexEnabled,
+        pregnancyEnabled
+      });
+    const canConsiderMate =
+      canSeekMate && (mateSeekOverridesNeeds || (!canDrink && !canEat));
 
     let intent = 'wander';
     let foodType = null;
     let target = null;
     let memoryEntry = null;
     let targeting = null;
-    if (creature.priority === 'thirst' && canDrink) {
+    let mateTarget = null;
+
+    if (canConsiderMate && reproductionState.mate && creaturesById) {
+      const mateState = reproductionState.mate;
+      let candidate = null;
+      if (Number.isFinite(mateState.targetId)) {
+        const existing = creaturesById.get(mateState.targetId);
+        const existingReady = existing
+          ? isReadyToReproduce({
+              creature: existing,
+              baseEnergy,
+              baseWater,
+              minEnergyRatio,
+              minWaterRatio,
+              minAgeTicks,
+              sexEnabled,
+              pregnancyEnabled
+            })
+          : false;
+        const existingCooldown = existing?.reproduction?.cooldownTicks ?? 0;
+        const existingPregnant =
+          pregnancyEnabled &&
+          existing?.sex === 'female' &&
+          existing.reproduction?.pregnancy?.isPregnant;
+        if (
+          existing &&
+          existing.species === creature.species &&
+          (!sexEnabled ||
+            (existing.sex && creature.sex && existing.sex !== creature.sex)) &&
+          existingCooldown <= 0 &&
+          !existingPregnant &&
+          existingReady
+        ) {
+          candidate = existing;
+        }
+      }
+
+      if (candidate) {
+        mateState.commitTicksRemaining = Math.max(
+          0,
+          mateState.commitTicksRemaining - 1
+        );
+        if (mateState.commitTicksRemaining > 0) {
+          mateTarget = candidate;
+        }
+      }
+
+      if (!mateTarget) {
+        const found = selectMateTarget({
+          creatures,
+          source: creature,
+          maxDistanceSq: mateSeekRangeSq,
+          baseEnergy,
+          baseWater,
+          minEnergyRatio,
+          minWaterRatio,
+          minAgeTicks,
+          sexEnabled,
+          pregnancyEnabled
+        });
+        if (found) {
+          mateState.targetId = found.id ?? null;
+          mateState.commitTicksRemaining = mateSeekCommitTicks;
+          mateTarget = found;
+        } else {
+          mateState.targetId = null;
+          mateState.commitTicksRemaining = 0;
+        }
+      }
+    } else if (mateSeekingEnabled && reproductionState.mate && !canSeekMate) {
+      reproductionState.mate.targetId = null;
+      reproductionState.mate.commitTicksRemaining = 0;
+    }
+
+    if (mateTarget) {
+      intent = 'mate';
+      target = { x: mateTarget.position.x, y: mateTarget.position.y };
+    } else if (creature.priority === 'thirst' && canDrink) {
       intent = 'drink';
     } else if (creature.priority === 'hunger' && canEat) {
       const chaseTarget = canEatMeat ? getChaseTarget(creature, creatures) : null;
