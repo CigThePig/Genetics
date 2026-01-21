@@ -9,7 +9,8 @@ import {
   regenerateCreatureStamina,
   updateCreatureMovement,
   updateCreaturePerception,
-  updateCreatureSprintDecision
+  updateCreatureSprintDecision,
+  updateCreatureReproduction
 } from '../src/sim/creatures/index.js';
 import { FOOD_TYPES, selectFoodChoice } from '../src/sim/creatures/food.js';
 
@@ -77,6 +78,138 @@ describe('creature sex assignment', () => {
       expect(counts[species].male).toBe(1);
       expect(counts[species].female).toBe(1);
     }
+  });
+});
+
+describe('creature pregnancy', () => {
+  it('starts pregnancy on successful conception', () => {
+    const rng = createRng(11);
+    const world = createWorldGrid({
+      width: 5,
+      height: 5,
+      defaultTerrain: 'plains'
+    });
+    const config = {
+      creatureSexEnabled: true,
+      creaturePregnancyEnabled: true,
+      creatureConceptionChance: 1,
+      creatureReproductionRange: 10,
+      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinEnergyRatio: 0,
+      creatureReproductionMinWaterRatio: 0,
+      creatureReproductionCooldownTicks: 10,
+      creatureGestationBaseTicks: 5,
+      creatureBaseEnergy: 1,
+      creatureBaseWater: 1,
+      creatureBaseStamina: 1,
+      creatureBaseHp: 1
+    };
+    const female = {
+      id: 1,
+      species: SPECIES.SQUARE,
+      sex: 'female',
+      position: { x: 1, y: 1 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      traits: { gestationMultiplier: 1, basalEnergyDrain: 0, basalWaterDrain: 0 },
+      reproduction: { cooldownTicks: 0 }
+    };
+    const male = {
+      id: 2,
+      species: SPECIES.SQUARE,
+      sex: 'male',
+      position: { x: 1.1, y: 1.1 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      traits: { gestationMultiplier: 1, basalEnergyDrain: 0, basalWaterDrain: 0 },
+      reproduction: { cooldownTicks: 0 }
+    };
+    const metrics = {};
+
+    updateCreatureReproduction({
+      creatures: [female, male],
+      config,
+      rng,
+      world,
+      metrics
+    });
+
+    expect(female.reproduction.pregnancy.isPregnant).toBe(true);
+    expect(female.reproduction.pregnancy.fatherId).toBe(male.id);
+    expect(metrics.pregnanciesLastTick).toBe(1);
+  });
+
+  it('spawns a newborn after gestation completes', () => {
+    const rng = createRng(5);
+    const world = createWorldGrid({
+      width: 5,
+      height: 5,
+      defaultTerrain: 'plains'
+    });
+    const config = {
+      creatureSexEnabled: true,
+      creaturePregnancyEnabled: true,
+      creatureGestationBaseTicks: 1,
+      creatureReproductionRange: 10,
+      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinEnergyRatio: 0,
+      creatureReproductionMinWaterRatio: 0,
+      creatureReproductionCooldownTicks: 10,
+      creatureBaseEnergy: 1,
+      creatureBaseWater: 1,
+      creatureBaseStamina: 1,
+      creatureBaseHp: 1,
+      creatureOffspringEnergy: 0.6,
+      creatureOffspringWater: 0.6,
+      creatureOffspringStamina: 0.6,
+      creatureOffspringHp: 0.8,
+      creatureBirthChildStartingMetersFastMultiplier: 0.5,
+      creatureBirthChildStartingMetersFastIfMultiplierBelow: 0.9
+    };
+    const female = {
+      id: 1,
+      species: SPECIES.SQUARE,
+      sex: 'female',
+      position: { x: 1, y: 1 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      traits: { gestationMultiplier: 0.8, basalEnergyDrain: 0, basalWaterDrain: 0 },
+      reproduction: {
+        cooldownTicks: 0,
+        pregnancy: {
+          isPregnant: true,
+          fatherId: 2,
+          gestationTicksTotal: 1,
+          gestationTicksRemaining: 1
+        }
+      }
+    };
+    const male = {
+      id: 2,
+      species: SPECIES.SQUARE,
+      sex: 'male',
+      position: { x: 1.1, y: 1.1 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      traits: { gestationMultiplier: 1, basalEnergyDrain: 0, basalWaterDrain: 0 },
+      reproduction: { cooldownTicks: 0 }
+    };
+    const creatures = [female, male];
+    const metrics = {};
+
+    updateCreatureReproduction({
+      creatures,
+      config,
+      rng,
+      world,
+      metrics
+    });
+
+    expect(creatures.length).toBe(3);
+    expect(female.reproduction.pregnancy.isPregnant).toBe(false);
+    const newborn = creatures[2];
+    expect(newborn.meters.energy).toBeCloseTo(0.3, 5);
+    expect(metrics.birthsLastTick).toBe(1);
   });
 });
 

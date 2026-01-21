@@ -442,6 +442,22 @@ const resolveMovementSpeed = (config) =>
     ? Math.max(0, config.creatureBaseSpeed)
     : 0;
 
+const resolvePregnancyMoveMultiplier = (creature, config) => {
+  if (config?.creaturePregnancyEnabled === false) {
+    return 1;
+  }
+  if (creature?.sex !== 'female') {
+    return 1;
+  }
+  if (!creature?.reproduction?.pregnancy?.isPregnant) {
+    return 1;
+  }
+  if (!Number.isFinite(config?.creaturePregnancyMoveSpeedMultiplier)) {
+    return 1;
+  }
+  return Math.max(0, config.creaturePregnancyMoveSpeedMultiplier);
+};
+
 const resolveCreatureSpeed = (creature, config) =>
   Number.isFinite(creature?.traits?.speed)
     ? Math.max(0, creature.traits.speed)
@@ -508,6 +524,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
           resolveSprintMultiplier(config?.creatureSprintSpeedMultiplier, 1)
         )
       : 1;
+    const pregnancyMultiplier = resolvePregnancyMoveMultiplier(creature, config);
     const x = creature.position.x;
     const y = creature.position.y;
     const heading = resolveHeading(creature, rng);
@@ -530,7 +547,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const terrainFriction =
       Number.isFinite(friction) && friction > 0 ? friction : 1;
     const distance =
-      (baseSpeed * scale * sprintMultiplier * tickScale) / terrainFriction;
+      (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * tickScale) /
+      terrainFriction;
     let nextX = clampPosition(
       x + Math.cos(updatedHeading) * distance,
       0,
