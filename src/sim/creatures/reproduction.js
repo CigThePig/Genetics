@@ -1,6 +1,11 @@
 import { createCreatureTraits } from './traits.js';
 import { inheritCreatureGenome, mutateCreatureGenome } from './genetics.js';
 
+const resolveTicksPerSecond = (config) =>
+  Number.isFinite(config?.ticksPerSecond)
+    ? Math.max(1, config.ticksPerSecond)
+    : 60;
+
 const fallbackLifeStages = [
   {
     id: 'juvenile',
@@ -26,6 +31,7 @@ const fallbackLifeStages = [
 ];
 
 const getLifeStageDefinitions = (config) => {
+  const ticksPerSecond = resolveTicksPerSecond(config);
   const stages = Array.isArray(config?.creatureLifeStages)
     ? config.creatureLifeStages
     : fallbackLifeStages;
@@ -34,7 +40,7 @@ const getLifeStageDefinitions = (config) => {
     .map((stage) => ({
       id: stage.id ?? stage.label ?? 'stage',
       label: stage.label ?? stage.id ?? 'Stage',
-      minAge: Math.max(0, Math.trunc(stage.minAge)),
+      minAge: Math.max(0, Math.trunc(stage.minAge * ticksPerSecond)),
       movementScale: Number.isFinite(stage.movementScale)
         ? stage.movementScale
         : 1,
@@ -85,11 +91,19 @@ const resolveRatio = (value, fallback) => {
   return Math.min(1, Math.max(0, value));
 };
 
-const resolveCooldownTicks = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : fallback;
+const resolveCooldownTicks = (value, fallback, ticksPerSecond) => {
+  if (!Number.isFinite(value)) {
+    return Math.max(0, Math.trunc(fallback * ticksPerSecond));
+  }
+  return Math.max(0, Math.trunc(value * ticksPerSecond));
+};
 
-const resolveMinAgeTicks = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, Math.trunc(value)) : fallback;
+const resolveMinAgeTicks = (value, fallback, ticksPerSecond) => {
+  if (!Number.isFinite(value)) {
+    return Math.max(0, Math.trunc(fallback * ticksPerSecond));
+  }
+  return Math.max(0, Math.trunc(value * ticksPerSecond));
+};
 
 const resolveDistance = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
@@ -208,6 +222,7 @@ export function updateCreatureReproduction({
     return;
   }
 
+  const ticksPerSecond = resolveTicksPerSecond(config);
   const baseEnergy = resolveBaseMeter(config?.creatureBaseEnergy);
   const baseWater = resolveBaseMeter(config?.creatureBaseWater);
   const baseStamina = resolveBaseMeter(config?.creatureBaseStamina);
@@ -222,11 +237,13 @@ export function updateCreatureReproduction({
   );
   const cooldownTicks = resolveCooldownTicks(
     config?.creatureReproductionCooldownTicks,
-    240
+    180,
+    ticksPerSecond
   );
   const minAgeTicks = resolveMinAgeTicks(
     config?.creatureReproductionMinAgeTicks,
-    120
+    90,
+    ticksPerSecond
   );
   const range = resolveDistance(config?.creatureReproductionRange, 2.5);
   const energyCost = resolveCost(

@@ -15,13 +15,14 @@ describe('creature metabolism', () => {
   it('applies basal drains each tick', () => {
     const sim = createSim({
       seed: 101,
+      ticksPerSecond: 10,
       creatureCount: 1,
       creatureBaseEnergy: 1,
       creatureBaseWater: 1,
       creatureBaseStamina: 1,
-      creatureBasalEnergyDrain: 0.1,
-      creatureBasalWaterDrain: 0.2,
-      creatureBasalStaminaDrain: 0.05,
+      creatureBasalEnergyDrain: 1,
+      creatureBasalWaterDrain: 2,
+      creatureBasalStaminaDrain: 0.5,
       creatureGenomeJitter: 0,
       creatureGenomeRanges: {
         basalEnergyDrain: { min: 1, max: 1 },
@@ -197,9 +198,10 @@ describe('creature stamina sprinting', () => {
       lifeStage: { metabolismScale: 1 }
     };
     const config = {
+      ticksPerSecond: 10,
       creatureBaseStamina: 1,
-      creatureSprintStaminaDrain: 0.1,
-      creatureStaminaRegen: 0.05
+      creatureSprintStaminaDrain: 1,
+      creatureStaminaRegen: 0.5
     };
 
     applyCreatureSprintCosts({ creatures: [creature], config });

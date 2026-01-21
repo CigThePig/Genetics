@@ -97,11 +97,11 @@
 ## Phase 2 — Survival Pacing (Metabolism + Behavior)
 
 **Tasks**
-- [ ] Convert basal drains/thresholds to per-second targets (or apply deterministic conversion).
+- [x] Convert basal drains/thresholds to per-second targets (or apply deterministic conversion).
 - [ ] Tune starting reserves and seek/drink thresholds after timebase fix.
-- [ ] Review reproduction age/cost pacing for timebase impact.
-- [ ] Add/update automated test covering survival pacing or deterministic drain conversion (required for core formula changes).
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Review reproduction age/cost pacing for timebase impact.
+- [x] Add/update automated test covering survival pacing or deterministic drain conversion (required for core formula changes).
+- [x] Update /context/repo-map.md if files/roles change. (No changes needed.)
 
 **Likely files to change**
 - `src/sim/config.js`
@@ -112,7 +112,7 @@
 **Verification checklist**
 - [ ] % deaths in first 60s reduced to target.
 - [ ] Median time-to-death aligns with expected seconds-based tuning.
-- [ ] Automated test passes and validates drain conversion or survival pacing.
+- [x] Automated test passes and validates drain conversion or survival pacing.
 
 **Stop point**
 - Stop after survival metrics and test coverage are validated.
