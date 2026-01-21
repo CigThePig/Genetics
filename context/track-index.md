@@ -305,6 +305,35 @@ Verification:
 
 ---
 
+## Track 10.5 — Timebase + Survival + Visibility + Map Scale
+Goal: Normalize sim timebase, survival pacing, creature visibility, and map scale while preserving density.
+Includes:
+1) Timebase decoupled from RAF via fixed timestep (ticksPerSecond + speed multiplier)
+2) Survival pacing tuned in seconds (basal drains/thresholds/starting reserves/behavior)
+3) Creature render size ≈ 1 tile with alignment + input/inspect unit fixes
+4) Map scale 4× area with density-preserving resource generation
+5) Population increase to 20 per species with clustered spawning (4 nearby groups)
+
+Acceptance:
+- Ticks/sec at 1x is stable and independent of monitor refresh.
+- Early mass deaths (first 60s) largely disappear after timebase fix; survival tuned with measured metrics.
+- Creatures are clearly visible at ~1 tile size with accurate tap/inspect positions.
+- World is 2× width and 2× height with comparable resource density to current map.
+- Spawn produces four nearby clusters (one per species) and total population of 80.
+
+Risks:
+- Timebase change affects every tick-based system and can reveal hidden coupling.
+- Size changes expose renderer/input coordinate mismatches and culling artifacts.
+- Density changes can destabilize resource economy or performance.
+
+Verification:
+- Measure ticks/sec at 1x across refresh rates; confirm movement speed in tiles/sec.
+- Track % deaths in first 60s and median time-to-death after timebase fix.
+- Visual check: creature size and tap/inspect alignment are correct.
+- Density checks: resource counts per tile remain stable after map resize.
+
+---
+
 ## Track 11 — Color System + Mating Preferences (Steps 48–49)
 Goal: Add universal color and mating preference visibility.
 Includes:
