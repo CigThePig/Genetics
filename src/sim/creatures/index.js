@@ -438,6 +438,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
 
   const maxX = Number.isFinite(world.width) ? Math.max(0, world.width - 0.001) : 0;
   const maxY = Number.isFinite(world.height) ? Math.max(0, world.height - 0.001) : 0;
+  const tickScale = resolveTickScale(config);
   const waterTerrain = resolveWaterTerrain(config);
   const headingNoise = 0.25;
   const alternateOffsets = [
@@ -491,7 +492,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     );
     const terrainFriction =
       Number.isFinite(friction) && friction > 0 ? friction : 1;
-    const distance = (baseSpeed * scale * sprintMultiplier) / terrainFriction;
+    const distance =
+      (baseSpeed * scale * sprintMultiplier * tickScale) / terrainFriction;
     let nextX = clampPosition(
       x + Math.cos(updatedHeading) * distance,
       0,
@@ -627,6 +629,15 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     const canDrink = waterRatio < drinkThreshold && hasNearbyWater(world, cell, config);
     const canEat = energyRatio < eatThreshold;
     const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
+    const dietPreferences = getDietPreferences(creature.species);
+    const canEatMeat = dietPreferences.includes(FOOD_TYPES.MEAT);
+    const perceivedFoodCell = creature.perception?.foodCell;
+    const perceivedFoodType = creature.perception?.foodType;
+    const perceivedWaterCell = creature.perception?.waterCell;
+    const canSeekPerceivedFood =
+      perceivedFoodCell &&
+      perceivedFoodType &&
+      dietPreferences.includes(perceivedFoodType);
     const foodMinimums = {
       grass: grassEatMin,
       berries: berryEatMin,
@@ -641,7 +652,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     if (creature.priority === 'thirst' && canDrink) {
       intent = 'drink';
     } else if (creature.priority === 'hunger' && canEat) {
-      const chaseTarget = getChaseTarget(creature, creatures);
+      const chaseTarget = canEatMeat ? getChaseTarget(creature, creatures) : null;
       if (chaseTarget && creature.chase?.lastKnownPosition) {
         intent = 'hunt';
         target = { ...creature.chase.lastKnownPosition };
@@ -660,7 +671,11 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
         if (choice) {
           intent = 'eat';
           foodType = choice.type;
-        } else {
+        } else if (canSeekPerceivedFood) {
+          intent = 'seek';
+          target = { ...perceivedFoodCell };
+          foodType = perceivedFoodType;
+        } else if (canEatMeat) {
           const predatorTarget = selectPredatorTarget({
             predator: creature,
             creatures,
@@ -688,16 +703,27 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
             memoryEntry = selectMemoryTarget({
               creature,
               type: MEMORY_TYPES.FOOD,
-              foodTypes: getDietPreferences(creature.species)
+              foodTypes: dietPreferences
             });
           }
+        } else {
+          memoryEntry = selectMemoryTarget({
+            creature,
+            type: MEMORY_TYPES.FOOD,
+            foodTypes: dietPreferences
+          });
         }
       }
     } else if (creature.priority === 'thirst' && waterRatio < drinkThreshold) {
-      memoryEntry = selectMemoryTarget({
-        creature,
-        type: MEMORY_TYPES.WATER
-      });
+      if (perceivedWaterCell && !hasNearbyWater(world, cell, config)) {
+        intent = 'seek';
+        target = { ...perceivedWaterCell };
+      } else {
+        memoryEntry = selectMemoryTarget({
+          creature,
+          type: MEMORY_TYPES.WATER
+        });
+      }
     }
 
     if (memoryEntry) {

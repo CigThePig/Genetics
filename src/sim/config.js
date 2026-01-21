@@ -43,7 +43,7 @@ export const simConfig = {
   creatureBaseWater: 1,
   creatureBaseStamina: 1,
   creatureBaseHp: 1,
-  creatureBaseSpeed: 0.6,
+  creatureBaseSpeed: 9, // tiles per second (movement is time-scaled)
   creaturePerceptionRange: 4,
   creaturePerceptionRangeMax: 7,
   creatureAlertnessBase: 0.55,

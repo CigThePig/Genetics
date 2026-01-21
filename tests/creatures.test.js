@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { createSim } from '../src/sim/sim.js';
 import { createRng } from '../src/sim/rng.js';
 import { createWorldGrid } from '../src/sim/world-grid.js';
+import { SPECIES } from '../src/sim/species.js';
 import {
   applyCreatureSprintCosts,
   updateCreatureAlertness,
@@ -10,6 +11,7 @@ import {
   updateCreaturePerception,
   updateCreatureSprintDecision
 } from '../src/sim/creatures/index.js';
+import { FOOD_TYPES, selectFoodChoice } from '../src/sim/creatures/food.js';
 
 describe('creature metabolism', () => {
   it('applies basal drains each tick', () => {
@@ -98,6 +100,42 @@ describe('creature movement', () => {
     expect(rockDistance).toBeLessThan(plainsDistance);
   });
 
+  it('scales per-tick distance based on ticks per second', () => {
+    const world = createWorldGrid({
+      width: 3,
+      height: 1,
+      defaultTerrain: 'plains'
+    });
+    const baseCreature = {
+      position: { x: 0.5, y: 0.5 },
+      lifeStage: { movementScale: 1 },
+      motion: { heading: 0 }
+    };
+    const rngStub = { nextFloat: () => 0.5 };
+
+    const slowTicksCreature = JSON.parse(JSON.stringify(baseCreature));
+    const fastTicksCreature = JSON.parse(JSON.stringify(baseCreature));
+
+    updateCreatureMovement({
+      creatures: [slowTicksCreature],
+      config: { creatureBaseSpeed: 10, ticksPerSecond: 10 },
+      rng: rngStub,
+      world
+    });
+    updateCreatureMovement({
+      creatures: [fastTicksCreature],
+      config: { creatureBaseSpeed: 10, ticksPerSecond: 20 },
+      rng: rngStub,
+      world
+    });
+
+    const slowDistance = slowTicksCreature.position.x - 0.5;
+    const fastDistance = fastTicksCreature.position.x - 0.5;
+
+    expect(slowDistance).toBeCloseTo(1, 5);
+    expect(fastDistance).toBeCloseTo(0.5, 5);
+  });
+
   it('does not move into water tiles', () => {
     const world = createWorldGrid({
       width: 3,
@@ -167,6 +205,21 @@ describe('creature movement', () => {
     expect(walkDistance).toBeGreaterThan(0);
     expect(sprintDistance).toBeGreaterThan(0);
     expect(sprintDistance).toBeGreaterThan(walkDistance);
+  });
+});
+
+describe('creature diet preferences', () => {
+  it('allows triangle foraging for berries or grass while meat is unavailable', () => {
+    const availability = { grass: 1, berries: 0.5, meat: 0 };
+    const minimums = { grass: 0.1, berries: 0.1, meat: 0 };
+
+    const choice = selectFoodChoice({
+      species: SPECIES.TRIANGLE,
+      availability,
+      minimums
+    });
+
+    expect([FOOD_TYPES.BERRIES, FOOD_TYPES.GRASS]).toContain(choice?.type);
   });
 });
 

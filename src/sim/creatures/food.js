@@ -20,11 +20,13 @@ const DEFAULT_FOOD_PROPERTIES = Object.freeze({
 });
 
 const DEFAULT_DIET_PREFERENCES = Object.freeze({
-  [SPECIES.SQUARE]: [FOOD_TYPES.BERRIES, FOOD_TYPES.MEAT],
-  [SPECIES.TRIANGLE]: [FOOD_TYPES.MEAT],
+  [SPECIES.SQUARE]: [FOOD_TYPES.BERRIES, FOOD_TYPES.GRASS],
+  [SPECIES.TRIANGLE]: [FOOD_TYPES.BERRIES, FOOD_TYPES.GRASS],
   [SPECIES.CIRCLE]: [FOOD_TYPES.GRASS, FOOD_TYPES.BERRIES],
-  [SPECIES.OCTAGON]: [FOOD_TYPES.MEAT, FOOD_TYPES.GRASS]
+  [SPECIES.OCTAGON]: [FOOD_TYPES.GRASS, FOOD_TYPES.BERRIES]
 });
+
+// TODO: Reintroduce MEAT preferences when meat/carcass system exists.
 
 const resolveFoodStat = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
