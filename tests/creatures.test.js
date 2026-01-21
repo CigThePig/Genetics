@@ -212,6 +212,74 @@ describe('creature pregnancy', () => {
     expect(newborn.meters.energy).toBeCloseTo(0.3, 5);
     expect(metrics.birthsLastTick).toBe(1);
   });
+
+  it('uses failed cooldown and partial costs when conception fails', () => {
+    const rng = createRng(21);
+    const world = createWorldGrid({
+      width: 5,
+      height: 5,
+      defaultTerrain: 'plains'
+    });
+    const config = {
+      ticksPerSecond: 10,
+      creatureSexEnabled: true,
+      creaturePregnancyEnabled: true,
+      creatureConceptionChance: 0,
+      creatureReproductionRange: 10,
+      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinEnergyRatio: 0,
+      creatureReproductionMinWaterRatio: 0,
+      creatureReproductionCooldownTicks: 180,
+      creatureReproductionFailedCooldownTicks: 20,
+      creatureReproductionFailedCostMultiplier: 0.5,
+      creatureReproductionEnergyCost: 0.2,
+      creatureReproductionWaterCost: 0.15,
+      creatureReproductionStaminaCost: 0.05,
+      creatureBaseEnergy: 1,
+      creatureBaseWater: 1,
+      creatureBaseStamina: 1,
+      creatureBaseHp: 1
+    };
+    const female = {
+      id: 1,
+      species: SPECIES.SQUARE,
+      sex: 'female',
+      position: { x: 1, y: 1 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      traits: { gestationMultiplier: 1, basalEnergyDrain: 0, basalWaterDrain: 0 },
+      reproduction: { cooldownTicks: 0 }
+    };
+    const male = {
+      id: 2,
+      species: SPECIES.SQUARE,
+      sex: 'male',
+      position: { x: 1.1, y: 1.1 },
+      meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+      ageTicks: 0,
+      traits: { gestationMultiplier: 1, basalEnergyDrain: 0, basalWaterDrain: 0 },
+      reproduction: { cooldownTicks: 0 }
+    };
+
+    updateCreatureReproduction({
+      creatures: [female, male],
+      config,
+      rng,
+      world,
+      metrics: {}
+    });
+
+    const expectedCooldown = 20 * config.ticksPerSecond;
+    expect(female.reproduction.cooldownTicks).toBe(expectedCooldown);
+    expect(male.reproduction.cooldownTicks).toBe(expectedCooldown);
+    expect(female.reproduction.pregnancy.isPregnant).toBe(false);
+    expect(female.meters.energy).toBeCloseTo(0.9, 5);
+    expect(female.meters.water).toBeCloseTo(0.925, 5);
+    expect(female.meters.stamina).toBeCloseTo(0.975, 5);
+    expect(male.meters.energy).toBeCloseTo(0.9, 5);
+    expect(male.meters.water).toBeCloseTo(0.925, 5);
+    expect(male.meters.stamina).toBeCloseTo(0.975, 5);
+  });
 });
 
 describe('creature mate seeking', () => {

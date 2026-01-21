@@ -239,35 +239,43 @@ export const selectMateTarget = ({
   let chosen = null;
   let closestDistance = Infinity;
 
-  const offset = Math.max(-1, Number.isFinite(startIndex) ? startIndex : -1);
-  for (let i = offset + 1; i < creatures.length; i += 1) {
-    const candidate = creatures[i];
-    if (
-      !isMateCandidate({
-        candidate,
-        source,
-        baseEnergy,
-        baseWater,
-        minEnergyRatio,
-        minWaterRatio,
-        minAgeTicks,
-        pairedIds,
-        sexEnabled,
-        pregnancyEnabled
-      })
-    ) {
-      continue;
+  const rawOffset = Number.isFinite(startIndex) ? Math.trunc(startIndex) : -1;
+  const offset = Math.min(creatures.length - 1, Math.max(-1, rawOffset));
+  const scanRange = (start, end) => {
+    for (let i = start; i < end; i += 1) {
+      const candidate = creatures[i];
+      if (
+        !isMateCandidate({
+          candidate,
+          source,
+          baseEnergy,
+          baseWater,
+          minEnergyRatio,
+          minWaterRatio,
+          minAgeTicks,
+          pairedIds,
+          sexEnabled,
+          pregnancyEnabled
+        })
+      ) {
+        continue;
+      }
+      const dx = candidate.position.x - source.position.x;
+      const dy = candidate.position.y - source.position.y;
+      const distanceSq = dx * dx + dy * dy;
+      if (distanceSq > maxDistanceSq) {
+        continue;
+      }
+      if (distanceSq < closestDistance) {
+        chosen = candidate;
+        closestDistance = distanceSq;
+      }
     }
-    const dx = candidate.position.x - source.position.x;
-    const dy = candidate.position.y - source.position.y;
-    const distanceSq = dx * dx + dy * dy;
-    if (distanceSq > maxDistanceSq) {
-      continue;
-    }
-    if (distanceSq < closestDistance) {
-      chosen = candidate;
-      closestDistance = distanceSq;
-    }
+  };
+
+  scanRange(offset + 1, creatures.length);
+  if (offset > 0) {
+    scanRange(0, offset);
   }
 
   return chosen;
@@ -395,6 +403,11 @@ export function updateCreatureReproduction({
     180,
     ticksPerSecond
   );
+  const failedCooldownTicks = resolveCooldownTicks(
+    config?.creatureReproductionFailedCooldownTicks,
+    20,
+    ticksPerSecond
+  );
   const minAgeTicks = resolveMinAgeTicks(
     config?.creatureReproductionMinAgeTicks,
     90,
@@ -416,6 +429,10 @@ export function updateCreatureReproduction({
   const staminaCost = resolveCost(
     config?.creatureReproductionStaminaCost,
     0.05
+  );
+  const failedCostMultiplier = resolveRatio(
+    config?.creatureReproductionFailedCostMultiplier,
+    0.5
   );
   const offspringEnergy = resolveCost(
     config?.creatureOffspringEnergy,
@@ -449,6 +466,7 @@ export function updateCreatureReproduction({
   }
 
   const pairedIds = new Set();
+  const cooldownUpdatedIds = new Set();
   const newborns = [];
   const originalCount = creatures.length;
 
@@ -472,7 +490,10 @@ export function updateCreatureReproduction({
     if (pregnancyEnabled && sexEnabled && !creature.reproduction.pregnancy) {
       creature.reproduction.pregnancy = createPregnancyState();
     }
-    if (creature.reproduction.cooldownTicks > 0) {
+    if (
+      creature.reproduction.cooldownTicks > 0 &&
+      !cooldownUpdatedIds.has(creature.id)
+    ) {
       creature.reproduction.cooldownTicks -= 1;
     }
     if (
@@ -651,34 +672,56 @@ export function updateCreatureReproduction({
     pairedIds.add(creature.id);
     pairedIds.add(mate.id);
 
-    creature.reproduction.cooldownTicks = cooldownTicks;
-    mate.reproduction.cooldownTicks = cooldownTicks;
+    let didConceive = true;
+    let gestationMultiplier = 1;
+
+    if (pregnancyEnabled && sexEnabled) {
+      const female = creature.sex === 'female' ? creature : mate;
+      gestationMultiplier = resolveGestationMultiplier({
+        creature: female,
+        config
+      });
+      didConceive = rng.nextFloat() < conceptionChance;
+    }
+
+    const cooldownValue = didConceive ? cooldownTicks : failedCooldownTicks;
+    creature.reproduction.cooldownTicks = cooldownValue;
+    mate.reproduction.cooldownTicks = cooldownValue;
+    cooldownUpdatedIds.add(creature.id);
+    cooldownUpdatedIds.add(mate.id);
+
+    const costMultiplier = didConceive ? 1 : failedCostMultiplier;
 
     if (creature.meters) {
-      creature.meters.energy = clampMeter(creature.meters.energy - energyCost);
-      creature.meters.water = clampMeter(creature.meters.water - waterCost);
+      creature.meters.energy = clampMeter(
+        creature.meters.energy - energyCost * costMultiplier
+      );
+      creature.meters.water = clampMeter(
+        creature.meters.water - waterCost * costMultiplier
+      );
       creature.meters.stamina = clampMeter(
-        creature.meters.stamina - staminaCost
+        creature.meters.stamina - staminaCost * costMultiplier
       );
     }
 
     if (mate.meters) {
-      mate.meters.energy = clampMeter(mate.meters.energy - energyCost);
-      mate.meters.water = clampMeter(mate.meters.water - waterCost);
-      mate.meters.stamina = clampMeter(mate.meters.stamina - staminaCost);
+      mate.meters.energy = clampMeter(
+        mate.meters.energy - energyCost * costMultiplier
+      );
+      mate.meters.water = clampMeter(
+        mate.meters.water - waterCost * costMultiplier
+      );
+      mate.meters.stamina = clampMeter(
+        mate.meters.stamina - staminaCost * costMultiplier
+      );
     }
 
     if (pregnancyEnabled && sexEnabled) {
       const female = creature.sex === 'female' ? creature : mate;
       const male = female === creature ? mate : creature;
       if (female?.reproduction?.pregnancy) {
-        const gestationMultiplier = resolveGestationMultiplier({
-          creature: female,
-          config
-        });
-        const isPregnant = rng.nextFloat() < conceptionChance;
-        female.reproduction.pregnancy.isPregnant = isPregnant;
-        if (isPregnant) {
+        female.reproduction.pregnancy.isPregnant = didConceive;
+        if (didConceive) {
           const gestationTicks = Math.max(
             1,
             Math.trunc(gestationBaseTicks * gestationMultiplier)

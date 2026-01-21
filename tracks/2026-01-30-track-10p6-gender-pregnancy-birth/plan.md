@@ -131,3 +131,24 @@ Verification checklist:
 
 Stop point:
 - Pause after verification and closeout updates for review.
+
+## Phase 6 — Sustainable births + gestation tuning
+Tasks:
+- [x] Update gestation and conception defaults, plus failed-conception cooldown/cost knobs.
+- [x] Adjust reproduction logic for failed cooldown + partial costs after conception roll.
+- [x] Ensure mate selection scans wrap-around to avoid missed pairings.
+- [x] Add test for failed-conception cooldown/cost multiplier behavior.
+- [x] Update /context/repo-map.md if files/roles change.
+
+Files touched:
+- src/sim/config.js
+- src/sim/creatures/reproduction.js
+- tests/creatures.test.js
+- context/repo-map.md (if needed)
+
+Verification checklist:
+- [x] npm test
+- [ ] Manual: defaults yield higher pregnancy/birth totals over long runs (seed 1).
+
+Stop point:
+- Pause after verification for review.
