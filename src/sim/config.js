@@ -77,8 +77,9 @@ export const simConfig = {
   creatureSprintStaminaDrain: 0.3,
   creatureStaminaRegen: 0.18,
   creatureReproductionMinAgeTicks: 90,
-  creatureReproductionMinEnergyRatio: 0.9,
-  creatureReproductionMinWaterRatio: 0.9,
+  // Must be <= creatureEatThreshold/creatureDrinkThreshold or reproduction never activates.
+  creatureReproductionMinEnergyRatio: 0.8,
+  creatureReproductionMinWaterRatio: 0.8,
   creatureReproductionCooldownTicks: 180,
   creatureReproductionRange: 2.5,
   creatureSexEnabled: true, // enable male/female assignment

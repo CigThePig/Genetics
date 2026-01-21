@@ -1,7 +1,8 @@
 # Track 10.6 — Plan
 
 ## Recon Summary
-- (To fill during build runs as needed.)
+- Lower reproduction readiness mins to align with eat/drink thresholds so readiness can activate.
+- Expose pregnancies/miscarriages metrics in the UI for runtime validation.
 
 ## Phase 1 — Add configuration knobs (no behavior changes)
 Tasks:
@@ -106,3 +107,27 @@ Phase 4 (activation layer):
 - [x] Mate target invalidation resets intent safely.
 - [x] Seeking range does not apply globally.
 - [x] Performance: scanning uses rangeSq and skips non-candidates early.
+
+## Phase 5 — Closeout patch (readiness thresholds + UI metrics + guard test)
+Tasks:
+- [x] Lower reproduction readiness thresholds to match eat/drink intent thresholds.
+- [x] Add pregnancy and miscarriage metrics rows to the UI panel.
+- [x] Add a guard test ensuring readiness thresholds stay <= eat/drink thresholds.
+- [x] Update /context/history.md with Track 10.6 closeout summary.
+- [x] Clear /context/active-track.md for Track 10.6 closeout.
+- [x] Confirm /context/repo-map.md does not need updates for file/role changes.
+
+Files touched:
+- src/sim/config.js
+- src/ui/index.js
+- tests/sim.test.js
+- tracks/2026-01-30-track-10p6-gender-pregnancy-birth/plan.md
+- context/history.md
+- context/active-track.md
+
+Verification checklist:
+- [x] npm test
+- [ ] Manual: UI shows pregnancies/miscarriages metrics and births increase over time.
+
+Stop point:
+- Pause after verification and closeout updates for review.
