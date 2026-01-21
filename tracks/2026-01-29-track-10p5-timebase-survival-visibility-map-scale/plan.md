@@ -140,11 +140,11 @@
 ## Phase 3 — Creature Visibility (Size ≈ 1 Tile)
 
 **Tasks**
-- [ ] Increase creature render radius toward ~1 tile.
-- [ ] Adjust render alignment for continuous tile coordinates.
-- [ ] Fix input/inspect unit conversion for accurate selection.
-- [ ] Update culling margin to avoid edge pop-in.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Increase creature render radius toward ~1 tile.
+- [x] Adjust render alignment for continuous tile coordinates.
+- [x] Fix input/inspect unit conversion for accurate selection.
+- [x] Update culling margin to avoid edge pop-in.
+- [x] Update /context/repo-map.md if files/roles change.
 
 **Likely files to change**
 - `src/render/renderer.js`
@@ -152,9 +152,9 @@
 - `src/sim/creatures/index.js` (inspection helpers)
 
 **Verification checklist**
-- [ ] Creatures are clearly visible at default zoom.
-- [ ] Tap/inspect selects intended creature reliably.
-- [ ] No obvious culling pop-in at edges.
+- [x] Creatures are clearly visible at default zoom.
+- [x] Tap/inspect selects intended creature reliably.
+- [x] No obvious culling pop-in at edges.
 
 **Stop point**
 - Stop after visual sizing/alignment and inspect accuracy are verified.
