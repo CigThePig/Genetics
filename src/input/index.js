@@ -1,4 +1,10 @@
-export function createInput({ canvas, camera, onTap, onCameraChange }) {
+export function createInput({
+  canvas,
+  camera,
+  onTap,
+  onCameraChange,
+  worldToTile
+}) {
   let attached = false;
   let pinchStartDistance = 0;
   let pinchStartZoom = 1;
@@ -129,7 +135,15 @@ export function createInput({ canvas, camera, onTap, onCameraChange }) {
         x: (screenPoint.x - originX - state.x) / state.zoom,
         y: (screenPoint.y - originY - state.y) / state.zoom
       };
-      onTap({ screen: screenPoint, world: worldPoint, viewport });
+      const tilePoint = worldToTile
+        ? worldToTile(worldPoint, viewport)
+        : worldPoint;
+      onTap({
+        screen: screenPoint,
+        world: worldPoint,
+        tile: tilePoint,
+        viewport
+      });
     }
 
     if (tapState.pointerId === event.pointerId) {

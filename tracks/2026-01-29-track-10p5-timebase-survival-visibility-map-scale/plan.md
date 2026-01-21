@@ -191,11 +191,11 @@
 ## Phase 5 — Preemptive Coupling Fixes for Phases 3 + 4
 
 **Tasks**
-- [ ] Fix renderer alignment assumptions when size increases (tile offsets).
-- [ ] Align input worldPoint units with tile-space creature positions.
-- [ ] Expand culling margins to accommodate larger sprites.
-- [ ] Ensure clustered spawn anchor region is on land with retry logic.
-- [ ] Update /context/repo-map.md if files/roles change.
+- [x] Fix renderer alignment assumptions when size increases (tile offsets).
+- [x] Align input worldPoint units with tile-space creature positions.
+- [x] Expand culling margins to accommodate larger sprites.
+- [x] Ensure clustered spawn anchor region is on land with retry logic.
+- [x] Update /context/repo-map.md if files/roles change. (No changes needed.)
 
 **Likely files to change**
 - `src/render/renderer.js`
@@ -204,10 +204,10 @@
 - `src/sim/terrain-generator.js` (anchor safety checks)
 
 **Verification checklist**
-- [ ] Render alignment matches sim coordinates under larger sizes.
-- [ ] Inspect/tap accuracy remains correct after size changes.
-- [ ] Culling no longer pops creatures near edges.
-- [ ] Cluster anchors avoid water and produce four nearby groups.
+- [x] Render alignment matches sim coordinates under larger sizes.
+- [x] Inspect/tap accuracy remains correct after size changes.
+- [x] Culling no longer pops creatures near edges.
+- [x] Cluster anchors avoid water and produce four nearby groups.
 
 **Stop point**
 - Stop after coupling fixes are confirmed and documented.

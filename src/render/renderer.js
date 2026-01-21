@@ -240,16 +240,10 @@ export function createRenderer(container, { camera }) {
     const minWorldY = -(height / 2 + state.y) / state.zoom - markerRadius;
     const maxWorldY = (height / 2 - state.y) / state.zoom + markerRadius;
 
-    const startCol = Math.max(0, Math.floor((minWorldX - originX) / tileSize));
-    const endCol = Math.min(
-      world.width,
-      Math.ceil((maxWorldX - originX) / tileSize)
-    );
-    const startRow = Math.max(0, Math.floor((minWorldY - originY) / tileSize));
-    const endRow = Math.min(
-      world.height,
-      Math.ceil((maxWorldY - originY) / tileSize)
-    );
+    const minTileX = (minWorldX - originX) / tileSize;
+    const maxTileX = (maxWorldX - originX) / tileSize;
+    const minTileY = (minWorldY - originY) / tileSize;
+    const maxTileY = (maxWorldY - originY) / tileSize;
 
     ctx.fillStyle = 'rgba(248, 232, 120, 0.9)';
     ctx.strokeStyle = 'rgba(30, 30, 30, 0.35)';
@@ -300,7 +294,7 @@ export function createRenderer(container, { camera }) {
       if (x === null || y === null) {
         continue;
       }
-      if (x < startCol || x >= endCol || y < startRow || y >= endRow) {
+      if (x < minTileX || x > maxTileX || y < minTileY || y > maxTileY) {
         continue;
       }
 
