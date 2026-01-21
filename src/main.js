@@ -34,19 +34,41 @@ const metrics = createMetrics({ container: app });
 let running = false;
 let speed = initialSettings.speed;
 let rafId = null;
+let lastFrameTime = null;
+let accumulatorMs = 0;
+const maxFrameDeltaMs = 250;
 
 const tickOnce = () => {
   sim.tick();
   renderer.render(sim);
   ui.setMetrics?.(sim.getSummary());
+  metrics.update({ ticks: 1 });
 };
 
-const runFrame = () => {
-  for (let i = 0; i < speed; i += 1) {
+const resetTimebase = () => {
+  lastFrameTime = performance.now();
+  accumulatorMs = 0;
+};
+
+const runFrame = (time) => {
+  const now = Number.isFinite(time) ? time : performance.now();
+  if (lastFrameTime === null) {
+    lastFrameTime = now;
+  }
+  const deltaMs = Math.min(now - lastFrameTime, maxFrameDeltaMs);
+  lastFrameTime = now;
+  accumulatorMs += deltaMs;
+  const ticksPerSecond = sim.config?.ticksPerSecond ?? 1;
+  const tickIntervalMs = 1000 / (ticksPerSecond * speed);
+  let ticksThisFrame = 0;
+  while (accumulatorMs >= tickIntervalMs) {
     sim.tick();
+    accumulatorMs -= tickIntervalMs;
+    ticksThisFrame += 1;
   }
   renderer.render(sim);
   ui.setMetrics?.(sim.getSummary());
+  metrics.update({ ticks: ticksThisFrame, time: now });
   if (running) {
     rafId = requestAnimationFrame(runFrame);
   }
@@ -58,6 +80,7 @@ const start = () => {
   }
   running = true;
   ui.setRunning(true);
+  resetTimebase();
   rafId = requestAnimationFrame(runFrame);
 };
 
@@ -71,6 +94,7 @@ const pause = () => {
     cancelAnimationFrame(rafId);
     rafId = null;
   }
+  resetTimebase();
 };
 
 const ui = createUI({

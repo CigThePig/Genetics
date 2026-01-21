@@ -1,6 +1,6 @@
 export function createMetrics({ container } = {}) {
   const overlay = document.createElement('div');
-  overlay.textContent = 'FPS: --';
+  overlay.textContent = 'FPS: -- | TPS: --';
   overlay.style.position = 'fixed';
   overlay.style.top = '12px';
   overlay.style.right = '12px';
@@ -19,9 +19,16 @@ export function createMetrics({ container } = {}) {
 
   let visible = true;
   let fps = 0;
+  let tps = 0;
   let frameCount = 0;
+  let tickCount = 0;
   let lastTime = performance.now();
+  let lastTickTime = performance.now();
   let rafId = null;
+
+  const updateOverlayText = () => {
+    overlay.textContent = `FPS: ${fps} | TPS: ${tps}`;
+  };
 
   const updateOverlay = (time) => {
     frameCount += 1;
@@ -30,7 +37,7 @@ export function createMetrics({ container } = {}) {
       fps = Math.round((frameCount * 1000) / elapsed);
       frameCount = 0;
       lastTime = time;
-      overlay.textContent = `FPS: ${fps}`;
+      updateOverlayText();
     }
     rafId = requestAnimationFrame(updateOverlay);
   };
@@ -53,7 +60,17 @@ export function createMetrics({ container } = {}) {
   ];
 
   return {
-    update() {},
+    update({ ticks = 0, time } = {}) {
+      const now = Number.isFinite(time) ? time : performance.now();
+      tickCount += ticks;
+      const elapsed = now - lastTickTime;
+      if (elapsed >= 1000) {
+        tps = Math.round((tickCount * 1000) / elapsed);
+        tickCount = 0;
+        lastTickTime = now;
+        updateOverlayText();
+      }
+    },
     snapshot() {
       return { fps, visible };
     },
