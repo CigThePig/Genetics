@@ -113,8 +113,8 @@
 - `tests/creatures.test.js` (or new deterministic scenario test)
 
 **Verification checklist**
-- [ ] % deaths in first 60s reduced to target.
-- [ ] Median time-to-death aligns with expected seconds-based tuning.
+- [x] % deaths in first 60s reduced to target.
+- [x] Median time-to-death aligns with expected seconds-based tuning.
 - [x] Automated test passes and validates drain conversion or survival pacing.
 - [x] Automated tests cover movement time-scaling and diet fallback.
 
