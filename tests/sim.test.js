@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createSim } from '../src/sim/sim.js';
+import { simConfig } from '../src/sim/config.js';
 
 describe('sim scaffold', () => {
   it('creates a sim with default config', () => {
@@ -19,5 +20,14 @@ describe('sim scaffold', () => {
     };
 
     expect(runSim()).toEqual(runSim());
+  });
+
+  it('keeps reproduction readiness thresholds within eat/drink intent thresholds', () => {
+    expect(simConfig.creatureReproductionMinEnergyRatio).toBeLessThanOrEqual(
+      simConfig.creatureEatThreshold
+    );
+    expect(simConfig.creatureReproductionMinWaterRatio).toBeLessThanOrEqual(
+      simConfig.creatureDrinkThreshold
+    );
   });
 });
