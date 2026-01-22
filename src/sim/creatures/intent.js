@@ -231,7 +231,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     const foodMinimums = {
       grass: grassEatMin,
       berries: berryEatMin,
-      meat: 0
+      meat: Math.min(grassEatMin, berryEatMin)
     };
     const reproductionState = creature.reproduction ?? { cooldownTicks: 0 };
     if (!creature.reproduction) {

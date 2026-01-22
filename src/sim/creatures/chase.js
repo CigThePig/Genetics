@@ -50,7 +50,9 @@ const ensureChaseState = (creature) => {
       distance: null,
       restTicks: 0,
       lastOutcome: null,
-      lastOutcomeTick: null
+      lastOutcomeTick: null,
+      lastTargetId: null,
+      lastTargetPosition: null
     };
   }
   return creature.chase;
@@ -73,11 +75,33 @@ const concludeChase = ({
   config,
   metrics,
   tick,
-  outcome
+  outcome,
+  target
 }) => {
   const tps = resolveTicksPerSecond(config);
   const restTicks = resolveTimeTicks(config?.creatureChaseRestTime, 0.1, tps);
   chase.status = 'resting';
+  if (outcome === 'caught') {
+    chase.lastTargetId = Number.isFinite(chase.targetId)
+      ? chase.targetId
+      : target?.id ?? null;
+    if (target?.position) {
+      chase.lastTargetPosition = {
+        x: target.position.x,
+        y: target.position.y
+      };
+    } else if (chase.lastKnownPosition) {
+      chase.lastTargetPosition = {
+        x: chase.lastKnownPosition.x,
+        y: chase.lastKnownPosition.y
+      };
+    } else {
+      chase.lastTargetPosition = null;
+    }
+  } else {
+    chase.lastTargetId = null;
+    chase.lastTargetPosition = null;
+  }
   chase.targetId = null;
   chase.preySpecies = null;
   chase.lastKnownPosition = null;
@@ -149,7 +173,7 @@ export function updateCreatureChase({ creatures, config, metrics, tick }) {
     chase.distance = distance;
 
     if (distance <= catchDistance) {
-      concludeChase({ chase, config, metrics, tick, outcome: 'caught' });
+      concludeChase({ chase, config, metrics, tick, outcome: 'caught', target });
       continue;
     }
 
@@ -168,7 +192,7 @@ export function updateCreatureChase({ creatures, config, metrics, tick }) {
       : tick;
     const missingTicks = Math.max(0, tick - lastSeenTick);
     if (missingTicks >= loseTicks) {
-      concludeChase({ chase, config, metrics, tick, outcome: 'lost' });
+      concludeChase({ chase, config, metrics, tick, outcome: 'lost', target });
       continue;
     }
 
@@ -211,6 +235,8 @@ export function startCreatureChase({ creature, target, metrics, config, tick }) 
   chase.distance = null;
   chase.lastOutcome = null;
   chase.lastOutcomeTick = null;
+  chase.lastTargetId = null;
+  chase.lastTargetPosition = null;
   if (metrics) {
     metrics.chaseAttempts = (metrics.chaseAttempts ?? 0) + 1;
   }

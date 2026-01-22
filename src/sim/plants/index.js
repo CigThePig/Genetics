@@ -1,9 +1,11 @@
 import { updateBushes } from './bushes.js';
+import { updateCarcasses } from './carcasses.js';
 import { updateGrass } from './grass.js';
 
 export function updatePlants({ state, config, rng }) {
   const grassSummary = updateGrass({ world: state.world, config });
   const bushSummary = updateBushes({ world: state.world, config, rng });
+  const carcassSummary = updateCarcasses({ world: state.world, config });
   if (!state.metrics) {
     state.metrics = {};
   }
@@ -17,6 +19,8 @@ export function updatePlants({ state, config, rng }) {
   state.metrics.berryTotal = bushSummary.totalBerries;
   state.metrics.berryAverage = bushSummary.averageBerries;
   state.metrics.bushAverageHealth = bushSummary.averageHealth;
+  state.metrics.carcassCount = carcassSummary.count;
+  state.metrics.carcassMeatTotal = carcassSummary.totalMeat;
 
   return state.metrics;
 }

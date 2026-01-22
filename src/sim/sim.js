@@ -9,6 +9,7 @@ import { createDefaultMetrics } from './metrics-factory.js';
 import {
   createCreatures,
   applyCreatureActions,
+  applyCreatureCombat,
   applyCreatureSprintCosts,
   applyCreatureDeaths,
   regenerateCreatureStamina,
@@ -109,6 +110,13 @@ export function createSim(config = simConfig) {
       updateCreatureChase({
         creatures: state.creatures,
         config: resolvedConfig,
+        metrics: state.metrics,
+        tick: state.tick
+      });
+      applyCreatureCombat({
+        creatures: state.creatures,
+        config: resolvedConfig,
+        world: state.world,
         metrics: state.metrics,
         tick: state.tick
       });

@@ -1,5 +1,6 @@
 import { SPECIES } from '../species.js';
 import { findBushAt } from '../plants/bushes.js';
+import { findCarcassAt } from '../plants/carcasses.js';
 
 export const FOOD_TYPES = Object.freeze({
   GRASS: 'grass',
@@ -21,12 +22,10 @@ const DEFAULT_FOOD_PROPERTIES = Object.freeze({
 
 const DEFAULT_DIET_PREFERENCES = Object.freeze({
   [SPECIES.SQUARE]: [FOOD_TYPES.BERRIES, FOOD_TYPES.GRASS],
-  [SPECIES.TRIANGLE]: [FOOD_TYPES.BERRIES, FOOD_TYPES.GRASS],
+  [SPECIES.TRIANGLE]: [FOOD_TYPES.MEAT, FOOD_TYPES.BERRIES, FOOD_TYPES.GRASS],
   [SPECIES.CIRCLE]: [FOOD_TYPES.GRASS, FOOD_TYPES.BERRIES],
-  [SPECIES.OCTAGON]: [FOOD_TYPES.GRASS, FOOD_TYPES.BERRIES]
+  [SPECIES.OCTAGON]: [FOOD_TYPES.MEAT, FOOD_TYPES.GRASS, FOOD_TYPES.BERRIES]
 });
-
-// TODO: Reintroduce MEAT preferences when meat/carcass system exists.
 
 const resolveFoodStat = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
@@ -78,16 +77,26 @@ const getBushAtCell = (world, cell) => {
   return findBushAt(world, cell.x, cell.y);
 };
 
+const getCarcassAtCell = (world, cell) => {
+  if (!world || typeof findCarcassAt !== 'function') {
+    return null;
+  }
+  return findCarcassAt(world, cell.x, cell.y);
+};
+
 export const getFoodAvailabilityAtCell = ({ world, cell }) => {
   const grass = getGrassAtCell(world, cell);
   const bush = getBushAtCell(world, cell);
   const berries = bush && Number.isFinite(bush.berries) ? bush.berries : 0;
+  const carcass = getCarcassAtCell(world, cell);
+  const meat = carcass && Number.isFinite(carcass.meat) ? carcass.meat : 0;
 
   return {
     grass,
     berries,
-    meat: 0,
-    bush
+    meat,
+    bush,
+    carcass
   };
 };
 
