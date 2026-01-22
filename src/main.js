@@ -7,8 +7,8 @@ import { createInput } from './input/index.js';
 import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
 import { createConfigPanel } from './ui/config-panel.js';
+import { createLiveInspector } from './ui/live-inspector.js';
 import { createSettings } from './app/settings.js';
-import { formatCreatureRows } from './ui/inspector-formatters.js';
 import { simConfig } from './sim/config.js';
 
 const app = document.querySelector('#app');
@@ -46,6 +46,7 @@ const tickOnce = () => {
   sim.tick();
   renderer.render(sim);
   ui.setMetrics?.(sim.getSummary());
+  inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
   metrics.update({ ticks: 1 });
 };
 
@@ -67,6 +68,7 @@ const runFrame = (time) => {
   lastFrameTime = now;
   renderer.render(sim);
   ui.setMetrics?.(sim.getSummary());
+  inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
   if (running) {
     rafId = requestAnimationFrame(runFrame);
   }
@@ -197,6 +199,12 @@ const configPanel = createConfigPanel({
   }
 });
 
+// Create live inspector for tracking creatures
+const inspector = createLiveInspector({
+  container: app,
+  ticksPerSecond: sim.config?.ticksPerSecond ?? 60
+});
+
 const resolveTilePoint = (worldPoint) => {
   const worldState = sim.state?.world;
   const tileSize = Number.isFinite(sim.config?.tileSize) ? sim.config.tileSize : 20;
@@ -220,24 +228,16 @@ const input = createInput({
     }
   },
   onTap: ({ screen, world: worldPoint, tile }) => {
-    const summary = sim.getSummary();
     const tilePoint = tile ?? resolveTilePoint(worldPoint);
     const creature = findNearestCreature(
       sim.state?.creatures,
       tilePoint,
       sim.config?.creatureInspectRadius
     );
-    const creatureRows = formatCreatureRows(creature);
-    ui.setInspector({
-      title: 'Inspector',
-      rows: [
-        `World: ${worldPoint.x.toFixed(1)}, ${worldPoint.y.toFixed(1)}`,
-        `Screen: ${screen.x.toFixed(1)}, ${screen.y.toFixed(1)}`,
-        `Tick: ${summary.tick}`,
-        `Seed: ${summary.seed}`,
-        ...creatureRows
-      ]
-    });
+    // Update the live inspector with selected creature
+    inspector.selectCreature(creature, tilePoint);
+    // Initial update to show creature data immediately
+    inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
   }
 });
 
