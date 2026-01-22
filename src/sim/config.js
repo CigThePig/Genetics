@@ -1,3 +1,21 @@
+/**
+ * Simulation Configuration
+ *
+ * TIME VALUE CONVENTIONS:
+ * - ticksPerSecond: Number of simulation ticks per real second (default: 60)
+ * - Values ending in "Ticks" that use resolve*Ticks() helpers: Actually in SECONDS
+ *   (they get multiplied by ticksPerSecond internally). Examples:
+ *   - creatureReproductionMinAgeTicks (seconds until reproductive maturity)
+ *   - creatureReproductionCooldownTicks (seconds between reproduction attempts)
+ *   - creatureMaxAgeTicks (maximum lifespan in seconds)
+ * - Values ending in "Ticks" used directly: Actually in TICKS. Examples:
+ *   - creatureReactionDelayTicks (raw tick count for reaction delay)
+ *   - creatureChaseLoseTicks (raw tick count before chase is lost)
+ *   - creatureGestationBaseTicks (raw tick count, comment shows conversion)
+ * - All drain/regen rates (e.g., basalEnergyDrain): Per-second rates, scaled by tickScale
+ *
+ * TODO: Future refactor should rename these for clarity (e.g., ...Seconds vs ...Ticks)
+ */
 export const simConfig = {
   seed: 1,
   hotspotSeed: 1337,
@@ -76,12 +94,12 @@ export const simConfig = {
   creatureSprintSpeedMultiplier: 1.6,
   creatureSprintStaminaDrain: 0.3,
   creatureStaminaRegen: 0.18,
-  creatureReproductionMinAgeTicks: 90,
+  creatureReproductionMinAgeTicks: 90, // NOTE: value in SECONDS, converted to ticks by resolveMinAgeTicks
   // Must be <= creatureEatThreshold/creatureDrinkThreshold or reproduction never activates.
   creatureReproductionMinEnergyRatio: 0.8,
   creatureReproductionMinWaterRatio: 0.8,
-  creatureReproductionCooldownTicks: 180,
-  creatureReproductionFailedCooldownTicks: 20, // cooldown (seconds) when conception fails
+  creatureReproductionCooldownTicks: 180, // NOTE: value in SECONDS, converted to ticks by resolveCooldownTicks
+  creatureReproductionFailedCooldownTicks: 20, // NOTE: value in SECONDS, converted to ticks
   creatureReproductionFailedCostMultiplier: 0.5, // scale energy/water/stamina costs on failure
   creatureReproductionRange: 2.5,
   creatureSexEnabled: true, // enable male/female assignment
@@ -172,7 +190,7 @@ export const simConfig = {
   creatureGenomeMutationRate: 0.18,
   creatureGenomeMutationStrength: 0.1,
   creatureGenomePleiotropyScale: 0.18,
-  creatureMaxAgeTicks: 600,
+  creatureMaxAgeTicks: 600, // NOTE: value in SECONDS (600s = 10min lifespan), converted to ticks
   creatureLifeStages: [
     {
       id: 'juvenile',

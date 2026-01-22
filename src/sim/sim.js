@@ -5,6 +5,7 @@ import { generateTerrain } from './terrain-generator.js';
 import { seedInitialPlants } from './plant-generator.js';
 import { updatePlants } from './plants/index.js';
 import { SPECIES } from './species.js';
+import { createDefaultMetrics } from './metrics-factory.js';
 import {
   createCreatures,
   applyCreatureActions,
@@ -65,41 +66,7 @@ export function createSim(config = simConfig) {
     lastRoll: 0,
     world: buildWorld(),
     creatures: [],
-    metrics: {
-      grassAverage: 0,
-      grassTotal: 0,
-      grassCoverage: 0,
-      grassCoverageCells: 0,
-      grassHotspotCells: 0,
-      stressedCells: 0,
-      bushCount: 0,
-      berryTotal: 0,
-      berryAverage: 0,
-      bushAverageHealth: 0,
-      chaseAttempts: 0,
-      chaseSuccesses: 0,
-      chaseLosses: 0,
-      birthsTotal: 0,
-      birthsLastTick: 0,
-      pregnanciesTotal: 0,
-      pregnanciesLastTick: 0,
-      miscarriagesTotal: 0,
-      miscarriagesLastTick: 0,
-      mutationsLastTick: 0,
-      mutationStrengthLastTick: 0,
-      mutationTotal: 0,
-      mutationStrengthTotal: 0,
-      pleiotropyStrengthLastTick: 0,
-      pleiotropyStrengthTotal: 0,
-      deathsTotal: 0,
-      deathsByCause: {
-        age: 0,
-        starvation: 0,
-        thirst: 0,
-        injury: 0,
-        other: 0
-      }
-    }
+    metrics: createDefaultMetrics()
   };
   state.creatures = spawnCreatures(state.world);
 
@@ -117,41 +84,7 @@ export function createSim(config = simConfig) {
       state.lastRoll = 0;
       state.world = buildWorld();
       state.creatures = spawnCreatures(state.world);
-      state.metrics = {
-        grassAverage: 0,
-        grassTotal: 0,
-        grassCoverage: 0,
-        grassCoverageCells: 0,
-        grassHotspotCells: 0,
-        stressedCells: 0,
-        bushCount: 0,
-        berryTotal: 0,
-        berryAverage: 0,
-        bushAverageHealth: 0,
-        chaseAttempts: 0,
-        chaseSuccesses: 0,
-        chaseLosses: 0,
-        birthsTotal: 0,
-        birthsLastTick: 0,
-        pregnanciesTotal: 0,
-        pregnanciesLastTick: 0,
-        miscarriagesTotal: 0,
-        miscarriagesLastTick: 0,
-        mutationsLastTick: 0,
-        mutationStrengthLastTick: 0,
-        mutationTotal: 0,
-        mutationStrengthTotal: 0,
-        pleiotropyStrengthLastTick: 0,
-        pleiotropyStrengthTotal: 0,
-        deathsTotal: 0,
-        deathsByCause: {
-          age: 0,
-          starvation: 0,
-          thirst: 0,
-          injury: 0,
-          other: 0
-        }
-      };
+      state.metrics = createDefaultMetrics();
     },
     tick() {
       state.tick += 1;
