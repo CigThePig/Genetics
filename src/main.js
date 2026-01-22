@@ -6,8 +6,10 @@ import { createCamera } from './render/camera.js';
 import { createInput } from './input/index.js';
 import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
+import { createConfigPanel } from './ui/config-panel.js';
 import { createSettings } from './app/settings.js';
 import { formatCreatureRows } from './ui/inspector-formatters.js';
+import { simConfig } from './sim/config.js';
 
 const app = document.querySelector('#app');
 
@@ -168,6 +170,31 @@ const ui = createUI({
     settings.save({ fpsVisible: visible });
   },
   initialFpsVisible: initialSettings.fpsVisible
+});
+
+// Create config panel for live parameter adjustment
+const configPanel = createConfigPanel({
+  container: app,
+  config: sim.config,
+  onConfigChange: (key, value) => {
+    if (key === '__reset__') {
+      // Reset all config values to defaults
+      for (const [configKey, defaultValue] of Object.entries(simConfig)) {
+        if (typeof defaultValue === 'number') {
+          sim.config[configKey] = defaultValue;
+        }
+      }
+      configPanel.update(sim.config);
+      ui.setStatus('Config reset to defaults.');
+    } else {
+      sim.config[key] = value;
+      ui.setStatus(`Updated ${key} = ${value}`);
+    }
+    if (!running) {
+      renderer.render(sim);
+      ui.setMetrics?.(sim.getSummary());
+    }
+  }
 });
 
 const resolveTilePoint = (worldPoint) => {
