@@ -14,10 +14,10 @@ import { simConfig } from './sim/config.js';
 const app = document.querySelector('#app');
 
 const title = document.createElement('h1');
-title.textContent = 'Genetics Scaffold';
+title.textContent = 'Genetics';
 
 const status = document.createElement('p');
-status.textContent = 'Bootstrapped Vite app with sim/render/ui stubs.';
+status.textContent = 'Initializing simulation...';
 
 app.append(title, status);
 

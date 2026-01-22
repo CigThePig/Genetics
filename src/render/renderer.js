@@ -18,8 +18,6 @@ export function createRenderer(container, { camera }) {
 
   const footer = document.createElement('p');
   footer.className = 'renderer-footer';
-  footer.style.margin = '0';
-  footer.style.padding = '6px 0';
 
   wrapper.append(canvas, footer);
   container.append(wrapper);
@@ -46,14 +44,15 @@ export function createRenderer(container, { camera }) {
 
   resizeToContainer();
 
+  // Enhanced terrain palette with more natural colors
   const terrainPalette = {
-    plains: '#5b8f4e',
-    forest: '#2d6a4f',
-    rock: '#6c757d',
-    sand: '#d9b68b',
-    shore: '#b5c98c',
-    water: '#3b6ea5',
-    unknown: '#3b3b3b'
+    plains: { base: '#5a7c47', light: '#6b8f54', dark: '#4a6938' },
+    forest: { base: '#3d5c3a', light: '#4a6d45', dark: '#2e4a2d' },
+    rock: { base: '#5c6168', light: '#6e737a', dark: '#4a4f55' },
+    sand: { base: '#c4a574', light: '#d4b88a', dark: '#b08f5e' },
+    shore: { base: '#8ba87a', light: '#9cb88c', dark: '#7a9668' },
+    water: { base: '#3b6d8c', light: '#4a7d9e', dark: '#2c5570' },
+    unknown: { base: '#3b3b3b', light: '#4a4a4a', dark: '#2c2c2c' }
   };
 
   const defaultTileSize = 20;
@@ -63,20 +62,46 @@ export function createRenderer(container, { camera }) {
       ? Math.max(1, config.tileSize)
       : defaultTileSize;
 
-  const getTerrainColor = (terrain) =>
-    terrainPalette[terrain] ?? terrainPalette.unknown;
+  // Simple noise function for texture variation
+  const noise = (x, y) => {
+    const n = Math.sin(x * 12.9898 + y * 78.233) * 43758.5453;
+    return n - Math.floor(n);
+  };
+
+  // Get terrain color with subtle variation
+  const getTerrainColor = (terrain, x, y, showDetail = true) => {
+    const palette = terrainPalette[terrain] ?? terrainPalette.unknown;
+    if (!showDetail) return palette.base;
+    
+    const n = noise(x * 0.5, y * 0.5);
+    if (n < 0.33) return palette.dark;
+    if (n > 0.66) return palette.light;
+    return palette.base;
+  };
+
+  // Create water pattern gradient
+  const createWaterGradient = (x, y, tileSize) => {
+    const gradient = ctx.createLinearGradient(x, y, x + tileSize, y + tileSize);
+    gradient.addColorStop(0, '#3b6d8c');
+    gradient.addColorStop(0.5, '#4580a0');
+    gradient.addColorStop(1, '#2c5570');
+    return gradient;
+  };
 
   const drawTerrain = (state, world, config) => {
     const tileSize = resolveTileSize(config);
     const { width, height } = canvas.getBoundingClientRect();
-    ctx.clearRect(0, 0, width, height);
+    
+    // Dark background with subtle gradient
+    const bgGradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height));
+    bgGradient.addColorStop(0, '#141a20');
+    bgGradient.addColorStop(1, '#0a0e12');
+    ctx.fillStyle = bgGradient;
+    ctx.fillRect(0, 0, width, height);
 
     ctx.save();
     ctx.translate(width / 2 + state.x, height / 2 + state.y);
     ctx.scale(state.zoom, state.zoom);
-
-    ctx.fillStyle = '#0d1117';
-    ctx.fillRect(-width, -height, width * 2, height * 2);
 
     if (!world) {
       ctx.restore();
@@ -111,14 +136,39 @@ export function createRenderer(container, { camera }) {
     const stressThreshold = Number.isFinite(config?.grassStressVisibleThreshold)
       ? config.grassStressVisibleThreshold
       : 0.25;
+    
+    // Determine detail level based on zoom
+    const showDetail = state.zoom > 0.4;
+    const showGrassDetail = state.zoom > 0.6;
+    
     for (let y = startRow; y < endRow; y += 1) {
       const rowOffset = y * world.width;
       const tileY = originY + y * tileSize;
       for (let x = startCol; x < endCol; x += 1) {
         const terrain = cells[rowOffset + x];
-        ctx.fillStyle = getTerrainColor(terrain);
-        ctx.fillRect(originX + x * tileSize, tileY, tileSize, tileSize);
+        const tileX = originX + x * tileSize;
+        
+        // Draw base terrain with variation
+        if (terrain === 'water') {
+          // Water with subtle shimmer effect
+          const waterBase = getTerrainColor(terrain, x, y, showDetail);
+          ctx.fillStyle = waterBase;
+          ctx.fillRect(tileX, tileY, tileSize, tileSize);
+          
+          // Add subtle highlight
+          if (showDetail) {
+            const shimmer = noise(x * 0.3, y * 0.3);
+            if (shimmer > 0.7) {
+              ctx.fillStyle = 'rgba(100, 160, 200, 0.15)';
+              ctx.fillRect(tileX, tileY, tileSize, tileSize);
+            }
+          }
+        } else {
+          ctx.fillStyle = getTerrainColor(terrain, x, y, showDetail);
+          ctx.fillRect(tileX, tileY, tileSize, tileSize);
+        }
 
+        // Grass overlay with improved blending
         if (grass) {
           const grassValue = Number.isFinite(grass[rowOffset + x])
             ? grass[rowOffset + x]
@@ -126,30 +176,43 @@ export function createRenderer(container, { camera }) {
           const grassRatio =
             grassCap > 0 ? Math.min(1, Math.max(0, grassValue / grassCap)) : 0;
           if (grassRatio > 0) {
-            const alpha = 0.1 + grassRatio * 0.35;
-            ctx.fillStyle = `rgba(88, 180, 72, ${alpha})`;
-            ctx.fillRect(originX + x * tileSize, tileY, tileSize, tileSize);
+            // Multi-layer grass for depth
+            const baseAlpha = 0.15 + grassRatio * 0.3;
+            
+            // Base grass layer
+            ctx.fillStyle = `rgba(76, 140, 58, ${baseAlpha})`;
+            ctx.fillRect(tileX, tileY, tileSize, tileSize);
+            
+            // Highlight layer for lush grass
+            if (grassRatio > 0.5 && showGrassDetail) {
+              const highlightAlpha = (grassRatio - 0.5) * 0.2;
+              ctx.fillStyle = `rgba(120, 180, 90, ${highlightAlpha})`;
+              ctx.fillRect(tileX, tileY, tileSize, tileSize);
+            }
           }
         }
 
+        // Stress overlay with softer red
         if (grassStress) {
           const stressValue = Number.isFinite(grassStress[rowOffset + x])
             ? grassStress[rowOffset + x]
             : 0;
           if (stressValue >= stressThreshold) {
-            const stressAlpha = Math.min(0.5, 0.15 + stressValue * 0.35);
-            ctx.fillStyle = `rgba(196, 72, 60, ${stressAlpha})`;
-            ctx.fillRect(originX + x * tileSize, tileY, tileSize, tileSize);
+            const stressAlpha = Math.min(0.4, 0.1 + stressValue * 0.3);
+            // Use a more muted, brownish-red for stress
+            ctx.fillStyle = `rgba(160, 80, 60, ${stressAlpha})`;
+            ctx.fillRect(tileX, tileY, tileSize, tileSize);
           }
         }
       }
     }
 
+    // Draw bushes with improved appearance
     if (Array.isArray(world.bushes) && world.bushes.length > 0) {
-      const bushRadiusBase = tileSize * 0.28;
-      const bushRadiusGrowth = tileSize * 0.18;
-      const berryRadiusBase = tileSize * 0.1;
-      const berryRadiusGrowth = tileSize * 0.12;
+      const bushRadiusBase = tileSize * 0.3;
+      const bushRadiusGrowth = tileSize * 0.2;
+      const berryRadiusBase = tileSize * 0.08;
+      const berryRadiusGrowth = tileSize * 0.1;
       const maxBerryFallback = Number.isFinite(config?.bushBerryMax)
         ? config.bushBerryMax
         : 1;
@@ -181,38 +244,80 @@ export function createRenderer(container, { camera }) {
         const centerY = originY + (bushY + 0.5) * tileSize;
         const bushRadius = bushRadiusBase + bushRadiusGrowth * health;
 
+        // Bush shadow
         ctx.beginPath();
-        ctx.fillStyle = `hsl(105, 28%, ${22 + health * 28}%)`;
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.ellipse(centerX + 1, centerY + 2, bushRadius * 0.9, bushRadius * 0.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Main bush body with gradient
+        const bushGradient = ctx.createRadialGradient(
+          centerX - bushRadius * 0.3, centerY - bushRadius * 0.3, 0,
+          centerX, centerY, bushRadius
+        );
+        const lightness = 25 + health * 20;
+        bushGradient.addColorStop(0, `hsl(110, 35%, ${lightness + 15}%)`);
+        bushGradient.addColorStop(1, `hsl(105, 30%, ${lightness}%)`);
+        
+        ctx.beginPath();
+        ctx.fillStyle = bushGradient;
         ctx.arc(centerX, centerY, bushRadius, 0, Math.PI * 2);
         ctx.fill();
-        ctx.strokeStyle = 'rgba(10, 30, 12, 0.5)';
+        
+        // Subtle outline
+        ctx.strokeStyle = 'rgba(20, 40, 20, 0.4)';
         ctx.lineWidth = 1 / state.zoom;
         ctx.stroke();
 
+        // Berries with glow effect
         if (berryRatio > 0) {
           const berryRadius = berryRadiusBase + berryRadiusGrowth * berryRatio;
-          ctx.beginPath();
-          ctx.fillStyle = `rgba(196, 64, 160, ${0.4 + berryRatio * 0.5})`;
-          ctx.arc(
-            centerX + bushRadius * 0.25,
-            centerY - bushRadius * 0.2,
-            berryRadius,
-            0,
-            Math.PI * 2
-          );
-          ctx.fill();
+          const berryOffsets = [
+            { x: 0.3, y: -0.25 },
+            { x: -0.2, y: 0.3 },
+            { x: 0.35, y: 0.2 }
+          ];
+          
+          const numBerries = Math.ceil(berryRatio * 3);
+          for (let i = 0; i < numBerries; i++) {
+            const offset = berryOffsets[i];
+            const bx = centerX + bushRadius * offset.x;
+            const by = centerY + bushRadius * offset.y;
+            
+            // Berry glow
+            ctx.beginPath();
+            ctx.fillStyle = `rgba(200, 80, 140, ${0.2 * berryRatio})`;
+            ctx.arc(bx, by, berryRadius * 1.5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Berry
+            ctx.beginPath();
+            ctx.fillStyle = `hsl(330, 60%, ${40 + berryRatio * 20}%)`;
+            ctx.arc(bx, by, berryRadius, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Berry highlight
+            ctx.beginPath();
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+            ctx.arc(bx - berryRadius * 0.3, by - berryRadius * 0.3, berryRadius * 0.3, 0, Math.PI * 2);
+            ctx.fill();
+          }
         }
       }
     }
 
-    ctx.strokeStyle = 'rgba(255,255,255,0.18)';
-    ctx.lineWidth = 1 / state.zoom;
+    // Map border with subtle glow
+    ctx.shadowColor = 'rgba(74, 222, 128, 0.2)';
+    ctx.shadowBlur = 10;
+    ctx.strokeStyle = 'rgba(74, 222, 128, 0.3)';
+    ctx.lineWidth = 2 / state.zoom;
     ctx.strokeRect(
       originX,
       originY,
       world.width * tileSize,
       world.height * tileSize
     );
+    ctx.shadowBlur = 0;
 
     ctx.restore();
   };

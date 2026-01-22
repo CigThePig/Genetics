@@ -1,17 +1,7 @@
 export function createMetrics({ container } = {}) {
   const overlay = document.createElement('div');
+  overlay.className = 'fps-overlay';
   overlay.textContent = 'FPS: -- | TPS: --';
-  overlay.style.position = 'fixed';
-  overlay.style.top = '12px';
-  overlay.style.right = '12px';
-  overlay.style.padding = '6px 10px';
-  overlay.style.borderRadius = '8px';
-  overlay.style.background = 'rgba(0, 0, 0, 0.7)';
-  overlay.style.color = '#fff';
-  overlay.style.fontFamily = 'system-ui, sans-serif';
-  overlay.style.fontSize = '12px';
-  overlay.style.letterSpacing = '0.3px';
-  overlay.style.zIndex = '10';
 
   if (container) {
     container.append(overlay);

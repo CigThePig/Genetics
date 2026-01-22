@@ -32,32 +32,23 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
 
   // Create main panel
   const panel = document.createElement('section');
-  panel.style.border = '1px solid #333';
-  panel.style.borderRadius = '12px';
-  panel.style.marginBottom = '12px';
-  panel.style.background = '#fff';
-  panel.style.fontSize = '14px';
+  panel.className = 'panel';
 
   // Header
   const header = document.createElement('div');
-  header.style.padding = '12px';
-  header.style.borderBottom = '1px solid #eee';
-  header.style.display = 'flex';
-  header.style.justifyContent = 'space-between';
-  header.style.alignItems = 'center';
+  header.className = 'panel-header';
+  header.style.cursor = 'default';
 
   const title = document.createElement('h2');
-  title.textContent = '🔍 Inspector';
-  title.style.margin = '0';
-  title.style.fontSize = '16px';
+  title.className = 'panel-title';
+  title.innerHTML = '🔍 Inspector';
 
   const clearButton = document.createElement('button');
   clearButton.textContent = '✕ Clear';
-  clearButton.style.padding = '4px 8px';
-  clearButton.style.border = '1px solid #ccc';
-  clearButton.style.borderRadius = '4px';
-  clearButton.style.background = '#f5f5f5';
-  clearButton.style.cursor = 'pointer';
+  clearButton.className = 'btn';
+  clearButton.style.padding = '4px 10px';
+  clearButton.style.minHeight = '28px';
+  clearButton.style.minWidth = 'auto';
   clearButton.style.fontSize = '12px';
   clearButton.style.display = 'none';
 
@@ -65,14 +56,13 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
 
   // Content area
   const content = document.createElement('div');
-  content.style.padding = '12px';
+  content.className = 'panel-content inspector-content';
+  content.style.display = 'block';
 
   // Placeholder message
   const placeholder = document.createElement('p');
+  placeholder.className = 'inspector-empty';
   placeholder.textContent = 'Tap on a creature to track it. The display will update live as the simulation runs.';
-  placeholder.style.color = '#666';
-  placeholder.style.margin = '0';
-  placeholder.style.fontStyle = 'italic';
 
   content.append(placeholder);
   panel.append(header, content);
@@ -103,41 +93,55 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
   // Helper: create collapsible section
   const createSection = (id, titleText, defaultOpen = false) => {
     const section = document.createElement('div');
-    section.style.marginBottom = '8px';
-    section.style.border = '1px solid #e0e0e0';
-    section.style.borderRadius = '8px';
+    section.style.marginBottom = '10px';
+    section.style.background = 'var(--bg-tertiary)';
+    section.style.borderRadius = 'var(--radius-md)';
     section.style.overflow = 'hidden';
 
     const sectionHeader = document.createElement('div');
-    sectionHeader.style.padding = '8px 12px';
-    sectionHeader.style.background = '#f8f8f8';
+    sectionHeader.style.padding = '10px 14px';
     sectionHeader.style.cursor = 'pointer';
     sectionHeader.style.display = 'flex';
     sectionHeader.style.justifyContent = 'space-between';
     sectionHeader.style.alignItems = 'center';
     sectionHeader.style.userSelect = 'none';
+    sectionHeader.style.transition = 'background 0.15s';
+
+    sectionHeader.addEventListener('mouseenter', () => {
+      sectionHeader.style.background = 'var(--bg-elevated)';
+    });
+    sectionHeader.addEventListener('mouseleave', () => {
+      sectionHeader.style.background = 'transparent';
+    });
 
     const sectionTitle = document.createElement('span');
     sectionTitle.textContent = titleText;
-    sectionTitle.style.fontWeight = 'bold';
+    sectionTitle.style.fontWeight = '600';
     sectionTitle.style.fontSize = '13px';
+    sectionTitle.style.color = 'var(--text-primary)';
 
     const arrow = document.createElement('span');
     arrow.textContent = sectionStates[id] ? '▼' : '▶';
     arrow.style.fontSize = '10px';
-    arrow.style.color = '#666';
+    arrow.style.color = 'var(--text-muted)';
+    arrow.style.transition = 'transform 0.2s';
 
     sectionHeader.append(sectionTitle, arrow);
 
     const sectionBody = document.createElement('div');
-    sectionBody.style.padding = '8px 12px';
-    sectionBody.style.display = sectionStates[id] ? 'block' : 'none';
+    sectionBody.style.padding = sectionStates[id] ? '10px 14px' : '0 14px';
+    sectionBody.style.maxHeight = sectionStates[id] ? '500px' : '0';
+    sectionBody.style.overflow = 'hidden';
+    sectionBody.style.transition = 'all 0.2s ease';
     sectionBody.style.fontSize = '13px';
     sectionBody.style.lineHeight = '1.6';
+    sectionBody.style.borderTop = sectionStates[id] ? '1px solid var(--border-subtle)' : 'none';
 
     sectionHeader.addEventListener('click', () => {
       sectionStates[id] = !sectionStates[id];
-      sectionBody.style.display = sectionStates[id] ? 'block' : 'none';
+      sectionBody.style.maxHeight = sectionStates[id] ? '500px' : '0';
+      sectionBody.style.padding = sectionStates[id] ? '10px 14px' : '0 14px';
+      sectionBody.style.borderTop = sectionStates[id] ? '1px solid var(--border-subtle)' : 'none';
       arrow.textContent = sectionStates[id] ? '▼' : '▶';
     });
 
@@ -150,54 +154,55 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     const div = document.createElement('div');
     div.style.display = 'flex';
     div.style.justifyContent = 'space-between';
-    div.style.padding = '2px 0';
+    div.style.padding = '3px 0';
     
     const labelSpan = document.createElement('span');
     labelSpan.textContent = label;
-    labelSpan.style.color = '#555';
+    labelSpan.style.color = 'var(--text-secondary)';
     
     const valueSpan = document.createElement('span');
     valueSpan.textContent = value;
     valueSpan.style.fontWeight = '500';
-    if (color) valueSpan.style.color = color;
+    valueSpan.style.color = color || 'var(--text-primary)';
     
     div.append(labelSpan, valueSpan);
     return div;
   };
 
   // Helper: create a meter bar
-  const meterBar = (label, value, max = 1, color = '#4CAF50') => {
+  const meterBar = (label, value, max = 1, color = '#58b448') => {
     const container = document.createElement('div');
-    container.style.marginBottom = '6px';
+    container.style.marginBottom = '8px';
 
     const labelRow = document.createElement('div');
     labelRow.style.display = 'flex';
     labelRow.style.justifyContent = 'space-between';
-    labelRow.style.marginBottom = '2px';
+    labelRow.style.marginBottom = '4px';
     labelRow.style.fontSize = '12px';
 
     const labelSpan = document.createElement('span');
     labelSpan.textContent = label;
-    labelSpan.style.color = '#555';
+    labelSpan.style.color = 'var(--text-secondary)';
 
     const valueSpan = document.createElement('span');
     const percentage = Number.isFinite(value) ? (value / max * 100) : 0;
     valueSpan.textContent = `${percentage.toFixed(0)}%`;
     valueSpan.style.fontWeight = '500';
+    valueSpan.style.color = 'var(--text-primary)';
 
     labelRow.append(labelSpan, valueSpan);
 
     const barOuter = document.createElement('div');
-    barOuter.style.height = '8px';
-    barOuter.style.background = '#e0e0e0';
-    barOuter.style.borderRadius = '4px';
+    barOuter.style.height = '6px';
+    barOuter.style.background = 'var(--bg-primary)';
+    barOuter.style.borderRadius = '3px';
     barOuter.style.overflow = 'hidden';
 
     const barInner = document.createElement('div');
     barInner.style.height = '100%';
     barInner.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
     barInner.style.background = color;
-    barInner.style.borderRadius = '4px';
+    barInner.style.borderRadius = '3px';
     barInner.style.transition = 'width 0.2s';
 
     barOuter.append(barInner);
