@@ -127,8 +127,25 @@ Rules:
   - Role: seeds initial grass patches for world generation
 - src/sim/worker.js
   - Role: worker-ready sim stub interface for future worker-backed loop
+- src/sim/metrics-factory.js
+  - Role: creates default metrics objects for sim initialization and reset
+- src/sim/utils/resolvers.js
+  - Role: shared config resolver utilities (clampMeter, resolveRatio, etc.)
+  - Used by: creatures/index.js, creatures/reproduction.js, creatures/intent.js, creatures/actions.js
 - src/sim/creatures/index.js
-  - Role: creature data model creation + basic inspection helpers
+  - Role: re-export hub for all creature subsystems
+- src/sim/creatures/death.js
+  - Role: creature death conditions and removal
+- src/sim/creatures/metabolism.js
+  - Role: basal metabolism drains, sprint decisions, stamina regen
+- src/sim/creatures/movement.js
+  - Role: creature position updates, terrain collision, water avoidance
+- src/sim/creatures/intent.js
+  - Role: priority selection and intent decision-making
+- src/sim/creatures/actions.js
+  - Role: eating and drinking action execution
+- src/sim/creatures/spawn.js
+  - Role: initial creature creation, positioning, sex assignment
 - src/sim/creatures/traits.js
   - Role: per-creature trait defaults derived from config
 - src/sim/creatures/genetics.js
@@ -147,6 +164,9 @@ Rules:
   - Role: chase state updates, stamina gating, and loss rules
 - src/sim/creatures/reproduction.js
   - Role: deterministic reproduction loop + offspring spawning
+- src/sim/creatures/life-stages.js
+  - Role: shared life stage definitions and resolution (juvenile/adult/elder)
+  - Used by: creatures/index.js, creatures/reproduction.js
 - src/render/renderer.js
   - Role: canvas renderer that draws the view using camera state
 - src/render/camera.js
@@ -157,6 +177,9 @@ Rules:
   - Role: metrics system entry point (FPS overlay + toggle support)
 - src/ui/index.js
   - Role: touch-first UI shell (FPS toggle + status updates)
+- src/ui/inspector-formatters.js
+  - Role: formatting functions for creature inspection panel
+  - Used by: main.js
 
 ## Tests
 - tests/sim.test.js
