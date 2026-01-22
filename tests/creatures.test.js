@@ -95,11 +95,11 @@ describe('creature pregnancy', () => {
       creaturePregnancyEnabled: true,
       creatureConceptionChance: 1,
       creatureReproductionRange: 10,
-      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinAge: 0,
       creatureReproductionMinEnergyRatio: 0,
       creatureReproductionMinWaterRatio: 0,
-      creatureReproductionCooldownTicks: 10,
-      creatureGestationBaseTicks: 5,
+      creatureReproductionCooldown: 10,
+      creatureGestationTime: 5,
       creatureBaseEnergy: 1,
       creatureBaseWater: 1,
       creatureBaseStamina: 1,
@@ -150,12 +150,12 @@ describe('creature pregnancy', () => {
     const config = {
       creatureSexEnabled: true,
       creaturePregnancyEnabled: true,
-      creatureGestationBaseTicks: 1,
+      creatureGestationTime: 1,
       creatureReproductionRange: 10,
-      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinAge: 0,
       creatureReproductionMinEnergyRatio: 0,
       creatureReproductionMinWaterRatio: 0,
-      creatureReproductionCooldownTicks: 10,
+      creatureReproductionCooldown: 10,
       creatureBaseEnergy: 1,
       creatureBaseWater: 1,
       creatureBaseStamina: 1,
@@ -226,11 +226,11 @@ describe('creature pregnancy', () => {
       creaturePregnancyEnabled: true,
       creatureConceptionChance: 0,
       creatureReproductionRange: 10,
-      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinAge: 0,
       creatureReproductionMinEnergyRatio: 0,
       creatureReproductionMinWaterRatio: 0,
-      creatureReproductionCooldownTicks: 180,
-      creatureReproductionFailedCooldownTicks: 20,
+      creatureReproductionCooldown: 180,
+      creatureReproductionFailedCooldown: 20,
       creatureReproductionFailedCostMultiplier: 0.5,
       creatureReproductionEnergyCost: 0.2,
       creatureReproductionWaterCost: 0.15,
@@ -290,12 +290,13 @@ describe('creature mate seeking', () => {
       defaultTerrain: 'plains'
     });
     const config = {
+      ticksPerSecond: 1,
       creatureSexEnabled: true,
       creaturePregnancyEnabled: true,
       creatureMateSeekingEnabled: true,
       creatureMateSeekRange: 5,
-      creatureMateSeekCommitTicks: 4,
-      creatureReproductionMinAgeTicks: 0,
+      creatureMateSeekCommitTime: 4,
+      creatureReproductionMinAge: 0,
       creatureReproductionMinEnergyRatio: 0,
       creatureReproductionMinWaterRatio: 0,
       creatureBaseEnergy: 1,
@@ -345,11 +346,12 @@ describe('creature mate seeking', () => {
     });
     world.setTerrainAt(1, 1, 'water');
     const config = {
+      ticksPerSecond: 1,
       creatureSexEnabled: true,
       creaturePregnancyEnabled: true,
       creatureMateSeekingEnabled: true,
       creatureMateSeekRange: 5,
-      creatureReproductionMinAgeTicks: 0,
+      creatureReproductionMinAge: 0,
       creatureReproductionMinEnergyRatio: 0,
       creatureReproductionMinWaterRatio: 0,
       creatureBaseEnergy: 1,
@@ -548,7 +550,7 @@ describe('creature movement', () => {
 describe('creature diet preferences', () => {
   it('allows triangle foraging for berries or grass while meat is unavailable', () => {
     const availability = { grass: 1, berries: 0.5, meat: 0 };
-    const minimums = { grass: 0.1, berries: 0.1, meat: 0 };
+    const minimums = { grass: 0.1, berries: 0.1, meat: 0.1 };
 
     const choice = selectFoodChoice({
       species: SPECIES.TRIANGLE,

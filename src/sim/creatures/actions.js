@@ -6,6 +6,7 @@
 
 import { consumeGrassAt } from '../plants/grass.js';
 import { consumeBerriesAt } from '../plants/bushes.js';
+import { consumeMeatAt } from '../plants/carcasses.js';
 import { clampMeter } from '../utils/resolvers.js';
 import { resolveTickScale, resolveNeedMeterBase } from './metabolism.js';
 import {
@@ -141,8 +142,31 @@ export function applyCreatureActions({ creatures, config, world }) {
 
     if (intentFoodType === FOOD_TYPES.MEAT) {
       const dietPreferences = getDietPreferences(creature.species);
-      if (dietPreferences.includes(FOOD_TYPES.MEAT)) {
-        creature.intent = { type: 'wander', foodType: null };
+      if (!dietPreferences.includes(FOOD_TYPES.MEAT)) {
+        continue;
+      }
+      const availability = getFoodAvailabilityAtCell({ world, cell });
+      const availableMeat = availability.meat;
+      if (availableMeat <= 0) {
+        continue;
+      }
+      const consumed = consumeMeatAt({
+        world,
+        x: cell.x,
+        y: cell.y,
+        amount: Math.min(availableMeat, eatAmountPerTick)
+      });
+      if (consumed > 0) {
+        const props = getFoodProperties(config, FOOD_TYPES.MEAT);
+        const efficiency = getDigestiveEfficiency(
+          creature,
+          FOOD_TYPES.MEAT,
+          config
+        );
+        const energyGain = consumed * props.nutrition * efficiency;
+        meters.energy = clampMeter(
+          Math.min(baseEnergy, meters.energy + energyGain)
+        );
       }
     }
   }

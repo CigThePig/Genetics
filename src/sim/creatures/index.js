@@ -20,6 +20,9 @@ export { updateCreatureMemory } from './memory.js';
 // Re-export chase system
 export { updateCreatureChase } from './chase.js';
 
+// Re-export combat system
+export { applyCreatureCombat } from './combat.js';
+
 // Re-export reproduction system
 export { updateCreatureReproduction } from './reproduction.js';
 

@@ -22,11 +22,16 @@ export function createDefaultMetrics() {
     berryTotal: 0,
     berryAverage: 0,
     bushAverageHealth: 0,
+    carcassCount: 0,
+    carcassMeatTotal: 0,
 
     // Chase metrics
     chaseAttempts: 0,
     chaseSuccesses: 0,
     chaseLosses: 0,
+
+    // Hunting metrics
+    killsTotal: 0,
 
     // Reproduction metrics
     birthsTotal: 0,

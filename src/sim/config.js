@@ -62,6 +62,11 @@ export const simConfig = {
   bushRecoveryRate: 0.01,
   bushBerryRegenRate: 0.25,
 
+  // === PLANTS: CARCASSES ===
+  carcassBaseYield: 0.8,
+  carcassMaxMeatPerCell: 2,
+  carcassDecayRate: 0.02,
+
   // === CREATURES: SPAWNING ===
   creatureCount: 80,
   creatureSpawnClusterSpread: 12,
