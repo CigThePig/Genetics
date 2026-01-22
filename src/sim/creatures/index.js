@@ -27,6 +27,16 @@ import {
   resolveTicksPerSecond,
   createLifeStageState
 } from './life-stages.js';
+import {
+  clampMeter,
+  resolveRatio,
+  resolveDistance,
+  resolveBasalDrain,
+  resolveTraitDrain,
+  resolveMinAgeTicks,
+  resolveWaterTerrain,
+  isWaterTile
+} from '../utils/resolvers.js';
 
 export {
   updateCreaturePerception,
@@ -131,15 +141,7 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
   }
 }
 
-const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
-
 const resolveTickScale = (config) => 1 / resolveTicksPerSecond(config);
-
-const resolveBasalDrain = (value) =>
-  Number.isFinite(value) ? Math.max(0, value) : 0;
-
-const resolveTraitDrain = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, value) : fallback;
 
 const resolveNeedSwitchMargin = (config) =>
   Number.isFinite(config?.creatureNeedSwitchMargin)
@@ -159,16 +161,6 @@ const resolveActionThreshold = (value, fallback) => {
 const resolveActionAmount = (value, fallback) =>
   Number.isFinite(value) && value > 0 ? value : fallback;
 
-const resolveRatio = (value, fallback) => {
-  if (!Number.isFinite(value)) {
-    return fallback;
-  }
-  return Math.min(1, Math.max(0, value));
-};
-
-const resolveDistance = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, value) : fallback;
-
 const resolveCommitTicks = (value, fallback) => {
   if (!Number.isFinite(value)) {
     return Math.max(0, Math.trunc(fallback));
@@ -181,13 +173,6 @@ const resolveSprintMultiplier = (value, fallback) =>
 
 const resolveStaminaRegen = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
-
-const resolveMinAgeTicks = (value, fallback, ticksPerSecond) => {
-  if (!Number.isFinite(value)) {
-    return Math.max(0, Math.trunc(fallback * ticksPerSecond));
-  }
-  return Math.max(0, Math.trunc(value * ticksPerSecond));
-};
 
 const resolveMaxAgeTicks = (value, fallback, ticksPerSecond) => {
   if (!Number.isFinite(value)) {
@@ -418,12 +403,6 @@ const resolveCreatureSpeed = (creature, config) =>
     : resolveMovementSpeed(config);
 
 const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
-
-const resolveWaterTerrain = (config) => config?.waterTerrain ?? 'water';
-
-const isWaterTile = (world, x, y, waterTerrain) =>
-  typeof world?.getTerrainAt === 'function' &&
-  world.getTerrainAt(x, y) === waterTerrain;
 
 const resolveHeading = (creature, rng) => {
   if (!creature.motion) {

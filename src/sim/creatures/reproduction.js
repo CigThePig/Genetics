@@ -4,18 +4,19 @@ import {
   resolveTicksPerSecond,
   createLifeStageState
 } from './life-stages.js';
-
-const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
+import {
+  clampMeter,
+  resolveRatio,
+  resolveDistance,
+  resolveBasalDrain,
+  resolveTraitDrain,
+  resolveMinAgeTicks,
+  resolveWaterTerrain,
+  isWaterTile
+} from '../utils/resolvers.js';
 
 const resolveBaseMeter = (value) =>
   Number.isFinite(value) && value > 0 ? value : 1;
-
-const resolveRatio = (value, fallback) => {
-  if (!Number.isFinite(value)) {
-    return fallback;
-  }
-  return Math.min(1, Math.max(0, value));
-};
 
 const resolveChance = (value, fallback) => {
   if (!Number.isFinite(value)) {
@@ -45,32 +46,10 @@ const resolveCooldownTicks = (value, fallback, ticksPerSecond) => {
   return Math.max(0, Math.trunc(value * ticksPerSecond));
 };
 
-const resolveMinAgeTicks = (value, fallback, ticksPerSecond) => {
-  if (!Number.isFinite(value)) {
-    return Math.max(0, Math.trunc(fallback * ticksPerSecond));
-  }
-  return Math.max(0, Math.trunc(value * ticksPerSecond));
-};
-
-const resolveDistance = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, value) : fallback;
-
 const resolveCost = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
 
-const resolveBasalDrain = (value) =>
-  Number.isFinite(value) ? Math.max(0, value) : 0;
-
-const resolveTraitDrain = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, value) : fallback;
-
 const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
-
-const resolveWaterTerrain = (config) => config?.waterTerrain ?? 'water';
-
-const isWaterTile = (world, x, y, waterTerrain) =>
-  typeof world?.getTerrainAt === 'function' &&
-  world.getTerrainAt(x, y) === waterTerrain;
 
 export const isReadyToReproduce = ({
   creature,
