@@ -4,7 +4,7 @@ const DEFAULT_GENOME = {
   speed: 0.5,
   perceptionRange: 0.5,
   alertness: 0.5,
-  reactionDelayTicks: 0.5,
+  reactionDelay: 0.5,
   basalEnergyDrain: 0.5,
   basalWaterDrain: 0.5,
   basalStaminaDrain: 0.5,
@@ -25,7 +25,7 @@ const DEFAULT_GENE_RANGES = {
   speed: { min: 0.8, max: 1.2 },
   perceptionRange: { min: 0.8, max: 1.2 },
   alertness: { min: 0.85, max: 1.15 },
-  reactionDelayTicks: { min: 0.8, max: 1.2 },
+  reactionDelay: { min: 0.8, max: 1.2 },
   basalEnergyDrain: { min: 0.85, max: 1.2 },
   basalWaterDrain: { min: 0.85, max: 1.2 },
   basalStaminaDrain: { min: 0.85, max: 1.2 },
@@ -48,7 +48,7 @@ const PLEIOTROPY_BENEFITS = {
   alertness: 1,
   sprintSpeedMultiplier: 1,
   staminaRegen: 1,
-  reactionDelayTicks: -1
+  reactionDelay: -1
 };
 
 const PLEIOTROPY_COST_GENES = [

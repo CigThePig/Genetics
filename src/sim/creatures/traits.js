@@ -48,10 +48,10 @@ export const createCreatureTraits = ({ config, species, genome } = {}) => {
       multipliers.alertness,
       genomeMultipliers.alertness
     ),
-    reactionDelayTicks: applyMultipliers(
-      config?.creatureReactionDelayTicks,
-      multipliers.reactionDelayTicks,
-      genomeMultipliers.reactionDelayTicks
+    reactionDelay: applyMultipliers(
+      config?.creatureReactionDelay,
+      multipliers.reactionDelay,
+      genomeMultipliers.reactionDelay
     ),
     basalEnergyDrain: applyMultipliers(
       config?.creatureBasalEnergyDrain,

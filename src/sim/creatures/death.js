@@ -57,7 +57,7 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
   }
   const ticksPerSecond = resolveTicksPerSecond(config);
   const maxAgeTicks = resolveMaxAgeTicks(
-    config?.creatureMaxAgeTicks,
+    config?.creatureMaxAge,
     Infinity,
     ticksPerSecond
   );

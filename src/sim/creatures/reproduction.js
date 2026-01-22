@@ -25,11 +25,10 @@ const resolveChance = (value, fallback) => {
   return Math.min(1, Math.max(0, value));
 };
 
-const resolveGestationTicks = (value, fallback) => {
-  if (!Number.isFinite(value)) {
-    return fallback;
-  }
-  return Math.max(1, Math.trunc(value));
+const resolveGestationTicks = (seconds, fallbackSeconds, ticksPerSecond) => {
+  const tps = Number.isFinite(ticksPerSecond) ? ticksPerSecond : 60;
+  const value = Number.isFinite(seconds) ? seconds : fallbackSeconds;
+  return Math.max(1, Math.trunc(value * tps));
 };
 
 const resolvePregnancyMultiplier = (value, fallback) => {
@@ -279,8 +278,9 @@ export function updateCreatureReproduction({
   const pregnancyEnabled = config?.creaturePregnancyEnabled !== false;
   const conceptionChance = resolveChance(config?.creatureConceptionChance, 0.35);
   const gestationBaseTicks = resolveGestationTicks(
-    config?.creatureGestationBaseTicks,
-    240
+    config?.creatureGestationTime,
+    60, // 60 seconds default
+    ticksPerSecond
   );
   const miscarriageEnabled = config?.creaturePregnancyMiscarriageEnabled !== false;
   const miscarriageEnergyRatio = resolveRatio(
@@ -304,17 +304,17 @@ export function updateCreatureReproduction({
     0.9
   );
   const cooldownTicks = resolveCooldownTicks(
-    config?.creatureReproductionCooldownTicks,
+    config?.creatureReproductionCooldown,
     180,
     ticksPerSecond
   );
   const failedCooldownTicks = resolveCooldownTicks(
-    config?.creatureReproductionFailedCooldownTicks,
+    config?.creatureReproductionFailedCooldown,
     20,
     ticksPerSecond
   );
   const minAgeTicks = resolveMinAgeTicks(
-    config?.creatureReproductionMinAgeTicks,
+    config?.creatureReproductionMinAge,
     90,
     ticksPerSecond
   );

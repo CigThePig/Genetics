@@ -47,13 +47,12 @@ const resolveActionAmount = (value, fallback) =>
   Number.isFinite(value) && value > 0 ? value : fallback;
 
 /**
- * Resolves commit ticks (integer with fallback).
+ * Resolves commit time in ticks from seconds value.
  */
-const resolveCommitTicks = (value, fallback) => {
-  if (!Number.isFinite(value)) {
-    return Math.max(0, Math.trunc(fallback));
-  }
-  return Math.max(0, Math.trunc(value));
+const resolveCommitTicks = (seconds, fallbackSeconds, ticksPerSecond) => {
+  const tps = Number.isFinite(ticksPerSecond) ? ticksPerSecond : 60;
+  const value = Number.isFinite(seconds) ? seconds : fallbackSeconds;
+  return Math.max(0, Math.trunc(value * tps));
 };
 
 /**
@@ -149,7 +148,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     0.9
   );
   const minAgeTicks = resolveMinAgeTicks(
-    config?.creatureReproductionMinAgeTicks,
+    config?.creatureReproductionMinAge,
     90,
     ticksPerSecond
   );
@@ -159,8 +158,9 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
   const mateSeekRange = resolveDistance(config?.creatureMateSeekRange, 25);
   const mateSeekRangeSq = mateSeekRange * mateSeekRange;
   const mateSeekCommitTicks = resolveCommitTicks(
-    config?.creatureMateSeekCommitTicks,
-    60
+    config?.creatureMateSeekCommitTime,
+    1, // 1 second default
+    ticksPerSecond
   );
   const mateSeekOverridesNeeds =
     config?.creatureMateSeekPriorityOverridesNeeds === true;
