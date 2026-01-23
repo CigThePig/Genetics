@@ -17,24 +17,91 @@ concurrency:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node
+      - name: Setup Node (pinned)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 20.12.2
           cache: npm
+
+      - name: Pin npm (avoid "Exit handler never called")
+        run: npm i -g npm@10.8.1
 
       - name: Debug toolchain versions
         run: |
           node --version
           npm --version
 
-      - name: Upgrade npm (workaround for npm "Exit handler never called")
-        run: npm i -g npm@latest
+      - name: Install dependencies (retry + show npm log on failure)
+        env:
+          NODE_ENV: development
+          NPM_CONFIG_UPDATE_NOTIFIER: "false"
+        run: |
+          set -euo pipefail
+
+          ec=0
+          for attempt in 1 2; do
+            echo "npm ci attempt ${attempt}..."
+            set +e
+            npm ci --no-audit --no-fund
+            ec=$?
+            set -e
+
+            if [ $ec -eq 0 ]; then
+              break
+            fi
+
+            echo "::warning::npm ci failed with exit code ${ec}. Cleaning cache and retrying..."
+            npm cache clean --force || true
+            rm -rf node_modules || true
+          done
+
+          if [ $ec -ne 0 ]; then
+            echo "::error::npm ci failed after retries (exit ${ec}). Dumping npm debug log tail..."
+            echo "::group::npm debug logs"
+            ls -la ~/.npm/_logs || true
+            latest="$(ls -1t ~/.npm/_logs/*debug-0.log 2>/dev/null | head -n 1 || true)"
+            if [ -n "${latest}" ]; then
+              echo "Latest log: ${latest}"
+              tail -n 200 "${latest}" || true
+            fi
+            echo "::endgroup::"
+            exit $ec
+          fi
+
+          if [ ! -x node_modules/.bin/vite ]; then
+            echo "::error::vite is missing after install (unexpected)."
+            ls -la node_modules/.bin || true
+            exit 1
+          fi
+
+      - name: Build
+        env:
+          VITE_BASE: /Genetics/
+        run: npm run build
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-22.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4        run: npm i -g npm@latest
 
       - name: Install dependencies
         env:
