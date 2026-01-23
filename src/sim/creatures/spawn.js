@@ -4,11 +4,26 @@
  * Handles initial creature creation and positioning.
  */
 
-import { pickSpawnSpecies, SPECIES_LIST } from '../species.js';
+import { SPECIES, SPECIES_LIST } from '../species.js';
 import { createCreatureTraits } from './traits.js';
 import { createCreatureGenome } from './genetics.js';
 import { createLifeStageState } from './life-stages.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
+
+/**
+ * Predator species (can hunt other creatures).
+ */
+const PREDATOR_SPECIES = [SPECIES.TRIANGLE, SPECIES.OCTAGON];
+
+/**
+ * Herbivore species (cannot hunt other creatures).
+ */
+const HERBIVORE_SPECIES = [SPECIES.SQUARE, SPECIES.CIRCLE];
+
+/**
+ * Checks if a species is a predator.
+ */
+const isPredatorSpecies = (species) => PREDATOR_SPECIES.includes(species);
 
 /**
  * Checks if sex assignment is enabled.
@@ -22,15 +37,58 @@ const resolveSexInitialSplitMode = (config) =>
   config?.creatureSexInitialSplitMode ?? 'exact';
 
 /**
+ * Resolves the predator count from config.
+ */
+const resolvePredatorCount = (config, totalCount) => {
+  if (Number.isFinite(config?.creaturePredatorCount)) {
+    return Math.max(0, Math.min(totalCount, Math.trunc(config.creaturePredatorCount)));
+  }
+  // Default: ~10% predators
+  return Math.trunc(totalCount * 0.1);
+};
+
+/**
+ * Creates a spawn queue that places predators and herbivores appropriately.
+ * Returns an array of species in spawn order.
+ */
+const createSpawnQueue = (totalCount, predatorCount) => {
+  const herbivoreCount = totalCount - predatorCount;
+  const queue = [];
+
+  // Distribute predators evenly between triangle and octagon
+  const triangleCount = Math.ceil(predatorCount / 2);
+  const octagonCount = predatorCount - triangleCount;
+
+  // Distribute herbivores evenly between square and circle
+  const squareCount = Math.ceil(herbivoreCount / 2);
+  const circleCount = herbivoreCount - squareCount;
+
+  // Add all species to their respective pools
+  for (let i = 0; i < triangleCount; i += 1) {
+    queue.push(SPECIES.TRIANGLE);
+  }
+  for (let i = 0; i < octagonCount; i += 1) {
+    queue.push(SPECIES.OCTAGON);
+  }
+  for (let i = 0; i < squareCount; i += 1) {
+    queue.push(SPECIES.SQUARE);
+  }
+  for (let i = 0; i < circleCount; i += 1) {
+    queue.push(SPECIES.CIRCLE);
+  }
+
+  return queue;
+};
+
+/**
  * Builds queues for exact 50/50 sex split per species.
  */
-const buildExactSexQueues = (count) => {
+const buildExactSexQueues = (spawnQueue) => {
   const counts = {};
   for (const species of SPECIES_LIST) {
     counts[species] = 0;
   }
-  for (let i = 0; i < count; i += 1) {
-    const species = pickSpawnSpecies(i);
+  for (const species of spawnQueue) {
     counts[species] += 1;
   }
 
@@ -64,6 +122,8 @@ export function createCreatures({ config, rng, world }) {
   const count = Number.isFinite(config?.creatureCount)
     ? Math.max(0, Math.trunc(config.creatureCount))
     : 0;
+  const predatorCount = resolvePredatorCount(config, count);
+  const spawnQueue = createSpawnQueue(count, predatorCount);
   const creatures = [];
   const waterTerrain = resolveWaterTerrain(config);
   const spawnRetries = 20;
@@ -80,7 +140,7 @@ export function createCreatures({ config, rng, world }) {
   const sexSplitMode = resolveSexInitialSplitMode(config);
   const sexQueues =
     sexEnabled && sexSplitMode === 'exact'
-      ? buildExactSexQueues(count)
+      ? buildExactSexQueues(spawnQueue)
       : null;
   const sexIndices = {};
   if (sexEnabled) {
@@ -157,7 +217,7 @@ export function createCreatures({ config, rng, world }) {
   const anchors = createAnchors();
 
   for (let i = 0; i < count; i += 1) {
-    const species = pickSpawnSpecies(i);
+    const species = spawnQueue[i] ?? SPECIES_LIST[i % SPECIES_LIST.length];
     const anchor = anchors[species] ?? findRandomLandPosition();
     let position = anchor;
     for (let attempt = 0; attempt < spawnRetries; attempt += 1) {

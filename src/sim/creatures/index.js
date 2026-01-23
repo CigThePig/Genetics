@@ -40,6 +40,9 @@ export {
 // Re-export movement system
 export { updateCreatureMovement } from './movement.js';
 
+// Re-export herding system
+export { updateCreatureHerding, getHerdingOffset, getHerdSize } from './herding.js';
+
 // Re-export intent/priority system
 export {
   updateCreaturePriority,

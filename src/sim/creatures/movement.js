@@ -8,6 +8,7 @@ import { getTerrainEffectsAt } from '../terrain-effects.js';
 import { resolveTicksPerSecond } from './life-stages.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 import { resolveTickScale, resolveSprintMultiplier } from './metabolism.js';
+import { getHerdingOffset } from './herding.js';
 
 /**
  * Resolves base movement speed from config.
@@ -117,15 +118,51 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const y = creature.position.y;
     const heading = resolveHeading(creature, rng);
     const target = creature.intent?.target;
+    const herdingOffset = getHerdingOffset(creature);
     let desiredHeading = heading;
+    
+    // Calculate base target direction
+    let targetX = null;
+    let targetY = null;
+    
     if (target && Number.isFinite(target.x) && Number.isFinite(target.y)) {
-      const dx = target.x - x;
-      const dy = target.y - y;
+      targetX = target.x;
+      targetY = target.y;
+    }
+    
+    // Apply herding offset for wandering or seeking creatures
+    const shouldApplyHerding = herdingOffset && 
+      (intentType === 'wander' || intentType === 'seek' || !intentType);
+    
+    if (shouldApplyHerding) {
+      // If we have a target, blend herding with target
+      if (targetX !== null && targetY !== null) {
+        const toTargetX = targetX - x;
+        const toTargetY = targetY - y;
+        const targetDist = Math.sqrt(toTargetX * toTargetX + toTargetY * toTargetY);
+        
+        if (targetDist > 0.01) {
+          // Blend herding offset with target direction (herding is secondary)
+          const blendedX = toTargetX + herdingOffset.x * 0.5;
+          const blendedY = toTargetY + herdingOffset.y * 0.5;
+          desiredHeading = Math.atan2(blendedY, blendedX);
+        }
+      } else {
+        // No target - herding becomes primary influence on wander
+        const herdDist = Math.sqrt(herdingOffset.x * herdingOffset.x + herdingOffset.y * herdingOffset.y);
+        if (herdDist > 0.1) {
+          desiredHeading = Math.atan2(herdingOffset.y, herdingOffset.x);
+        }
+      }
+    } else if (targetX !== null && targetY !== null) {
+      const dx = targetX - x;
+      const dy = targetY - y;
       if (dx !== 0 || dy !== 0) {
         desiredHeading = Math.atan2(dy, dx);
       }
     }
-    const noise = target ? headingNoise * 0.4 : headingNoise;
+    const hasTarget = targetX !== null && targetY !== null;
+    const noise = hasTarget ? headingNoise * 0.4 : headingNoise;
     const updatedHeading = applyHeadingNoise(desiredHeading, rng, noise);
     const { friction } = getTerrainEffectsAt(
       world,
