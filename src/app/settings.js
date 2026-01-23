@@ -20,8 +20,7 @@ const normalizeNumber = (value, fallback, { min = null } = {}) => {
 const normalizeSettings = (input, defaults) => ({
   seed: normalizeNumber(input?.seed, defaults.seed),
   speed: normalizeNumber(input?.speed, defaults.speed, { min: 1 }),
-  fpsVisible:
-    typeof input?.fpsVisible === 'boolean' ? input.fpsVisible : defaults.fpsVisible
+  fpsVisible: typeof input?.fpsVisible === 'boolean' ? input.fpsVisible : defaults.fpsVisible
 });
 
 const canUseStorage = (storage) => {

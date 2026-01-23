@@ -19,16 +19,7 @@ import { FOOD_LABELS } from '../sim/creatures/food.js';
 export function createLiveInspector({ container, ticksPerSecond = 60 }) {
   // State
   let trackedCreatureId = null;
-  let lastTapLocation = null;
-  let sectionStates = {
-    status: true,
-    needs: true,
-    behavior: false,
-    body: false,
-    hunting: false,
-    memory: false,
-    genetics: false
-  };
+  const sectionStates = {};
 
   // Create main panel
   const panel = document.createElement('section');
@@ -62,7 +53,8 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
   // Placeholder message
   const placeholder = document.createElement('p');
   placeholder.className = 'inspector-empty';
-  placeholder.textContent = 'Tap on a creature to track it. The display will update live as the simulation runs.';
+  placeholder.textContent =
+    'Tap on a creature to track it. The display will update live as the simulation runs.';
 
   content.append(placeholder);
   panel.append(header, content);
@@ -92,6 +84,10 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
 
   // Helper: create collapsible section
   const createSection = (id, titleText, defaultOpen = false) => {
+    // Initialize open/closed state once per section.
+    if (typeof sectionStates[id] !== 'boolean') {
+      sectionStates[id] = Boolean(defaultOpen);
+    }
     const section = document.createElement('div');
     section.style.marginBottom = '10px';
     section.style.background = 'var(--bg-tertiary)';
@@ -155,16 +151,16 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     div.style.display = 'flex';
     div.style.justifyContent = 'space-between';
     div.style.padding = '3px 0';
-    
+
     const labelSpan = document.createElement('span');
     labelSpan.textContent = label;
     labelSpan.style.color = 'var(--text-secondary)';
-    
+
     const valueSpan = document.createElement('span');
     valueSpan.textContent = value;
     valueSpan.style.fontWeight = '500';
     valueSpan.style.color = color || 'var(--text-primary)';
-    
+
     div.append(labelSpan, valueSpan);
     return div;
   };
@@ -185,7 +181,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     labelSpan.style.color = 'var(--text-secondary)';
 
     const valueSpan = document.createElement('span');
-    const percentage = Number.isFinite(value) ? (value / max * 100) : 0;
+    const percentage = Number.isFinite(value) ? (value / max) * 100 : 0;
     valueSpan.textContent = `${percentage.toFixed(0)}%`;
     valueSpan.style.fontWeight = '500';
     valueSpan.style.color = 'var(--text-primary)';
@@ -225,14 +221,15 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
 
     // === STATUS SECTION (always open) ===
     const { section: statusSection, body: statusBody } = createSection('status', '📋 Status', true);
-    
+
     const species = getSpeciesLabel(creature.species) || 'Unknown';
-    const speciesEmoji = {
-      'Squares': '🟦',
-      'Triangles': '🔺',
-      'Circles': '🟢',
-      'Octagons': '🛑'
-    }[species] || '❓';
+    const speciesEmoji =
+      {
+        Squares: '🟦',
+        Triangles: '🔺',
+        Circles: '🟢',
+        Octagons: '🛑'
+      }[species] || '❓';
 
     statusBody.append(
       row('Creature ID', `#${creature.id}`),
@@ -246,21 +243,21 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     const priority = creature.priority ?? 'unknown';
     const intent = creature.intent?.type ?? 'unknown';
     const priorityLabels = {
-      'hunger': '🍽️ Looking for food',
-      'thirst': '💧 Looking for water',
-      'flee': '🏃 Running away!',
-      'mate': '💕 Looking for a mate',
-      'rest': '😴 Resting'
+      hunger: '🍽️ Looking for food',
+      thirst: '💧 Looking for water',
+      flee: '🏃 Running away!',
+      mate: '💕 Looking for a mate',
+      rest: '😴 Resting'
     };
     const intentLabels = {
-      'eat': '🍽️ Eating',
-      'drink': '💧 Drinking',
-      'wander': '🚶 Wandering',
-      'seek_food': '🔍 Searching for food',
-      'seek_water': '🔍 Searching for water',
-      'seek_mate': '💕 Seeking a mate',
-      'flee': '🏃 Fleeing!',
-      'chase': '🎯 Chasing prey'
+      eat: '🍽️ Eating',
+      drink: '💧 Drinking',
+      wander: '🚶 Wandering',
+      seek_food: '🔍 Searching for food',
+      seek_water: '🔍 Searching for water',
+      seek_mate: '💕 Seeking a mate',
+      flee: '🏃 Fleeing!',
+      chase: '🎯 Chasing prey'
     };
 
     const activityDiv = document.createElement('div');
@@ -269,16 +266,21 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     activityDiv.style.background = '#f0f7ff';
     activityDiv.style.borderRadius = '6px';
     activityDiv.style.textAlign = 'center';
-    
-    const currentActivity = intentLabels[intent] || priorityLabels[priority] || `${priority} / ${intent}`;
+
+    const currentActivity =
+      intentLabels[intent] || priorityLabels[priority] || `${priority} / ${intent}`;
     activityDiv.innerHTML = `<strong>Currently:</strong> ${currentActivity}`;
     statusBody.append(activityDiv);
 
     content.append(statusSection);
 
     // === NEEDS SECTION ===
-    const { section: needsSection, body: needsBody } = createSection('needs', '❤️ Needs & Health', true);
-    
+    const { section: needsSection, body: needsBody } = createSection(
+      'needs',
+      '❤️ Needs & Health',
+      true
+    );
+
     const meters = creature.meters || {};
     needsBody.append(
       meterBar('Energy (hunger)', meters.energy, 1, '#FF9800'),
@@ -288,31 +290,44 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     );
 
     // Pregnancy status
-    if (creature.pregnancy?.active) {
+    const pregnancy = creature.reproduction?.pregnancy;
+    if (pregnancy?.isPregnant) {
       const pregDiv = document.createElement('div');
       pregDiv.style.marginTop = '8px';
       pregDiv.style.padding = '6px';
       pregDiv.style.background = '#fff3e0';
       pregDiv.style.borderRadius = '4px';
       pregDiv.style.fontSize = '12px';
-      
-      const remaining = creature.pregnancy.gestationTicksRemaining || 0;
-      const total = creature.pregnancy.gestationTicksTotal || 1;
-      const progress = ((total - remaining) / total * 100).toFixed(0);
-      pregDiv.innerHTML = `🤰 <strong>Pregnant!</strong> ${progress}% (${ticksToTime(remaining)} remaining)`;
+
+      const remaining = Number.isFinite(pregnancy.gestationTicksRemaining)
+        ? pregnancy.gestationTicksRemaining
+        : 0;
+      const total = Number.isFinite(pregnancy.gestationTicksTotal)
+        ? pregnancy.gestationTicksTotal
+        : 0;
+      const safeTotal = Math.max(1, total);
+      const progress = ((safeTotal - remaining) / safeTotal) * 100;
+      pregDiv.innerHTML = `🤰 <strong>Pregnant!</strong> ${Math.max(
+        0,
+        Math.min(100, Math.round(progress))
+      )}% (${ticksToTime(remaining)} remaining)`;
       needsBody.append(pregDiv);
     }
 
     content.append(needsSection);
 
     // === BEHAVIOR SECTION ===
-    const { section: behaviorSection, body: behaviorBody } = createSection('behavior', '🧠 Behavior', false);
+    const { section: behaviorSection, body: behaviorBody } = createSection(
+      'behavior',
+      '🧠 Behavior',
+      false
+    );
 
     // What they can see
     const perception = creature.perception || {};
     const canSeeFood = perception.foodType && perception.foodDistance;
     const canSeeWater = Number.isFinite(perception.waterDistance);
-    
+
     let seesText = 'Nothing nearby';
     if (canSeeFood && canSeeWater) {
       seesText = `${FOOD_LABELS[perception.foodType] || 'Food'} (${num(perception.foodDistance)} tiles) and Water (${num(perception.waterDistance)} tiles)`;
@@ -331,13 +346,19 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
 
     // Food preference
     if (creature.intent?.foodType) {
-      behaviorBody.append(row('Seeking', FOOD_LABELS[creature.intent.foodType] || creature.intent.foodType));
+      behaviorBody.append(
+        row('Seeking', FOOD_LABELS[creature.intent.foodType] || creature.intent.foodType)
+      );
     }
 
     content.append(behaviorSection);
 
     // === BODY SECTION ===
-    const { section: bodySection, body: bodyBody } = createSection('body', '🦵 Physical Traits', false);
+    const { section: bodySection, body: bodyBody } = createSection(
+      'body',
+      '🦵 Physical Traits',
+      false
+    );
 
     const traits = creature.traits || {};
     bodyBody.append(
@@ -354,13 +375,17 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
       effectsDiv.style.marginTop = '6px';
       effectsDiv.style.fontSize = '12px';
       effectsDiv.style.color = '#666';
-      
+
       let effects = [];
-      if (lifeStage.movementScale < 1) effects.push(`${((1 - lifeStage.movementScale) * 100).toFixed(0)}% slower`);
-      if (lifeStage.movementScale > 1) effects.push(`${((lifeStage.movementScale - 1) * 100).toFixed(0)}% faster`);
-      if (lifeStage.metabolismScale < 1) effects.push(`${((1 - lifeStage.metabolismScale) * 100).toFixed(0)}% less hungry`);
-      if (lifeStage.metabolismScale > 1) effects.push(`${((lifeStage.metabolismScale - 1) * 100).toFixed(0)}% hungrier`);
-      
+      if (lifeStage.movementScale < 1)
+        effects.push(`${((1 - lifeStage.movementScale) * 100).toFixed(0)}% slower`);
+      if (lifeStage.movementScale > 1)
+        effects.push(`${((lifeStage.movementScale - 1) * 100).toFixed(0)}% faster`);
+      if (lifeStage.metabolismScale < 1)
+        effects.push(`${((1 - lifeStage.metabolismScale) * 100).toFixed(0)}% less hungry`);
+      if (lifeStage.metabolismScale > 1)
+        effects.push(`${((lifeStage.metabolismScale - 1) * 100).toFixed(0)}% hungrier`);
+
       effectsDiv.textContent = `${lifeStage.label} effects: ${effects.join(', ')}`;
       bodyBody.append(effectsDiv);
     }
@@ -370,29 +395,37 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     // === HUNTING SECTION (for predators) ===
     const chase = creature.chase;
     const targeting = creature.targeting;
-    const isHunting = chase?.status === 'pursuing' || chase?.status === 'losing' || targeting?.targetId;
+    const isHunting =
+      chase?.status === 'pursuing' || chase?.status === 'losing' || targeting?.targetId;
 
     if (isHunting || chase?.lastOutcome) {
-      const { section: huntSection, body: huntBody } = createSection('hunting', '🎯 Hunting', false);
+      const { section: huntSection, body: huntBody } = createSection(
+        'hunting',
+        '🎯 Hunting',
+        false
+      );
 
       if (chase?.status && chase.status !== 'idle') {
         const statusLabels = {
-          'pursuing': '🏃 Actively chasing',
-          'losing': '👀 Losing sight...',
-          'resting': '😮‍💨 Catching breath'
+          pursuing: '🏃 Actively chasing',
+          losing: '👀 Losing sight...',
+          resting: '😮‍💨 Catching breath'
         };
         huntBody.append(
           row('Status', statusLabels[chase.status] || chase.status),
-          row('Target', `#${chase.targetId || '--'} (${getSpeciesLabel(chase.preySpecies) || 'Unknown'})`),
+          row(
+            'Target',
+            `#${chase.targetId || '--'} (${getSpeciesLabel(chase.preySpecies) || 'Unknown'})`
+          ),
           row('Distance', `${num(chase.distance)} tiles`)
         );
       }
 
       if (chase?.lastOutcome) {
         const outcomeLabels = {
-          'caught': '✅ Caught prey',
-          'lost': '❌ Lost them',
-          'exhausted': '😓 Too tired'
+          caught: '✅ Caught prey',
+          lost: '❌ Lost them',
+          exhausted: '😓 Too tired'
         };
         huntBody.append(row('Last hunt', outcomeLabels[chase.lastOutcome] || chase.lastOutcome));
       }
@@ -405,19 +438,21 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     if (Array.isArray(memories) && memories.length > 0) {
       const { section: memSection, body: memBody } = createSection('memory', '🧠 Memory', false);
 
-      const sorted = [...memories].sort((a, b) => (b?.strength ?? 0) - (a?.strength ?? 0)).slice(0, 5);
-      
+      const sorted = [...memories]
+        .sort((a, b) => (b?.strength ?? 0) - (a?.strength ?? 0))
+        .slice(0, 5);
+
       for (const mem of sorted) {
         const typeLabels = {
-          'food': `🍽️ ${FOOD_LABELS[mem.foodType] || 'Food'}`,
-          'water': '💧 Water',
-          'danger': '⚠️ Danger',
-          'mate': '💕 Mate'
+          food: `🍽️ ${FOOD_LABELS[mem.foodType] || 'Food'}`,
+          water: '💧 Water',
+          danger: '⚠️ Danger',
+          mate: '💕 Mate'
         };
         const label = typeLabels[mem.type] || mem.type;
         const strength = pct(mem.strength);
         const age = ticksToTime(mem.ageTicks);
-        
+
         const memRow = document.createElement('div');
         memRow.style.fontSize = '12px';
         memRow.style.padding = '2px 0';
@@ -430,7 +465,11 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     }
 
     // === GENETICS SECTION ===
-    const { section: geneSection, body: geneBody } = createSection('genetics', '🧬 Genetics', false);
+    const { section: geneSection, body: geneBody } = createSection(
+      'genetics',
+      '🧬 Genetics',
+      false
+    );
 
     const genome = creature.genome || {};
     const geneLabels = {
@@ -475,7 +514,6 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
   // Clear button handler
   clearButton.addEventListener('click', () => {
     trackedCreatureId = null;
-    lastTapLocation = null;
     clearButton.style.display = 'none';
     title.textContent = '🔍 Inspector';
     content.innerHTML = '';
@@ -489,17 +527,15 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     selectCreature(creature, tapLocation) {
       if (creature) {
         trackedCreatureId = creature.id;
-        lastTapLocation = tapLocation;
         clearButton.style.display = 'block';
         title.textContent = `🔍 Tracking #${creature.id}`;
       } else {
         // Tapped but no creature found
         trackedCreatureId = null;
-        lastTapLocation = tapLocation;
         clearButton.style.display = 'none';
         title.textContent = '🔍 Inspector';
         content.innerHTML = '';
-        
+
         const noCreature = document.createElement('p');
         noCreature.style.margin = '0';
         noCreature.style.color = '#666';
@@ -518,7 +554,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
       if (trackedCreatureId === null) return;
 
       // Find the tracked creature
-      const creature = creatures?.find(c => c?.id === trackedCreatureId);
+      const creature = creatures?.find((c) => c?.id === trackedCreatureId);
       buildCreatureDisplay(creature, tick);
 
       if (!creature) {
@@ -539,7 +575,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
      * Sets the ticks per second for time formatting.
      */
     setTicksPerSecond(tps) {
-      ticksPerSecond = tps;
+      ticksPerSecond = Number.isFinite(tps) && tps > 0 ? tps : 60;
     }
   };
 }

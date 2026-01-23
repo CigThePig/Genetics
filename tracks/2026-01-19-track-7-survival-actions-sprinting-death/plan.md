@@ -1,14 +1,15 @@
 # Plan — Track 7: Survival Actions + Sprinting + Death
 
 ## Recon Summary
+
 - Files likely to change:
-  - src/sim/creatures/index.js (add action intents, stamina/sprint state, death cause, decision logic). 
+  - src/sim/creatures/index.js (add action intents, stamina/sprint state, death cause, decision logic).
   - src/sim/sim.js (wire new Sense/Decide/Act/Costs/LifeHistory/Regen/Metric steps to preserve tick order).
   - src/sim/world-grid.js (add water accessors if water data is introduced for drinking).
   - src/sim/plants/grass.js (add consumption hook for eating).
   - src/metrics/index.js (add population/death metrics output).
   - src/ui/index.js (surface new inspector fields + metrics panel rows).
-  - tests/* (add determinism-sensitive movement/metabolism test if formulas change).
+  - tests/\* (add determinism-sensitive movement/metabolism test if formulas change).
 - Key modules/functions involved:
   - updateCreaturePriority/updateCreatureMovement/updateCreatureBasalMetabolism/updateCreatureLifeStages, createCreatures (creature state + meters).
   - updatePlants/updateGrass for consumption and plant regrowth.
@@ -38,6 +39,7 @@
   - Automated: npm test if tests added/updated.
 
 ## Deviation Note
+
 - Phase 1 needs wiring in `src/sim/sim.js` to add the drink/eat intent and action steps to the tick order, so that behavior executes deterministically.
 
 ---
@@ -45,6 +47,7 @@
 ## Phase 1 — Drinking behavior + Grass eating (Steps 31–32)
 
 ### Tasks
+
 - [x] Implement drink action selection based on thirst and nearby water access.
 - [x] Implement grass eating action selection for Circles only, based on hunger and grass availability.
 - [x] Update grass consumption hooks in plant system.
@@ -53,6 +56,7 @@
 - [x] Update /context/repo-map.md if any files/roles change.
 
 ### Files touched
+
 - src/sim/creatures/index.js
 - src/sim/sim.js
 - src/sim/world-grid.js
@@ -62,9 +66,11 @@
 - context/repo-map.md (if roles/files change)
 
 ### Verification
+
 - Manual: observe creatures choosing drink/eat appropriately.
 
 ### Stop point
+
 - Pause for review after Phase 1 verification.
 
 ---
@@ -72,20 +78,24 @@
 ## Phase 1.5 — Per-creature traits scaffolding (Track 7 follow-up)
 
 ### Tasks
+
 - [x] Add per-creature traits helper module for baseline trait values.
 - [x] Attach per-creature traits to each creature on creation.
 - [x] Read movement/metabolism/action thresholds from traits with config fallbacks.
 - [x] Update /context/repo-map.md for the new traits module.
 
 ### Files touched
+
 - src/sim/creatures/traits.js
 - src/sim/creatures/index.js
 - context/repo-map.md
 
 ### Verification
+
 - Manual: confirm behavior unchanged with default traits.
 
 ### Stop point
+
 - Pause for review after Phase 1.5 verification.
 
 ---
@@ -93,6 +103,7 @@
 ## Phase 2 — Stamina + Sprinting (Step 33)
 
 ### Tasks
+
 - [x] Add stamina meter and sprint decision rules tied to movement.
 - [x] Apply stamina drain/regen aligned to tick order.
 - [x] Ensure deterministic selection for sprint usage.
@@ -100,16 +111,19 @@
 - [x] Update /context/repo-map.md if any files/roles change.
 
 ### Files touched
+
 - src/sim/creatures/index.js
 - src/sim/sim.js
-- tests/* (as needed)
+- tests/\* (as needed)
 - context/repo-map.md (if roles/files change)
 
 ### Verification
+
 - Manual: observe sprint use with stamina drain and recovery.
 - Automated: run relevant tests if added/updated.
 
 ### Stop point
+
 - Pause for review after Phase 2 verification.
 
 ---
@@ -117,6 +131,7 @@
 ## Phase 3 — Death conditions + Population counters (Steps 34–35)
 
 ### Tasks
+
 - [x] Implement death conditions tied to meters/age.
 - [x] Record death causes for metrics.
 - [x] Add population counters and death cause metrics output.
@@ -124,13 +139,16 @@
 - [x] Update /context/repo-map.md if any files/roles change.
 
 ### Files touched
+
 - src/sim/creatures/index.js
 - src/metrics/index.js
 - src/ui/index.js
 - context/repo-map.md (if roles/files change)
 
 ### Verification
+
 - Manual: observe population metrics change and death causes recorded.
 
 ### Stop point
+
 - Pause for review after Phase 3 verification.

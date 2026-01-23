@@ -1,14 +1,17 @@
 # Repo Map (Master Context Index)
 
 Purpose:
+
 - One-page index of important files and how they connect.
 - Keeps planning accurate without dumping the whole repo into prompts.
 
 Rules:
+
 - Keep entries short (2–6 bullets).
 - Update when files are added or roles change.
 
 ## Top-level
+
 - AGENTS.md
   - Role: agent rules + constraints + workflow gates
 - README.md
@@ -25,12 +28,22 @@ Rules:
   - Role: app shell entry for Vite
 - .gitignore
   - Role: ignore build output + node modules
+- .editorconfig
+  - Role: consistent whitespace + line endings across editors
+- .eslintrc.cjs
+  - Role: lint rules for catching bugs + unused code early
+- .prettierrc.json, .prettierignore
+  - Role: formatting defaults + excluded paths
 
 ## GitHub
+
 - .github/workflows/deploy.yml
   - Role: GitHub Pages build + deploy pipeline
+- .github/workflows/verify.yml
+  - Role: CI gate for tests + build + lint/format checks
 
 ## Context
+
 - context/README.md
   - Role: project overview, pillars, and workflow summary
 - context/track-index.md
@@ -56,6 +69,7 @@ Rules:
   - Role: append-only track summaries + verification notes
 
 ## Tracks
+
 - tracks/YYYY-MM-DD-track-N-<slug>/
   - Contains: spec.md, blueprint.md, plan.md
   - Rule: scope must match Track Index for Track N unless explicitly overridden
@@ -99,6 +113,7 @@ Rules:
   - Role: placeholder to keep the tracks directory in git
 
 ## Source
+
 - src/main.js
   - Role: app entry; wires sim + renderer + UI
 - src/app/settings.js
@@ -121,6 +136,8 @@ Rules:
   - Role: grass regrowth update logic + summary stats
 - src/sim/plants/bushes.js
   - Role: bush entity placement and berry pool summary updates
+- src/sim/plants/carcasses.js
+  - Role: carcass spawning, meat consumption, and decay updates
 - src/sim/plants/index.js
   - Role: plant system orchestrator for sim ticks
 - src/sim/plant-generator.js
@@ -130,8 +147,14 @@ Rules:
 - src/sim/metrics-factory.js
   - Role: creates default metrics objects for sim initialization and reset
 - src/sim/utils/resolvers.js
-  - Role: shared config resolver utilities (clampMeter, resolveRatio, etc.)
-  - Used by: creatures/index.js, creatures/reproduction.js, creatures/intent.js, creatures/actions.js
+  - Role: shared config resolver utilities (clampMeter, resolveRatio, resolveTicksPerSecond, etc.)
+  - Used by: creatures/_, plants/_, intent, actions
+- src/sim/utils/config.js
+  - Role: safe deep-clone + deep-merge helpers for simulation config
+  - Used by: sim/sim.js, main.js (config reset)
+- src/sim/utils/config.js
+  - Role: deep-clone + deep-merge helpers for sim config
+  - Used by: sim.js, main.js
 - src/sim/creatures/index.js
   - Role: re-export hub for all creature subsystems
 - src/sim/creatures/death.js
@@ -162,6 +185,10 @@ Rules:
   - Role: deterministic predator target scoring helpers
 - src/sim/creatures/chase.js
   - Role: chase state updates, stamina gating, and loss rules
+- src/sim/creatures/combat.js
+  - Role: predator attack execution and carcass spawning
+- src/sim/creatures/herding.js
+  - Role: flocking/herding behavior for herbivore creatures
 - src/sim/creatures/reproduction.js
   - Role: deterministic reproduction loop + offspring spawning
 - src/sim/creatures/life-stages.js
@@ -177,16 +204,24 @@ Rules:
   - Role: metrics system entry point (FPS overlay + toggle support)
 - src/ui/index.js
   - Role: touch-first UI shell (FPS toggle + status updates)
-- src/ui/inspector-formatters.js
-  - Role: formatting functions for creature inspection panel
-  - Used by: main.js
+- src/ui/config-panel.js
+  - Role: runtime config editor panel with category groupings
+- src/ui/live-inspector.js
+  - Role: creature inspection panel with real-time state display
+- src/styles.css
+  - Role: global styles with modern CSS design system
 
 ## Tests
+
 - tests/sim.test.js
   - Role: Vitest smoke test for sim scaffold
 - tests/genetics.test.js
   - Role: deterministic genetics mutation smoke test
 - tests/creatures.test.js
-  - Role: validates basal metabolism drains per tick
+  - Role: validates basal metabolism drains, life stages, reproduction, pregnancy
 - tests/targeting.test.js
   - Role: validates predator target scoring determinism
+- tests/carcasses.test.js
+  - Role: validates carcass spawning, consumption, and decay
+- tests/hunting.test.js
+  - Role: validates combat mechanics and carcass spawning on kill

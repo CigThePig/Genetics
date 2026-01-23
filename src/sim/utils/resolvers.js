@@ -12,8 +12,7 @@ export { resolveTicksPerSecond } from '../creatures/life-stages.js';
  * Clamps a meter value to be non-negative.
  * Returns 0 if value is not a finite number.
  */
-export const clampMeter = (value) =>
-  Math.max(0, Number.isFinite(value) ? value : 0);
+export const clampMeter = (value) => Math.max(0, Number.isFinite(value) ? value : 0);
 
 /**
  * Resolves a ratio value (0-1 range) with fallback.
@@ -34,8 +33,7 @@ export const resolveDistance = (value, fallback) =>
 /**
  * Resolves a basal drain value (non-negative, defaults to 0).
  */
-export const resolveBasalDrain = (value) =>
-  Number.isFinite(value) ? Math.max(0, value) : 0;
+export const resolveBasalDrain = (value) => (Number.isFinite(value) ? Math.max(0, value) : 0);
 
 /**
  * Resolves a trait drain value (non-negative) with fallback.
@@ -59,12 +57,10 @@ export const resolveMinAgeTicks = (value, fallback, ticksPerSecond) => {
 /**
  * Resolves the water terrain type from config.
  */
-export const resolveWaterTerrain = (config) =>
-  config?.waterTerrain ?? 'water';
+export const resolveWaterTerrain = (config) => config?.waterTerrain ?? 'water';
 
 /**
  * Checks if a tile at (x, y) is water terrain.
  */
 export const isWaterTile = (world, x, y, waterTerrain) =>
-  typeof world?.getTerrainAt === 'function' &&
-  world.getTerrainAt(x, y) === waterTerrain;
+  typeof world?.getTerrainAt === 'function' && world.getTerrainAt(x, y) === waterTerrain;

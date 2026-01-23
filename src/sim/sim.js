@@ -6,6 +6,7 @@ import { seedInitialPlants } from './plant-generator.js';
 import { updatePlants } from './plants/index.js';
 import { SPECIES } from './species.js';
 import { createDefaultMetrics } from './metrics-factory.js';
+import { mergeSimConfig } from './utils/config.js';
 import {
   createCreatures,
   applyCreatureActions,
@@ -28,7 +29,7 @@ import {
 } from './creatures/index.js';
 
 export function createSim(config = simConfig) {
-  const resolvedConfig = { ...simConfig, ...config };
+  const resolvedConfig = mergeSimConfig(simConfig, config);
   const rng = createRng(resolvedConfig.seed);
   const countSpecies = (creatures) => {
     const counts = {
@@ -60,8 +61,7 @@ export function createSim(config = simConfig) {
     return world;
   };
 
-  const spawnCreatures = (world) =>
-    createCreatures({ world, rng, config: resolvedConfig });
+  const spawnCreatures = (world) => createCreatures({ world, rng, config: resolvedConfig });
 
   const state = {
     tick: 0,

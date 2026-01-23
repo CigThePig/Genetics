@@ -1,5 +1,6 @@
-const resolveNeedMeterBase = (value) =>
-  Number.isFinite(value) && value > 0 ? value : 1;
+import { resolveTicksPerSecond } from '../utils/resolvers.js';
+
+const resolveNeedMeterBase = (value) => (Number.isFinite(value) && value > 0 ? value : 1);
 
 const resolveThreshold = (value, fallback) => {
   if (!Number.isFinite(value)) {
@@ -19,9 +20,6 @@ const resolveTimeTicks = (seconds, fallbackSeconds, ticksPerSecond) => {
   const value = Number.isFinite(seconds) ? seconds : fallbackSeconds;
   return Math.max(0, Math.trunc(value * tps));
 };
-
-const resolveTicksPerSecond = (config) =>
-  Number.isFinite(config?.ticksPerSecond) ? Math.max(1, config.ticksPerSecond) : 60;
 
 const resolveTargetingRange = (config) => {
   if (Number.isFinite(config?.creatureTargetingRange)) {
@@ -70,21 +68,12 @@ const findTargetById = (creatures, id) => {
   return null;
 };
 
-const concludeChase = ({
-  chase,
-  config,
-  metrics,
-  tick,
-  outcome,
-  target
-}) => {
+const concludeChase = ({ chase, config, metrics, tick, outcome, target }) => {
   const tps = resolveTicksPerSecond(config);
   const restTicks = resolveTimeTicks(config?.creatureChaseRestTime, 0.1, tps);
   chase.status = 'resting';
   if (outcome === 'caught') {
-    chase.lastTargetId = Number.isFinite(chase.targetId)
-      ? chase.targetId
-      : target?.id ?? null;
+    chase.lastTargetId = Number.isFinite(chase.targetId) ? chase.targetId : (target?.id ?? null);
     if (target?.position) {
       chase.lastTargetPosition = {
         x: target.position.x,
@@ -124,18 +113,12 @@ export function updateCreatureChase({ creatures, config, metrics, tick }) {
   }
   const tps = resolveTicksPerSecond(config);
   const baseStamina = resolveNeedMeterBase(config?.creatureBaseStamina);
-  const stopThreshold = resolveThreshold(
-    config?.creatureChaseStopThreshold,
-    0.25
-  );
+  const stopThreshold = resolveThreshold(config?.creatureChaseStopThreshold, 0.25);
   const loseDistance = resolveChaseDistance(
     config?.creatureChaseLoseDistance,
     resolveTargetingRange(config) * 1.25
   );
-  const catchDistance = resolveChaseDistance(
-    config?.creatureChaseCatchDistance,
-    0.6
-  );
+  const catchDistance = resolveChaseDistance(config?.creatureChaseCatchDistance, 0.6);
   const loseTicks = resolveTimeTicks(config?.creatureChaseLoseTime, 0.1, tps);
 
   for (const creature of creatures) {
@@ -187,9 +170,7 @@ export function updateCreatureChase({ creatures, config, metrics, tick }) {
       continue;
     }
 
-    const lastSeenTick = Number.isFinite(chase.lastSeenTick)
-      ? chase.lastSeenTick
-      : tick;
+    const lastSeenTick = Number.isFinite(chase.lastSeenTick) ? chase.lastSeenTick : tick;
     const missingTicks = Math.max(0, tick - lastSeenTick);
     if (missingTicks >= loseTicks) {
       concludeChase({ chase, config, metrics, tick, outcome: 'lost', target });
@@ -216,10 +197,7 @@ export function startCreatureChase({ creature, target, metrics, config, tick }) 
     return false;
   }
   const baseStamina = resolveNeedMeterBase(config?.creatureBaseStamina);
-  const startThreshold = resolveThreshold(
-    config?.creatureChaseStartThreshold,
-    0.6
-  );
+  const startThreshold = resolveThreshold(config?.creatureChaseStartThreshold, 0.6);
   const staminaRatio = getStaminaRatio(creature, baseStamina);
   if (staminaRatio < startThreshold) {
     return false;

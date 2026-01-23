@@ -63,7 +63,7 @@ const resolveGenomeDefaults = (config, species) => {
   return {
     ...DEFAULT_GENOME,
     ...(defaults.default ?? {}),
-    ...(species ? defaults[species] ?? {} : {})
+    ...(species ? (defaults[species] ?? {}) : {})
   };
 };
 
@@ -139,8 +139,7 @@ export const createCreatureGenome = ({ config, species, rng } = {}) => {
 
   for (const key of Object.keys(defaults)) {
     const base = defaults[key];
-    const noise =
-      rng && jitter > 0 ? (rng.nextFloat() * 2 - 1) * jitter : 0;
+    const noise = rng && jitter > 0 ? (rng.nextFloat() * 2 - 1) * jitter : 0;
     genome[key] = clamp01(Number.isFinite(base) ? base + noise : 0.5 + noise);
   }
 
@@ -201,23 +200,15 @@ const updateMutationMetrics = ({
     return;
   }
   metrics.mutationsLastTick = (metrics.mutationsLastTick ?? 0) + mutationCount;
-  metrics.mutationStrengthLastTick =
-    (metrics.mutationStrengthLastTick ?? 0) + mutationStrength;
+  metrics.mutationStrengthLastTick = (metrics.mutationStrengthLastTick ?? 0) + mutationStrength;
   metrics.mutationTotal = (metrics.mutationTotal ?? 0) + mutationCount;
-  metrics.mutationStrengthTotal =
-    (metrics.mutationStrengthTotal ?? 0) + mutationStrength;
+  metrics.mutationStrengthTotal = (metrics.mutationStrengthTotal ?? 0) + mutationStrength;
   metrics.pleiotropyStrengthLastTick =
     (metrics.pleiotropyStrengthLastTick ?? 0) + pleiotropyStrength;
-  metrics.pleiotropyStrengthTotal =
-    (metrics.pleiotropyStrengthTotal ?? 0) + pleiotropyStrength;
+  metrics.pleiotropyStrengthTotal = (metrics.pleiotropyStrengthTotal ?? 0) + pleiotropyStrength;
 };
 
-export const mutateCreatureGenome = ({
-  genome,
-  rng,
-  config,
-  metrics
-} = {}) => {
+export const mutateCreatureGenome = ({ genome, rng, config, metrics } = {}) => {
   if (!genome) {
     return genome;
   }
@@ -253,8 +244,7 @@ export const mutateCreatureGenome = ({
 
   let pleiotropyStrength = 0;
   if (benefitTotal > 0 && pleiotropyScale > 0) {
-    const perGeneDelta =
-      (benefitTotal * pleiotropyScale) / PLEIOTROPY_COST_GENES.length;
+    const perGeneDelta = (benefitTotal * pleiotropyScale) / PLEIOTROPY_COST_GENES.length;
     for (const key of PLEIOTROPY_COST_GENES) {
       if (!Object.prototype.hasOwnProperty.call(normalized, key)) {
         continue;

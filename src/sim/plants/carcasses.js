@@ -1,3 +1,5 @@
+import { resolveTicksPerSecond } from '../utils/resolvers.js';
+
 const DEFAULT_CARCASS = Object.freeze({
   baseYield: 0.8,
   maxMeatPerCell: 2,
@@ -94,9 +96,11 @@ export function consumeMeatAt({ world, x, y, amount }) {
 
 export function updateCarcasses({ world, config }) {
   const carcasses = ensureCarcassStore(world) ?? [];
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const tickScale = 1 / ticksPerSecond;
   const decayRate = Number.isFinite(config?.carcassDecayRate)
-    ? Math.max(0, config.carcassDecayRate)
-    : DEFAULT_CARCASS.decayRate;
+    ? Math.max(0, config.carcassDecayRate) * tickScale
+    : DEFAULT_CARCASS.decayRate * tickScale;
   let totalMeat = 0;
   for (let i = carcasses.length - 1; i >= 0; i -= 1) {
     const carcass = carcasses[i];
@@ -107,9 +111,7 @@ export function updateCarcasses({ world, config }) {
     const currentMeat = Number.isFinite(carcass.meat) ? carcass.meat : 0;
     const nextMeat = Math.max(0, currentMeat - decayRate);
     carcass.meat = nextMeat;
-    carcass.ageTicks = Number.isFinite(carcass.ageTicks)
-      ? carcass.ageTicks + 1
-      : 1;
+    carcass.ageTicks = Number.isFinite(carcass.ageTicks) ? carcass.ageTicks + 1 : 1;
     if (nextMeat <= 0) {
       carcasses.splice(i, 1);
       continue;

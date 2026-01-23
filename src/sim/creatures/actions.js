@@ -9,12 +9,7 @@ import { consumeBerriesAt } from '../plants/bushes.js';
 import { consumeMeatAt } from '../plants/carcasses.js';
 import { clampMeter } from '../utils/resolvers.js';
 import { resolveTickScale, resolveNeedMeterBase } from './metabolism.js';
-import {
-  getCreatureCell,
-  hasNearbyWater,
-  getGrassAtCell,
-  resolveActionAmount
-} from './intent.js';
+import { getCreatureCell, hasNearbyWater, getGrassAtCell, resolveActionAmount } from './intent.js';
 import {
   FOOD_TYPES,
   getDietPreferences,
@@ -34,54 +29,28 @@ export function applyCreatureActions({ creatures, config, world }) {
   const tickScale = resolveTickScale(config);
   const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
   const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
-  const fallbackDrinkAmount = resolveActionAmount(
-    config?.creatureDrinkAmount,
-    0.08
-  );
-  const fallbackEatAmount = resolveActionAmount(
-    config?.creatureEatAmount,
-    0.08
-  );
-  const fallbackGrassEatMin = resolveActionAmount(
-    config?.creatureGrassEatMin,
-    0.05
-  );
-  const fallbackBerryEatMin = resolveActionAmount(
-    config?.creatureBerryEatMin,
-    0.1
-  );
+  const fallbackDrinkAmount = resolveActionAmount(config?.creatureDrinkAmount, 0.08);
+  const fallbackEatAmount = resolveActionAmount(config?.creatureEatAmount, 0.08);
+  const fallbackGrassEatMin = resolveActionAmount(config?.creatureGrassEatMin, 0.05);
+  const fallbackBerryEatMin = resolveActionAmount(config?.creatureBerryEatMin, 0.1);
 
   for (const creature of creatures) {
     const meters = creature?.meters;
     if (!meters || !creature.position) {
       continue;
     }
-    const drinkAmount = resolveActionAmount(
-      creature?.traits?.drinkAmount,
-      fallbackDrinkAmount
-    );
-    const eatAmount = resolveActionAmount(
-      creature?.traits?.eatAmount,
-      fallbackEatAmount
-    );
+    const drinkAmount = resolveActionAmount(creature?.traits?.drinkAmount, fallbackDrinkAmount);
+    const eatAmount = resolveActionAmount(creature?.traits?.eatAmount, fallbackEatAmount);
     const drinkAmountPerTick = drinkAmount * tickScale;
     const eatAmountPerTick = eatAmount * tickScale;
-    const grassEatMin = resolveActionAmount(
-      creature?.traits?.grassEatMin,
-      fallbackGrassEatMin
-    );
-    const berryEatMin = resolveActionAmount(
-      creature?.traits?.berryEatMin,
-      fallbackBerryEatMin
-    );
+    const grassEatMin = resolveActionAmount(creature?.traits?.grassEatMin, fallbackGrassEatMin);
+    const berryEatMin = resolveActionAmount(creature?.traits?.berryEatMin, fallbackBerryEatMin);
     const cell = getCreatureCell(creature);
     const intentType = creature.intent?.type;
     const intentFoodType = creature.intent?.foodType;
 
     if (intentType === 'drink' && hasNearbyWater(world, cell, config)) {
-      meters.water = clampMeter(
-        Math.min(baseWater, meters.water + drinkAmountPerTick)
-      );
+      meters.water = clampMeter(Math.min(baseWater, meters.water + drinkAmountPerTick));
       continue;
     }
 
@@ -100,15 +69,9 @@ export function applyCreatureActions({ creatures, config, world }) {
         });
         if (consumed > 0) {
           const props = getFoodProperties(config, FOOD_TYPES.GRASS);
-          const efficiency = getDigestiveEfficiency(
-            creature,
-            FOOD_TYPES.GRASS,
-            config
-          );
+          const efficiency = getDigestiveEfficiency(creature, FOOD_TYPES.GRASS, config);
           const energyGain = consumed * props.nutrition * efficiency;
-          meters.energy = clampMeter(
-            Math.min(baseEnergy, meters.energy + energyGain)
-          );
+          meters.energy = clampMeter(Math.min(baseEnergy, meters.energy + energyGain));
         }
       }
       continue;
@@ -126,15 +89,9 @@ export function applyCreatureActions({ creatures, config, world }) {
         });
         if (consumed > 0) {
           const props = getFoodProperties(config, FOOD_TYPES.BERRIES);
-          const efficiency = getDigestiveEfficiency(
-            creature,
-            FOOD_TYPES.BERRIES,
-            config
-          );
+          const efficiency = getDigestiveEfficiency(creature, FOOD_TYPES.BERRIES, config);
           const energyGain = consumed * props.nutrition * efficiency;
-          meters.energy = clampMeter(
-            Math.min(baseEnergy, meters.energy + energyGain)
-          );
+          meters.energy = clampMeter(Math.min(baseEnergy, meters.energy + energyGain));
         }
       }
       continue;
@@ -158,15 +115,9 @@ export function applyCreatureActions({ creatures, config, world }) {
       });
       if (consumed > 0) {
         const props = getFoodProperties(config, FOOD_TYPES.MEAT);
-        const efficiency = getDigestiveEfficiency(
-          creature,
-          FOOD_TYPES.MEAT,
-          config
-        );
+        const efficiency = getDigestiveEfficiency(creature, FOOD_TYPES.MEAT, config);
         const energyGain = consumed * props.nutrition * efficiency;
-        meters.energy = clampMeter(
-          Math.min(baseEnergy, meters.energy + energyGain)
-        );
+        meters.energy = clampMeter(Math.min(baseEnergy, meters.energy + energyGain));
       }
     }
   }

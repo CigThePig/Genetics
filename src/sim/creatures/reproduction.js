@@ -1,9 +1,6 @@
 import { createCreatureTraits } from './traits.js';
 import { inheritCreatureGenome, mutateCreatureGenome } from './genetics.js';
-import {
-  resolveTicksPerSecond,
-  createLifeStageState
-} from './life-stages.js';
+import { resolveTicksPerSecond, createLifeStageState } from './life-stages.js';
 import {
   clampMeter,
   resolveRatio,
@@ -15,14 +12,26 @@ import {
   isWaterTile
 } from '../utils/resolvers.js';
 
-const resolveBaseMeter = (value) =>
-  Number.isFinite(value) && value > 0 ? value : 1;
+const resolveBaseMeter = (value) => (Number.isFinite(value) && value > 0 ? value : 1);
 
 const resolveChance = (value, fallback) => {
   if (!Number.isFinite(value)) {
     return fallback;
   }
   return Math.min(1, Math.max(0, value));
+};
+
+// Converts a probability expressed "per second" into a per-tick probability that
+// stays stable when ticksPerSecond changes.
+const resolvePerTickChanceFromPerSecond = (chancePerSecond, ticksPerSecond) => {
+  if (!Number.isFinite(chancePerSecond)) {
+    return null;
+  }
+  const tps = Number.isFinite(ticksPerSecond) && ticksPerSecond > 0 ? ticksPerSecond : 60;
+  const clamped = Math.min(1, Math.max(0, chancePerSecond));
+  if (clamped === 0) return 0;
+  if (clamped === 1) return 1;
+  return 1 - Math.pow(1 - clamped, 1 / tps);
 };
 
 const resolveGestationTicks = (seconds, fallbackSeconds, ticksPerSecond) => {
@@ -45,8 +54,7 @@ const resolveCooldownTicks = (value, fallback, ticksPerSecond) => {
   return Math.max(0, Math.trunc(value * ticksPerSecond));
 };
 
-const resolveCost = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, value) : fallback;
+const resolveCost = (value, fallback) => (Number.isFinite(value) ? Math.max(0, value) : fallback);
 
 const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
 
@@ -191,9 +199,7 @@ const spawnOffset = (rng) => (rng.nextFloat() * 2 - 1) * 0.35;
 
 const createOffspringPosition = ({ rng, world, source, mate, config }) => {
   const maxX = Number.isFinite(world?.width) ? Math.max(0, world.width - 0.001) : 0;
-  const maxY = Number.isFinite(world?.height)
-    ? Math.max(0, world.height - 0.001)
-    : 0;
+  const maxY = Number.isFinite(world?.height) ? Math.max(0, world.height - 0.001) : 0;
   const x = (source.position.x + mate.position.x) * 0.5 + spawnOffset(rng);
   const y = (source.position.y + mate.position.y) * 0.5 + spawnOffset(rng);
   const clampedX = clampPosition(x, 0, maxX);
@@ -258,13 +264,7 @@ const resolveNewbornMeterMultiplier = (config, gestationMultiplier) => {
   return 1;
 };
 
-export function updateCreatureReproduction({
-  creatures,
-  config,
-  rng,
-  world,
-  metrics
-}) {
+export function updateCreatureReproduction({ creatures, config, rng, world, metrics }) {
   if (!Array.isArray(creatures) || !rng || !world) {
     return;
   }
@@ -287,22 +287,20 @@ export function updateCreatureReproduction({
     config?.creaturePregnancyMiscarriageEnergyRatio,
     0.15
   );
-  const miscarriageChance = resolveChance(
-    config?.creaturePregnancyMiscarriageChancePerTick,
-    0.01
+  const miscarriageChancePerSecond = resolveChance(
+    config?.creaturePregnancyMiscarriageChancePerSecond,
+    null
   );
+  // Backward-compatible fallback (older configs may still provide a per-tick chance).
+  const miscarriageChance = Number.isFinite(miscarriageChancePerSecond)
+    ? resolvePerTickChanceFromPerSecond(miscarriageChancePerSecond, ticksPerSecond)
+    : resolveChance(config?.creaturePregnancyMiscarriageChancePerTick, 0.01);
   const pregnancyMetabolismMultiplier = resolvePregnancyMultiplier(
     config?.creaturePregnancyMetabolismMultiplier,
     1
   );
-  const minEnergyRatio = resolveRatio(
-    config?.creatureReproductionMinEnergyRatio,
-    0.9
-  );
-  const minWaterRatio = resolveRatio(
-    config?.creatureReproductionMinWaterRatio,
-    0.9
-  );
+  const minEnergyRatio = resolveRatio(config?.creatureReproductionMinEnergyRatio, 0.9);
+  const minWaterRatio = resolveRatio(config?.creatureReproductionMinWaterRatio, 0.9);
   const cooldownTicks = resolveCooldownTicks(
     config?.creatureReproductionCooldown,
     180,
@@ -313,48 +311,17 @@ export function updateCreatureReproduction({
     20,
     ticksPerSecond
   );
-  const minAgeTicks = resolveMinAgeTicks(
-    config?.creatureReproductionMinAge,
-    90,
-    ticksPerSecond
-  );
+  const minAgeTicks = resolveMinAgeTicks(config?.creatureReproductionMinAge, 90, ticksPerSecond);
   const range = resolveDistance(config?.creatureReproductionRange, 2.5);
-  const rangeWhileSeeking = resolveDistance(
-    config?.creatureReproductionRangeWhileSeeking,
-    range
-  );
-  const energyCost = resolveCost(
-    config?.creatureReproductionEnergyCost,
-    0.2
-  );
-  const waterCost = resolveCost(
-    config?.creatureReproductionWaterCost,
-    0.15
-  );
-  const staminaCost = resolveCost(
-    config?.creatureReproductionStaminaCost,
-    0.05
-  );
-  const failedCostMultiplier = resolveRatio(
-    config?.creatureReproductionFailedCostMultiplier,
-    0.5
-  );
-  const offspringEnergy = resolveCost(
-    config?.creatureOffspringEnergy,
-    baseEnergy * 0.6
-  );
-  const offspringWater = resolveCost(
-    config?.creatureOffspringWater,
-    baseWater * 0.6
-  );
-  const offspringStamina = resolveCost(
-    config?.creatureOffspringStamina,
-    baseStamina * 0.6
-  );
-  const offspringHp = resolveCost(
-    config?.creatureOffspringHp,
-    baseHp * 0.8
-  );
+  const rangeWhileSeeking = resolveDistance(config?.creatureReproductionRangeWhileSeeking, range);
+  const energyCost = resolveCost(config?.creatureReproductionEnergyCost, 0.2);
+  const waterCost = resolveCost(config?.creatureReproductionWaterCost, 0.15);
+  const staminaCost = resolveCost(config?.creatureReproductionStaminaCost, 0.05);
+  const failedCostMultiplier = resolveRatio(config?.creatureReproductionFailedCostMultiplier, 0.5);
+  const offspringEnergy = resolveCost(config?.creatureOffspringEnergy, baseEnergy * 0.6);
+  const offspringWater = resolveCost(config?.creatureOffspringWater, baseWater * 0.6);
+  const offspringStamina = resolveCost(config?.creatureOffspringStamina, baseStamina * 0.6);
+  const offspringHp = resolveCost(config?.creatureOffspringHp, baseHp * 0.8);
   const tickScale = 1 / ticksPerSecond;
   const fallbackEnergyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
   const fallbackWaterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
@@ -395,10 +362,7 @@ export function updateCreatureReproduction({
     if (pregnancyEnabled && sexEnabled && !creature.reproduction.pregnancy) {
       creature.reproduction.pregnancy = createPregnancyState();
     }
-    if (
-      creature.reproduction.cooldownTicks > 0 &&
-      !cooldownUpdatedIds.has(creature.id)
-    ) {
+    if (creature.reproduction.cooldownTicks > 0 && !cooldownUpdatedIds.has(creature.id)) {
       creature.reproduction.cooldownTicks -= 1;
     }
     if (
@@ -413,17 +377,11 @@ export function updateCreatureReproduction({
       const extraMultiplier = Math.max(0, pregnancyMetabolismMultiplier - 1);
       if (meters && extraMultiplier > 0) {
         const energyDrain =
-          resolveTraitDrain(
-            creature?.traits?.basalEnergyDrain,
-            fallbackEnergyDrain
-          ) *
+          resolveTraitDrain(creature?.traits?.basalEnergyDrain, fallbackEnergyDrain) *
           tickScale *
           extraMultiplier;
         const waterDrain =
-          resolveTraitDrain(
-            creature?.traits?.basalWaterDrain,
-            fallbackWaterDrain
-          ) *
+          resolveTraitDrain(creature?.traits?.basalWaterDrain, fallbackWaterDrain) *
           tickScale *
           extraMultiplier;
         const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
@@ -450,15 +408,9 @@ export function updateCreatureReproduction({
         continue;
       }
 
-      pregnancy.gestationTicksRemaining = Math.max(
-        0,
-        pregnancy.gestationTicksRemaining - 1
-      );
+      pregnancy.gestationTicksRemaining = Math.max(0, pregnancy.gestationTicksRemaining - 1);
       if (pregnancy.gestationTicksRemaining <= 0) {
-        const father =
-          pregnancy.fatherId !== null
-            ? creaturesById.get(pregnancy.fatherId)
-            : null;
+        const father = pregnancy.fatherId !== null ? creaturesById.get(pregnancy.fatherId) : null;
         const mate = father ?? creature;
         const position = createOffspringPosition({
           rng,
@@ -482,15 +434,8 @@ export function updateCreatureReproduction({
           species: creature.species,
           genome
         });
-        const sex = sexEnabled
-          ? rng.nextFloat() < 0.5
-            ? 'male'
-            : 'female'
-          : null;
-        const newbornMeterMultiplier = resolveNewbornMeterMultiplier(
-          config,
-          gestationMultiplier
-        );
+        const sex = sexEnabled ? (rng.nextFloat() < 0.5 ? 'male' : 'female') : null;
+        const newbornMeterMultiplier = resolveNewbornMeterMultiplier(config, gestationMultiplier);
 
         newborns.push({
           id: nextId,
@@ -504,15 +449,9 @@ export function updateCreatureReproduction({
           priority: 'thirst',
           intent: { type: 'wander' },
           meters: {
-            energy: clampMeter(
-              Math.min(baseEnergy, offspringEnergy * newbornMeterMultiplier)
-            ),
-            water: clampMeter(
-              Math.min(baseWater, offspringWater * newbornMeterMultiplier)
-            ),
-            stamina: clampMeter(
-              Math.min(baseStamina, offspringStamina * newbornMeterMultiplier)
-            ),
+            energy: clampMeter(Math.min(baseEnergy, offspringEnergy * newbornMeterMultiplier)),
+            water: clampMeter(Math.min(baseWater, offspringWater * newbornMeterMultiplier)),
+            stamina: clampMeter(Math.min(baseStamina, offspringStamina * newbornMeterMultiplier)),
             hp: clampMeter(Math.min(baseHp, offspringHp * newbornMeterMultiplier))
           },
           memory: { entries: [] },
@@ -553,8 +492,7 @@ export function updateCreatureReproduction({
       continue;
     }
 
-    const activeRange =
-      creature.intent?.type === 'mate' ? rangeWhileSeeking : range;
+    const activeRange = creature.intent?.type === 'mate' ? rangeWhileSeeking : range;
     const mate = findMate({
       creatures,
       startIndex: i,
@@ -598,27 +536,15 @@ export function updateCreatureReproduction({
     const costMultiplier = didConceive ? 1 : failedCostMultiplier;
 
     if (creature.meters) {
-      creature.meters.energy = clampMeter(
-        creature.meters.energy - energyCost * costMultiplier
-      );
-      creature.meters.water = clampMeter(
-        creature.meters.water - waterCost * costMultiplier
-      );
-      creature.meters.stamina = clampMeter(
-        creature.meters.stamina - staminaCost * costMultiplier
-      );
+      creature.meters.energy = clampMeter(creature.meters.energy - energyCost * costMultiplier);
+      creature.meters.water = clampMeter(creature.meters.water - waterCost * costMultiplier);
+      creature.meters.stamina = clampMeter(creature.meters.stamina - staminaCost * costMultiplier);
     }
 
     if (mate.meters) {
-      mate.meters.energy = clampMeter(
-        mate.meters.energy - energyCost * costMultiplier
-      );
-      mate.meters.water = clampMeter(
-        mate.meters.water - waterCost * costMultiplier
-      );
-      mate.meters.stamina = clampMeter(
-        mate.meters.stamina - staminaCost * costMultiplier
-      );
+      mate.meters.energy = clampMeter(mate.meters.energy - energyCost * costMultiplier);
+      mate.meters.water = clampMeter(mate.meters.water - waterCost * costMultiplier);
+      mate.meters.stamina = clampMeter(mate.meters.stamina - staminaCost * costMultiplier);
     }
 
     if (pregnancyEnabled && sexEnabled) {
@@ -627,17 +553,13 @@ export function updateCreatureReproduction({
       if (female?.reproduction?.pregnancy) {
         female.reproduction.pregnancy.isPregnant = didConceive;
         if (didConceive) {
-          const gestationTicks = Math.max(
-            1,
-            Math.trunc(gestationBaseTicks * gestationMultiplier)
-          );
+          const gestationTicks = Math.max(1, Math.trunc(gestationBaseTicks * gestationMultiplier));
           female.reproduction.pregnancy.fatherId = male?.id ?? null;
           female.reproduction.pregnancy.gestationTicksTotal = gestationTicks;
           female.reproduction.pregnancy.gestationTicksRemaining = gestationTicks;
           if (metrics) {
             metrics.pregnanciesTotal = (metrics.pregnanciesTotal ?? 0) + 1;
-            metrics.pregnanciesLastTick =
-              (metrics.pregnanciesLastTick ?? 0) + 1;
+            metrics.pregnanciesLastTick = (metrics.pregnanciesLastTick ?? 0) + 1;
           }
         } else {
           female.reproduction.pregnancy.fatherId = null;

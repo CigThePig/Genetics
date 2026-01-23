@@ -1,6 +1,7 @@
 # Track 4 — Plan
 
 ## Recon Summary
+
 - Files likely to change:
   - `src/sim/world-grid.js` to add per-cell grass/stress fields or a parallel buffer for plant state.
   - `src/sim/sim.js` to hook plant system updates into the Regen phase (without changing tick order).
@@ -36,7 +37,9 @@
 ---
 
 ## Phase 1 — Grass regrowth to cap (Step 16)
+
 **Tasks**
+
 - [x] Confirm active track and update `/context/active-track.md` for Phase 1.
 - [x] Add/extend grass state on world cells to support regrowth.
 - [x] Implement regrowth logic toward cap using deterministic rules.
@@ -44,6 +47,7 @@
 - [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
+
 - `src/sim/world-grid.js`
 - `src/sim/plants/grass.js` (new)
 - `src/sim/plants/index.js` (new)
@@ -51,40 +55,50 @@
 - `context/repo-map.md` (if needed)
 
 **Verification**
+
 - [x] Manual: grass values increase toward cap over time.
 - [x] Metrics: average grass updates during simulation.
 
 **Stop point**
+
 - Stop after verifying regrowth to cap and metrics update.
 
 ---
 
 ## Phase 2 — Diminishing regrowth near cap (Step 17)
+
 **Tasks**
+
 - [x] Implement diminishing returns as grass approaches cap.
 - [x] Tune config values to keep visible but stable regrowth.
 - [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
+
 - `src/sim/plants/grass.js`
 - `src/sim/config.js`
 - `context/repo-map.md` (if needed)
 
 **Verification**
+
 - [x] Manual: regrowth slows near cap, no sudden jumps.
 
 **Stop point**
+
 - Stop after verifying diminishing regrowth behavior.
 
 ---
 
 ## Phase 3 — Overgrazing stress (Step 18)
+
 **Tasks**
+
 - [x] Add stress accumulation when grass is low/depleted.
 - [x] Add metrics for stressed cells.
 - [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
+
 - `src/sim/world-grid.js`
 - `src/sim/plants/grass.js`
 - `src/sim/config.js`
@@ -92,41 +106,51 @@
 - `context/repo-map.md` (if needed)
 
 **Verification**
+
 - [x] Manual: stress increases in overgrazed areas.
 - [x] Metrics: stressed cell count updates.
 
 **Stop point**
+
 - Stop after verifying stress accumulation and metrics.
 
 ---
 
 ## Phase 4 — Stress recovery (Step 19)
+
 **Tasks**
+
 - [x] Implement stress decay when grass recovers.
 - [x] Ensure stress recovery respects determinism and tick order.
 - [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
+
 - `src/sim/plants/grass.js`
 - `src/sim/config.js`
 - `context/repo-map.md` (if needed)
 
 **Verification**
+
 - [x] Manual: stressed areas recover over time as grass returns.
 
 **Stop point**
+
 - Stop after verifying stress recovery.
 
 ---
 
 ## Phase 5 — Bush entities + berry pool (Step 20)
+
 **Tasks**
+
 - [x] Add bush entity structure with health and berries.
 - [x] Add deterministic placement and initialization.
 - [x] Expose bush/berry metrics.
 - [x] Update `/context/repo-map.md` if any files/roles change. (checkbox reminder)
 
 **Files touched**
+
 - `src/sim/plants/bushes.js` (new)
 - `src/sim/plants/index.js`
 - `src/sim/config.js`
@@ -134,7 +158,9 @@
 - `context/repo-map.md` (if needed)
 
 **Verification**
+
 - [x] Manual: bushes exist and berry pools are visible in metrics.
 
 **Stop point**
+
 - Stop after verifying bushes + berries metrics.

@@ -1,9 +1,11 @@
 # Blueprint — Track 6.5: Canon Lock + Species Retrofit
 
 ## Overview
+
 Retrofit the Track 6 implementation so creatures have canonical species identifiers, shapes are rendered per species, and species counts are observable. Define a single canon source of truth in context docs and align Track 7 documentation to reference it.
 
 ## Files to Update
+
 - src/sim/species.js (new)
   - Canonical species IDs + ordered list + deterministic spawn helper.
 - src/sim/creatures/index.js
@@ -28,13 +30,16 @@ Retrofit the Track 6 implementation so creatures have canonical species identifi
   - Add new species module entry.
 
 ## Canon (single source of truth)
+
 - Keep the authoritative canon definition in context/architecture.md under a dedicated “Canonical Ecosystem (Locked)” section.
 - Other docs should reference this section rather than repeating full tables.
 
 ## Determinism
+
 - Species assignment must be deterministic and order-based (no RNG usage required).
 - Rendering remains read-only.
 
 ## Verification
+
 - npm test passes.
 - Manual: creatures show distinct shapes and inspector species; metrics include per-species counts.

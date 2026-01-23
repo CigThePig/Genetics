@@ -1,13 +1,16 @@
 # Blueprint — Track 7: Survival Actions + Sprinting + Death
 
 ## Overview
+
 Implement survival actions (drink/eat), stamina + sprinting, death conditions, and population counters while preserving determinism, tick order, and observability.
 
 ## Canon References (Required)
+
 - Canonical species + food web definitions: context/architecture.md (“Canonical Ecosystem (Locked)”).
 - This track must use the canonical species/resource names (Squares, Triangles, Circles, Octagons; Grass, Bushes, Berries, Meat) and must not introduce generic species placeholders.
 
 ## Scope (from Track Index)
+
 - Drinking behavior
 - Grass eating (Circles only; other species skip)
 - Stamina + sprinting
@@ -15,6 +18,7 @@ Implement survival actions (drink/eat), stamina + sprinting, death conditions, a
 - Population counters
 
 ## Systems & Files (expected)
+
 - src/sim/creatures/index.js
   - Extend creature state to include action intents (drink/eat/sprint) and stamina meter handling.
 - src/sim/sim.js
@@ -31,6 +35,7 @@ Implement survival actions (drink/eat), stamina + sprinting, death conditions, a
   - Add deterministic test if core formula changes touch metabolism/movement costs.
 
 ## Data Model Changes
+
 - Creature meters:
   - stamina (0..1) with drain on sprint and regen during rest.
 - Creature state:
@@ -41,6 +46,7 @@ Implement survival actions (drink/eat), stamina + sprinting, death conditions, a
   - deaths by cause
 
 ## Tick Order Alignment
+
 - Sense: detect nearby water/grass availability.
 - Decide: choose drink/eat/sprint based on meters/needs.
 - Act: move or consume resources.
@@ -50,17 +56,21 @@ Implement survival actions (drink/eat), stamina + sprinting, death conditions, a
 - Metrics: update population/death counters.
 
 ## Determinism & RNG
+
 - All randomness (if any for targeting/selection) must use central RNG.
 - Keep iteration order stable; avoid object key iteration for sim-critical loops.
 
 ## Observability
+
 - Metrics panel shows population counts and deaths by cause.
 - Inspector includes current action intent and meters.
 
 ## Risks & Mitigations
+
 - Death spiral: keep tuning conservative; expose metrics for feedback.
 - Sprint dominance: cap sprint usage with stamina cost + regen constraints.
 
 ## Open Questions
+
 - Whether to model sprint as speed multiplier or discrete action.
 - How to attribute death cause if multiple meters are zero.

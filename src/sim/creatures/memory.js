@@ -1,3 +1,5 @@
+import { resolveTicksPerSecond } from '../utils/resolvers.js';
+
 const clamp01 = (value) => {
   if (!Number.isFinite(value)) {
     return 0;
@@ -24,15 +26,18 @@ export const MEMORY_TYPES = Object.freeze({
   MATE: 'mate'
 });
 
-const resolveMemoryConfig = (config) => ({
-  maxEntries: resolvePositive(config?.creatureMemoryMaxEntries, 12),
-  decay: resolveNonNegative(config?.creatureMemoryDecay, 0.02),
-  minStrength: resolveNonNegative(config?.creatureMemoryMinStrength, 0.05),
-  mergeDistance: resolveNonNegative(config?.creatureMemoryMergeDistance, 1.5)
-});
+const resolveMemoryConfig = (config) => {
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const tickScale = 1 / ticksPerSecond;
+  return {
+    maxEntries: resolvePositive(config?.creatureMemoryMaxEntries, 12),
+    decay: resolveNonNegative(config?.creatureMemoryDecay, 0.02) * tickScale,
+    minStrength: resolveNonNegative(config?.creatureMemoryMinStrength, 0.05),
+    mergeDistance: resolveNonNegative(config?.creatureMemoryMergeDistance, 1.5)
+  };
+};
 
-const resolveVisitPenalty = (config) =>
-  resolveNonNegative(config?.creatureMemoryVisitPenalty, 0.5);
+const resolveVisitPenalty = (config) => resolveNonNegative(config?.creatureMemoryVisitPenalty, 0.5);
 
 const getMemoryStrength = ({ distance, range }) => {
   const safeRange = resolvePositive(range, 1);
@@ -51,8 +56,7 @@ const findMergeCandidate = (entries, entry, mergeDistanceSq) =>
     (candidate) =>
       candidate.type === entry.type &&
       (candidate.foodType ?? null) === (entry.foodType ?? null) &&
-      getDistanceSq(candidate.x, candidate.y, entry.x, entry.y) <=
-        mergeDistanceSq
+      getDistanceSq(candidate.x, candidate.y, entry.x, entry.y) <= mergeDistanceSq
   );
 
 const addOrMergeEntry = ({ entries, entry, mergeDistance }) => {
@@ -95,8 +99,7 @@ export function updateCreatureMemory({ creatures, config }) {
   if (!Array.isArray(creatures)) {
     return;
   }
-  const { maxEntries, decay, minStrength, mergeDistance } =
-    resolveMemoryConfig(config);
+  const { maxEntries, decay, minStrength, mergeDistance } = resolveMemoryConfig(config);
 
   for (const creature of creatures) {
     const memory = ensureMemoryState(creature);
@@ -112,9 +115,7 @@ export function updateCreatureMemory({ creatures, config }) {
     const range = Number.isFinite(perception?.range) ? perception.range : 0;
 
     if (perception?.foodCell && perception?.foodType) {
-      const distance = Number.isFinite(perception.foodDistance)
-        ? perception.foodDistance
-        : range;
+      const distance = Number.isFinite(perception.foodDistance) ? perception.foodDistance : range;
       const strength = getMemoryStrength({ distance, range });
       addOrMergeEntry({
         entries,
@@ -131,9 +132,7 @@ export function updateCreatureMemory({ creatures, config }) {
     }
 
     if (perception?.waterCell) {
-      const distance = Number.isFinite(perception.waterDistance)
-        ? perception.waterDistance
-        : range;
+      const distance = Number.isFinite(perception.waterDistance) ? perception.waterDistance : range;
       const strength = getMemoryStrength({ distance, range });
       addOrMergeEntry({
         entries,

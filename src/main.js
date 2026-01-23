@@ -10,6 +10,7 @@ import { createConfigPanel } from './ui/config-panel.js';
 import { createLiveInspector } from './ui/live-inspector.js';
 import { createSettings } from './app/settings.js';
 import { simConfig } from './sim/config.js';
+import { cloneConfigValue } from './sim/utils/config.js';
 
 const app = document.querySelector('#app');
 
@@ -36,11 +37,15 @@ let running = false;
 let speed = initialSettings.speed;
 let rafId = null;
 let tickTimerId = null;
-let lastFrameTime = null;
 let lastTickTime = null;
 let accumulatorMs = 0;
-const maxFrameDeltaMs = 250;
+// Drive the simulation tick loop at a steady cadence (independent of TPS).
+// The accumulator determines how many sim ticks to run.
+const tickLoopIntervalMs = 16;
+// Clamp catch-up time to avoid spirals when the tab sleeps or the device stutters.
 const maxTickDeltaMs = 250;
+// Hard cap on ticks per interval to keep UI responsive under extreme catch-up.
+const maxTicksPerInterval = 240;
 
 const tickOnce = () => {
   sim.tick();
@@ -50,22 +55,12 @@ const tickOnce = () => {
   metrics.update({ ticks: 1 });
 };
 
-const resetRenderTimebase = () => {
-  lastFrameTime = performance.now();
-};
-
 const resetTickTimebase = () => {
   lastTickTime = performance.now();
   accumulatorMs = 0;
 };
 
-const runFrame = (time) => {
-  const now = Number.isFinite(time) ? time : performance.now();
-  if (lastFrameTime === null) {
-    lastFrameTime = now;
-  }
-  const deltaMs = Math.min(now - lastFrameTime, maxFrameDeltaMs);
-  lastFrameTime = now;
+const runFrame = (_time) => {
   renderer.render(sim);
   ui.setMetrics?.(sim.getSummary());
   inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
@@ -93,10 +88,14 @@ const runTicks = () => {
   accumulatorMs += deltaMs * speed;
   const tickIntervalMs = getTickIntervalMs();
   let ticksThisInterval = 0;
-  while (accumulatorMs >= tickIntervalMs) {
+  while (accumulatorMs >= tickIntervalMs && ticksThisInterval < maxTicksPerInterval) {
     sim.tick();
     accumulatorMs -= tickIntervalMs;
     ticksThisInterval += 1;
+  }
+  if (ticksThisInterval >= maxTicksPerInterval) {
+    // Drop most backlog to keep the UI responsive.
+    accumulatorMs = Math.min(accumulatorMs, tickIntervalMs);
   }
   if (ticksThisInterval > 0) {
     metrics.update({ ticks: ticksThisInterval, time: now });
@@ -107,8 +106,7 @@ const startTickLoop = () => {
   if (tickTimerId) {
     return;
   }
-  const tickIntervalMs = getTickIntervalMs();
-  tickTimerId = window.setInterval(runTicks, tickIntervalMs);
+  tickTimerId = window.setInterval(runTicks, tickLoopIntervalMs);
 };
 
 const stopTickLoop = () => {
@@ -124,7 +122,6 @@ const start = () => {
   }
   running = true;
   ui.setRunning(true);
-  resetRenderTimebase();
   resetTickTimebase();
   startTickLoop();
   rafId = requestAnimationFrame(runFrame);
@@ -141,7 +138,6 @@ const pause = () => {
     cancelAnimationFrame(rafId);
     rafId = null;
   }
-  resetRenderTimebase();
   resetTickTimebase();
 };
 
@@ -182,15 +178,18 @@ const configPanel = createConfigPanel({
     if (key === '__reset__') {
       // Reset all config values to defaults
       for (const [configKey, defaultValue] of Object.entries(simConfig)) {
-        if (typeof defaultValue === 'number') {
-          sim.config[configKey] = defaultValue;
-        }
+        sim.config[configKey] = cloneConfigValue(defaultValue);
       }
       configPanel.update(sim.config);
       ui.setStatus('Config reset to defaults.');
     } else {
       sim.config[key] = value;
       ui.setStatus(`Updated ${key} = ${value}`);
+    }
+
+    if (key === 'ticksPerSecond' || key === '__reset__') {
+      inspector.setTicksPerSecond?.(sim.config?.ticksPerSecond ?? 60);
+      resetTickTimebase();
     }
     if (!running) {
       renderer.render(sim);
@@ -227,7 +226,7 @@ const input = createInput({
       ui.setMetrics?.(sim.getSummary());
     }
   },
-  onTap: ({ screen, world: worldPoint, tile }) => {
+  onTap: ({ screen: _screen, world: worldPoint, tile }) => {
     const tilePoint = tile ?? resolveTilePoint(worldPoint);
     const creature = findNearestCreature(
       sim.state?.creatures,
@@ -242,14 +241,7 @@ const input = createInput({
 });
 
 renderer.render(sim);
-const hotspotSeed = Number.isFinite(sim.config?.hotspotSeed)
-  ? sim.config.hotspotSeed
-  : null;
-if (hotspotSeed !== null) {
-  ui.setStatus(`Ready for Track 5. Hotspot seed: ${hotspotSeed}.`);
-} else {
-  ui.setStatus('Ready for Track 5.');
-}
+ui.setStatus('Ready. Press Play to start.');
 ui.setRunning(running);
 ui.setSpeed(speed);
 ui.setSeed(sim.getSeed());

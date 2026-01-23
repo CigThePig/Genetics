@@ -34,11 +34,7 @@ const seedGrassPatches = ({ world, config, rng }) => {
   const baseAmount = clamp(initialAmount * baseRatio, 0, cap);
   const patchCount = resolveInt(config?.grassPatchCount, 0, 0);
   const minRadius = resolveInt(config?.grassPatchMinRadius, 2, 1);
-  const maxRadius = resolveInt(
-    config?.grassPatchMaxRadius,
-    Math.max(minRadius, 2),
-    minRadius
-  );
+  const maxRadius = resolveInt(config?.grassPatchMaxRadius, Math.max(minRadius, 2), minRadius);
   const falloffPower = resolveNumber(config?.grassPatchFalloffPower, 1.6, 0.1);
 
   for (let i = 0; i < grass.length; i += 1) {

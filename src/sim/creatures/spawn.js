@@ -11,21 +11,6 @@ import { createLifeStageState } from './life-stages.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 
 /**
- * Predator species (can hunt other creatures).
- */
-const PREDATOR_SPECIES = [SPECIES.TRIANGLE, SPECIES.OCTAGON];
-
-/**
- * Herbivore species (cannot hunt other creatures).
- */
-const HERBIVORE_SPECIES = [SPECIES.SQUARE, SPECIES.CIRCLE];
-
-/**
- * Checks if a species is a predator.
- */
-const isPredatorSpecies = (species) => PREDATOR_SPECIES.includes(species);
-
-/**
  * Checks if sex assignment is enabled.
  */
 const resolveSexEnabled = (config) => config?.creatureSexEnabled !== false;
@@ -33,8 +18,7 @@ const resolveSexEnabled = (config) => config?.creatureSexEnabled !== false;
 /**
  * Gets the sex split mode (exact or alternating).
  */
-const resolveSexInitialSplitMode = (config) =>
-  config?.creatureSexInitialSplitMode ?? 'exact';
+const resolveSexInitialSplitMode = (config) => config?.creatureSexInitialSplitMode ?? 'exact';
 
 /**
  * Resolves the predator count from config.
@@ -138,10 +122,7 @@ export function createCreatures({ config, rng, world }) {
   const height = Number.isFinite(world?.height) ? world.height : 0;
   const sexEnabled = resolveSexEnabled(config);
   const sexSplitMode = resolveSexInitialSplitMode(config);
-  const sexQueues =
-    sexEnabled && sexSplitMode === 'exact'
-      ? buildExactSexQueues(spawnQueue)
-      : null;
+  const sexQueues = sexEnabled && sexSplitMode === 'exact' ? buildExactSexQueues(spawnQueue) : null;
   const sexIndices = {};
   if (sexEnabled) {
     for (const species of SPECIES_LIST) {
@@ -181,16 +162,13 @@ export function createCreatures({ config, rng, world }) {
     return findFallbackLandPosition();
   };
 
-  const clampToWorld = (value, max) =>
-    Math.max(0, Math.min(max - 0.001, value));
+  const clampToWorld = (value, max) => Math.max(0, Math.min(max - 0.001, value));
 
   const findNearbyLandPosition = (origin, radius, attempts) => {
     if (!origin || radius <= 0 || !Number.isFinite(width) || !Number.isFinite(height)) {
       return findRandomLandPosition();
     }
-    const baseOrigin = resolveLandPosition(origin)
-      ? origin
-      : findRandomLandPosition(anchorRetries);
+    const baseOrigin = resolveLandPosition(origin) ? origin : findRandomLandPosition(anchorRetries);
     for (let attempt = 0; attempt < attempts; attempt += 1) {
       const offsetX = (rng.nextFloat() * 2 - 1) * radius;
       const offsetY = (rng.nextFloat() * 2 - 1) * radius;
@@ -233,7 +211,7 @@ export function createCreatures({ config, rng, world }) {
       }
     }
     const genome = createCreatureGenome({ config, species, rng });
-    const sexIndex = sexEnabled ? sexIndices[species] ?? 0 : 0;
+    const sexIndex = sexEnabled ? (sexIndices[species] ?? 0) : 0;
     if (sexEnabled) {
       sexIndices[species] = sexIndex + 1;
     }

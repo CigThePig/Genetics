@@ -1,6 +1,7 @@
 # Plan — Track 2: Canvas + Camera + Inspection Skeleton
 
 ## Recon Summary
+
 - Files likely to change (why):
   - `src/render/renderer.js` for canvas render path and camera transforms.
   - `src/render/camera.js` new module for pan/zoom state and helpers.
@@ -11,7 +12,7 @@
   - `src/sim/worker.js` new stub to define worker interface seam.
   - `src/main.js` to wire renderer, camera, input, UI, settings, worker stub.
 - Key modules/functions involved:
-  - `createRenderer` currently appends a footer only; will expand for canvas rendering. 
+  - `createRenderer` currently appends a footer only; will expand for canvas rendering.
   - `createInput` is a stub with attach/detach.
   - `createUI` already owns touch-friendly controls; will gain inspector/metrics panels.
   - `createMetrics` currently only exposes FPS overlay.
@@ -48,21 +49,25 @@
 ## Phase 1 — Canvas renderer + camera pan/zoom (touch)
 
 **Tasks**
+
 - [x] Add camera module to hold pan/zoom state and helpers.
 - [x] Extend renderer to draw to canvas with camera transforms.
 - [x] Wire touch drag and pinch gestures to camera controls in input.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
+
 - `src/render/renderer.js`
 - `src/render/camera.js` (new)
 - `src/input/index.js`
 - `src/main.js`
 
 **Verification**
+
 - [x] Manual: drag to pan and pinch to zoom works on touch device/emulation.
 
 **Stop point**
+
 - Pause after verifying touch camera behavior.
 
 ---
@@ -70,20 +75,24 @@
 ## Phase 2 — Tap inspector stub (location or entity)
 
 **Tasks**
+
 - [x] Add tap handling to input that routes to inspector.
 - [x] Create inspector UI stub with minimal readable output.
 - [x] Provide a read-only summary for a location/entity.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
+
 - `src/input/index.js`
 - `src/ui/index.js`
 - `src/render/renderer.js` (if needed for read-only data handoff)
 
 **Verification**
+
 - [x] Manual: tapping the canvas shows a location or entity summary.
 
 **Stop point**
+
 - Pause after inspector stub is visible and updates on tap.
 
 ---
@@ -91,19 +100,23 @@
 ## Phase 3 — Metrics panel skeleton
 
 **Tasks**
+
 - [x] Add a metrics panel container in the UI.
 - [x] Add placeholder rows/sections for future metrics.
 - [x] Ensure layout remains touch-friendly.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
+
 - `src/ui/index.js`
 - `src/metrics/index.js`
 
 **Verification**
+
 - [x] Manual: metrics panel skeleton is visible without breaking layout.
 
 **Stop point**
+
 - Pause after metrics panel skeleton is in place.
 
 ---
@@ -111,20 +124,24 @@
 ## Phase 4 — Save/load settings (seed, speed, toggles)
 
 **Tasks**
+
 - [x] Create settings module for save/load defaults.
 - [x] Wire UI toggles/seed/speed into settings persistence.
 - [x] Load settings on boot and apply to UI state.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
+
 - `src/app/settings.js` (new)
 - `src/main.js`
 - `src/ui/index.js`
 
 **Verification**
+
 - [x] Manual: refresh preserves seed/speed/toggles.
 
 **Stop point**
+
 - Pause after settings persist across refresh.
 
 ---
@@ -132,17 +149,21 @@
 ## Phase 5 — Worker-ready architecture stub
 
 **Tasks**
+
 - [x] Add worker stub module with clear interface shape.
 - [x] Wire optional use in main without changing sim behavior.
 - [x] Document how the stub will be activated later.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 **Files touched**
+
 - `src/sim/worker.js` (new)
 - `src/main.js`
 
 **Verification**
+
 - [x] Manual: app boots and runs with current non-worker path.
 
 **Stop point**
+
 - Pause after confirming worker stub does not alter behavior.

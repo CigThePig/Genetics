@@ -10,23 +10,23 @@ export function createUI({
   initialFpsVisible = true
 }) {
   const container = statusNode?.parentElement ?? document.body;
-  
+
   // Wrap header elements
   const header = document.createElement('header');
   header.className = 'app-header';
-  
+
   const titleNode = container.querySelector('h1');
   if (titleNode) {
     titleNode.textContent = 'Genetics';
     header.appendChild(titleNode);
   }
-  
+
   statusNode.className = 'status';
   header.appendChild(statusNode);
-  
+
   // Insert header at the beginning
   container.insertBefore(header, container.firstChild);
-  
+
   // Controls bar
   const controls = document.createElement('div');
   controls.className = 'controls-bar';
@@ -42,17 +42,17 @@ export function createUI({
   // Playback controls group
   const playbackGroup = document.createElement('div');
   playbackGroup.className = 'control-group';
-  
+
   const playButton = createButton('▶ Play', 'btn-primary');
   const pauseButton = createButton('⏸ Pause');
   const stepButton = createButton('⏭ Step');
-  
+
   playbackGroup.append(playButton, pauseButton, stepButton);
 
   // Speed control group
   const speedGroup = document.createElement('div');
   speedGroup.className = 'control-group';
-  
+
   const speedSelect = document.createElement('select');
   speedSelect.className = 'select';
 
@@ -68,7 +68,7 @@ export function createUI({
     entry.textContent = option.label;
     speedSelect.append(entry);
   }
-  
+
   speedGroup.append(speedSelect);
 
   playButton.addEventListener('click', () => {
@@ -133,7 +133,7 @@ export function createUI({
   // FPS toggle
   const fpsGroup = document.createElement('div');
   fpsGroup.className = 'control-group';
-  
+
   const fpsToggle = createButton('FPS: On');
   fpsToggle.setAttribute('aria-pressed', 'true');
 
@@ -162,7 +162,7 @@ export function createUI({
   } else {
     setFpsVisible(Boolean(initialFpsVisible));
   }
-  
+
   fpsGroup.append(fpsToggle);
 
   controls.append(playbackGroup, speedGroup, seedGroup, fpsGroup);
@@ -174,20 +174,20 @@ export function createUI({
 
   const metricsHeader = document.createElement('div');
   metricsHeader.className = 'panel-header';
-  
+
   const metricsTitle = document.createElement('h2');
   metricsTitle.className = 'panel-title';
   metricsTitle.innerHTML = '📊 Simulation Metrics';
-  
+
   const metricsToggle = document.createElement('span');
   metricsToggle.className = 'panel-toggle expanded';
   metricsToggle.textContent = '▼';
-  
+
   metricsHeader.append(metricsTitle, metricsToggle);
 
   const metricsContent = document.createElement('div');
   metricsContent.className = 'panel-content';
-  
+
   const metricsBody = document.createElement('div');
   metricsBody.className = 'metrics-grid';
 
@@ -238,7 +238,7 @@ export function createUI({
   ];
 
   const metricRows = new Map();
-  
+
   const createMetricSection = (title, definitions) => {
     const section = document.createElement('div');
     section.className = 'metrics-section';
@@ -253,15 +253,15 @@ export function createUI({
     for (const metric of definitions) {
       const item = document.createElement('li');
       item.className = 'metrics-item';
-      
+
       const labelSpan = document.createElement('span');
       labelSpan.className = 'metrics-item-label';
       labelSpan.textContent = metric.label;
-      
+
       const valueSpan = document.createElement('span');
       valueSpan.className = 'metrics-item-value';
       valueSpan.textContent = '--';
-      
+
       item.append(labelSpan, valueSpan);
       sectionList.append(item);
       metricRows.set(metric.key, { label: metric.label, node: valueSpan });
@@ -281,7 +281,7 @@ export function createUI({
   ];
 
   for (const { key, title } of sectionOrder) {
-    const sectionMetrics = metricDefinitions.filter(m => m.section === key);
+    const sectionMetrics = metricDefinitions.filter((m) => m.section === key);
     if (sectionMetrics.length) {
       metricsBody.append(createMetricSection(title, sectionMetrics));
     }
@@ -315,7 +315,7 @@ export function createUI({
   };
 
   const setMetrics = (summary = {}) => {
-    metricRows.forEach(({ label, node }, key) => {
+    metricRows.forEach(({ node }, key) => {
       const value = formatMetricValue(key, summary[key]);
       node.textContent = value;
     });

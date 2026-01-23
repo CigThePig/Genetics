@@ -1,6 +1,7 @@
 # Plan — Maintenance: Creature Render Pass
 
 ## Recon Summary
+
 - Files likely to change:
   - src/render/renderer.js (add creature render pass aligned with camera transforms).
 - Key modules/functions involved:
@@ -26,6 +27,7 @@
 ## Phase 1 — Add creature render pass
 
 ### Tasks
+
 - [x] Add creature render pass after terrain + plant drawing.
 - [x] Convert creature world positions to canvas coordinates using existing camera transforms.
 - [x] Render simple markers for visible creatures only.
@@ -34,11 +36,14 @@
 - [x] Update /context/repo-map.md if any files/roles change.
 
 ### Files touched
+
 - src/render/renderer.js
 - context/repo-map.md (if roles/files change)
 
 ### Verification
+
 - Manual: pan/zoom to confirm creature markers align with terrain tiles.
 
 ### Stop point
+
 - Pause for review after Phase 1 verification.

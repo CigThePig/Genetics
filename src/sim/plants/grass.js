@@ -1,11 +1,11 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
+import { resolveTicksPerSecond } from '../utils/resolvers.js';
 
 export function consumeGrassAt({ world, x, y, amount }) {
   if (!world?.grass || !world?.getIndex) {
     return 0;
   }
-  const resolvedAmount =
-    Number.isFinite(amount) && amount > 0 ? amount : 0;
+  const resolvedAmount = Number.isFinite(amount) && amount > 0 ? amount : 0;
   if (resolvedAmount === 0) {
     return 0;
   }
@@ -13,9 +13,7 @@ export function consumeGrassAt({ world, x, y, amount }) {
   if (index === -1) {
     return 0;
   }
-  const current = Number.isFinite(world.grass[index])
-    ? world.grass[index]
-    : 0;
+  const current = Number.isFinite(world.grass[index]) ? world.grass[index] : 0;
   const next = Math.max(0, current - resolvedAmount);
   world.grass[index] = next;
   return current - next;
@@ -30,8 +28,10 @@ export function updateGrass({ world, config }) {
   const grassStress = Array.isArray(world.grassStress) ? world.grassStress : null;
   const width = Number.isFinite(world.width) ? world.width : 0;
   const cap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const tickScale = 1 / ticksPerSecond;
   const regrowth = Number.isFinite(config?.grassRegrowthRate)
-    ? config.grassRegrowthRate
+    ? config.grassRegrowthRate * tickScale
     : 0;
   const diminishPower = Number.isFinite(config?.grassRegrowthDiminishPower)
     ? config.grassRegrowthDiminishPower
@@ -40,19 +40,15 @@ export function updateGrass({ world, config }) {
     ? config.grassStressThreshold
     : 0;
   const stressIncrease = Number.isFinite(config?.grassStressIncrease)
-    ? config.grassStressIncrease
+    ? config.grassStressIncrease * tickScale
     : 0;
   const stressRecoveryRate = Number.isFinite(config?.grassStressRecoveryRate)
-    ? config.grassStressRecoveryRate
+    ? config.grassStressRecoveryRate * tickScale
     : 0;
-  const stressRecoveryThreshold = Number.isFinite(
-    config?.grassStressRecoveryThreshold
-  )
+  const stressRecoveryThreshold = Number.isFinite(config?.grassStressRecoveryThreshold)
     ? config.grassStressRecoveryThreshold
     : stressThreshold;
-  const stressVisibleThreshold = Number.isFinite(
-    config?.grassStressVisibleThreshold
-  )
+  const stressVisibleThreshold = Number.isFinite(config?.grassStressVisibleThreshold)
     ? config.grassStressVisibleThreshold
     : 0.01;
   const coverageThreshold = Number.isFinite(config?.grassCoverageThreshold)
@@ -86,8 +82,7 @@ export function updateGrass({ world, config }) {
 
     const remaining = Math.max(0, cellCap - current);
     const normalizedRemaining = cellCap > 0 ? remaining / cellCap : 0;
-    const scaledRegrowth =
-      regrowth * Math.pow(normalizedRemaining, diminishPower);
+    const scaledRegrowth = regrowth * Math.pow(normalizedRemaining, diminishPower);
     const next = Math.min(cellCap, current + scaledRegrowth);
     grass[i] = next;
     total += next;
@@ -100,9 +95,7 @@ export function updateGrass({ world, config }) {
     }
 
     if (grassStress) {
-      const currentStress = Number.isFinite(grassStress[i])
-        ? grassStress[i]
-        : 0;
+      const currentStress = Number.isFinite(grassStress[i]) ? grassStress[i] : 0;
       const shouldStress = next <= stressThreshold;
       const shouldRecover = next >= stressRecoveryThreshold;
       let nextStress = currentStress;

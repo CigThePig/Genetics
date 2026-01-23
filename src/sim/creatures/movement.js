@@ -5,7 +5,6 @@
  */
 
 import { getTerrainEffectsAt } from '../terrain-effects.js';
-import { resolveTicksPerSecond } from './life-stages.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 import { resolveTickScale, resolveSprintMultiplier } from './metabolism.js';
 import { getHerdingOffset } from './herding.js';
@@ -14,9 +13,7 @@ import { getHerdingOffset } from './herding.js';
  * Resolves base movement speed from config.
  */
 const resolveMovementSpeed = (config) =>
-  Number.isFinite(config?.creatureBaseSpeed)
-    ? Math.max(0, config.creatureBaseSpeed)
-    : 0;
+  Number.isFinite(config?.creatureBaseSpeed) ? Math.max(0, config.creatureBaseSpeed) : 0;
 
 /**
  * Resolves pregnancy movement speed multiplier.
@@ -120,36 +117,38 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const heading = resolveHeading(creature, rng);
     const target = creature.intent?.target;
     let desiredHeading = heading;
-    
+
     // Calculate base target direction
     let targetX = null;
     let targetY = null;
-    
+
     if (target && Number.isFinite(target.x) && Number.isFinite(target.y)) {
       targetX = target.x;
       targetY = target.y;
     }
-    
+
     // Apply herding offset ONLY for wandering creatures (no urgent needs)
     // The herding module already filters to herbivores only
     const herdingOffset = getHerdingOffset(creature);
     const shouldApplyHerding = herdingOffset && intentType === 'wander';
-    
+
     if (shouldApplyHerding) {
       // No target - herding influences wander direction
-      const herdMag = Math.sqrt(herdingOffset.x * herdingOffset.x + herdingOffset.y * herdingOffset.y);
+      const herdMag = Math.sqrt(
+        herdingOffset.x * herdingOffset.x + herdingOffset.y * herdingOffset.y
+      );
       if (herdMag > 0.01) {
         // Blend current heading with herding direction
         const currentDirX = Math.cos(heading);
         const currentDirY = Math.sin(heading);
         const herdDirX = herdingOffset.x / herdMag;
         const herdDirY = herdingOffset.y / herdMag;
-        
+
         // Weighted blend - herding is subtle influence, not override
         const blendWeight = Math.min(0.5, herdMag); // Cap influence
         const blendedX = currentDirX * (1 - blendWeight) + herdDirX * blendWeight;
         const blendedY = currentDirY * (1 - blendWeight) + herdDirY * blendWeight;
-        
+
         desiredHeading = Math.atan2(blendedY, blendedX);
       }
     } else if (targetX !== null && targetY !== null) {
@@ -162,50 +161,21 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const hasTarget = targetX !== null && targetY !== null;
     const noise = hasTarget ? headingNoise * 0.4 : headingNoise;
     const updatedHeading = applyHeadingNoise(desiredHeading, rng, noise);
-    const { friction } = getTerrainEffectsAt(
-      world,
-      Math.floor(x),
-      Math.floor(y)
-    );
-    const terrainFriction =
-      Number.isFinite(friction) && friction > 0 ? friction : 1;
+    const { friction } = getTerrainEffectsAt(world, Math.floor(x), Math.floor(y));
+    const terrainFriction = Number.isFinite(friction) && friction > 0 ? friction : 1;
     const distance =
-      (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * tickScale) /
-      terrainFriction;
-    let nextX = clampPosition(
-      x + Math.cos(updatedHeading) * distance,
-      0,
-      maxX
-    );
-    let nextY = clampPosition(
-      y + Math.sin(updatedHeading) * distance,
-      0,
-      maxY
-    );
+      (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * tickScale) / terrainFriction;
+    let nextX = clampPosition(x + Math.cos(updatedHeading) * distance, 0, maxX);
+    let nextY = clampPosition(y + Math.sin(updatedHeading) * distance, 0, maxY);
 
     let chosenHeading = updatedHeading;
     if (isWaterTile(world, Math.floor(nextX), Math.floor(nextY), waterTerrain)) {
       let found = false;
       for (const offset of alternateOffsets) {
         const candidateHeading = updatedHeading + offset;
-        const candidateX = clampPosition(
-          x + Math.cos(candidateHeading) * distance,
-          0,
-          maxX
-        );
-        const candidateY = clampPosition(
-          y + Math.sin(candidateHeading) * distance,
-          0,
-          maxY
-        );
-        if (
-          !isWaterTile(
-            world,
-            Math.floor(candidateX),
-            Math.floor(candidateY),
-            waterTerrain
-          )
-        ) {
+        const candidateX = clampPosition(x + Math.cos(candidateHeading) * distance, 0, maxX);
+        const candidateY = clampPosition(y + Math.sin(candidateHeading) * distance, 0, maxY);
+        if (!isWaterTile(world, Math.floor(candidateX), Math.floor(candidateY), waterTerrain)) {
           nextX = candidateX;
           nextY = candidateY;
           chosenHeading = candidateHeading;

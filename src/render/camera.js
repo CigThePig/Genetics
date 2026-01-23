@@ -1,10 +1,4 @@
-export function createCamera({
-  minZoom = 0.25,
-  maxZoom = 4,
-  zoom = 1,
-  x = 0,
-  y = 0
-} = {}) {
+export function createCamera({ minZoom = 0.25, maxZoom = 4, zoom = 1, x = 0, y = 0 } = {}) {
   const state = {
     x,
     y,
@@ -13,8 +7,7 @@ export function createCamera({
     maxZoom
   };
 
-  const clampZoom = (nextZoom) =>
-    Math.min(state.maxZoom, Math.max(state.minZoom, nextZoom));
+  const clampZoom = (nextZoom) => Math.min(state.maxZoom, Math.max(state.minZoom, nextZoom));
 
   return {
     getState() {

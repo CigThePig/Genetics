@@ -1,12 +1,11 @@
+import { resolveTicksPerSecond } from '../utils/resolvers.js';
+
 const clamp01 = (value) => {
   if (!Number.isFinite(value)) {
     return 0;
   }
   return Math.min(1, Math.max(0, value));
 };
-
-const resolveTicksPerSecond = (config) =>
-  Number.isFinite(config?.ticksPerSecond) ? Math.max(1, config.ticksPerSecond) : 60;
 
 /**
  * Converts a delay in seconds to ticks.
@@ -25,12 +24,11 @@ export function updateCreatureAlertness({ creatures, config }) {
   const fallbackDelayTicks = resolveDelayTicks(config?.creatureReactionDelay, 0.033, tps);
 
   for (const creature of creatures) {
-    const alertnessLevel = clamp01(
-      creature?.traits?.alertness ?? baseAlertness
-    );
-    const delayBase = creature?.traits?.reactionDelay !== undefined
-      ? resolveDelayTicks(creature.traits.reactionDelay, 0.033, tps)
-      : fallbackDelayTicks;
+    const alertnessLevel = clamp01(creature?.traits?.alertness ?? baseAlertness);
+    const delayBase =
+      creature?.traits?.reactionDelay !== undefined
+        ? resolveDelayTicks(creature.traits.reactionDelay, 0.033, tps)
+        : fallbackDelayTicks;
     const reactionDelay = Math.max(0, Math.round(delayBase * (1 - alertnessLevel)));
     const previousCooldown = Number.isFinite(creature?.alertness?.reactionCooldown)
       ? creature.alertness.reactionCooldown

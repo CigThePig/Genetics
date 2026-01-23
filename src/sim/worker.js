@@ -6,9 +6,7 @@ export function createSimWorkerStub({ enabled = false } = {}) {
         return createSim({ seed });
       }
 
-      console.warn(
-        'Worker stub active: using local sim until worker implementation is added.'
-      );
+      console.warn('Worker stub active: using local sim until worker implementation is added.');
       const sim = createSim({ seed });
       return {
         ...sim,

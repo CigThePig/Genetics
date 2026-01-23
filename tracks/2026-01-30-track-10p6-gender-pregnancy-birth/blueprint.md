@@ -1,9 +1,11 @@
 # Track 10.6 — Blueprint
 
 Purpose:
+
 - Introduce sex, pregnancy/gestation, and mate-seeking so births are reliable and observable.
 
 Systems touched:
+
 - Config (new reproduction/pregnancy knobs).
 - Creature creation (sex assignment per species).
 - Reproduction system (pregnancy, conception, gestation, birth, mate selection).
@@ -12,6 +14,7 @@ Systems touched:
 - Traits (gestation multiplier).
 
 Files & responsibilities:
+
 - src/sim/config.js
   - Add sex/pregnancy/mate-seeking config knobs with short comments.
 - src/sim/creatures/index.js
@@ -29,12 +32,14 @@ Files & responsibilities:
   - Deterministic tests for sex split, pregnancy/birth, mate seeking intent.
 
 Config knobs (new):
+
 - Sex/pregnancy enablement, conception chance, gestation base ticks, gestation trait toggle.
 - Pregnancy tradeoffs (metabolism/move speed), miscarriage thresholds/chance.
 - Mate seeking toggles (range, commit ticks, seeking reproduction range).
 - Newborn meter tradeoffs based on gestation multiplier thresholds.
 
 Risks & mitigations:
+
 - Intent thrashing → add commit timer and target invalidation checks.
 - Needs overridden by mate seeking → gated by config override flag.
 - Determinism → all random rolls via RNG; no Date/Math.random.

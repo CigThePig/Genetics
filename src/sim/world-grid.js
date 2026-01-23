@@ -6,14 +6,10 @@ export function createWorldGrid({
   defaultGrassStress = 0
 } = {}) {
   const resolvedWidth = Number.isFinite(width) ? Math.max(1, Math.trunc(width)) : 1;
-  const resolvedHeight = Number.isFinite(height)
-    ? Math.max(1, Math.trunc(height))
-    : 1;
+  const resolvedHeight = Number.isFinite(height) ? Math.max(1, Math.trunc(height)) : 1;
   const cells = new Array(resolvedWidth * resolvedHeight).fill(defaultTerrain);
   const grass = new Array(resolvedWidth * resolvedHeight).fill(defaultGrass);
-  const grassStress = new Array(resolvedWidth * resolvedHeight).fill(
-    defaultGrassStress
-  );
+  const grassStress = new Array(resolvedWidth * resolvedHeight).fill(defaultGrassStress);
 
   const isInBounds = (x, y) =>
     Number.isInteger(x) &&
@@ -23,23 +19,16 @@ export function createWorldGrid({
     x < resolvedWidth &&
     y < resolvedHeight;
 
-  const getIndex = (x, y) =>
-    isInBounds(x, y) ? y * resolvedWidth + x : -1;
+  const getIndex = (x, y) => (isInBounds(x, y) ? y * resolvedWidth + x : -1);
 
   const getTerrainAt = (x, y) => {
     const index = getIndex(x, y);
     return index === -1 ? null : cells[index];
   };
 
-  const isTerrainAt = (x, y, terrainType) =>
-    getTerrainAt(x, y) === terrainType;
+  const isTerrainAt = (x, y, terrainType) => getTerrainAt(x, y) === terrainType;
 
-  const isWaterAt = (
-    x,
-    y,
-    waterTerrain = 'water',
-    shoreTerrain = 'shore'
-  ) => {
+  const isWaterAt = (x, y, waterTerrain = 'water', shoreTerrain = 'shore') => {
     const terrain = getTerrainAt(x, y);
     return terrain === waterTerrain || terrain === shoreTerrain;
   };

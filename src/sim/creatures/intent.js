@@ -6,31 +6,17 @@
 
 import { resolveTicksPerSecond } from './life-stages.js';
 import { resolveRatio, resolveDistance, resolveMinAgeTicks } from '../utils/resolvers.js';
-import {
-  resolveNeedMeterBase,
-  resolveActionThreshold,
-  normalizeNeedRatio
-} from './metabolism.js';
+import { resolveNeedMeterBase, resolveActionThreshold, normalizeNeedRatio } from './metabolism.js';
 import {
   FOOD_TYPES,
   getDietPreferences,
   getFoodAvailabilityAtCell,
   selectFoodChoice
 } from './food.js';
-import {
-  applyMemoryPenalty,
-  selectMemoryTarget,
-  MEMORY_TYPES
-} from './memory.js';
+import { applyMemoryPenalty, selectMemoryTarget, MEMORY_TYPES } from './memory.js';
 import { selectPredatorTarget } from './targeting.js';
-import {
-  getChaseTarget,
-  startCreatureChase
-} from './chase.js';
-import {
-  isReadyToReproduce,
-  selectMateTarget
-} from './reproduction.js';
+import { getChaseTarget, startCreatureChase } from './chase.js';
+import { isReadyToReproduce, selectMateTarget } from './reproduction.js';
 
 /**
  * Resolves the need switch margin (hysteresis) for priority switching.
@@ -139,19 +125,9 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
   const ticksPerSecond = resolveTicksPerSecond(config);
   const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
   const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
-  const minEnergyRatio = resolveRatio(
-    config?.creatureReproductionMinEnergyRatio,
-    0.9
-  );
-  const minWaterRatio = resolveRatio(
-    config?.creatureReproductionMinWaterRatio,
-    0.9
-  );
-  const minAgeTicks = resolveMinAgeTicks(
-    config?.creatureReproductionMinAge,
-    90,
-    ticksPerSecond
-  );
+  const minEnergyRatio = resolveRatio(config?.creatureReproductionMinEnergyRatio, 0.9);
+  const minWaterRatio = resolveRatio(config?.creatureReproductionMinWaterRatio, 0.9);
+  const minAgeTicks = resolveMinAgeTicks(config?.creatureReproductionMinAge, 90, ticksPerSecond);
   const sexEnabled = config?.creatureSexEnabled !== false;
   const pregnancyEnabled = config?.creaturePregnancyEnabled !== false;
   const mateSeekingEnabled = config?.creatureMateSeekingEnabled !== false;
@@ -162,36 +138,17 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     1, // 1 second default
     ticksPerSecond
   );
-  const mateSeekOverridesNeeds =
-    config?.creatureMateSeekPriorityOverridesNeeds === true;
-  const fallbackDrinkThreshold = resolveActionThreshold(
-    config?.creatureDrinkThreshold,
-    0.8
-  );
-  const fallbackEatThreshold = resolveActionThreshold(
-    config?.creatureEatThreshold,
-    0.8
-  );
-  const fallbackGrassEatMin = resolveActionAmount(
-    config?.creatureGrassEatMin,
-    0.05
-  );
-  const fallbackBerryEatMin = resolveActionAmount(
-    config?.creatureBerryEatMin,
-    0.1
-  );
-  
+  const mateSeekOverridesNeeds = config?.creatureMateSeekPriorityOverridesNeeds === true;
+  const fallbackDrinkThreshold = resolveActionThreshold(config?.creatureDrinkThreshold, 0.8);
+  const fallbackEatThreshold = resolveActionThreshold(config?.creatureEatThreshold, 0.8);
+  const fallbackGrassEatMin = resolveActionAmount(config?.creatureGrassEatMin, 0.05);
+  const fallbackBerryEatMin = resolveActionAmount(config?.creatureBerryEatMin, 0.1);
+
   // Predator rest behavior settings
   const predatorRestEnabled = config?.creaturePredatorRestEnabled !== false;
-  const predatorRestThreshold = resolveRatio(
-    config?.creaturePredatorRestThreshold,
-    0.9
-  );
-  const predatorHuntThreshold = resolveRatio(
-    config?.creaturePredatorHuntThreshold,
-    0.5
-  );
-  
+  const predatorRestThreshold = resolveRatio(config?.creaturePredatorRestThreshold, 0.9);
+  const predatorHuntThreshold = resolveRatio(config?.creaturePredatorHuntThreshold, 0.5);
+
   const creaturesById = mateSeekingEnabled ? new Map() : null;
   if (creaturesById) {
     for (const creature of creatures) {
@@ -217,14 +174,8 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
       creature?.traits?.eatThreshold,
       fallbackEatThreshold
     );
-    const grassEatMin = resolveActionAmount(
-      creature?.traits?.grassEatMin,
-      fallbackGrassEatMin
-    );
-    const berryEatMin = resolveActionAmount(
-      creature?.traits?.berryEatMin,
-      fallbackBerryEatMin
-    );
+    const grassEatMin = resolveActionAmount(creature?.traits?.grassEatMin, fallbackGrassEatMin);
+    const berryEatMin = resolveActionAmount(creature?.traits?.berryEatMin, fallbackBerryEatMin);
     const cell = getCreatureCell(creature);
     const waterRatio = normalizeNeedRatio(meters.water, baseWater);
     const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
@@ -233,7 +184,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
     const dietPreferences = getDietPreferences(creature.species);
     const canEatMeat = dietPreferences.includes(FOOD_TYPES.MEAT);
-    
+
     // Predator rest behavior: well-fed predators don't hunt
     // They only start hunting again when energy drops below hunt threshold
     const isPredator = canEatMeat && dietPreferences[0] === FOOD_TYPES.MEAT;
@@ -256,14 +207,12 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
       }
       predatorIsResting = creature.predatorState.isResting;
     }
-    
+
     const perceivedFoodCell = creature.perception?.foodCell;
     const perceivedFoodType = creature.perception?.foodType;
     const perceivedWaterCell = creature.perception?.waterCell;
     const canSeekPerceivedFood =
-      perceivedFoodCell &&
-      perceivedFoodType &&
-      dietPreferences.includes(perceivedFoodType);
+      perceivedFoodCell && perceivedFoodType && dietPreferences.includes(perceivedFoodType);
     const foodMinimums = {
       grass: grassEatMin,
       berries: berryEatMin,
@@ -290,8 +239,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
         sexEnabled,
         pregnancyEnabled
       });
-    const canConsiderMate =
-      canSeekMate && (mateSeekOverridesNeeds || (!canDrink && !canEat));
+    const canConsiderMate = canSeekMate && (mateSeekOverridesNeeds || (!canDrink && !canEat));
 
     let intent = 'wander';
     let foodType = null;
@@ -325,8 +273,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
         if (
           existing &&
           existing.species === creature.species &&
-          (!sexEnabled ||
-            (existing.sex && creature.sex && existing.sex !== creature.sex)) &&
+          (!sexEnabled || (existing.sex && creature.sex && existing.sex !== creature.sex)) &&
           existingCooldown <= 0 &&
           !existingPregnant &&
           existingReady
@@ -336,10 +283,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
       }
 
       if (candidate) {
-        mateState.commitTicksRemaining = Math.max(
-          0,
-          mateState.commitTicksRemaining - 1
-        );
+        mateState.commitTicksRemaining = Math.max(0, mateState.commitTicksRemaining - 1);
         if (mateState.commitTicksRemaining > 0) {
           mateTarget = candidate;
         }
@@ -513,13 +457,11 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
 
     const targetDistanceSq =
       target && creature.position
-        ? (creature.position.x - target.x) ** 2 +
-          (creature.position.y - target.y) ** 2
+        ? (creature.position.x - target.x) ** 2 + (creature.position.y - target.y) ** 2
         : null;
     if (memoryEntry && targetDistanceSq !== null && targetDistanceSq <= 1) {
       const missingWater =
-        memoryEntry.type === MEMORY_TYPES.WATER &&
-        !hasNearbyWater(world, cell, config);
+        memoryEntry.type === MEMORY_TYPES.WATER && !hasNearbyWater(world, cell, config);
       const missingFood =
         memoryEntry.type === MEMORY_TYPES.FOOD &&
         !selectFoodChoice({
@@ -540,9 +482,4 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
 }
 
 // Re-export helpers needed by actions module
-export {
-  getCreatureCell,
-  hasNearbyWater,
-  getGrassAtCell,
-  resolveActionAmount
-};
+export { getCreatureCell, hasNearbyWater, getGrassAtCell, resolveActionAmount };

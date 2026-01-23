@@ -10,9 +10,7 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 const generateTerrainBlobs = ({ world, rng, config }) => {
   const { width, height } = world;
 
-  const terrainTypes = Array.isArray(config.terrainTypes)
-    ? config.terrainTypes
-    : [];
+  const terrainTypes = Array.isArray(config.terrainTypes) ? config.terrainTypes : [];
   const defaultTerrain = config.defaultTerrain;
   const waterTerrain = config.waterTerrain ?? 'water';
   const shoreTerrain = config.shoreTerrain ?? 'shore';
@@ -25,10 +23,7 @@ const generateTerrainBlobs = ({ world, rng, config }) => {
 
   const blobCount = Math.max(0, Math.trunc(config.terrainBlobCount ?? 0));
   const minRadius = Math.max(1, Math.trunc(config.terrainBlobMinRadius ?? 1));
-  const maxRadius = Math.max(
-    minRadius,
-    Math.trunc(config.terrainBlobMaxRadius ?? minRadius)
-  );
+  const maxRadius = Math.max(minRadius, Math.trunc(config.terrainBlobMaxRadius ?? minRadius));
 
   for (let blobIndex = 0; blobIndex < blobCount; blobIndex += 1) {
     const terrainType = palette[rng.nextInt(0, palette.length - 1)];
@@ -85,8 +80,7 @@ const generateWaterCorridors = ({ world, rng, config }) => {
         const turnRight = rng.nextInt(0, 1) === 1;
         const currentIndex = DIRECTIONS.indexOf(direction);
         const nextIndex =
-          (currentIndex + (turnRight ? 1 : -1) + DIRECTIONS.length) %
-          DIRECTIONS.length;
+          (currentIndex + (turnRight ? 1 : -1) + DIRECTIONS.length) % DIRECTIONS.length;
         direction = DIRECTIONS[nextIndex];
       }
 

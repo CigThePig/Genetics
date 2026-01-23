@@ -1,6 +1,7 @@
 # Track 3 — Plan: World Grid & Terrain Foundations
 
 ## Recon Summary
+
 - Files likely to change:
   - src/sim/sim.js (wire world grid + terrain generation into sim initialization).
   - src/sim/config.js (add grid dimensions + terrain tuning knobs).
@@ -41,12 +42,14 @@
 ## Phase 1 — World grid data structure (Step 11)
 
 ### Tasks
+
 - [x] Identify the module that will own world grid state (new module if needed).
 - [x] Define the grid data structure and accessors for terrain type lookup.
 - [x] Wire grid initialization into sim startup while preserving determinism.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
+
 - src/sim/
 - src/sim/config.js
 - src/sim/sim.js
@@ -54,9 +57,11 @@
 - /context/repo-map.md (if needed)
 
 ### Verification
+
 - [x] Manual: confirm a grid is initialized with stable dimensions on reload.
 
 ### Stop point
+
 - Pause for review after grid structure and wiring exist.
 
 ---
@@ -64,21 +69,25 @@
 ## Phase 2 — Terrain generator v1 (blobs) (Step 12)
 
 ### Tasks
+
 - [x] Create terrain generation module using the central RNG.
 - [x] Implement blob placement with deterministic iteration order.
 - [x] Add configuration knobs for blob counts/sizes.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
+
 - src/sim/
 - src/sim/rng.js
 - src/sim/config.js
 - /context/repo-map.md (if needed)
 
 ### Verification
+
 - [x] Manual: same seed produces the same terrain layout.
 
 ### Stop point
+
 - Pause for review after terrain generation is in place.
 
 ---
@@ -86,19 +95,23 @@
 ## Phase 3 — Terrain effects table (Step 13)
 
 ### Tasks
+
 - [x] Define terrain types and a lookup table for friction, perception, and plant cap.
 - [x] Expose query helpers for sim systems to consume.
 - [x] Rebuild world terrain when setSeed resets the RNG to keep terrain deterministic.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
+
 - src/sim/
 - /context/repo-map.md (if needed)
 
 ### Verification
+
 - [x] Manual: inspect terrain effects table values in console or debug output.
 
 ### Stop point
+
 - Pause for review after terrain effects are queryable.
 
 ---
@@ -106,19 +119,23 @@
 ## Phase 4 — Terrain rendering (Step 14)
 
 ### Tasks
+
 - [x] Extend renderer to draw terrain tiles from the world grid.
 - [x] Choose a palette that makes terrain types visually distinct.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
+
 - src/render/renderer.js
 - src/render/
 - /context/repo-map.md (if needed)
 
 ### Verification
+
 - [x] Manual: terrain is visible and distinct on canvas.
 
 ### Stop point
+
 - Pause for review after terrain rendering is implemented.
 
 ---
@@ -126,17 +143,21 @@
 ## Phase 5 — Water + shore corridors (Step 15)
 
 ### Tasks
+
 - [x] Add water terrain regions and shore corridors to the generator.
 - [x] Update rendering to differentiate water vs shore.
 - [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
+
 - src/sim/
 - src/render/renderer.js
 - /context/repo-map.md (if needed)
 
 ### Verification
+
 - [x] Manual: water corridors and shore tiles appear in coherent patterns.
 
 ### Stop point
+
 - Pause for review after water and shore rendering is complete.

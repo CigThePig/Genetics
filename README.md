@@ -1,22 +1,31 @@
 # Genetics
 
-Scaffolding-only repo for a mobile-first evolution simulation. The app runs with a minimal Vite boot and stubs for future systems; no simulation logic is implemented yet.
+Mobile-first, shareable browser simulation where evolution emerges from ecology, terrain, predation, mate choice, and genetics.
 
 For project vision, workflow, and roadmap details see `context/README.md` and the files under `context/`.
 
 ## Quickstart
 
 ```bash
-npm install
+npm ci
 npm run dev
 ```
 
 Other useful commands:
 
 ```bash
+npm test
+npm run verify
 npm run build
 npm run preview
-npm test
+```
+
+Code quality tools:
+
+```bash
+npm run lint
+npm run format
+npm run format:check
 ```
 
 ### Local preview vs. GitHub Pages
@@ -43,6 +52,7 @@ This repo deploys to GitHub Pages as a project site at:
 The workflow in `.github/workflows/deploy.yml` builds the site and publishes `dist/`. Vite’s production base path is set to `/Genetics/` so assets resolve correctly on Pages.
 
 If you rename this repo, update:
+
 - The GitHub Pages URL in this README.
 - The `VITE_BASE` value in `.github/workflows/deploy.yml`.
 - Any other references to `/Genetics/` in deployment docs.

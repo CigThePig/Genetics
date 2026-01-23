@@ -58,9 +58,7 @@ export function createRenderer(container, { camera }) {
   const defaultTileSize = 20;
 
   const resolveTileSize = (config) =>
-    Number.isFinite(config?.tileSize)
-      ? Math.max(1, config.tileSize)
-      : defaultTileSize;
+    Number.isFinite(config?.tileSize) ? Math.max(1, config.tileSize) : defaultTileSize;
 
   // Simple noise function for texture variation
   const noise = (x, y) => {
@@ -72,28 +70,30 @@ export function createRenderer(container, { camera }) {
   const getTerrainColor = (terrain, x, y, showDetail = true) => {
     const palette = terrainPalette[terrain] ?? terrainPalette.unknown;
     if (!showDetail) return palette.base;
-    
+
     const n = noise(x * 0.5, y * 0.5);
     if (n < 0.33) return palette.dark;
     if (n > 0.66) return palette.light;
     return palette.base;
   };
 
-  // Create water pattern gradient
-  const createWaterGradient = (x, y, tileSize) => {
-    const gradient = ctx.createLinearGradient(x, y, x + tileSize, y + tileSize);
-    gradient.addColorStop(0, '#3b6d8c');
-    gradient.addColorStop(0.5, '#4580a0');
-    gradient.addColorStop(1, '#2c5570');
-    return gradient;
-  };
+  // (Water gradients were previously prototyped here, but the current renderer
+  // uses a cheaper tile shimmer approach. Keeping unused helpers around tends
+  // to rot and confuse future edits, so they're removed.)
 
   const drawTerrain = (state, world, config) => {
     const tileSize = resolveTileSize(config);
     const { width, height } = canvas.getBoundingClientRect();
-    
+
     // Dark background with subtle gradient
-    const bgGradient = ctx.createRadialGradient(width/2, height/2, 0, width/2, height/2, Math.max(width, height));
+    const bgGradient = ctx.createRadialGradient(
+      width / 2,
+      height / 2,
+      0,
+      width / 2,
+      height / 2,
+      Math.max(width, height)
+    );
     bgGradient.addColorStop(0, '#141a20');
     bgGradient.addColorStop(1, '#0a0e12');
     ctx.fillStyle = bgGradient;
@@ -117,44 +117,36 @@ export function createRenderer(container, { camera }) {
     const maxWorldY = (height / 2 - state.y) / state.zoom;
 
     const startCol = Math.max(0, Math.floor((minWorldX - originX) / tileSize));
-    const endCol = Math.min(
-      world.width,
-      Math.ceil((maxWorldX - originX) / tileSize)
-    );
+    const endCol = Math.min(world.width, Math.ceil((maxWorldX - originX) / tileSize));
     const startRow = Math.max(0, Math.floor((minWorldY - originY) / tileSize));
-    const endRow = Math.min(
-      world.height,
-      Math.ceil((maxWorldY - originY) / tileSize)
-    );
+    const endRow = Math.min(world.height, Math.ceil((maxWorldY - originY) / tileSize));
 
     const { cells } = world;
     const grass = Array.isArray(world.grass) ? world.grass : null;
-    const grassStress = Array.isArray(world.grassStress)
-      ? world.grassStress
-      : null;
+    const grassStress = Array.isArray(world.grassStress) ? world.grassStress : null;
     const grassCap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
     const stressThreshold = Number.isFinite(config?.grassStressVisibleThreshold)
       ? config.grassStressVisibleThreshold
       : 0.25;
-    
+
     // Determine detail level based on zoom
     const showDetail = state.zoom > 0.4;
     const showGrassDetail = state.zoom > 0.6;
-    
+
     for (let y = startRow; y < endRow; y += 1) {
       const rowOffset = y * world.width;
       const tileY = originY + y * tileSize;
       for (let x = startCol; x < endCol; x += 1) {
         const terrain = cells[rowOffset + x];
         const tileX = originX + x * tileSize;
-        
+
         // Draw base terrain with variation
         if (terrain === 'water') {
           // Water with subtle shimmer effect
           const waterBase = getTerrainColor(terrain, x, y, showDetail);
           ctx.fillStyle = waterBase;
           ctx.fillRect(tileX, tileY, tileSize, tileSize);
-          
+
           // Add subtle highlight
           if (showDetail) {
             const shimmer = noise(x * 0.3, y * 0.3);
@@ -170,19 +162,16 @@ export function createRenderer(container, { camera }) {
 
         // Grass overlay with improved blending
         if (grass) {
-          const grassValue = Number.isFinite(grass[rowOffset + x])
-            ? grass[rowOffset + x]
-            : 0;
-          const grassRatio =
-            grassCap > 0 ? Math.min(1, Math.max(0, grassValue / grassCap)) : 0;
+          const grassValue = Number.isFinite(grass[rowOffset + x]) ? grass[rowOffset + x] : 0;
+          const grassRatio = grassCap > 0 ? Math.min(1, Math.max(0, grassValue / grassCap)) : 0;
           if (grassRatio > 0) {
             // Multi-layer grass for depth
             const baseAlpha = 0.15 + grassRatio * 0.3;
-            
+
             // Base grass layer
             ctx.fillStyle = `rgba(76, 140, 58, ${baseAlpha})`;
             ctx.fillRect(tileX, tileY, tileSize, tileSize);
-            
+
             // Highlight layer for lush grass
             if (grassRatio > 0.5 && showGrassDetail) {
               const highlightAlpha = (grassRatio - 0.5) * 0.2;
@@ -213,9 +202,7 @@ export function createRenderer(container, { camera }) {
       const bushRadiusGrowth = tileSize * 0.2;
       const berryRadiusBase = tileSize * 0.08;
       const berryRadiusGrowth = tileSize * 0.1;
-      const maxBerryFallback = Number.isFinite(config?.bushBerryMax)
-        ? config.bushBerryMax
-        : 1;
+      const maxBerryFallback = Number.isFinite(config?.bushBerryMax) ? config.bushBerryMax : 1;
 
       for (const bush of world.bushes) {
         const bushX = Number.isFinite(bush.x) ? bush.x : null;
@@ -223,22 +210,14 @@ export function createRenderer(container, { camera }) {
         if (bushX === null || bushY === null) {
           continue;
         }
-        if (
-          bushX < startCol ||
-          bushX >= endCol ||
-          bushY < startRow ||
-          bushY >= endRow
-        ) {
+        if (bushX < startCol || bushX >= endCol || bushY < startRow || bushY >= endRow) {
           continue;
         }
 
         const health = Number.isFinite(bush.health) ? bush.health : 0;
         const berries = Number.isFinite(bush.berries) ? bush.berries : 0;
-        const berryMax = Number.isFinite(bush.berryMax)
-          ? bush.berryMax
-          : maxBerryFallback;
-        const berryRatio =
-          berryMax > 0 ? Math.min(1, Math.max(0, berries / berryMax)) : 0;
+        const berryMax = Number.isFinite(bush.berryMax) ? bush.berryMax : maxBerryFallback;
+        const berryRatio = berryMax > 0 ? Math.min(1, Math.max(0, berries / berryMax)) : 0;
 
         const centerX = originX + (bushX + 0.5) * tileSize;
         const centerY = originY + (bushY + 0.5) * tileSize;
@@ -247,23 +226,35 @@ export function createRenderer(container, { camera }) {
         // Bush shadow
         ctx.beginPath();
         ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        ctx.ellipse(centerX + 1, centerY + 2, bushRadius * 0.9, bushRadius * 0.5, 0, 0, Math.PI * 2);
+        ctx.ellipse(
+          centerX + 1,
+          centerY + 2,
+          bushRadius * 0.9,
+          bushRadius * 0.5,
+          0,
+          0,
+          Math.PI * 2
+        );
         ctx.fill();
 
         // Main bush body with gradient
         const bushGradient = ctx.createRadialGradient(
-          centerX - bushRadius * 0.3, centerY - bushRadius * 0.3, 0,
-          centerX, centerY, bushRadius
+          centerX - bushRadius * 0.3,
+          centerY - bushRadius * 0.3,
+          0,
+          centerX,
+          centerY,
+          bushRadius
         );
         const lightness = 25 + health * 20;
         bushGradient.addColorStop(0, `hsl(110, 35%, ${lightness + 15}%)`);
         bushGradient.addColorStop(1, `hsl(105, 30%, ${lightness}%)`);
-        
+
         ctx.beginPath();
         ctx.fillStyle = bushGradient;
         ctx.arc(centerX, centerY, bushRadius, 0, Math.PI * 2);
         ctx.fill();
-        
+
         // Subtle outline
         ctx.strokeStyle = 'rgba(20, 40, 20, 0.4)';
         ctx.lineWidth = 1 / state.zoom;
@@ -277,29 +268,35 @@ export function createRenderer(container, { camera }) {
             { x: -0.2, y: 0.3 },
             { x: 0.35, y: 0.2 }
           ];
-          
+
           const numBerries = Math.ceil(berryRatio * 3);
           for (let i = 0; i < numBerries; i++) {
             const offset = berryOffsets[i];
             const bx = centerX + bushRadius * offset.x;
             const by = centerY + bushRadius * offset.y;
-            
+
             // Berry glow
             ctx.beginPath();
             ctx.fillStyle = `rgba(200, 80, 140, ${0.2 * berryRatio})`;
             ctx.arc(bx, by, berryRadius * 1.5, 0, Math.PI * 2);
             ctx.fill();
-            
+
             // Berry
             ctx.beginPath();
             ctx.fillStyle = `hsl(330, 60%, ${40 + berryRatio * 20}%)`;
             ctx.arc(bx, by, berryRadius, 0, Math.PI * 2);
             ctx.fill();
-            
+
             // Berry highlight
             ctx.beginPath();
             ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
-            ctx.arc(bx - berryRadius * 0.3, by - berryRadius * 0.3, berryRadius * 0.3, 0, Math.PI * 2);
+            ctx.arc(
+              bx - berryRadius * 0.3,
+              by - berryRadius * 0.3,
+              berryRadius * 0.3,
+              0,
+              Math.PI * 2
+            );
             ctx.fill();
           }
         }
@@ -311,12 +308,7 @@ export function createRenderer(container, { camera }) {
     ctx.shadowBlur = 10;
     ctx.strokeStyle = 'rgba(74, 222, 128, 0.3)';
     ctx.lineWidth = 2 / state.zoom;
-    ctx.strokeRect(
-      originX,
-      originY,
-      world.width * tileSize,
-      world.height * tileSize
-    );
+    ctx.strokeRect(originX, originY, world.width * tileSize, world.height * tileSize);
     ctx.shadowBlur = 0;
 
     ctx.restore();
@@ -350,7 +342,14 @@ export function createRenderer(container, { camera }) {
     const minTileY = (minWorldY - originY) / tileSize;
     const maxTileY = (maxWorldY - originY) / tileSize;
 
-    ctx.fillStyle = 'rgba(248, 232, 120, 0.9)';
+    const speciesFill = {
+      [SPECIES.SQUARE]: 'rgba(248, 232, 120, 0.92)',
+      [SPECIES.CIRCLE]: 'rgba(128, 215, 255, 0.92)',
+      [SPECIES.TRIANGLE]: 'rgba(255, 140, 140, 0.92)',
+      [SPECIES.OCTAGON]: 'rgba(190, 150, 255, 0.92)'
+    };
+
+    const defaultFill = 'rgba(248, 232, 120, 0.92)';
     ctx.strokeStyle = 'rgba(30, 30, 30, 0.35)';
     ctx.lineWidth = 1 / state.zoom;
 
@@ -405,6 +404,8 @@ export function createRenderer(container, { camera }) {
 
       const centerX = originX + x * tileSize;
       const centerY = originY + y * tileSize;
+
+      ctx.fillStyle = speciesFill[creature.species] ?? defaultFill;
       ctx.beginPath();
       drawCreatureShape(creature.species, centerX, centerY, markerRadius);
       ctx.fill();
@@ -421,9 +422,7 @@ export function createRenderer(container, { camera }) {
       drawTerrain(state, sim.state?.world, sim.config);
       drawCreatures(state, sim.state?.world, sim.state?.creatures, sim.config);
 
-      const roll = Number.isFinite(sim.state?.lastRoll)
-        ? sim.state.lastRoll.toFixed(4)
-        : '--';
+      const roll = Number.isFinite(sim.state?.lastRoll) ? sim.state.lastRoll.toFixed(4) : '--';
       const grassAverage = Number.isFinite(sim.state?.metrics?.grassAverage)
         ? sim.state.metrics.grassAverage.toFixed(2)
         : '--';

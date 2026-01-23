@@ -29,10 +29,31 @@ export function createMetrics({ container } = {}) {
       lastTime = time;
       updateOverlayText();
     }
+    if (visible) {
+      rafId = requestAnimationFrame(updateOverlay);
+    } else {
+      rafId = null;
+    }
+  };
+
+  const startRaf = () => {
+    if (rafId) {
+      return;
+    }
+    frameCount = 0;
+    lastTime = performance.now();
     rafId = requestAnimationFrame(updateOverlay);
   };
 
-  rafId = requestAnimationFrame(updateOverlay);
+  const stopRaf = () => {
+    if (!rafId) {
+      return;
+    }
+    cancelAnimationFrame(rafId);
+    rafId = null;
+  };
+
+  startRaf();
 
   const getSkeletonSections = () => [
     {
@@ -68,11 +89,14 @@ export function createMetrics({ container } = {}) {
     setVisible(nextVisible) {
       visible = Boolean(nextVisible);
       overlay.style.display = visible ? 'block' : 'none';
+      if (visible) {
+        startRaf();
+      } else {
+        stopRaf();
+      }
     },
     destroy() {
-      if (rafId) {
-        cancelAnimationFrame(rafId);
-      }
+      stopRaf();
       overlay.remove();
     }
   };

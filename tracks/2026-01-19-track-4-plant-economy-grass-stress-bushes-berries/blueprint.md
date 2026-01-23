@@ -1,9 +1,11 @@
 # Track 4 — Blueprint
 
 ## Intent
+
 Implement the plant economy core loop: grass regrowth with stress dynamics and bush entities with berries, while keeping determinism, tick order, and observability intact.
 
 ## Scope Mapping (Steps 16–20)
+
 - Grass regrowth to cap.
 - Diminishing regrowth near cap.
 - Overgrazing stress.
@@ -11,6 +13,7 @@ Implement the plant economy core loop: grass regrowth with stress dynamics and b
 - Bush entities + berry pool.
 
 ## Proposed Modules / Files
+
 - `src/sim/plants/grass.js`
   - Grass state update logic (regrowth, stress, recovery).
 - `src/sim/plants/bushes.js`
@@ -29,6 +32,7 @@ Implement the plant economy core loop: grass regrowth with stress dynamics and b
 (Adjust filenames based on existing structure after recon; new system = new file requirement applies.)
 
 ## Data Model (Conceptual, No Code)
+
 - World cell adds plant fields:
   - `grass`: current amount (0..cap).
   - `grassStress`: stress accumulator (0..1) indicating overgrazing.
@@ -38,16 +42,19 @@ Implement the plant economy core loop: grass regrowth with stress dynamics and b
   - `berries` (0..max).
 
 ## System Behavior (Conceptual)
+
 - Grass regrowth: grows toward cap; regrowth rate diminishes near cap.
 - Overgrazing stress: increases when grass is low or recently depleted; decays over time.
 - Stress recovery: stress decays as grass recovers.
 - Bushes: placed deterministically during world setup or by a deterministic placement pass; berries are a pool tied to bush health.
 
 ## Tick Order Considerations
+
 - Plant updates should occur in the Regen phase or a dedicated plant step invoked within Regen.
 - Rendering remains a read-only view step after sim tick.
 
 ## Observability
+
 - Metrics to add:
   - Average grass amount.
   - Count/percent of stressed cells.
@@ -55,11 +62,13 @@ Implement the plant economy core loop: grass regrowth with stress dynamics and b
   - Total berries (and optionally average bush health).
 
 ## Risks & Mitigations
+
 - Risk: regrowth/stress dynamics overpower the sim.
   - Mitigation: keep tunables centralized in config; validate with deterministic metrics.
 - Risk: additional state increases memory costs.
   - Mitigation: store minimal per-cell fields and reuse buffers where possible.
 
 ## Open Questions
+
 - Are grass/stress fields already present in `world-grid` from prior track?
 - Best place to hook plant updates in the sim tick while preserving the order invariants.

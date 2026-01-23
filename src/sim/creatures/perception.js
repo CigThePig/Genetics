@@ -1,14 +1,9 @@
 import { getTerrainEffectsAt } from '../terrain-effects.js';
-import {
-  getFoodAvailabilityAtCell,
-  selectFoodChoice
-} from './food.js';
+import { getFoodAvailabilityAtCell, selectFoodChoice } from './food.js';
 
-const resolveRange = (value, fallback) =>
-  Number.isFinite(value) ? Math.max(0, value) : fallback;
+const resolveRange = (value, fallback) => (Number.isFinite(value) ? Math.max(0, value) : fallback);
 
-const resolveRangeMax = (value) =>
-  Number.isFinite(value) ? Math.max(0, value) : Infinity;
+const resolveRangeMax = (value) => (Number.isFinite(value) ? Math.max(0, value) : Infinity);
 
 const resolveMinimum = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
@@ -25,6 +20,9 @@ export function updateCreaturePerception({ creatures, config, world }) {
   const maxRange = resolveRangeMax(config?.creaturePerceptionRangeMax);
   const fallbackGrassMin = resolveMinimum(config?.creatureGrassEatMin, 0.05);
   const fallbackBerryMin = resolveMinimum(config?.creatureBerryEatMin, 0.1);
+  // Meat should never have a 0 minimum, otherwise "no meat" can look like "valid meat".
+  // Use a conservative fallback that works for both predators and opportunistic scavenging.
+  const fallbackMeatMin = Math.min(fallbackGrassMin, fallbackBerryMin);
   const waterTerrain = config?.waterTerrain ?? 'water';
   const shoreTerrain = config?.shoreTerrain ?? 'shore';
 
@@ -33,10 +31,7 @@ export function updateCreaturePerception({ creatures, config, world }) {
       continue;
     }
 
-    const creatureRange = resolveRange(
-      creature?.traits?.perceptionRange,
-      baseRange
-    );
+    const creatureRange = resolveRange(creature?.traits?.perceptionRange, baseRange);
     const cell = {
       x: Math.floor(creature.position.x),
       y: Math.floor(creature.position.y)
@@ -60,7 +55,7 @@ export function updateCreaturePerception({ creatures, config, world }) {
       const minimums = {
         grass: resolveMinimum(creature?.traits?.grassEatMin, fallbackGrassMin),
         berries: resolveMinimum(creature?.traits?.berryEatMin, fallbackBerryMin),
-        meat: 0
+        meat: resolveMinimum(creature?.traits?.meatEatMin, fallbackMeatMin)
       };
 
       for (let dy = -radius; dy <= radius; dy += 1) {
@@ -77,12 +72,13 @@ export function updateCreaturePerception({ creatures, config, world }) {
           const distance = Math.sqrt(distanceSq);
 
           if (
-            waterDistance === null &&
             typeof world.isWaterAt === 'function' &&
             world.isWaterAt(x, y, waterTerrain, shoreTerrain)
           ) {
-            waterDistance = distance;
-            waterCell = { x, y };
+            if (waterDistance === null || distance < waterDistance) {
+              waterDistance = distance;
+              waterCell = { x, y };
+            }
           }
 
           const availability = getFoodAvailabilityAtCell({

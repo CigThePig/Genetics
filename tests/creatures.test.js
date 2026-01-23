@@ -60,6 +60,7 @@ describe('creature sex assignment', () => {
     const sim = createSim({
       seed: 42,
       creatureCount: 8,
+      creaturePredatorCount: 4,
       creatureSexEnabled: true,
       creatureSexInitialSplitMode: 'exact'
     });

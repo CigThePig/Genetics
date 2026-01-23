@@ -1,7 +1,9 @@
 # Track 1 Plan — Developer Visibility & Control
 
 ## Recon Summary
+
 Recon completed; summary below reflects current repo state.
+
 - Files likely to change:
   - src/metrics/index.js (add FPS overlay + toggle and metrics snapshot plumbing).
   - src/ui/index.js (add control shell, seed display, FPS toggle wiring).
@@ -44,6 +46,7 @@ Recon completed; summary below reflects current repo state.
 ## Phase 1 — FPS overlay + toggle
 
 ### Tasks
+
 - [x] Identify current render/metrics entry points for overlay placement.
 - [x] Implement FPS overlay display and toggle state (mobile + desktop).
 - [x] Wire metrics instance into app boot so UI can control overlay visibility.
@@ -51,16 +54,19 @@ Recon completed; summary below reflects current repo state.
 - [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
+
 - src/metrics/index.js
 - src/ui/index.js
 - src/main.js
 - context/repo-map.md (if roles change)
 
 ### Verification
+
 - [x] Manual: FPS overlay visible with toggle on desktop. (Completed by user.)
 - [x] Manual: FPS overlay toggle works on mobile. (Completed by user.)
 
 ### Stop Point
+
 - Pause for review after verifying overlay and toggle behavior.
 
 ---
@@ -68,19 +74,23 @@ Recon completed; summary below reflects current repo state.
 ## Phase 2 — Minimal UI shell (play/pause/step/speed)
 
 ### Tasks
+
 - [x] Implement minimal control shell for play/pause/step/speed.
 - [x] Wire controls to sim lifecycle entry points (no sim logic in UI).
 - [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
+
 - src/ui/index.js
 - src/main.js
 - context/repo-map.md (if roles change)
 
 ### Verification
+
 - [x] Manual: play/pause/step/speed controls function as expected.
 
 ### Stop Point
+
 - Pause for review after verifying controls behavior.
 
 ---
@@ -88,21 +98,25 @@ Recon completed; summary below reflects current repo state.
 ## Phase 3 — Seeded RNG module
 
 ### Tasks
+
 - [x] Add a seeded RNG module with clear API.
 - [x] Ensure sim uses the central RNG module (no Math.random in sim logic).
 - [x] Display seed in UI or metrics panel as appropriate.
 - [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
+
 - src/sim/rng.js
 - src/sim/sim.js
 - src/ui/index.js
 - context/repo-map.md (if roles change)
 
 ### Verification
+
 - [x] Manual: seed displayed and changes affect outcomes.
 
 ### Stop Point
+
 - Pause for review after verifying seed usage.
 
 ---
@@ -110,19 +124,23 @@ Recon completed; summary below reflects current repo state.
 ## Phase 4 — Determinism smoke test
 
 ### Tasks
+
 - [x] Add deterministic summary output for sim after N ticks.
 - [x] Implement determinism smoke test (same seed => same summary).
 - [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
+
 - src/sim/sim.js
 - tests/sim.test.js
 - context/repo-map.md (if roles change)
 
 ### Verification
+
 - [x] Automated: determinism test passes.
 
 ### Stop Point
+
 - Pause for review after test passes.
 
 ---
@@ -130,16 +148,20 @@ Recon completed; summary below reflects current repo state.
 ## Phase 5 — Context pack + repo-map validation
 
 ### Tasks
+
 - [x] Validate context pack alignment (track artifacts, repo-map updates).
 - [x] Ensure repo-map matches actual file roles.
 - [x] [Repo-map] Update /context/repo-map.md if any files are added or roles change.
 
 ### Files Touched
+
 - context/repo-map.md
 - context/active-track.md (if needed)
 
 ### Verification
+
 - [x] Manual: repo-map reflects current file roles and new modules.
 
 ### Stop Point
+
 - Pause for review after repo-map validation.

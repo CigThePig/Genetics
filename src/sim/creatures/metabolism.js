@@ -5,11 +5,7 @@
  */
 
 import { resolveTicksPerSecond } from './life-stages.js';
-import {
-  clampMeter,
-  resolveBasalDrain,
-  resolveTraitDrain
-} from '../utils/resolvers.js';
+import { clampMeter, resolveBasalDrain, resolveTraitDrain } from '../utils/resolvers.js';
 
 /**
  * Calculates tick scale (fraction of second per tick).
@@ -19,8 +15,7 @@ const resolveTickScale = (config) => 1 / resolveTicksPerSecond(config);
 /**
  * Resolves a need meter base value (positive, defaults to 1).
  */
-const resolveNeedMeterBase = (value) =>
-  Number.isFinite(value) && value > 0 ? value : 1;
+const resolveNeedMeterBase = (value) => (Number.isFinite(value) && value > 0 ? value : 1);
 
 /**
  * Resolves an action threshold (0-1 range).
@@ -66,9 +61,7 @@ export function updateCreatureBasalMetabolism({ creatures, config }) {
   const tickScale = resolveTickScale(config);
   const fallbackEnergyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
   const fallbackWaterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
-  const fallbackStaminaDrain = resolveBasalDrain(
-    config?.creatureBasalStaminaDrain
-  );
+  const fallbackStaminaDrain = resolveBasalDrain(config?.creatureBasalStaminaDrain);
 
   for (const creature of creatures) {
     const meters = creature.meters;
@@ -76,14 +69,11 @@ export function updateCreatureBasalMetabolism({ creatures, config }) {
       continue;
     }
     const energyDrain =
-      resolveTraitDrain(creature?.traits?.basalEnergyDrain, fallbackEnergyDrain) *
-      tickScale;
+      resolveTraitDrain(creature?.traits?.basalEnergyDrain, fallbackEnergyDrain) * tickScale;
     const waterDrain =
-      resolveTraitDrain(creature?.traits?.basalWaterDrain, fallbackWaterDrain) *
-      tickScale;
+      resolveTraitDrain(creature?.traits?.basalWaterDrain, fallbackWaterDrain) * tickScale;
     const staminaDrain =
-      resolveTraitDrain(creature?.traits?.basalStaminaDrain, fallbackStaminaDrain) *
-      tickScale;
+      resolveTraitDrain(creature?.traits?.basalStaminaDrain, fallbackStaminaDrain) * tickScale;
     const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
       ? creature.lifeStage.metabolismScale
       : 1;
@@ -101,14 +91,8 @@ export function updateCreatureSprintDecision({ creatures, config }) {
     return;
   }
   const baseStamina = resolveNeedMeterBase(config?.creatureBaseStamina);
-  const fallbackStart = resolveActionThreshold(
-    config?.creatureSprintStartThreshold,
-    0.7
-  );
-  const fallbackStop = resolveActionThreshold(
-    config?.creatureSprintStopThreshold,
-    0.4
-  );
+  const fallbackStart = resolveActionThreshold(config?.creatureSprintStartThreshold, 0.7);
+  const fallbackStop = resolveActionThreshold(config?.creatureSprintStopThreshold, 0.4);
 
   for (const creature of creatures) {
     const meters = creature?.meters;
@@ -149,9 +133,7 @@ export function applyCreatureSprintCosts({ creatures, config }) {
     return;
   }
   const tickScale = resolveTickScale(config);
-  const fallbackDrain = resolveBasalDrain(
-    config?.creatureSprintStaminaDrain
-  );
+  const fallbackDrain = resolveBasalDrain(config?.creatureSprintStaminaDrain);
 
   for (const creature of creatures) {
     const meters = creature?.meters;
@@ -159,8 +141,7 @@ export function applyCreatureSprintCosts({ creatures, config }) {
       continue;
     }
     const sprintDrain =
-      resolveTraitDrain(creature?.traits?.sprintStaminaDrain, fallbackDrain) *
-      tickScale;
+      resolveTraitDrain(creature?.traits?.sprintStaminaDrain, fallbackDrain) * tickScale;
     const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
       ? creature.lifeStage.metabolismScale
       : 1;
@@ -177,25 +158,18 @@ export function regenerateCreatureStamina({ creatures, config }) {
   }
   const tickScale = resolveTickScale(config);
   const baseStamina = resolveNeedMeterBase(config?.creatureBaseStamina);
-  const fallbackRegen = resolveStaminaRegen(
-    config?.creatureStaminaRegen,
-    0
-  );
+  const fallbackRegen = resolveStaminaRegen(config?.creatureStaminaRegen, 0);
 
   for (const creature of creatures) {
     const meters = creature?.meters;
     if (!meters || creature.motion?.isSprinting) {
       continue;
     }
-    const regen =
-      resolveStaminaRegen(creature?.traits?.staminaRegen, fallbackRegen) *
-      tickScale;
+    const regen = resolveStaminaRegen(creature?.traits?.staminaRegen, fallbackRegen) * tickScale;
     const scale = Number.isFinite(creature.lifeStage?.metabolismScale)
       ? creature.lifeStage.metabolismScale
       : 1;
-    meters.stamina = clampMeter(
-      Math.min(baseStamina, meters.stamina + regen * scale)
-    );
+    meters.stamina = clampMeter(Math.min(baseStamina, meters.stamina + regen * scale));
   }
 }
 

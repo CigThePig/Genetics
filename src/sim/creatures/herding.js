@@ -15,27 +15,15 @@ import { SPECIES } from '../species.js';
 const PREDATOR_SPECIES = new Set([SPECIES.TRIANGLE, SPECIES.OCTAGON]);
 
 /**
- * Herbivore species - these form herds.
- */
-const HERBIVORE_SPECIES = new Set([SPECIES.SQUARE, SPECIES.CIRCLE]);
-
-/**
  * Checks if a species is a predator.
  */
 const isPredator = (species) => PREDATOR_SPECIES.has(species);
 
 /**
- * Checks if a species is a herbivore.
- */
-const isHerbivore = (species) => HERBIVORE_SPECIES.has(species);
-
-/**
  * Resolves herding range from config.
  */
 const resolveHerdingRange = (config) =>
-  Number.isFinite(config?.creatureHerdingRange)
-    ? Math.max(0, config.creatureHerdingRange)
-    : 10;
+  Number.isFinite(config?.creatureHerdingRange) ? Math.max(0, config.creatureHerdingRange) : 10;
 
 /**
  * Resolves threat detection range from config.
@@ -169,9 +157,9 @@ const calculateFleeVector = (threats, threatRange) => {
 
   for (const threat of threats) {
     // Strength inversely proportional to distance (closer = stronger)
-    const strength = 1 - (threat.distance / threatRange);
+    const strength = 1 - threat.distance / threatRange;
     const strengthSq = strength * strength; // Quadratic falloff
-    
+
     // Direction away from threat
     fleeX -= (threat.dx / threat.distance) * strengthSq;
     fleeY -= (threat.dy / threat.distance) * strengthSq;
@@ -244,7 +232,7 @@ const calculateSeparation = (members, separationDist) => {
   for (const member of members) {
     if (member.distance < separationDist && member.distance > 0.01) {
       // Push away from nearby creatures
-      const strength = 1 - (member.distance / separationDist);
+      const strength = 1 - member.distance / separationDist;
       sepX -= (member.dx / member.distance) * strength;
       sepY -= (member.dy / member.distance) * strength;
       count += 1;
@@ -280,7 +268,13 @@ const ensureHerdingState = (creature) => {
 const hasUrgentNeed = (creature) => {
   const intent = creature.intent?.type;
   // These intents mean the creature needs something urgently
-  return intent === 'drink' || intent === 'eat' || intent === 'seek' || intent === 'hunt' || intent === 'mate';
+  return (
+    intent === 'drink' ||
+    intent === 'eat' ||
+    intent === 'seek' ||
+    intent === 'hunt' ||
+    intent === 'mate'
+  );
 };
 
 /**
@@ -327,7 +321,7 @@ export function updateCreatureHerding({ creatures, config }) {
     // Find nearby herd members and threats
     const members = findNearbyHerdMembers(creature, creatures, herdRangeSq);
     const threats = findNearbyThreats(creature, creatures, threatRangeSq);
-    
+
     herding.herdSize = members.length + 1;
     herding.nearbyThreats = threats.length;
     herding.isThreatened = threats.length > 0;

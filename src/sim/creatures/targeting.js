@@ -11,9 +11,7 @@ const DEFAULT_TARGET_WEIGHTS = Object.freeze({
 });
 
 const resolveTargetingWeights = (species, config) =>
-  config?.creatureTargetingPreferences?.[species] ??
-  DEFAULT_TARGET_WEIGHTS[species] ??
-  null;
+  config?.creatureTargetingPreferences?.[species] ?? DEFAULT_TARGET_WEIGHTS[species] ?? null;
 
 const resolveTargetingRange = (config) => {
   if (Number.isFinite(config?.creatureTargetingRange)) {

@@ -75,7 +75,19 @@ export function createConfigPanel({ container, config, onConfigChange }) {
   const inputs = new Map();
 
   // Create category sections
-  const categoryOrder = ['simulation', 'creatures', 'metabolism', 'predator', 'herding', 'reproduction', 'lifespan', 'chase', 'plants', 'genetics', 'other'];
+  const categoryOrder = [
+    'simulation',
+    'creatures',
+    'metabolism',
+    'predator',
+    'herding',
+    'reproduction',
+    'lifespan',
+    'chase',
+    'plants',
+    'genetics',
+    'other'
+  ];
   for (const category of categoryOrder) {
     const items = categories[category];
     if (!items || items.length === 0) continue;

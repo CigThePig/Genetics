@@ -13,10 +13,7 @@ const applyMultipliers = (value, ...multipliers) => {
   if (!Number.isFinite(value)) {
     return value;
   }
-  return multipliers.reduce(
-    (result, multiplier) => result * resolveMultiplier(multiplier),
-    value
-  );
+  return multipliers.reduce((result, multiplier) => result * resolveMultiplier(multiplier), value);
 };
 
 const resolveFoodEfficiency = (baseEfficiency, multipliers = {}) => ({
@@ -33,11 +30,7 @@ export const createCreatureTraits = ({ config, species, genome } = {}) => {
     : 1;
 
   return {
-    speed: applyMultipliers(
-      config?.creatureBaseSpeed,
-      multipliers.speed,
-      genomeMultipliers.speed
-    ),
+    speed: applyMultipliers(config?.creatureBaseSpeed, multipliers.speed, genomeMultipliers.speed),
     perceptionRange: applyMultipliers(
       config?.creaturePerceptionRange,
       multipliers.perceptionRange,

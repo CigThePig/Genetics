@@ -44,19 +44,13 @@ export { updateCreatureMovement } from './movement.js';
 export { updateCreatureHerding, getHerdingOffset, getHerdSize, isThreatened } from './herding.js';
 
 // Re-export intent/priority system
-export {
-  updateCreaturePriority,
-  updateCreatureIntent
-} from './intent.js';
+export { updateCreaturePriority, updateCreatureIntent } from './intent.js';
 
 // Re-export actions system
 export { applyCreatureActions } from './actions.js';
 
 // Re-export spawn system
-export {
-  createCreatures,
-  findNearestCreature
-} from './spawn.js';
+export { createCreatures, findNearestCreature } from './spawn.js';
 
 /**
  * Updates creature life stages based on age.
@@ -67,9 +61,7 @@ export function updateCreatureLifeStages({ creatures, config }) {
     return;
   }
   for (const creature of creatures) {
-    const ageTicks = Number.isFinite(creature.ageTicks)
-      ? creature.ageTicks + 1
-      : 1;
+    const ageTicks = Number.isFinite(creature.ageTicks) ? creature.ageTicks + 1 : 1;
     creature.ageTicks = ageTicks;
     creature.lifeStage = createLifeStageState(ageTicks, config);
   }

@@ -1,3 +1,5 @@
+import { resolveTicksPerSecond } from '../utils/resolvers.js';
+
 const DEFAULT_BUSH_INIT = {
   count: 0,
   initialHealth: 1,
@@ -104,12 +106,14 @@ export function updateBushes({ world, config, rng }) {
     world.bushes = bushes;
   }
 
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const tickScale = 1 / ticksPerSecond;
   const recoveryRate = Number.isFinite(config?.bushRecoveryRate)
-    ? Math.max(0, config.bushRecoveryRate)
-    : DEFAULT_BUSH_INIT.recoveryRate;
+    ? Math.max(0, config.bushRecoveryRate) * tickScale
+    : DEFAULT_BUSH_INIT.recoveryRate * tickScale;
   const berryRegenRate = Number.isFinite(config?.bushBerryRegenRate)
-    ? Math.max(0, config.bushBerryRegenRate)
-    : DEFAULT_BUSH_INIT.berryRegenRate;
+    ? Math.max(0, config.bushBerryRegenRate) * tickScale
+    : DEFAULT_BUSH_INIT.berryRegenRate * tickScale;
   const fallbackBerryMax = Number.isFinite(config?.bushBerryMax)
     ? Math.max(0, config.bushBerryMax)
     : DEFAULT_BUSH_INIT.berryMax;

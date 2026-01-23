@@ -63,9 +63,9 @@ export const simConfig = {
   bushBerryRegenRate: 0.25,
 
   // === PLANTS: CARCASSES ===
-  carcassBaseYield: 3.0,          // Meat from a kill (enough for multiple feedings)
-  carcassMaxMeatPerCell: 6,       // Allow multiple carcasses to stack
-  carcassDecayRate: 0.015,        // Per second - slow decay, carcass lasts ~3+ minutes
+  carcassBaseYield: 3.0, // Meat from a kill (enough for multiple feedings)
+  carcassMaxMeatPerCell: 6, // Allow multiple carcasses to stack
+  carcassDecayRate: 0.015, // Per second - slow decay, carcass lasts ~3+ minutes
 
   // === CREATURES: SPAWNING ===
   creatureCount: 80,
@@ -76,13 +76,13 @@ export const simConfig = {
   // === CREATURES: HERDING ===
   // Only herbivores (squares, circles) herd - predators hunt independently
   creatureHerdingEnabled: true,
-  creatureHerdingRange: 12,           // How far to look for herd members
-  creatureHerdingThreatRange: 8,      // Reduced - only flee from close predators
-  creatureHerdingStrength: 0.02,      // Very gentle cohesion (loose groups)
+  creatureHerdingRange: 12, // How far to look for herd members
+  creatureHerdingThreatRange: 8, // Reduced - only flee from close predators
+  creatureHerdingStrength: 0.02, // Very gentle cohesion (loose groups)
   creatureHerdingThreatStrength: 0.2, // Reduced - less frantic fleeing
-  creatureHerdingMinGroupSize: 2,     // Min creatures to form a herd
-  creatureHerdingSeparation: 2.0,     // Personal space distance
-  creatureHerdingIdealDistance: 5,    // Preferred distance from herd center
+  creatureHerdingMinGroupSize: 2, // Min creatures to form a herd
+  creatureHerdingSeparation: 2.0, // Personal space distance
+  creatureHerdingIdealDistance: 5, // Preferred distance from herd center
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
@@ -114,9 +114,9 @@ export const simConfig = {
   // === CREATURES: PREDATOR BEHAVIOR ===
   // When well-fed, predators rest near water instead of constantly hunting
   creaturePredatorRestEnabled: true,
-  creaturePredatorRestThreshold: 0.7,     // Energy above 70% = resting (was 0.9)
-  creaturePredatorHuntThreshold: 0.4,     // Energy below 40% = actively hunt (was 0.5)
-  creaturePredatorPatrolSpeed: 0.4,       // Multiplier when patrolling (slower movement)
+  creaturePredatorRestThreshold: 0.7, // Energy above 70% = resting (was 0.9)
+  creaturePredatorHuntThreshold: 0.4, // Energy below 40% = actively hunt (was 0.5)
+  creaturePredatorPatrolSpeed: 0.4, // Multiplier when patrolling (slower movement)
 
   // === CREATURES: MEMORY ===
   creatureMemoryMaxEntries: 12,
@@ -157,7 +157,10 @@ export const simConfig = {
   creaturePregnancyMoveSpeedMultiplier: 0.9,
   creaturePregnancyMiscarriageEnabled: true,
   creaturePregnancyMiscarriageEnergyRatio: 0.15,
-  creaturePregnancyMiscarriageChancePerTick: 0.01,
+  // Probability per second while below the miscarriage energy threshold.
+  // This is converted to a per-tick chance internally so it remains stable
+  // if ticksPerSecond is changed.
+  creaturePregnancyMiscarriageChancePerSecond: 0.4528433576,
 
   // === CREATURES: MATE SEEKING ===
   creatureMateSeekingEnabled: true,
@@ -192,7 +195,7 @@ export const simConfig = {
   creatureFoodProperties: {
     grass: { nutrition: 1, handling: 1, risk: 0.02 },
     berries: { nutrition: 1.2, handling: 1, risk: 0.04 },
-    meat: { nutrition: 4.0, handling: 1.2, risk: 0.12 }  // Meat is 4x as nutritious - keeps predators full longer
+    meat: { nutrition: 4.0, handling: 1.2, risk: 0.12 } // Meat is 4x as nutritious - keeps predators full longer
   },
   creatureFoodEfficiency: {
     grass: 1,
@@ -284,52 +287,209 @@ export const configMeta = {
 
   // Creatures: Base Stats
   creatureCount: { label: 'Creature Count', min: 0, max: 500, step: 10, category: 'creatures' },
-  creaturePredatorCount: { label: 'Predator Count', min: 0, max: 50, step: 1, category: 'creatures' },
+  creaturePredatorCount: {
+    label: 'Predator Count',
+    min: 0,
+    max: 50,
+    step: 1,
+    category: 'creatures'
+  },
   creatureBaseSpeed: { label: 'Base Speed', min: 1, max: 30, step: 1, category: 'creatures' },
   creatureBaseEnergy: { label: 'Base Energy', min: 0.1, max: 5, step: 0.1, category: 'creatures' },
   creatureBaseWater: { label: 'Base Water', min: 0.1, max: 5, step: 0.1, category: 'creatures' },
 
   // Creatures: Metabolism
-  creatureBasalEnergyDrain: { label: 'Energy Drain/s', min: 0, max: 0.1, step: 0.001, category: 'metabolism' },
-  creatureBasalWaterDrain: { label: 'Water Drain/s', min: 0, max: 0.1, step: 0.001, category: 'metabolism' },
-  creatureSprintStaminaDrain: { label: 'Sprint Drain/s', min: 0, max: 1, step: 0.01, category: 'metabolism' },
-  creatureStaminaRegen: { label: 'Stamina Regen/s', min: 0, max: 1, step: 0.01, category: 'metabolism' },
+  creatureBasalEnergyDrain: {
+    label: 'Energy Drain/s',
+    min: 0,
+    max: 0.1,
+    step: 0.001,
+    category: 'metabolism'
+  },
+  creatureBasalWaterDrain: {
+    label: 'Water Drain/s',
+    min: 0,
+    max: 0.1,
+    step: 0.001,
+    category: 'metabolism'
+  },
+  creatureSprintStaminaDrain: {
+    label: 'Sprint Drain/s',
+    min: 0,
+    max: 1,
+    step: 0.01,
+    category: 'metabolism'
+  },
+  creatureStaminaRegen: {
+    label: 'Stamina Regen/s',
+    min: 0,
+    max: 1,
+    step: 0.01,
+    category: 'metabolism'
+  },
   creatureEatAmount: { label: 'Eat Amount/s', min: 0.1, max: 2, step: 0.1, category: 'metabolism' },
-  creatureDrinkAmount: { label: 'Drink Amount/s', min: 0.1, max: 2, step: 0.1, category: 'metabolism' },
+  creatureDrinkAmount: {
+    label: 'Drink Amount/s',
+    min: 0.1,
+    max: 2,
+    step: 0.1,
+    category: 'metabolism'
+  },
 
   // Predator Behavior
-  creaturePredatorRestThreshold: { label: 'Rest When Energy >', min: 0.3, max: 1, step: 0.05, category: 'predator' },
-  creaturePredatorHuntThreshold: { label: 'Hunt When Energy <', min: 0.1, max: 0.8, step: 0.05, category: 'predator' },
-  creatureTargetingRange: { label: 'Targeting Range', min: 5, max: 30, step: 1, category: 'predator' },
+  creaturePredatorRestThreshold: {
+    label: 'Rest When Energy >',
+    min: 0.3,
+    max: 1,
+    step: 0.05,
+    category: 'predator'
+  },
+  creaturePredatorHuntThreshold: {
+    label: 'Hunt When Energy <',
+    min: 0.1,
+    max: 0.8,
+    step: 0.05,
+    category: 'predator'
+  },
+  creatureTargetingRange: {
+    label: 'Targeting Range',
+    min: 5,
+    max: 30,
+    step: 1,
+    category: 'predator'
+  },
 
   // Herding Behavior
-  creatureHerdingStrength: { label: 'Herd Cohesion', min: 0, max: 0.2, step: 0.01, category: 'herding' },
-  creatureHerdingThreatRange: { label: 'Threat Detect Range', min: 2, max: 20, step: 1, category: 'herding' },
-  creatureHerdingThreatStrength: { label: 'Flee Strength', min: 0, max: 0.5, step: 0.05, category: 'herding' },
-  creatureHerdingIdealDistance: { label: 'Herd Spacing', min: 2, max: 10, step: 0.5, category: 'herding' },
+  creatureHerdingStrength: {
+    label: 'Herd Cohesion',
+    min: 0,
+    max: 0.2,
+    step: 0.01,
+    category: 'herding'
+  },
+  creatureHerdingThreatRange: {
+    label: 'Threat Detect Range',
+    min: 2,
+    max: 20,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingThreatStrength: {
+    label: 'Flee Strength',
+    min: 0,
+    max: 0.5,
+    step: 0.05,
+    category: 'herding'
+  },
+  creatureHerdingIdealDistance: {
+    label: 'Herd Spacing',
+    min: 2,
+    max: 10,
+    step: 0.5,
+    category: 'herding'
+  },
 
   // Creatures: Reproduction
-  creatureReproductionMinAge: { label: 'Min Repro Age (s)', min: 0, max: 300, step: 10, category: 'reproduction' },
-  creatureReproductionCooldown: { label: 'Repro Cooldown (s)', min: 0, max: 600, step: 10, category: 'reproduction' },
-  creatureGestationTime: { label: 'Gestation (s)', min: 10, max: 300, step: 5, category: 'reproduction' },
-  creatureConceptionChance: { label: 'Conception %', min: 0, max: 1, step: 0.05, category: 'reproduction' },
+  creatureReproductionMinAge: {
+    label: 'Min Repro Age (s)',
+    min: 0,
+    max: 300,
+    step: 10,
+    category: 'reproduction'
+  },
+  creatureReproductionCooldown: {
+    label: 'Repro Cooldown (s)',
+    min: 0,
+    max: 600,
+    step: 10,
+    category: 'reproduction'
+  },
+  creatureGestationTime: {
+    label: 'Gestation (s)',
+    min: 10,
+    max: 300,
+    step: 5,
+    category: 'reproduction'
+  },
+  creatureConceptionChance: {
+    label: 'Conception %',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'reproduction'
+  },
+  creaturePregnancyMiscarriageChancePerSecond: {
+    label: 'Miscarriage chance/s',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'reproduction'
+  },
 
   // Creatures: Lifespan
   creatureMaxAge: { label: 'Max Age (s)', min: 60, max: 1800, step: 60, category: 'lifespan' },
 
   // Creatures: Chase
-  creatureChaseStartThreshold: { label: 'Chase Start', min: 0, max: 1, step: 0.05, category: 'chase' },
-  creatureChaseStopThreshold: { label: 'Chase Stop', min: 0, max: 1, step: 0.05, category: 'chase' },
-  creatureChaseLoseTime: { label: 'Chase Lose (s)', min: 0.05, max: 1, step: 0.05, category: 'chase' },
-  creatureChaseRestTime: { label: 'Chase Rest (s)', min: 0.05, max: 1, step: 0.05, category: 'chase' },
+  creatureChaseStartThreshold: {
+    label: 'Chase Start',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'chase'
+  },
+  creatureChaseStopThreshold: {
+    label: 'Chase Stop',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'chase'
+  },
+  creatureChaseLoseTime: {
+    label: 'Chase Lose (s)',
+    min: 0.05,
+    max: 1,
+    step: 0.05,
+    category: 'chase'
+  },
+  creatureChaseRestTime: {
+    label: 'Chase Rest (s)',
+    min: 0.05,
+    max: 1,
+    step: 0.05,
+    category: 'chase'
+  },
 
   // Plants & Carcasses
-  grassRegrowthRate: { label: 'Grass Regrowth/s', min: 0, max: 0.1, step: 0.005, category: 'plants' },
+  grassRegrowthRate: {
+    label: 'Grass Regrowth/s',
+    min: 0,
+    max: 0.1,
+    step: 0.005,
+    category: 'plants'
+  },
   bushBerryRegenRate: { label: 'Berry Regen/s', min: 0, max: 1, step: 0.05, category: 'plants' },
-  carcassBaseYield: { label: 'Carcass Meat Yield', min: 0.5, max: 10, step: 0.5, category: 'plants' },
+  carcassBaseYield: {
+    label: 'Carcass Meat Yield',
+    min: 0.5,
+    max: 10,
+    step: 0.5,
+    category: 'plants'
+  },
   carcassDecayRate: { label: 'Carcass Decay/s', min: 0, max: 0.1, step: 0.005, category: 'plants' },
 
   // Genetics
-  creatureGenomeMutationRate: { label: 'Mutation Rate', min: 0, max: 0.5, step: 0.01, category: 'genetics' },
-  creatureGenomeMutationStrength: { label: 'Mutation Strength', min: 0, max: 0.3, step: 0.01, category: 'genetics' }
+  creatureGenomeMutationRate: {
+    label: 'Mutation Rate',
+    min: 0,
+    max: 0.5,
+    step: 0.01,
+    category: 'genetics'
+  },
+  creatureGenomeMutationStrength: {
+    label: 'Mutation Strength',
+    min: 0,
+    max: 0.3,
+    step: 0.01,
+    category: 'genetics'
+  }
 };

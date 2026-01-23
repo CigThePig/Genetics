@@ -31,7 +31,7 @@ describe('carcasses', () => {
 
   it('decays meat over time and removes empty carcasses', () => {
     const world = { carcasses: [], carcassIdCounter: 0 };
-    const config = { carcassDecayRate: 0.2 };
+    const config = { carcassDecayRate: 0.2, ticksPerSecond: 1 };
 
     spawnCarcass({ world, x: 1, y: 1, meat: 0.3, config });
     let summary = updateCarcasses({ world, config });

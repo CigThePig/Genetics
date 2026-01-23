@@ -19,8 +19,6 @@ export const SPECIES_LABELS = Object.freeze({
   [SPECIES.OCTAGON]: 'Octagons'
 });
 
-export const pickSpawnSpecies = (index) =>
-  SPECIES_LIST[index % SPECIES_LIST.length];
+export const pickSpawnSpecies = (index) => SPECIES_LIST[index % SPECIES_LIST.length];
 
-export const getSpeciesLabel = (species) =>
-  SPECIES_LABELS[species] ?? 'Unknown';
+export const getSpeciesLabel = (species) => SPECIES_LABELS[species] ?? 'Unknown';

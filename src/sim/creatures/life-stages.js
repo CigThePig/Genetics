@@ -9,9 +9,7 @@
  * Resolves ticks per second from config, with fallback to 60.
  */
 export const resolveTicksPerSecond = (config) =>
-  Number.isFinite(config?.ticksPerSecond)
-    ? Math.max(1, config.ticksPerSecond)
-    : 60;
+  Number.isFinite(config?.ticksPerSecond) ? Math.max(1, config.ticksPerSecond) : 60;
 
 /**
  * Default life stages used when config doesn't specify custom stages.
@@ -56,12 +54,8 @@ export const getLifeStageDefinitions = (config) => {
       id: stage.id ?? stage.label ?? 'stage',
       label: stage.label ?? stage.id ?? 'Stage',
       minAge: Math.max(0, Math.trunc(stage.minAge * ticksPerSecond)),
-      movementScale: Number.isFinite(stage.movementScale)
-        ? stage.movementScale
-        : 1,
-      metabolismScale: Number.isFinite(stage.metabolismScale)
-        ? stage.metabolismScale
-        : 1
+      movementScale: Number.isFinite(stage.movementScale) ? stage.movementScale : 1,
+      metabolismScale: Number.isFinite(stage.metabolismScale) ? stage.metabolismScale : 1
     }));
 
   if (!normalized.length) {
