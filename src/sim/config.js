@@ -74,11 +74,15 @@ export const simConfig = {
   creatureSpawnClusterJitter: 4,
 
   // === CREATURES: HERDING ===
+  // Only herbivores (squares, circles) herd - predators hunt independently
   creatureHerdingEnabled: true,
-  creatureHerdingRange: 8,
-  creatureHerdingStrength: 0.15,
-  creatureHerdingMinGroupSize: 2,
-  creatureHerdingSeparation: 1.5,
+  creatureHerdingRange: 10,           // How far to look for herd members
+  creatureHerdingThreatRange: 12,     // How far to detect predators
+  creatureHerdingStrength: 0.03,      // Very gentle cohesion (loose groups)
+  creatureHerdingThreatStrength: 0.4, // How fast to flee from predators
+  creatureHerdingMinGroupSize: 2,     // Min creatures to form a herd
+  creatureHerdingSeparation: 2.5,     // Personal space distance
+  creatureHerdingIdealDistance: 4,    // Preferred distance from herd center
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
