@@ -97,7 +97,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       continue;
     }
     const intentType = creature.intent?.type;
-    if (intentType === 'drink' || intentType === 'eat') {
+    // Resting, drinking, or eating creatures don't move
+    if (intentType === 'drink' || intentType === 'eat' || intentType === 'rest') {
       continue;
     }
     const baseSpeed = resolveCreatureSpeed(creature, config);

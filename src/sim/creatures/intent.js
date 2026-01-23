@@ -180,6 +180,18 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     config?.creatureBerryEatMin,
     0.1
   );
+  
+  // Predator rest behavior settings
+  const predatorRestEnabled = config?.creaturePredatorRestEnabled !== false;
+  const predatorRestThreshold = resolveRatio(
+    config?.creaturePredatorRestThreshold,
+    0.9
+  );
+  const predatorHuntThreshold = resolveRatio(
+    config?.creaturePredatorHuntThreshold,
+    0.5
+  );
+  
   const creaturesById = mateSeekingEnabled ? new Map() : null;
   if (creaturesById) {
     for (const creature of creatures) {
@@ -221,6 +233,30 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
     const dietPreferences = getDietPreferences(creature.species);
     const canEatMeat = dietPreferences.includes(FOOD_TYPES.MEAT);
+    
+    // Predator rest behavior: well-fed predators don't hunt
+    // They only start hunting again when energy drops below hunt threshold
+    const isPredator = canEatMeat && dietPreferences[0] === FOOD_TYPES.MEAT;
+    let predatorIsResting = false;
+    if (isPredator && predatorRestEnabled) {
+      // Track rest state with hysteresis to prevent flip-flopping
+      if (!creature.predatorState) {
+        creature.predatorState = { isResting: energyRatio >= predatorRestThreshold };
+      }
+      if (creature.predatorState.isResting) {
+        // Currently resting - only start hunting if very hungry
+        if (energyRatio < predatorHuntThreshold) {
+          creature.predatorState.isResting = false;
+        }
+      } else {
+        // Currently hunting - only rest if very full
+        if (energyRatio >= predatorRestThreshold) {
+          creature.predatorState.isResting = true;
+        }
+      }
+      predatorIsResting = creature.predatorState.isResting;
+    }
+    
     const perceivedFoodCell = creature.perception?.foodCell;
     const perceivedFoodType = creature.perception?.foodType;
     const perceivedWaterCell = creature.perception?.waterCell;
@@ -342,7 +378,9 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     } else if (creature.priority === 'thirst' && canDrink) {
       intent = 'drink';
     } else if (creature.priority === 'hunger' && canEat) {
-      const chaseTarget = canEatMeat ? getChaseTarget(creature, creatures) : null;
+      // Resting predators don't chase - they wait until hungry
+      const shouldHunt = canEatMeat && !predatorIsResting;
+      const chaseTarget = shouldHunt ? getChaseTarget(creature, creatures) : null;
       if (chaseTarget && creature.chase?.lastKnownPosition) {
         intent = 'hunt';
         target = { ...creature.chase.lastKnownPosition };
@@ -353,7 +391,8 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
           distance: creature.chase.distance ?? null
         };
       } else {
-        if (canEatMeat && dietPreferences[0] === FOOD_TYPES.MEAT) {
+        // Only start new hunts if not resting
+        if (shouldHunt && dietPreferences[0] === FOOD_TYPES.MEAT) {
           const predatorTarget = selectPredatorTarget({
             predator: creature,
             creatures,
@@ -393,7 +432,8 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
             intent = 'seek';
             target = { ...perceivedFoodCell };
             foodType = perceivedFoodType;
-          } else if (canEatMeat) {
+          } else if (shouldHunt) {
+            // Only hunt as fallback if not resting
             const predatorTarget = selectPredatorTarget({
               predator: creature,
               creatures,
@@ -442,6 +482,26 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
           creature,
           type: MEMORY_TYPES.WATER
         });
+      }
+    }
+
+    // Resting predators: if well-fed, seek water and rest there
+    if (predatorIsResting && intent === 'wander') {
+      if (!hasNearbyWater(world, cell, config)) {
+        // Not near water - seek it
+        if (perceivedWaterCell) {
+          intent = 'seek';
+          target = { ...perceivedWaterCell };
+        } else {
+          memoryEntry = selectMemoryTarget({
+            creature,
+            type: MEMORY_TYPES.WATER
+          });
+        }
+      } else {
+        // Near water - rest (idle intent with no target)
+        intent = 'rest';
+        target = null;
       }
     }
 
