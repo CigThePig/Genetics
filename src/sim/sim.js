@@ -23,7 +23,8 @@ import {
   updateCreaturePerception,
   updateCreaturePriority,
   updateCreatureReproduction,
-  updateCreatureSprintDecision
+  updateCreatureSprintDecision,
+  updateCreatureHerding
 } from './creatures/index.js';
 
 export function createSim(config = simConfig) {
@@ -127,6 +128,10 @@ export function createSim(config = simConfig) {
         metrics: state.metrics,
         tick: state.tick
       });
+      updateCreatureHerding({
+        creatures: state.creatures,
+        config: resolvedConfig
+      });
       updateCreatureSprintDecision({
         creatures: state.creatures,
         config: resolvedConfig
@@ -189,6 +194,9 @@ export function createSim(config = simConfig) {
         chaseAttempts: state.metrics.chaseAttempts,
         chaseSuccesses: state.metrics.chaseSuccesses,
         chaseLosses: state.metrics.chaseLosses,
+        killsTotal: state.metrics.killsTotal,
+        carcassCount: state.metrics.carcassCount,
+        carcassMeatTotal: state.metrics.carcassMeatTotal,
         birthsTotal: state.metrics.birthsTotal,
         birthsLastTick: state.metrics.birthsLastTick,
         pregnanciesTotal: state.metrics.pregnanciesTotal,

@@ -69,8 +69,16 @@ export const simConfig = {
 
   // === CREATURES: SPAWNING ===
   creatureCount: 80,
+  creaturePredatorCount: 5,
   creatureSpawnClusterSpread: 12,
   creatureSpawnClusterJitter: 4,
+
+  // === CREATURES: HERDING ===
+  creatureHerdingEnabled: true,
+  creatureHerdingRange: 8,
+  creatureHerdingStrength: 0.15,
+  creatureHerdingMinGroupSize: 2,
+  creatureHerdingSeparation: 1.5,
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
