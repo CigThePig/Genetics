@@ -36,32 +36,31 @@ jobs:
           node --version
           npm --version
 
-      - name: Install dependencies (retry + show npm log on failure)
+      - name: Install dependencies (retry + dump npm log on failure)
+        shell: bash
         env:
           NODE_ENV: development
           NPM_CONFIG_UPDATE_NOTIFIER: "false"
         run: |
           set -euo pipefail
 
-          ec=0
-          for attempt in 1 2; do
+          success=0
+          for attempt in 1 2 3; do
             echo "npm ci attempt ${attempt}..."
-            set +e
-            npm ci --no-audit --no-fund
-            ec=$?
-            set -e
-
-            if [ $ec -eq 0 ]; then
+            if npm ci --no-audit --no-fund; then
+              success=1
               break
             fi
 
-            echo "::warning::npm ci failed with exit code ${ec}. Cleaning cache and retrying..."
+            echo "::warning::npm ci failed. Cleaning cache and retrying..."
+            npm cache verify || true
             npm cache clean --force || true
             rm -rf node_modules || true
+            sleep 5
           done
 
-          if [ $ec -ne 0 ]; then
-            echo "::error::npm ci failed after retries (exit ${ec}). Dumping npm debug log tail..."
+          if [ "${success}" -ne 1 ]; then
+            echo "::error::npm ci failed after retries. Dumping npm debug log tail..."
             echo "::group::npm debug logs"
             ls -la ~/.npm/_logs || true
             latest="$(ls -1t ~/.npm/_logs/*debug-0.log 2>/dev/null | head -n 1 || true)"
@@ -70,7 +69,7 @@ jobs:
               tail -n 200 "${latest}" || true
             fi
             echo "::endgroup::"
-            exit $ec
+            exit 1
           fi
 
           if [ ! -x node_modules/.bin/vite ]; then
@@ -97,42 +96,7 @@ jobs:
     runs-on: ubuntu-22.04
     environment:
       name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4        run: npm i -g npm@latest
-
-      - name: Install dependencies
-        env:
-          NODE_ENV: development
-        run: |
-          npm ci --no-audit --no-fund
-          if [ ! -x node_modules/.bin/vite ]; then
-            echo "::error::vite is missing after install. npm ci did not complete successfully."
-            ls -la node_modules/.bin || true
-            exit 1
-          fi
-
-      - name: Build
-        env:
-          VITE_BASE: /Genetics/
-        run: npm run build
-
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
+      url: "${{ steps.deployment.outputs.page_url }}"
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
