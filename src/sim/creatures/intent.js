@@ -353,19 +353,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
           distance: creature.chase.distance ?? null
         };
       } else {
-        const choice = selectFoodChoice({
-          species: creature.species,
-          availability: foodAvailability,
-          minimums: foodMinimums
-        });
-        if (choice) {
-          intent = 'eat';
-          foodType = choice.type;
-        } else if (canSeekPerceivedFood) {
-          intent = 'seek';
-          target = { ...perceivedFoodCell };
-          foodType = perceivedFoodType;
-        } else if (canEatMeat) {
+        if (canEatMeat && dietPreferences[0] === FOOD_TYPES.MEAT) {
           const predatorTarget = selectPredatorTarget({
             predator: creature,
             creatures,
@@ -389,6 +377,53 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
                 distance: predatorTarget.distance
               };
             }
+          }
+        }
+
+        if (intent !== 'hunt') {
+          const choice = selectFoodChoice({
+            species: creature.species,
+            availability: foodAvailability,
+            minimums: foodMinimums
+          });
+          if (choice) {
+            intent = 'eat';
+            foodType = choice.type;
+          } else if (canSeekPerceivedFood) {
+            intent = 'seek';
+            target = { ...perceivedFoodCell };
+            foodType = perceivedFoodType;
+          } else if (canEatMeat) {
+            const predatorTarget = selectPredatorTarget({
+              predator: creature,
+              creatures,
+              config
+            });
+            if (predatorTarget) {
+              const started = startCreatureChase({
+                creature,
+                target: predatorTarget.target,
+                metrics,
+                config,
+                tick
+              });
+              if (started) {
+                intent = 'hunt';
+                target = { ...predatorTarget.target.position };
+                targeting = {
+                  targetId: predatorTarget.target?.id ?? null,
+                  preySpecies: predatorTarget.preySpecies,
+                  score: predatorTarget.score,
+                  distance: predatorTarget.distance
+                };
+              }
+            } else {
+              memoryEntry = selectMemoryTarget({
+                creature,
+                type: MEMORY_TYPES.FOOD,
+                foodTypes: dietPreferences
+              });
+            }
           } else {
             memoryEntry = selectMemoryTarget({
               creature,
@@ -396,12 +431,6 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
               foodTypes: dietPreferences
             });
           }
-        } else {
-          memoryEntry = selectMemoryTarget({
-            creature,
-            type: MEMORY_TYPES.FOOD,
-            foodTypes: dietPreferences
-          });
         }
       }
     } else if (creature.priority === 'thirst' && waterRatio < drinkThreshold) {

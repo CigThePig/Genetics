@@ -86,7 +86,7 @@ export const simConfig = {
   creatureReactionDelay: 0.033, // seconds (was 2 ticks at 60 TPS)
 
   // === CREATURES: TARGETING & CHASE ===
-  creatureTargetingRange: 5,
+  creatureTargetingRange: 10,
   creatureTargetingDistanceWeight: 0.12,
   creatureTargetingPreferences: {
     triangle: { circle: 1, octagon: 0.85 },
@@ -94,9 +94,9 @@ export const simConfig = {
   },
   creatureChaseStartThreshold: 0.6,
   creatureChaseStopThreshold: 0.25,
-  creatureChaseLoseDistance: 6,
-  creatureChaseLoseTime: 0.1, // seconds (was 6 ticks at 60 TPS)
-  creatureChaseCatchDistance: 0.6,
+  creatureChaseLoseDistance: 12,
+  creatureChaseLoseTime: 0.25, // seconds (was 15 ticks at 60 TPS)
+  creatureChaseCatchDistance: 1.0,
   creatureChaseRestTime: 0.1, // seconds (was 6 ticks at 60 TPS)
 
   // === CREATURES: MEMORY ===
