@@ -28,8 +28,24 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: Debug toolchain versions
+        run: |
+          node --version
+          npm --version
+
+      - name: Upgrade npm (workaround for npm "Exit handler never called")
+        run: npm i -g npm@latest
+
       - name: Install dependencies
-        run: npm ci
+        env:
+          NODE_ENV: development
+        run: |
+          npm ci --no-audit --no-fund
+          if [ ! -x node_modules/.bin/vite ]; then
+            echo "::error::vite is missing after install. npm ci did not complete successfully."
+            ls -la node_modules/.bin || true
+            exit 1
+          fi
 
       - name: Build
         env:
