@@ -41,7 +41,7 @@ export {
 export { updateCreatureMovement } from './movement.js';
 
 // Re-export herding system
-export { updateCreatureHerding, getHerdingOffset, getHerdSize } from './herding.js';
+export { updateCreatureHerding, getHerdingOffset, getHerdSize, isThreatened } from './herding.js';
 
 // Re-export intent/priority system
 export {

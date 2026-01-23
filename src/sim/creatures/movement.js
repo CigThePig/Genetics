@@ -118,7 +118,6 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const y = creature.position.y;
     const heading = resolveHeading(creature, rng);
     const target = creature.intent?.target;
-    const herdingOffset = getHerdingOffset(creature);
     let desiredHeading = heading;
     
     // Calculate base target direction
@@ -130,29 +129,27 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       targetY = target.y;
     }
     
-    // Apply herding offset for wandering or seeking creatures
-    const shouldApplyHerding = herdingOffset && 
-      (intentType === 'wander' || intentType === 'seek' || !intentType);
+    // Apply herding offset ONLY for wandering creatures (no urgent needs)
+    // The herding module already filters to herbivores only
+    const herdingOffset = getHerdingOffset(creature);
+    const shouldApplyHerding = herdingOffset && intentType === 'wander';
     
     if (shouldApplyHerding) {
-      // If we have a target, blend herding with target
-      if (targetX !== null && targetY !== null) {
-        const toTargetX = targetX - x;
-        const toTargetY = targetY - y;
-        const targetDist = Math.sqrt(toTargetX * toTargetX + toTargetY * toTargetY);
+      // No target - herding influences wander direction
+      const herdMag = Math.sqrt(herdingOffset.x * herdingOffset.x + herdingOffset.y * herdingOffset.y);
+      if (herdMag > 0.01) {
+        // Blend current heading with herding direction
+        const currentDirX = Math.cos(heading);
+        const currentDirY = Math.sin(heading);
+        const herdDirX = herdingOffset.x / herdMag;
+        const herdDirY = herdingOffset.y / herdMag;
         
-        if (targetDist > 0.01) {
-          // Blend herding offset with target direction (herding is secondary)
-          const blendedX = toTargetX + herdingOffset.x * 0.5;
-          const blendedY = toTargetY + herdingOffset.y * 0.5;
-          desiredHeading = Math.atan2(blendedY, blendedX);
-        }
-      } else {
-        // No target - herding becomes primary influence on wander
-        const herdDist = Math.sqrt(herdingOffset.x * herdingOffset.x + herdingOffset.y * herdingOffset.y);
-        if (herdDist > 0.1) {
-          desiredHeading = Math.atan2(herdingOffset.y, herdingOffset.x);
-        }
+        // Weighted blend - herding is subtle influence, not override
+        const blendWeight = Math.min(0.5, herdMag); // Cap influence
+        const blendedX = currentDirX * (1 - blendWeight) + herdDirX * blendWeight;
+        const blendedY = currentDirY * (1 - blendWeight) + herdDirY * blendWeight;
+        
+        desiredHeading = Math.atan2(blendedY, blendedX);
       }
     } else if (targetX !== null && targetY !== null) {
       const dx = targetX - x;
