@@ -231,7 +231,10 @@ export function createUI({
     { key: 'bushAverageHealth', label: 'Bush avg health', section: 'plants' },
     { key: 'chaseAttempts', label: 'Chase attempts', section: 'chase' },
     { key: 'chaseSuccesses', label: 'Chase successes', section: 'chase' },
-    { key: 'chaseLosses', label: 'Chase losses', section: 'chase' }
+    { key: 'chaseLosses', label: 'Chase losses', section: 'chase' },
+    { key: 'killsTotal', label: 'Kills total', section: 'hunting' },
+    { key: 'carcassCount', label: 'Carcasses', section: 'hunting' },
+    { key: 'carcassMeatTotal', label: 'Carcass meat', section: 'hunting' }
   ];
 
   const metricRows = new Map();
@@ -273,6 +276,7 @@ export function createUI({
     { key: 'deaths', title: 'Deaths' },
     { key: 'plants', title: 'Plants' },
     { key: 'chase', title: 'Chase' },
+    { key: 'hunting', title: 'Hunting' },
     { key: 'genetics', title: 'Genetics' }
   ];
 
