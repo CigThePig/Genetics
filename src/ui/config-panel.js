@@ -61,10 +61,12 @@ export function createConfigPanel({ container, config, onConfigChange }) {
     simulation: 'Simulation',
     creatures: 'Creatures',
     metabolism: 'Metabolism',
+    predator: 'Predator Behavior',
+    herding: 'Herding Behavior',
     reproduction: 'Reproduction',
     lifespan: 'Lifespan',
     chase: 'Chase',
-    plants: 'Plants',
+    plants: 'Plants & Carcasses',
     genetics: 'Genetics',
     other: 'Other'
   };
@@ -73,7 +75,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
   const inputs = new Map();
 
   // Create category sections
-  const categoryOrder = ['simulation', 'creatures', 'metabolism', 'reproduction', 'lifespan', 'chase', 'plants', 'genetics', 'other'];
+  const categoryOrder = ['simulation', 'creatures', 'metabolism', 'predator', 'herding', 'reproduction', 'lifespan', 'chase', 'plants', 'genetics', 'other'];
   for (const category of categoryOrder) {
     const items = categories[category];
     if (!items || items.length === 0) continue;
