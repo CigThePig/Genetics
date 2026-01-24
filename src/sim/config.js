@@ -38,9 +38,9 @@ export const simConfig = {
 
   // === PLANTS: GRASS ===
   grassCap: 1,
-  grassRegrowthRate: 0.02, // per second
+  grassRegrowthRate: 0.025, // per second (was 0.02 - slightly faster recovery)
   grassRegrowthDiminishPower: 1.5,
-  grassInitialAmount: 0.2,
+  grassInitialAmount: 0.25, // (was 0.2 - more starting food)
   grassPatchCount: 112,
   grassPatchMinRadius: 2,
   grassPatchMaxRadius: 7,
@@ -48,7 +48,7 @@ export const simConfig = {
   grassPatchBaseRatio: 0.15,
   grassStressThreshold: 0.15,
   grassStressIncrease: 0.02,
-  grassStressRecoveryRate: 0.015,
+  grassStressRecoveryRate: 0.018, // (was 0.015 - faster stress recovery)
   grassStressRecoveryThreshold: 0.35,
   grassStressVisibleThreshold: 0.1,
   grassCoverageThreshold: 0.1,
@@ -58,144 +58,142 @@ export const simConfig = {
   bushCount: 96,
   bushInitialHealth: 0.85,
   bushBerryMax: 12,
-  bushInitialBerries: 6,
-  bushRecoveryRate: 0.01,
-  bushBerryRegenRate: 0.25,
+  bushInitialBerries: 8, // (was 6 - more starting berries)
+  bushRecoveryRate: 0.012, // (was 0.01 - slightly faster bush recovery)
+  bushBerryRegenRate: 0.3, // (was 0.25 - faster berry regen)
 
   // === PLANTS: CARCASSES ===
-  carcassBaseYield: 3.0, // Meat from a kill (enough for multiple feedings)
-  carcassMaxMeatPerCell: 6, // Allow multiple carcasses to stack
-  carcassDecayRate: 0.015, // Per second - slow decay, carcass lasts ~3+ minutes
+  carcassBaseYield: 3.5, // (was 3.0 - more meat per kill keeps predators full longer)
+  carcassMaxMeatPerCell: 6,
+  carcassDecayRate: 0.012, // (was 0.015 - slower decay, carcass lasts longer)
 
   // === CREATURES: SPAWNING ===
   creatureCount: 80,
-  creaturePredatorCount: 5,
+  creaturePredatorCount: 8, // (was 5 - more predators for better ecosystem pressure)
   creatureSpawnClusterSpread: 12,
   creatureSpawnClusterJitter: 4,
 
   // === CREATURES: HERDING ===
   // Only herbivores (squares, circles) herd - predators hunt independently
   creatureHerdingEnabled: true,
-  creatureHerdingRange: 12, // How far to look for herd members
-  creatureHerdingThreatRange: 8, // Reduced - only flee from close predators
-  creatureHerdingStrength: 0.02, // Very gentle cohesion (loose groups)
-  creatureHerdingThreatStrength: 0.2, // Reduced - less frantic fleeing
-  creatureHerdingMinGroupSize: 2, // Min creatures to form a herd
-  creatureHerdingSeparation: 2.0, // Personal space distance
-  creatureHerdingIdealDistance: 5, // Preferred distance from herd center
+  creatureHerdingRange: 14, // (was 12 - wider herding awareness)
+  creatureHerdingThreatRange: 10, // (was 8 - better predator detection)
+  creatureHerdingStrength: 0.025, // (was 0.02 - slightly tighter groups)
+  creatureHerdingThreatStrength: 0.25, // (was 0.2 - stronger flee response)
+  creatureHerdingMinGroupSize: 2,
+  creatureHerdingSeparation: 2.0,
+  creatureHerdingIdealDistance: 5,
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
   creatureBaseWater: 1,
   creatureBaseStamina: 1,
   creatureBaseHp: 1,
-  creatureBaseSpeed: 9, // tiles per second
+  creatureBaseSpeed: 10, // (was 9 - slightly faster base movement)
 
   // === CREATURES: PERCEPTION & ALERTNESS ===
-  creaturePerceptionRange: 4,
-  creaturePerceptionRangeMax: 7,
-  creatureAlertnessBase: 0.55,
-  creatureReactionDelay: 0.033, // seconds (was 2 ticks at 60 TPS)
+  creaturePerceptionRange: 5, // (was 4 - better awareness)
+  creaturePerceptionRangeMax: 8, // (was 7)
+  creatureAlertnessBase: 0.6, // (was 0.55 - more alert)
+  creatureReactionDelay: 0.033, // seconds (unchanged)
 
   // === CREATURES: TARGETING & CHASE ===
-  creatureTargetingRange: 10,
+  creatureTargetingRange: 12, // (was 10 - predators can spot prey further)
   creatureTargetingDistanceWeight: 0.12,
   creatureTargetingPreferences: {
     triangle: { circle: 1, octagon: 0.85 },
     octagon: { square: 1 }
   },
-  creatureChaseStartThreshold: 0.6,
-  creatureChaseStopThreshold: 0.25,
-  creatureChaseLoseDistance: 12,
-  creatureChaseLoseTime: 0.25, // seconds (was 15 ticks at 60 TPS)
+  creatureChaseStartThreshold: 0.55, // (was 0.6 - start chasing with less stamina)
+  creatureChaseStopThreshold: 0.2, // (was 0.25 - push harder before giving up)
+  creatureChaseLoseDistance: 14, // (was 12 - longer chase persistence)
+  creatureChaseLoseTime: 0.3, // (was 0.25 - more time before losing target)
   creatureChaseCatchDistance: 1.0,
-  creatureChaseRestTime: 0.1, // seconds (was 6 ticks at 60 TPS)
+  creatureChaseRestTime: 0.15, // (was 0.1 - slightly longer rest after chase)
 
   // === CREATURES: PREDATOR BEHAVIOR ===
   // When well-fed, predators rest near water instead of constantly hunting
   creaturePredatorRestEnabled: true,
-  creaturePredatorRestThreshold: 0.7, // Energy above 70% = resting (was 0.9)
-  creaturePredatorHuntThreshold: 0.4, // Energy below 40% = actively hunt (was 0.5)
-  creaturePredatorPatrolSpeed: 0.4, // Multiplier when patrolling (slower movement)
+  creaturePredatorRestThreshold: 0.75, // (was 0.7 - rest slightly earlier)
+  creaturePredatorHuntThreshold: 0.5, // (was 0.4 - start hunting sooner)
+  creaturePredatorPatrolSpeed: 0.45, // (was 0.4 - slightly faster patrol)
 
   // === CREATURES: MEMORY ===
   creatureMemoryMaxEntries: 12,
-  creatureMemoryDecay: 0.02, // per second
+  creatureMemoryDecay: 0.018, // (was 0.02 - memories last slightly longer)
   creatureMemoryMinStrength: 0.05,
   creatureMemoryMergeDistance: 1.5,
   creatureMemoryVisitPenalty: 0.5,
 
   // === CREATURES: METABOLISM ===
-  creatureBasalEnergyDrain: 0.008, // per second
-  creatureBasalWaterDrain: 0.01, // per second
-  creatureBasalStaminaDrain: 0.004, // per second
+  creatureBasalEnergyDrain: 0.007, // (was 0.008 - slightly slower drain)
+  creatureBasalWaterDrain: 0.009, // (was 0.01 - slightly slower drain)
+  creatureBasalStaminaDrain: 0.003, // (was 0.004 - slower passive stamina loss)
 
   // === CREATURES: SPRINT ===
-  creatureSprintStartThreshold: 0.7,
-  creatureSprintStopThreshold: 0.4,
-  creatureSprintSpeedMultiplier: 1.6,
-  creatureSprintStaminaDrain: 0.3, // per second
-  creatureStaminaRegen: 0.18, // per second
+  creatureSprintStartThreshold: 0.65, // (was 0.7 - sprint with slightly less stamina)
+  creatureSprintStopThreshold: 0.35, // (was 0.4 - push sprinting further)
+  creatureSprintSpeedMultiplier: 1.7, // (was 1.6 - faster sprinting)
+  creatureSprintStaminaDrain: 0.25, // (was 0.3 - slower sprint drain = longer chases)
+  creatureStaminaRegen: 0.2, // (was 0.18 - faster stamina recovery)
 
   // === CREATURES: REPRODUCTION ===
-  creatureReproductionMinAge: 90, // seconds until reproductive maturity
-  creatureReproductionMinEnergyRatio: 0.8,
-  creatureReproductionMinWaterRatio: 0.8,
-  creatureReproductionCooldown: 180, // seconds between reproduction attempts
-  creatureReproductionFailedCooldown: 20, // seconds cooldown when conception fails
-  creatureReproductionFailedCostMultiplier: 0.5,
+  creatureReproductionMinAge: 75, // (was 90 - mature faster)
+  creatureReproductionMinEnergyRatio: 0.7, // (was 0.8 - easier to reproduce)
+  creatureReproductionMinWaterRatio: 0.7, // (was 0.8 - easier to reproduce)
+  creatureReproductionCooldown: 120, // (was 180 - faster reproduction cycle)
+  creatureReproductionFailedCooldown: 15, // (was 20 - try again sooner)
+  creatureReproductionFailedCostMultiplier: 0.4, // (was 0.5 - less penalty for failed mating)
   creatureReproductionRange: 2.5,
 
   // === CREATURES: SEX & PREGNANCY ===
   creatureSexEnabled: true,
   creaturePregnancyEnabled: true,
   creatureSexInitialSplitMode: 'exact',
-  creatureConceptionChance: 0.5,
-  creatureGestationTime: 60, // seconds (was 3600 ticks at 60 TPS)
+  creatureConceptionChance: 0.6, // (was 0.5 - higher conception rate)
+  creatureGestationTime: 45, // (was 60 - faster pregnancy)
   creatureGestationTraitEnabled: true,
-  creaturePregnancyMetabolismMultiplier: 1.15,
-  creaturePregnancyMoveSpeedMultiplier: 0.9,
+  creaturePregnancyMetabolismMultiplier: 1.12, // (was 1.15 - less pregnancy cost)
+  creaturePregnancyMoveSpeedMultiplier: 0.92, // (was 0.9 - less speed penalty)
   creaturePregnancyMiscarriageEnabled: true,
-  creaturePregnancyMiscarriageEnergyRatio: 0.15,
+  creaturePregnancyMiscarriageEnergyRatio: 0.12, // (was 0.15 - miscarriage at lower energy)
   // Probability per second while below the miscarriage energy threshold.
-  // This is converted to a per-tick chance internally so it remains stable
-  // if ticksPerSecond is changed.
-  creaturePregnancyMiscarriageChancePerSecond: 0.4528433576,
+  creaturePregnancyMiscarriageChancePerSecond: 0.35, // (was 0.4528 - lower miscarriage rate)
 
   // === CREATURES: MATE SEEKING ===
   creatureMateSeekingEnabled: true,
-  creatureMateSeekRange: 25,
-  creatureMateSeekCommitTime: 1, // seconds (was 60 ticks at 60 TPS)
-  creatureReproductionRangeWhileSeeking: 6,
+  creatureMateSeekRange: 28, // (was 25 - wider mate search)
+  creatureMateSeekCommitTime: 0.8, // (was 1 - faster commitment)
+  creatureReproductionRangeWhileSeeking: 7, // (was 6 - easier to complete mating)
   creatureMateSeekPriorityOverridesNeeds: false,
 
   // === CREATURES: OFFSPRING ===
-  creatureBirthChildStartingMetersFastMultiplier: 0.85,
-  creatureBirthChildStartingMetersSlowMultiplier: 1.1,
+  creatureBirthChildStartingMetersFastMultiplier: 0.88, // (was 0.85 - healthier fast-gestation babies)
+  creatureBirthChildStartingMetersSlowMultiplier: 1.08, // (was 1.1 - slightly less bonus)
   creatureBirthChildStartingMetersFastIfMultiplierBelow: 0.9,
   creatureBirthChildStartingMetersSlowIfMultiplierAbove: 1.1,
-  creatureReproductionEnergyCost: 0.2,
-  creatureReproductionWaterCost: 0.15,
-  creatureReproductionStaminaCost: 0.05,
-  creatureOffspringEnergy: 0.6,
-  creatureOffspringWater: 0.6,
-  creatureOffspringStamina: 0.6,
-  creatureOffspringHp: 0.8,
+  creatureReproductionEnergyCost: 0.18, // (was 0.2 - less costly reproduction)
+  creatureReproductionWaterCost: 0.12, // (was 0.15 - less costly reproduction)
+  creatureReproductionStaminaCost: 0.04, // (was 0.05)
+  creatureOffspringEnergy: 0.65, // (was 0.6 - offspring start healthier)
+  creatureOffspringWater: 0.65, // (was 0.6)
+  creatureOffspringStamina: 0.65, // (was 0.6)
+  creatureOffspringHp: 0.85, // (was 0.8)
 
   // === CREATURES: NEEDS & EATING ===
   creatureNeedSwitchMargin: 0.05,
-  creatureDrinkThreshold: 0.8,
-  creatureDrinkAmount: 0.6, // per second
-  creatureEatThreshold: 0.8,
-  creatureEatAmount: 0.5, // per second
-  creatureGrassEatMin: 0.05,
-  creatureBerryEatMin: 0.1,
+  creatureDrinkThreshold: 0.75, // (was 0.8 - drink slightly less often)
+  creatureDrinkAmount: 0.7, // (was 0.6 - drink faster)
+  creatureEatThreshold: 0.75, // (was 0.8 - eat slightly less often)
+  creatureEatAmount: 0.55, // (was 0.5 - eat slightly faster)
+  creatureGrassEatMin: 0.04, // (was 0.05 - can eat scarcer grass)
+  creatureBerryEatMin: 0.08, // (was 0.1 - can eat fewer berries)
 
   // === CREATURES: FOOD PROPERTIES ===
   creatureFoodProperties: {
     grass: { nutrition: 1, handling: 1, risk: 0.02 },
-    berries: { nutrition: 1.2, handling: 1, risk: 0.04 },
-    meat: { nutrition: 4.0, handling: 1.2, risk: 0.12 } // Meat is 4x as nutritious - keeps predators full longer
+    berries: { nutrition: 1.3, handling: 1, risk: 0.04 }, // (was 1.2 - berries more nutritious)
+    meat: { nutrition: 4.5, handling: 1.2, risk: 0.12 } // (was 4.0 - meat more nutritious)
   },
   creatureFoodEfficiency: {
     grass: 1,
@@ -204,16 +202,16 @@ export const simConfig = {
   },
   creatureTraitMultipliers: {
     square: {
-      foodEfficiency: { berries: 1.25, grass: 0.75, meat: 0.65 }
+      foodEfficiency: { berries: 1.3, grass: 0.75, meat: 0.65 } // (was 1.25 for berries)
     },
     triangle: {
-      foodEfficiency: { meat: 1.25, grass: 0.7, berries: 0.7 }
+      foodEfficiency: { meat: 1.3, grass: 0.7, berries: 0.7 } // (was 1.25 for meat)
     },
     circle: {
-      foodEfficiency: { grass: 1.25, berries: 0.8, meat: 0.6 }
+      foodEfficiency: { grass: 1.3, berries: 0.8, meat: 0.6 } // (was 1.25 for grass)
     },
     octagon: {
-      foodEfficiency: { meat: 1.2, grass: 0.75, berries: 0.7 }
+      foodEfficiency: { meat: 1.25, grass: 0.75, berries: 0.7 } // (was 1.2 for meat)
     }
   },
 
@@ -244,34 +242,34 @@ export const simConfig = {
     circle: {},
     octagon: {}
   },
-  creatureGenomeJitter: 0.08,
-  creatureGenomeMutationRate: 0.18,
-  creatureGenomeMutationStrength: 0.1,
+  creatureGenomeJitter: 0.1, // (was 0.08 - more initial variation)
+  creatureGenomeMutationRate: 0.2, // (was 0.18 - slightly more mutations)
+  creatureGenomeMutationStrength: 0.12, // (was 0.1 - stronger mutations for faster evolution)
   creatureGenomePleiotropyScale: 0.18,
 
   // === CREATURES: LIFESPAN ===
-  creatureMaxAge: 600, // seconds (600s = 10 minutes)
+  creatureMaxAge: 540, // (was 600 - slightly shorter lifespan creates faster generations)
   creatureLifeStages: [
     {
       id: 'juvenile',
       label: 'Juvenile',
       minAge: 0, // seconds
-      movementScale: 0.85,
-      metabolismScale: 0.9
+      movementScale: 0.88, // (was 0.85 - juveniles slightly faster)
+      metabolismScale: 0.88 // (was 0.9 - juveniles slightly more efficient)
     },
     {
       id: 'adult',
       label: 'Adult',
-      minAge: 120, // seconds
+      minAge: 100, // (was 120 - reach adulthood faster)
       movementScale: 1,
       metabolismScale: 1
     },
     {
       id: 'elder',
       label: 'Elder',
-      minAge: 300, // seconds
-      movementScale: 0.75,
-      metabolismScale: 1.1
+      minAge: 280, // (was 300 - become elder slightly earlier)
+      movementScale: 0.78, // (was 0.75 - elders slightly faster)
+      metabolismScale: 1.08 // (was 1.1 - elders slightly more efficient)
     }
   ],
   creatureInspectRadius: 6
