@@ -9,6 +9,7 @@
  * - Herding applies to both 'wander' and 'graze' intents
  * - Reduced per-tick noise (jitter only on retarget, not every tick)
  * - Faster reactive turning when fleeing from threats
+ * - Boundary avoidance: creatures steer away from map edges
  */
 
 import { getTerrainEffectsAt } from '../terrain-effects.js';
@@ -130,6 +131,24 @@ const resolveTicksPerSecond = (config) =>
   Number.isFinite(config?.ticksPerSecond) ? Math.max(1, config.ticksPerSecond) : 60;
 
 /**
+ * Resolves boundary avoidance distance from config.
+ * This is how far from edges creatures start steering away.
+ */
+const resolveBoundaryAvoidDistance = (config) =>
+  Number.isFinite(config?.creatureBoundaryAvoidDistance)
+    ? Math.max(1, config.creatureBoundaryAvoidDistance)
+    : 8;
+
+/**
+ * Resolves boundary avoidance strength from config.
+ * Higher values create stronger steering away from edges.
+ */
+const resolveBoundaryAvoidStrength = (config) =>
+  Number.isFinite(config?.creatureBoundaryAvoidStrength)
+    ? Math.max(0, Math.min(1, config.creatureBoundaryAvoidStrength))
+    : 0.6;
+
+/**
  * Ensures wander state exists on creature motion.
  */
 const ensureWanderState = (creature) => {
@@ -146,11 +165,74 @@ const ensureWanderState = (creature) => {
 };
 
 /**
- * Picks a new wander heading based on current heading plus jitter.
+ * Calculates boundary avoidance vector.
+ * Returns a steering vector pointing away from nearby boundaries,
+ * with strength proportional to proximity.
  */
-const pickNewWanderHeading = (currentHeading, rng, jitter) => {
+const calculateBoundaryAvoidance = (x, y, maxX, maxY, avoidDistance) => {
+  let avoidX = 0;
+  let avoidY = 0;
+
+  // Left boundary
+  if (x < avoidDistance) {
+    const proximity = 1 - x / avoidDistance;
+    avoidX += proximity * proximity; // Quadratic falloff - stronger near edge
+  }
+  // Right boundary
+  if (x > maxX - avoidDistance) {
+    const proximity = 1 - (maxX - x) / avoidDistance;
+    avoidX -= proximity * proximity;
+  }
+  // Top boundary (y = 0)
+  if (y < avoidDistance) {
+    const proximity = 1 - y / avoidDistance;
+    avoidY += proximity * proximity;
+  }
+  // Bottom boundary
+  if (y > maxY - avoidDistance) {
+    const proximity = 1 - (maxY - y) / avoidDistance;
+    avoidY -= proximity * proximity;
+  }
+
+  const magnitude = Math.sqrt(avoidX * avoidX + avoidY * avoidY);
+  if (magnitude < 0.001) {
+    return null;
+  }
+
+  return {
+    x: avoidX / magnitude,
+    y: avoidY / magnitude,
+    magnitude: Math.min(1, magnitude) // Cap at 1 for blending
+  };
+};
+
+/**
+ * Picks a new wander heading with boundary awareness.
+ * Biases the heading away from nearby edges.
+ */
+const pickNewWanderHeading = (currentHeading, rng, jitter, boundaryAvoid, avoidStrength) => {
+  // Start with random jitter from current heading
   const turn = (rng.nextFloat() * 2 - 1) * jitter;
-  return currentHeading + turn;
+  let newHeading = currentHeading + turn;
+
+  // If near boundary, blend toward avoidance direction
+  if (boundaryAvoid && avoidStrength > 0) {
+    const avoidHeading = Math.atan2(boundaryAvoid.y, boundaryAvoid.x);
+    const blendWeight = avoidStrength * boundaryAvoid.magnitude;
+
+    // Blend the new heading toward the avoidance heading
+    const currentDirX = Math.cos(newHeading);
+    const currentDirY = Math.sin(newHeading);
+    const avoidDirX = Math.cos(avoidHeading);
+    const avoidDirY = Math.sin(avoidHeading);
+
+    const blendedX = currentDirX * (1 - blendWeight) + avoidDirX * blendWeight;
+    const blendedY = currentDirY * (1 - blendWeight) + avoidDirY * blendWeight;
+
+    newHeading = Math.atan2(blendedY, blendedX);
+  }
+
+  return newHeading;
 };
 
 /**
@@ -170,6 +252,7 @@ const pickRetargetTicks = (rng, minSeconds, maxSeconds, ticksPerSecond) => {
  * - Max turn rate: smooth turning instead of instant snapping
  * - Herding applies to both wander and graze
  * - Faster turning when fleeing threats
+ * - Boundary avoidance: creatures steer away from map edges
  */
 export function updateCreatureMovement({ creatures, config, rng, world }) {
   if (!Array.isArray(creatures) || !rng || !world) {
@@ -186,6 +269,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const wanderRetarget = resolveWanderRetargetTime(config);
   const wanderJitter = resolveWanderJitter(config);
   const fleeTurnMultiplier = resolveFleeTurnMultiplier(config);
+  const boundaryAvoidDistance = resolveBoundaryAvoidDistance(config);
+  const boundaryAvoidStrength = resolveBoundaryAvoidStrength(config);
 
   // Small noise for targeted movement (much less than before)
   const targetHeadingNoise = 0.08;
@@ -233,6 +318,12 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const isWandering = intentType === 'wander' || intentType === 'graze';
     const shouldApplyHerding = herdingOffset && isWandering;
 
+    // Calculate boundary avoidance for wandering creatures
+    const boundaryAvoid =
+      isWandering && !isThreatened
+        ? calculateBoundaryAvoidance(x, y, maxX, maxY, boundaryAvoidDistance)
+        : null;
+
     // Determine effective max turn rate (faster when fleeing)
     const effectiveMaxTurn = isThreatened ? maxTurnPerTick * fleeTurnMultiplier : maxTurnPerTick;
 
@@ -272,8 +363,15 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
 
         // Weighted blend - herding is subtle influence
         const blendWeight = Math.min(0.5, herdMag);
-        const blendedX = currentDirX * (1 - blendWeight) + herdDirX * blendWeight;
-        const blendedY = currentDirY * (1 - blendWeight) + herdDirY * blendWeight;
+        let blendedX = currentDirX * (1 - blendWeight) + herdDirX * blendWeight;
+        let blendedY = currentDirY * (1 - blendWeight) + herdDirY * blendWeight;
+
+        // Also blend in boundary avoidance if present
+        if (boundaryAvoid) {
+          const avoidWeight = boundaryAvoidStrength * boundaryAvoid.magnitude * 0.5;
+          blendedX = blendedX * (1 - avoidWeight) + boundaryAvoid.x * avoidWeight;
+          blendedY = blendedY * (1 - avoidWeight) + boundaryAvoid.y * avoidWeight;
+        }
 
         desiredHeading = Math.atan2(blendedY, blendedX);
       }
@@ -287,9 +385,28 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
         wander.ticksRemaining -= 1;
       }
 
-      // Pick new heading when timer expires or no heading set
-      if (wander.ticksRemaining <= 0 || wander.targetHeading === null) {
-        wander.targetHeading = pickNewWanderHeading(heading, rng, wanderJitter);
+      // Force early retarget if heading strongly toward boundary
+      let forceRetarget = false;
+      if (boundaryAvoid && boundaryAvoid.magnitude > 0.7) {
+        // Check if current heading is toward the boundary
+        const headingX = Math.cos(wander.targetHeading ?? heading);
+        const headingY = Math.sin(wander.targetHeading ?? heading);
+        // Dot product: negative means heading toward boundary
+        const dot = headingX * boundaryAvoid.x + headingY * boundaryAvoid.y;
+        if (dot < -0.3) {
+          forceRetarget = true;
+        }
+      }
+
+      // Pick new heading when timer expires, no heading set, or forced by boundary
+      if (wander.ticksRemaining <= 0 || wander.targetHeading === null || forceRetarget) {
+        wander.targetHeading = pickNewWanderHeading(
+          heading,
+          rng,
+          wanderJitter,
+          boundaryAvoid,
+          boundaryAvoidStrength
+        );
         wander.ticksRemaining = pickRetargetTicks(
           rng,
           wanderRetarget.min,
@@ -299,6 +416,16 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       }
 
       desiredHeading = wander.targetHeading;
+
+      // Apply gentle continuous boundary steering even mid-commit
+      if (boundaryAvoid && boundaryAvoid.magnitude > 0.3) {
+        const steerWeight = boundaryAvoidStrength * boundaryAvoid.magnitude * 0.3;
+        const currentDirX = Math.cos(desiredHeading);
+        const currentDirY = Math.sin(desiredHeading);
+        const blendedX = currentDirX * (1 - steerWeight) + boundaryAvoid.x * steerWeight;
+        const blendedY = currentDirY * (1 - steerWeight) + boundaryAvoid.y * steerWeight;
+        desiredHeading = Math.atan2(blendedY, blendedX);
+      }
     }
 
     // Apply max turn rate (smooth turning)
