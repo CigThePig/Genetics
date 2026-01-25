@@ -73,6 +73,14 @@ export const simConfig = {
   creatureSpawnClusterSpread: 12,
   creatureSpawnClusterJitter: 4,
 
+  // === CREATURES: MOVEMENT STYLE ===
+  // Controls how creatures turn and commit to directions
+  creatureMaxTurnRateRadPerSecond: 3.5, // ~200°/sec - smooth but responsive
+  creatureWanderRetargetTimeMin: 0.8, // seconds before picking new wander heading
+  creatureWanderRetargetTimeMax: 2.5, // seconds max before retarget
+  creatureWanderTurnJitter: 0.4, // radians - noise only on retarget, not every tick
+  creatureFleeMaxTurnMultiplier: 2.5, // faster turning when threatened
+
   // === CREATURES: HERDING ===
   // Only herbivores (squares, circles) herd - predators hunt independently
   creatureHerdingEnabled: true,
@@ -83,6 +91,9 @@ export const simConfig = {
   creatureHerdingMinGroupSize: 2,
   creatureHerdingSeparation: 2.0,
   creatureHerdingIdealDistance: 5,
+  creatureHerdingAlignmentStrength: 0.4, // relative to base strength
+  creatureHerdingComfortMin: 2.0, // inside comfort band, minimal steering
+  creatureHerdingComfortMax: 4.5, // outside this, cohesion kicks in
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
@@ -112,11 +123,19 @@ export const simConfig = {
   creatureChaseRestTime: 0.15, // (was 0.1 - slightly longer rest after chase)
 
   // === CREATURES: PREDATOR BEHAVIOR ===
-  // When well-fed, predators rest near water instead of constantly hunting
+  // When well-fed, predators patrol instead of constantly hunting
   creaturePredatorRestEnabled: true,
   creaturePredatorRestThreshold: 0.75, // (was 0.7 - rest slightly earlier)
   creaturePredatorHuntThreshold: 0.5, // (was 0.4 - start hunting sooner)
   creaturePredatorPatrolSpeed: 0.45, // (was 0.4 - slightly faster patrol)
+
+  // === CREATURES: PACK BEHAVIOR ===
+  // Predators form packs and patrol with waypoints
+  creaturePackEnabled: true,
+  creaturePackSpacing: 3.5, // distance between pack members
+  creaturePredatorPatrolRadius: 25, // how far from home to patrol
+  creaturePredatorPatrolRetargetTimeMin: 3, // seconds before new waypoint
+  creaturePredatorPatrolRetargetTimeMax: 8, // seconds max before retarget
 
   // === CREATURES: MEMORY ===
   creatureMemoryMaxEntries: 12,
@@ -361,8 +380,15 @@ export const configMeta = {
   creatureHerdingStrength: {
     label: 'Herd Cohesion',
     min: 0,
-    max: 0.2,
+    max: 1,
     step: 0.01,
+    category: 'herding'
+  },
+  creatureHerdingAlignmentStrength: {
+    label: 'Herd Alignment',
+    min: 0,
+    max: 1,
+    step: 0.05,
     category: 'herding'
   },
   creatureHerdingThreatRange: {
@@ -385,6 +411,45 @@ export const configMeta = {
     max: 10,
     step: 0.5,
     category: 'herding'
+  },
+
+  // Movement Style
+  creatureMaxTurnRateRadPerSecond: {
+    label: 'Turn Rate (rad/s)',
+    min: 1,
+    max: 8,
+    step: 0.5,
+    category: 'movement'
+  },
+  creatureWanderRetargetTimeMin: {
+    label: 'Wander Min (s)',
+    min: 0.2,
+    max: 3,
+    step: 0.1,
+    category: 'movement'
+  },
+  creatureWanderRetargetTimeMax: {
+    label: 'Wander Max (s)',
+    min: 1,
+    max: 6,
+    step: 0.5,
+    category: 'movement'
+  },
+
+  // Pack Behavior
+  creaturePackEnabled: {
+    label: 'Pack Enabled',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'predator'
+  },
+  creaturePredatorPatrolRadius: {
+    label: 'Patrol Radius',
+    min: 10,
+    max: 50,
+    step: 5,
+    category: 'predator'
   },
 
   // Creatures: Reproduction

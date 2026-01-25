@@ -5,6 +5,11 @@
  * - Herbivores form loose groups and respond to predator threats
  * - Predators do NOT herd - they patrol and hunt independently
  * - Survival needs (food/water) always take priority over herding
+ *
+ * Key improvements:
+ * - Alignment term: neighbors agree on direction, not just position
+ * - Comfort band: inside the band, minimal steering (relaxed herd)
+ * - Forward-cone weighting: reduces over-correction to rear neighbors
  */
 
 import { SPECIES } from '../species.js';
@@ -42,6 +47,14 @@ const resolveHerdingStrength = (config) =>
     : 0.03;
 
 /**
+ * Resolves alignment strength relative to base herding strength.
+ */
+const resolveAlignmentStrength = (config) =>
+  Number.isFinite(config?.creatureHerdingAlignmentStrength)
+    ? Math.max(0, Math.min(1, config.creatureHerdingAlignmentStrength))
+    : 0.4;
+
+/**
  * Resolves threat response strength (how fast to flee).
  */
 const resolveThreatStrength = (config) =>
@@ -66,6 +79,22 @@ const resolveHerdingSeparation = (config) =>
     : 2.5;
 
 /**
+ * Resolves comfort band min (same as separation, inside = no steering).
+ */
+const resolveComfortMin = (config) =>
+  Number.isFinite(config?.creatureHerdingComfortMin)
+    ? Math.max(0, config.creatureHerdingComfortMin)
+    : 2.0;
+
+/**
+ * Resolves comfort band max (outside this, cohesion kicks in).
+ */
+const resolveComfortMax = (config) =>
+  Number.isFinite(config?.creatureHerdingComfortMax)
+    ? Math.max(0, config.creatureHerdingComfortMax)
+    : 4.5;
+
+/**
  * Resolves ideal herd distance (how far apart to stay normally).
  */
 const resolveIdealDistance = (config) =>
@@ -79,13 +108,27 @@ const resolveIdealDistance = (config) =>
 const isHerdingEnabled = (config) => config?.creatureHerdingEnabled !== false;
 
 /**
+ * Wraps an angle to the range [-PI, PI].
+ */
+const wrapPi = (angle) => {
+  let a = angle % (2 * Math.PI);
+  if (a > Math.PI) a -= 2 * Math.PI;
+  if (a < -Math.PI) a += 2 * Math.PI;
+  return a;
+};
+
+/**
  * Finds nearby creatures of the same species (potential herd members).
+ * Includes forward-cone weighting to reduce over-correction to rear neighbors.
  */
 const findNearbyHerdMembers = (creature, creatures, rangeSq) => {
   const members = [];
   const species = creature.species;
   const x = creature.position.x;
   const y = creature.position.y;
+  const myHeading = creature.motion?.heading ?? 0;
+  const forwardX = Math.cos(myHeading);
+  const forwardY = Math.sin(myHeading);
 
   for (const other of creatures) {
     if (other === creature || !other?.position) {
@@ -98,12 +141,20 @@ const findNearbyHerdMembers = (creature, creatures, rangeSq) => {
     const dy = other.position.y - y;
     const distSq = dx * dx + dy * dy;
     if (distSq <= rangeSq && distSq > 0) {
+      const distance = Math.sqrt(distSq);
+      // Forward-cone weight: neighbors in front have more influence
+      const dotProduct = (dx / distance) * forwardX + (dy / distance) * forwardY;
+      // dotProduct is -1 (behind) to +1 (ahead)
+      // Weight: 0.5 for behind, 1.0 for ahead
+      const forwardWeight = 0.5 + 0.5 * Math.max(0, dotProduct);
+
       members.push({
         creature: other,
         dx,
         dy,
         distSq,
-        distance: Math.sqrt(distSq)
+        distance,
+        forwardWeight
       });
     }
   }
@@ -179,23 +230,64 @@ const calculateFleeVector = (threats, threatRange) => {
 };
 
 /**
- * Calculates gentle cohesion toward herd center.
- * Only pulls if creature is far from the group.
+ * Calculates alignment vector (average heading of neighbors).
+ * Only considers neighbors moving in a roughly similar direction (within 90°).
  */
-const calculateCohesion = (creature, members, idealDistance) => {
+const calculateAlignment = (creature, members) => {
+  const myHeading = creature.motion?.heading ?? 0;
+  let ax = 0;
+  let ay = 0;
+  let totalWeight = 0;
+
+  for (const m of members) {
+    const h = m.creature?.motion?.heading;
+    if (!Number.isFinite(h)) continue;
+
+    // Only align with neighbors moving "roughly same direction" (within 90°)
+    const angleDiff = Math.abs(wrapPi(h - myHeading));
+    if (angleDiff > Math.PI / 2) continue;
+
+    // Weight by forward-cone (neighbors ahead matter more)
+    const weight = m.forwardWeight;
+    ax += Math.cos(h) * weight;
+    ay += Math.sin(h) * weight;
+    totalWeight += weight;
+  }
+
+  if (totalWeight < 0.5) return null; // Need meaningful aligned neighbors
+
+  const mag = Math.hypot(ax, ay);
+  if (mag < 1e-6) return null;
+
+  return {
+    x: ax / mag,
+    y: ay / mag
+  };
+};
+
+/**
+ * Calculates gentle cohesion toward herd center.
+ * Only pulls if creature is outside the comfort band.
+ */
+const calculateCohesion = (creature, members, comfortMax, idealDistance) => {
   if (members.length === 0) {
     return null;
   }
 
-  // Calculate center of nearby herd members
+  // Calculate weighted center of nearby herd members
   let sumX = 0;
   let sumY = 0;
+  let totalWeight = 0;
   for (const member of members) {
-    sumX += member.creature.position.x;
-    sumY += member.creature.position.y;
+    const weight = member.forwardWeight;
+    sumX += member.creature.position.x * weight;
+    sumY += member.creature.position.y * weight;
+    totalWeight += weight;
   }
-  const centerX = sumX / members.length;
-  const centerY = sumY / members.length;
+  if (totalWeight < 0.1) return null;
+
+  const centerX = sumX / totalWeight;
+  const centerY = sumY / totalWeight;
 
   // Direction and distance to center
   const towardX = centerX - creature.position.x;
@@ -206,13 +298,13 @@ const calculateCohesion = (creature, members, idealDistance) => {
     return null;
   }
 
-  // Only apply cohesion if we're farther than ideal distance
-  // Strength increases gradually as we get farther
-  const excessDistance = Math.max(0, distance - idealDistance);
-  if (excessDistance < 0.5) {
-    return null; // Close enough, no need to move closer
+  // Only apply cohesion if we're outside comfort band
+  if (distance <= comfortMax) {
+    return null; // Inside comfort band, no cohesion needed
   }
 
+  // Strength increases as we get farther from comfort band
+  const excessDistance = distance - comfortMax;
   const strength = Math.min(1, excessDistance / idealDistance);
 
   return {
@@ -233,8 +325,10 @@ const calculateSeparation = (members, separationDist) => {
     if (member.distance < separationDist && member.distance > 0.01) {
       // Push away from nearby creatures
       const strength = 1 - member.distance / separationDist;
-      sepX -= (member.dx / member.distance) * strength;
-      sepY -= (member.dy / member.distance) * strength;
+      // Weight by forward-cone (but inverted - rear neighbors push harder)
+      const weight = 2 - member.forwardWeight;
+      sepX -= (member.dx / member.distance) * strength * weight;
+      sepY -= (member.dy / member.distance) * strength * weight;
       count += 1;
     }
   }
@@ -297,9 +391,12 @@ export function updateCreatureHerding({ creatures, config }) {
   const threatRange = resolveThreatRange(config);
   const threatRangeSq = threatRange * threatRange;
   const baseStrength = resolveHerdingStrength(config);
+  const alignmentStrength = resolveAlignmentStrength(config);
   const threatStrength = resolveThreatStrength(config);
   const minGroupSize = resolveHerdingMinGroupSize(config);
   const separation = resolveHerdingSeparation(config);
+  const _comfortMin = resolveComfortMin(config); // Reserved for future comfort band logic
+  const comfortMax = resolveComfortMax(config);
   const idealDistance = resolveIdealDistance(config);
 
   for (const creature of creatures) {
@@ -356,11 +453,23 @@ export function updateCreatureHerding({ creatures, config }) {
       hasOffset = true;
     }
 
-    // COHESION: Gentle pull toward herd (only if enough members and not threatened)
+    // ALIGNMENT: Match neighbors' heading (only if enough members)
     if (members.length >= minGroupSize - 1) {
-      // When threatened, tighten up slightly (reduce ideal distance)
-      const adjustedIdeal = threats.length > 0 ? idealDistance * 0.7 : idealDistance;
-      const cohesion = calculateCohesion(creature, members, adjustedIdeal);
+      const align = calculateAlignment(creature, members);
+      if (align) {
+        // Alignment strength increases when threatened (tighten and align)
+        const alignMult = threats.length > 0 ? alignmentStrength * 1.5 : alignmentStrength;
+        offsetX += align.x * baseStrength * alignMult;
+        offsetY += align.y * baseStrength * alignMult;
+        hasOffset = true;
+      }
+    }
+
+    // COHESION: Gentle pull toward herd (only if enough members and outside comfort band)
+    if (members.length >= minGroupSize - 1) {
+      // When threatened, tighten up (reduce comfort band)
+      const adjustedComfortMax = threats.length > 0 ? comfortMax * 0.7 : comfortMax;
+      const cohesion = calculateCohesion(creature, members, adjustedComfortMax, idealDistance);
       if (cohesion) {
         offsetX += cohesion.x * baseStrength;
         offsetY += cohesion.y * baseStrength;

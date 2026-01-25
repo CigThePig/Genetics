@@ -25,7 +25,8 @@ import {
   updateCreaturePriority,
   updateCreatureReproduction,
   updateCreatureSprintDecision,
-  updateCreatureHerding
+  updateCreatureHerding,
+  updateCreaturePack
 } from './creatures/index.js';
 
 export function createSim(config = simConfig) {
@@ -131,6 +132,12 @@ export function createSim(config = simConfig) {
       updateCreatureHerding({
         creatures: state.creatures,
         config: resolvedConfig
+      });
+      updateCreaturePack({
+        creatures: state.creatures,
+        config: resolvedConfig,
+        rng,
+        world: state.world
       });
       updateCreatureSprintDecision({
         creatures: state.creatures,

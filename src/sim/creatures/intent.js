@@ -429,25 +429,10 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
       }
     }
 
-    // Resting predators: if well-fed, seek water and rest there
-    if (predatorIsResting && intent === 'wander') {
-      if (!hasNearbyWater(world, cell, config)) {
-        // Not near water - seek it
-        if (perceivedWaterCell) {
-          intent = 'seek';
-          target = { ...perceivedWaterCell };
-        } else {
-          memoryEntry = selectMemoryTarget({
-            creature,
-            type: MEMORY_TYPES.WATER
-          });
-        }
-      } else {
-        // Near water - rest (idle intent with no target)
-        intent = 'rest';
-        target = null;
-      }
-    }
+    // Resting predators: previously they would camp at water.
+    // Now they simply wander when full, letting the pack module
+    // (if enabled) or natural wander behavior take over.
+    // Thirst logic still handles water seeking when needed.
 
     if (memoryEntry) {
       intent = 'seek';

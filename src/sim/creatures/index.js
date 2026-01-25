@@ -43,6 +43,9 @@ export { updateCreatureMovement } from './movement.js';
 // Re-export herding system
 export { updateCreatureHerding, getHerdingOffset, getHerdSize, isThreatened } from './herding.js';
 
+// Re-export pack system (predator patrol behavior)
+export { updateCreaturePack, getPackInfo, isPackLeader } from './pack.js';
+
 // Re-export intent/priority system
 export { updateCreaturePriority, updateCreatureIntent } from './intent.js';
 
