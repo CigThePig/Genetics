@@ -1,12 +1,16 @@
-name: Replace repo from ZIP (flatten nested)
+name: Replace Repo from Zip
 
 on:
   workflow_dispatch:
     inputs:
-      zip_file:
-        description: "ZIP file name located at repo root"
+      zip_filename:
+        description: "Name of the zip file (uploaded to repo root)"
         required: true
-        default: "Genetics-main-solid-fixed.zip"
+        default: "Genetics-behavior-overhaul.zip"
+      nested_folder:
+        description: "Optional: nested folder name inside the zip (e.g., Genetics-main). Leave blank to auto-detect."
+        required: false
+        default: ""
       run_verify:
         description: "Run npm ci + npm run verify before committing"
         required: true
@@ -18,7 +22,7 @@ on:
       commit_message:
         description: "Commit message"
         required: false
-        default: "Replace repo contents from ZIP (flattened)"
+        default: "Replace repo contents from ZIP"
 
 permissions:
   contents: write
@@ -28,194 +32,106 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  replace:
+  replace-from-zip:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout (use PAT so workflow files can be updated)
+      - name: Checkout
         uses: actions/checkout@v4
         with:
+          # Uses your secret if present; otherwise falls back to the default token
+          token: ${{ secrets.REPLACE_ZIP_TOKEN || github.token }}
           fetch-depth: 0
-          token: ${{ secrets.REPLACE_ZIP_TOKEN }}
 
-      - name: Install unzip + rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip rsync
-
-      - name: Unzip into runner temp (NOT inside repo)
-        env:
-          ZIP_FILE: ${{ inputs.zip_file }}
+      - name: Validate ZIP exists
         run: |
           set -euo pipefail
-          test -f "$ZIP_FILE" || (echo "::error::$ZIP_FILE not found at repo root" && ls -la && exit 1)
+          ZIP="${{ github.event.inputs.zip_filename }}"
+          if [ ! -f "$ZIP" ]; then
+            echo "::error::ZIP file '$ZIP' not found at repo root."
+            echo "Repo root contents:"
+            ls -la
+            exit 1
+          fi
 
-          EXTRACT_DIR="${RUNNER_TEMP}/zip_extract"
-          rm -rf "$EXTRACT_DIR"
-          mkdir -p "$EXTRACT_DIR"
-
-          unzip -q "$ZIP_FILE" -d "$EXTRACT_DIR"
-
-          echo "ZIP_FILE=$ZIP_FILE" >> "$GITHUB_ENV"
-          echo "EXTRACT_DIR=$EXTRACT_DIR" >> "$GITHUB_ENV"
-
-      - name: Determine source folder (flattens nested folders repeatedly)
+      - name: Replace repo contents from ZIP (nested folder optional)
         run: |
           set -euo pipefail
-          SRC="$EXTRACT_DIR"
 
-          # Descend while the current folder contains exactly one folder and no files.
-          for i in 1 2 3 4 5; do
-            TOP_DIRS=$(find "$SRC" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
-            TOP_FILES=$(find "$SRC" -mindepth 1 -maxdepth 1 -type f | wc -l | tr -d ' ')
+          ZIP="${{ github.event.inputs.zip_filename }}"
+          NESTED="${{ github.event.inputs.nested_folder }}"
 
-            if [ "$TOP_DIRS" -eq 1 ] && [ "$TOP_FILES" -eq 0 ]; then
-              SRC="$(find "$SRC" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
-            else
-              break
+          TMP="$(mktemp -d)"
+          echo "Unzipping '$ZIP' to '$TMP'..."
+          unzip -q "$ZIP" -d "$TMP"
+
+          # Decide what directory inside the unzip is the "real" repo root.
+          SRC="$TMP"
+
+          if [ -n "${NESTED}" ]; then
+            if [ ! -d "$TMP/$NESTED" ]; then
+              echo "::error::nested_folder '$NESTED' was provided but not found inside the ZIP."
+              echo "Top-level folders inside ZIP:"
+              find "$TMP" -mindepth 1 -maxdepth 1 -type d -printf " - %f\n" || true
+              exit 1
             fi
-          done
+            SRC="$TMP/$NESTED"
+          else
+            # Auto-detect: if there's exactly one top-level directory (ignoring __MACOSX)
+            # and no top-level files, assume that single directory is the repo root.
+            mapfile -t TOP_DIRS < <(find "$TMP" -mindepth 1 -maxdepth 1 -type d ! -name "__MACOSX" -printf "%f\n" | sort)
+            mapfile -t TOP_FILES < <(find "$TMP" -mindepth 1 -maxdepth 1 -type f -printf "%f\n" | sort)
 
-          echo "SRC_DIR=$SRC" >> "$GITHUB_ENV"
-          echo "Using SRC_DIR=$SRC"
+            if [ "${#TOP_FILES[@]}" -eq 0 ] && [ "${#TOP_DIRS[@]}" -eq 1 ]; then
+              SRC="$TMP/${TOP_DIRS[0]}"
+            fi
+          fi
 
-      - name: Replace repo contents (preserve this workflow file)
-        run: |
-          set -euo pipefail
+          echo "Using source directory: $SRC"
+          if [ ! -d "$SRC" ]; then
+            echo "::error::Source directory '$SRC' does not exist."
+            exit 1
+          fi
+
+          # Sync into repo root, preserving .git and the ZIP file itself.
           rsync -a --delete \
-            --exclude=".git/" \
-            --exclude=".github/workflows/replace-from-zip.yml" \
-            --exclude=".github/workflows/replace-from-zip.yaml" \
-            "$SRC_DIR"/ "$GITHUB_WORKSPACE"/
+            --exclude='.git/' \
+            --exclude="$ZIP" \
+            "$SRC"/ ./
 
-      - name: Delete the ZIP from the repo after
-        run: |
-          set -euo pipefail
-          rm -f "$GITHUB_WORKSPACE/$ZIP_FILE"
+          rm -rf "$TMP"
 
-      - name: Setup Node (for verify)
-        if: ${{ inputs.run_verify == 'true' }}
+      - name: Setup Node (if verify)
+        if: ${{ github.event.inputs.run_verify == 'true' }}
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: npm
 
-      - name: Verify (tests + lint + format check + build)
-        if: ${{ inputs.run_verify == 'true' }}
-        env:
-          CI: true
-          NODE_ENV: development
-          NPM_CONFIG_PRODUCTION: "false"
+      - name: Verify (if verify)
+        if: ${{ github.event.inputs.run_verify == 'true' }}
         run: |
           set -euo pipefail
-          npm ci --include=dev
-          npm run verify
+          if [ -f package.json ]; then
+            npm ci
+            npm run verify
+          else
+            echo "No package.json found; skipping npm verify."
+          fi
 
       - name: Commit & push
-        env:
-          COMMIT_MESSAGE: ${{ inputs.commit_message }}
         run: |
           set -euo pipefail
+
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          if [ -z "$(git status --porcelain)" ]; then
+          git add -A
+
+          if git diff --cached --quiet; then
             echo "No changes to commit."
             exit 0
           fi
 
-          git add -A
-          git commit -m "$COMMIT_MESSAGE"
-
-          # In case main moved since checkout
-          git pull --rebase
-          git push
-          fetch-depth: 0
-
-      - name: Install unzip + rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip rsync
-
-      - name: Unzip into runner temp (NOT inside repo)
-        env:
-          ZIP_FILE: ${{ inputs.zip_file }}
-        run: |
-          set -euo pipefail
-          test -f "$ZIP_FILE" || (echo "::error::$ZIP_FILE not found at repo root" && ls -la && exit 1)
-
-          EXTRACT_DIR="${RUNNER_TEMP}/zip_extract"
-          rm -rf "$EXTRACT_DIR"
-          mkdir -p "$EXTRACT_DIR"
-
-          unzip -q "$ZIP_FILE" -d "$EXTRACT_DIR"
-
-          echo "ZIP_FILE=$ZIP_FILE" >> "$GITHUB_ENV"
-          echo "EXTRACT_DIR=$EXTRACT_DIR" >> "$GITHUB_ENV"
-
-      - name: Determine source folder (flattens nested folders repeatedly)
-        run: |
-          set -euo pipefail
-          SRC="$EXTRACT_DIR"
-
-          # Descend while the current folder contains exactly one folder and no files.
-          for i in 1 2 3 4 5; do
-            TOP_DIRS=$(find "$SRC" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
-            TOP_FILES=$(find "$SRC" -mindepth 1 -maxdepth 1 -type f | wc -l | tr -d ' ')
-
-            if [ "$TOP_DIRS" -eq 1 ] && [ "$TOP_FILES" -eq 0 ]; then
-              SRC="$(find "$SRC" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
-            else
-              break
-            fi
-          done
-
-          echo "SRC_DIR=$SRC" >> "$GITHUB_ENV"
-          echo "Using SRC_DIR=$SRC"
-
-      - name: Replace repo contents (preserve this workflow file)
-        run: |
-          set -euo pipefail
-          rsync -a --delete \
-            --exclude=".git/" \
-            --exclude=".github/workflows/replace-from-zip.yml" \
-            --exclude=".github/workflows/replace-from-zip.yaml" \
-            "$SRC_DIR"/ "$GITHUB_WORKSPACE"/
-
-      - name: Delete the ZIP from the repo after
-        run: |
-          set -euo pipefail
-          rm -f "$GITHUB_WORKSPACE/$ZIP_FILE"
-
-      - name: Setup Node (for verify)
-        if: ${{ inputs.run_verify == 'true' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Verify (tests + lint + format check + build)
-        if: ${{ inputs.run_verify == 'true' }}
-        run: |
-          set -euo pipefail
-          npm ci
-          npm run verify
-
-      - name: Commit & push
-        env:
-          COMMIT_MESSAGE: ${{ inputs.commit_message }}
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "No changes to commit."
-            exit 0
-          fi
-
-          git add -A
-          git commit -m "$COMMIT_MESSAGE"
-
-          # In case main moved since checkout (rare, but happens)
-          git pull --rebase
+          MSG="${{ github.event.inputs.commit_message }}"
+          git commit -m "$MSG"
           git push
