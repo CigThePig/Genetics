@@ -15,14 +15,13 @@ on:
 jobs:
   replace-from-zip:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          token: ${{ secrets.REPLACE_ZIP_TOKEN }}
       
       - name: Verify zip file exists
         run: |
