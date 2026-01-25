@@ -27,13 +27,23 @@ export const simConfig = {
   waterTerrain: 'water',
   shoreTerrain: 'shore',
   terrainTypes: ['plains', 'forest', 'rock', 'sand', 'shore', 'water'],
+
+  // Enhanced terrain generation (noise-based)
+  terrainNoiseScale: 0.035, // Controls terrain feature size (smaller = larger features)
+  terrainWaterLevel: -0.18, // Height threshold for water (-1 to 1)
+  terrainShoreLevel: -0.08, // Height threshold for shore
+  terrainRockThreshold: 0.72, // Roughness threshold for rock formation
+  terrainForestMoisture: 0.58, // Moisture threshold for forest biome
+  terrainSandMoisture: 0.32, // Moisture threshold below which sand appears
+
+  // Legacy terrain settings (for fallback)
   terrainBlobCount: 72,
   terrainBlobMinRadius: 2,
   terrainBlobMaxRadius: 6,
-  waterCorridorCount: 12,
+  waterCorridorCount: 8,
   waterCorridorMinLength: 10,
   waterCorridorMaxLength: 22,
-  waterCorridorWidth: 3,
+  waterCorridorWidth: 2,
   waterCorridorTurnChance: 0.35,
 
   // === PLANTS: GRASS ===
