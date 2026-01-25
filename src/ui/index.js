@@ -227,7 +227,7 @@ export function createUI({
   // ═══════════════════════════════════════════════════════════════════════════
 
   const perfPanel = document.createElement('div');
-  perfPanel.className = 'overlay-panel performance-panel bottom-right';
+  perfPanel.className = 'overlay-panel performance-panel center';
 
   const perfPanelHeader = document.createElement('div');
   perfPanelHeader.className = 'panel-header';
@@ -243,7 +243,7 @@ export function createUI({
   perfPanelHeader.append(perfPanelTitle, perfPanelClose);
 
   const perfPanelBody = document.createElement('div');
-  perfPanelBody.className = 'panel-body';
+  perfPanelBody.className = 'panel-content';
 
   const perfSummaryList = document.createElement('div');
   perfSummaryList.className = 'metrics-list';
@@ -307,6 +307,82 @@ export function createUI({
   const perfTimersList = document.createElement('div');
   perfTimersList.className = 'metrics-list';
 
+  // Stable timer rows (fixed order) to avoid flicker/reordering on mobile.
+  const TICK_TIMER_ORDER = [
+    'tick.total',
+    'tick.spatialIndex',
+    'tick.priority',
+    'tick.perception',
+    'tick.alertness',
+    'tick.memory',
+    'tick.chase',
+    'tick.combat',
+    'tick.intent',
+    'tick.herding',
+    'tick.pack',
+    'tick.sprintDecision',
+    'tick.movement',
+    'tick.actions',
+    'tick.basalMetabolism',
+    'tick.sprintCosts',
+    'tick.lifeStages',
+    'tick.reproduction',
+    'tick.deaths',
+    'tick.staminaRegen',
+    'tick.plants'
+  ];
+
+  const RENDER_TIMER_ORDER = [
+    'render.total',
+    'render.terrain',
+    'render.creatures'
+  ];
+
+  const perfWindowItem = (() => {
+    const item = document.createElement('div');
+    item.className = 'metrics-item';
+    const labelEl = document.createElement('span');
+    labelEl.className = 'metrics-item-label';
+    labelEl.textContent = 'Window';
+    const valueEl = document.createElement('span');
+    valueEl.className = 'metrics-item-value';
+    valueEl.textContent = '--';
+    item.append(labelEl, valueEl);
+    perfTimersList.append(item);
+    return { valueEl };
+  })();
+
+  const createTimerRow = (name) => {
+    const item = document.createElement('div');
+    item.className = 'metrics-item';
+    const labelEl = document.createElement('span');
+    labelEl.className = 'metrics-item-label';
+    labelEl.textContent = name;
+    const valueEl = document.createElement('span');
+    valueEl.className = 'metrics-item-value';
+    valueEl.textContent = '--';
+    item.append(labelEl, valueEl);
+    return { item, valueEl };
+  };
+
+  const timerValueEls = new Map();
+
+  const appendTimerSection = (title, names) => {
+    const heading = document.createElement('div');
+    heading.className = 'metrics-subheading';
+    heading.textContent = title;
+    perfTimersList.append(heading);
+
+    names.forEach((name) => {
+      const row = createTimerRow(name);
+      timerValueEls.set(name, row.valueEl);
+      perfTimersList.append(row.item);
+    });
+  };
+
+  appendTimerSection('Tick timers', TICK_TIMER_ORDER);
+  appendTimerSection('Render timers', RENDER_TIMER_ORDER);
+
   perfPanelBody.append(perfSummaryList, perfControls, perfTimersList);
   perfPanel.append(perfPanelHeader, perfPanelBody);
   container.append(perfPanel);
@@ -321,8 +397,6 @@ export function createUI({
     return `${value.toFixed(2)} ms`;
   };
 
-  const findTimer = (timers, name) => timers.find(timer => timer.name === name);
-
   const updatePerfPanel = () => {
     const snap = metrics?.snapshot?.();
     const perfSnap = metrics?.getPerfSnapshot?.();
@@ -331,8 +405,10 @@ export function createUI({
     summaryNodes.fps.valueEl.textContent = formatNumber(snap?.fps);
     summaryNodes.tps.valueEl.textContent = formatNumber(snap?.tps);
     summaryNodes.frameMs.valueEl.textContent = formatMs(snap?.frameMs);
-    summaryNodes.tickAvg.valueEl.textContent = formatMs(findTimer(timers, 'tick.total')?.avgMs);
-    summaryNodes.renderAvg.valueEl.textContent = formatMs(findTimer(timers, 'render.total')?.avgMs);
+
+    const timerMap = new Map(timers.map((t) => [t.name, t]));
+    summaryNodes.tickAvg.valueEl.textContent = formatMs(timerMap.get('tick.total')?.avgMs);
+    summaryNodes.renderAvg.valueEl.textContent = formatMs(timerMap.get('render.total')?.avgMs);
 
     fpsOverlayBtn.classList.toggle('active', fpsVisible);
     fpsOverlayBtn.textContent = `FPS Overlay: ${fpsVisible ? 'ON' : 'OFF'}`;
@@ -347,41 +423,58 @@ export function createUI({
     renderTimersBtn.classList.toggle('active', groups.render);
     renderTimersBtn.textContent = `Render timers: ${groups.render ? 'ON' : 'OFF'}`;
 
+    // Window label (prefer stable snapshot window length)
+    if (perfWindowItem?.valueEl) {
+      const w = perfSnap?.windowMs;
+      perfWindowItem.valueEl.textContent = Number.isFinite(w) ? `${Math.round(w)} ms` : '--';
+    }
+
+// Stable timer rows to prevent flicker on mobile
+    const setRow = (name, text) => {
+      const el = timerValueEls.get(name);
+      if (el) el.textContent = text;
+    };
+
     if (!profilerEnabled) {
-      perfTimersList.innerHTML =
-        '<div class="metrics-item"><span class="metrics-item-label">Profiler</span><span class="metrics-item-value">Disabled</span></div>';
+      timerValueEls.forEach((el) => {
+        el.textContent = 'Disabled';
+      });
       return;
     }
 
-    const tickTimers = timers
-      .filter(timer => timer.group === 'tick')
-      .sort((a, b) => b.totalMs - a.totalMs)
-      .slice(0, 6);
-    const renderTimers = timers
-      .filter(timer => timer.group === 'render')
-      .sort((a, b) => b.totalMs - a.totalMs)
-      .slice(0, 6);
+    // Update tick timers
+    TICK_TIMER_ORDER.forEach((name) => {
+      if (!groups.tick) {
+        setRow(name, 'OFF');
+        return;
+      }
+      const t = timerMap.get(name);
+      if (!t) {
+        setRow(name, '--');
+        return;
+      }
+      setRow(
+        name,
+        `${t.totalMs.toFixed(1)} ms • avg ${t.avgMs.toFixed(2)} • max ${t.maxMs.toFixed(2)} • ${t.calls}x`
+      );
+    });
 
-    const renderTimerRows = (label, items) => {
-      if (!items.length) return '';
-      const rows = items
-        .map(
-          timer => `<div class="metrics-item">
-            <span class="metrics-item-label">${timer.name}</span>
-            <span class="metrics-item-value">${timer.totalMs.toFixed(1)} ms • avg ${timer.avgMs.toFixed(
-              2
-            )} • max ${timer.maxMs.toFixed(2)} • ${timer.calls}x</span>
-          </div>`
-        )
-        .join('');
-      return `<div class="metrics-subheading">${label}</div>${rows}`;
-    };
-
-    const content =
-      renderTimerRows('Tick timers', tickTimers) + renderTimerRows('Render timers', renderTimers);
-    perfTimersList.innerHTML =
-      content ||
-      '<div class="metrics-item"><span class="metrics-item-label">Timers</span><span class="metrics-item-value">No data</span></div>';
+    // Update render timers
+    RENDER_TIMER_ORDER.forEach((name) => {
+      if (!groups.render) {
+        setRow(name, 'OFF');
+        return;
+      }
+      const t = timerMap.get(name);
+      if (!t) {
+        setRow(name, '--');
+        return;
+      }
+      setRow(
+        name,
+        `${t.totalMs.toFixed(1)} ms • avg ${t.avgMs.toFixed(2)} • max ${t.maxMs.toFixed(2)} • ${t.calls}x`
+      );
+    });
   };
 
   let perfVisible = false;
@@ -398,7 +491,7 @@ export function createUI({
       if (metricsVisible) toggleMetrics();
       if (configVisible) toggleConfig();
       updatePerfPanel();
-      perfIntervalId = setInterval(updatePerfPanel, 250);
+      perfIntervalId = setInterval(updatePerfPanel, 1000);
     }
   };
 

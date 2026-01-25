@@ -708,6 +708,10 @@ body {
   width: var(--panel-max-width);
 }
 
+.performance-panel {
+  width: var(--panel-max-width);
+}
+
 .metrics-grid {
   display: flex;
   flex-direction: column;
