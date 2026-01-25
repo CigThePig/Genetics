@@ -1,3 +1,6 @@
+import { createPerfSampler } from './perf.js';
+import { setActivePerf } from './perf-registry.js';
+
 export function createMetrics({ container } = {}) {
   const overlay = document.createElement('div');
   overlay.className = 'fps-overlay';
@@ -6,6 +9,10 @@ export function createMetrics({ container } = {}) {
   if (container) {
     container.append(overlay);
   }
+
+  const perf = createPerfSampler();
+  perf.setEnabled(false);
+  setActivePerf(null);
 
   let visible = true;
   let fps = 0;
@@ -83,7 +90,12 @@ export function createMetrics({ container } = {}) {
       }
     },
     snapshot() {
-      return { fps, visible };
+      return {
+        fps,
+        tps,
+        visible,
+        frameMs: fps > 0 ? 1000 / fps : null
+      };
     },
     getSkeletonSections,
     setVisible(nextVisible) {
@@ -91,9 +103,31 @@ export function createMetrics({ container } = {}) {
       overlay.style.display = visible ? 'block' : 'none';
       if (visible) {
         startRaf();
+        updateOverlayText();
       } else {
         stopRaf();
       }
+    },
+    setPerfEnabled(nextEnabled) {
+      const enabled = Boolean(nextEnabled);
+      perf.setEnabled(enabled);
+      setActivePerf(enabled ? perf : null);
+    },
+    isPerfEnabled() {
+      return perf.isEnabled();
+    },
+    setPerfGroupEnabled(group, nextEnabled) {
+      if (group !== 'tick' && group !== 'render') {
+        return;
+      }
+      perf.setGroupEnabled(group, Boolean(nextEnabled));
+    },
+    getPerfGroups() {
+      return perf.getGroups();
+    },
+    getPerfSnapshot(time) {
+      const now = Number.isFinite(time) ? time : performance.now();
+      return perf.snapshot(now);
     },
     destroy() {
       stopRaf();

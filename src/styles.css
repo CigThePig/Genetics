@@ -811,6 +811,35 @@ body {
 }
 
 /* ===========================================
+   Performance Panel
+   =========================================== */
+
+.performance-panel .perf-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  padding: var(--space-sm);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.perf-toggle-btn {
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-subtle);
+  background: transparent;
+  color: var(--text-muted);
+  font-weight: 600;
+  font-family: var(--font-mono);
+  cursor: pointer;
+}
+
+.perf-toggle-btn.active {
+  background: var(--accent-tertiary);
+  border-color: var(--accent-secondary);
+  color: #fff;
+}
+
+/* ===========================================
    Config Panel
    =========================================== */
 

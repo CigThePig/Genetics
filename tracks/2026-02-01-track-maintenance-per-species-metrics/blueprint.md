@@ -2,40 +2,37 @@
 
 Purpose:
 
-- Add per-species metrics counters, summary keys, and UI grouping while preserving existing metrics.
+- Add a performance profiler panel and fix FPS overlay ownership while preserving sim determinism and tick order.
 
 Systems touched:
 
-- Metrics factory for new per-species structures.
-- Creature subsystems for reproduction, death, chase, combat, and genetics mutation updates.
-- Sim summary generation for flat per-species keys.
-- UI metrics definitions and rendering for grouped subsections.
-- Styles for subheading layout.
+- Metrics overlay and profiler API.
+- New perf sampler + registry modules.
+- Sim tick and renderer timing wrappers.
+- UI performance panel and toggles.
+- Styles for touch-friendly controls (minimal).
 
 Files & responsibilities:
 
-- src/sim/metrics-factory.js
-  - Add per-species counter helpers and initialize new metrics fields.
-- src/sim/creatures/reproduction.js
-  - Reset per-species last-tick metrics and increment per-species birth/pregnancy/miscarriage counters.
-  - Pass species to mutation metric helpers.
-- src/sim/creatures/death.js
-  - Increment per-species deaths by total and cause.
-- src/sim/creatures/chase.js
-  - Increment per-species chase attempts/successes/losses.
-- src/sim/creatures/combat.js
-  - Increment per-species predator/prey kill counts.
-- src/sim/creatures/genetics.js
-  - Accept species in mutation metric updates and increment per-species totals.
+- src/metrics/perf-registry.js
+  - Global registry for the active perf sampler (avoid circular imports).
+- src/metrics/perf.js
+  - Perf sampler with named timers, windowed rollups, and group gating.
+- src/metrics/index.js
+  - Own the single FPS overlay, expose perf controls and snapshots.
 - src/sim/sim.js
-  - Expose flat per-species summary keys for UI.
+  - Wrap tick steps with perf timers (no tick order changes).
+- src/render/renderer-enhanced.js
+  - Wrap draw calls with perf timers (no rendering order changes).
 - src/ui/index.js
-  - Add group metadata to metric definitions and render subheadings.
+  - Remove duplicate FPS overlay and add Performance panel + toggles.
 - src/styles.css
-  - Style metrics subheadings for grouped layout.
+  - Minimal styling for perf panel controls if needed.
+- context/repo-map.md
+  - Add new perf modules.
 
 Risks & mitigations:
 
-- Stale per-tick data → reset per-species last-tick counters alongside existing resets.
-- Key mismatches → reuse species constants and align UI labels with summary keys.
-- UI layout drift → add subheading styling with grid spanning.
+- Overlay duplication persists → remove UI-created overlay and use metrics only.
+- Perf sampling overhead → keep start/end minimal and gate by group.
+- Panel update load → throttle to 250ms intervals.

@@ -2,33 +2,30 @@
 
 ## Recon Summary
 
-- Files involved: sim metrics factory, reproduction/death/chase/combat/genetics systems, sim summary, UI metrics definitions, styles.
-- Invariants: determinism, tick order unchanged, keep existing metrics keys intact.
-- Observability: per-species metrics must be exposed in summary/UI.
-- Risks: forgetting per-tick resets or mismatched UI labels.
+- Files involved: metrics overlay, UI shell, sim tick, renderer, styles.
+- Invariants: determinism, tick order unchanged, no new dependencies.
+- Observability: profiler panel must expose timing summaries and timers list.
+- Risks: overlay duplication, timer wrappers accidentally change tick order, panel update overhead.
 
-## Phase 1 — Add per-species metrics, summary keys, and UI grouping
+## Phase 1 — Perf sampler, instrumentation, and Performance panel
 
 Tasks:
 
-- [x] Add per-species metrics helpers and initialize new metrics fields.
-- [x] Reset per-species last-tick metrics alongside existing resets.
-- [x] Increment per-species metrics in reproduction, death, chase, combat, and genetics.
-- [x] Expose flat per-species summary keys in sim.getSummary().
-- [x] Group UI metrics by species with subheadings.
-- [x] Style metrics subheadings.
-- [x] Run tests.
-- [x] Update /context/repo-map.md if any file roles change. (reminder)
+- [x] Add perf sampler + registry modules for timing.
+- [x] Update metrics overlay ownership and expose perf controls/snapshots.
+- [x] Instrument sim tick and renderer with perf timers (no order changes).
+- [x] Build touch-friendly Performance panel tied to FPS button.
+- [x] Add minimal styles for perf controls if needed.
+- [x] Run npm run verify. (fails: prettier check in existing files)
+- [x] Update /context/repo-map.md if files/roles change. (reminder)
 
 Files touched:
 
-- src/sim/metrics-factory.js
-- src/sim/creatures/reproduction.js
-- src/sim/creatures/death.js
-- src/sim/creatures/chase.js
-- src/sim/creatures/combat.js
-- src/sim/creatures/genetics.js
+- src/metrics/perf-registry.js
+- src/metrics/perf.js
+- src/metrics/index.js
 - src/sim/sim.js
+- src/render/renderer-enhanced.js
 - src/ui/index.js
 - src/styles.css
 - context/active-track.md
@@ -36,8 +33,8 @@ Files touched:
 
 Verification checklist:
 
-- [x] npm test
-- [ ] Manual: verify grouped metrics update during sim
+- [ ] npm run verify (fails: prettier check in existing files)
+- [ ] Manual: verify FPS overlay and Performance panel behaviors per checklist
 
 Stop point:
 
