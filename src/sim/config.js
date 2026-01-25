@@ -270,7 +270,11 @@ export const simConfig = {
       eatThreshold: 0.5,
       eatAmount: 0.5,
       grassEatMin: 0.5,
-      berryEatMin: 0.5
+      berryEatMin: 0.5,
+      // Life history genes
+      gestationMultiplier: 0.5,
+      growthRate: 0.5,
+      longevity: 0.5
     },
     square: {},
     triangle: {},
@@ -281,6 +285,22 @@ export const simConfig = {
   creatureGenomeMutationRate: 0.2, // (was 0.18 - slightly more mutations)
   creatureGenomeMutationStrength: 0.12, // (was 0.1 - stronger mutations for faster evolution)
   creatureGenomePleiotropyScale: 0.18,
+  // Inheritance: small noise makes offspring close to but not identical to parents
+  creatureGenomeInheritanceNoise: 0.03, // adds small random deviation during inheritance
+  // Inheritance: mix chance controls blend vs midpoint (1 = always random blend)
+  creatureGenomeInheritanceMixChance: 1,
+  // Aging: "grow fast, die fast" coupling exponent (1 = full coupling, 0 = no coupling)
+  creatureGrowthLongevityCoupling: 1,
+
+  // === TRAIT TRADEOFFS ===
+  // Positive traits have deterministic costs (applied at birth, fixed for life)
+  // Speed costs energy/water metabolism
+  creatureTradeoffSpeedToEnergyDrainScale: 0.6,
+  creatureTradeoffSpeedToWaterDrainScale: 0.4,
+  // Sprint speed costs sprint stamina drain
+  creatureTradeoffSprintToStaminaDrainScale: 0.7,
+  // Perception costs reaction delay (wide vision = slower processing)
+  creatureTradeoffPerceptionToReactionDelayScale: 0.5,
 
   // === CREATURES: LIFESPAN ===
   creatureMaxAge: 540, // (was 600 - slightly shorter lifespan creates faster generations)

@@ -50,20 +50,25 @@ const selectDeathCause = ({ creature, maxAgeTicks }) => {
 /**
  * Removes dead creatures from the array and updates metrics.
  * Modifies creatures array in place.
+ * Uses per-creature maxAgeTicks if available (from genome), otherwise falls back to config.
  */
 export function applyCreatureDeaths({ creatures, config, metrics }) {
   if (!Array.isArray(creatures)) {
     return;
   }
   const ticksPerSecond = resolveTicksPerSecond(config);
-  const maxAgeTicks = resolveMaxAgeTicks(config?.creatureMaxAge, Infinity, ticksPerSecond);
+  const globalMaxAgeTicks = resolveMaxAgeTicks(config?.creatureMaxAge, Infinity, ticksPerSecond);
   const counts = metrics?.deathsByCause;
   let totalDeaths = 0;
   let writeIndex = 0;
 
   for (let i = 0; i < creatures.length; i += 1) {
     const creature = creatures[i];
-    const cause = selectDeathCause({ creature, maxAgeTicks });
+    // Use per-creature maxAgeTicks if available (genetic longevity), otherwise global
+    const creatureMaxAgeTicks = Number.isFinite(creature.maxAgeTicks) 
+      ? creature.maxAgeTicks 
+      : globalMaxAgeTicks;
+    const cause = selectDeathCause({ creature, maxAgeTicks: creatureMaxAgeTicks });
     if (!cause) {
       creatures[writeIndex] = creature;
       writeIndex += 1;

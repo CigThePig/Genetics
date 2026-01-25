@@ -8,6 +8,7 @@ import { SPECIES, SPECIES_LIST } from '../species.js';
 import { createCreatureTraits } from './traits.js';
 import { createCreatureGenome } from './genetics.js';
 import { createLifeStageState } from './life-stages.js';
+import { resolveCreatureMaturityScale, resolveCreatureMaxAgeTicks } from './aging.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 
 /**
@@ -211,6 +212,8 @@ export function createCreatures({ config, rng, world }) {
       }
     }
     const genome = createCreatureGenome({ config, species, rng });
+    const maturityScale = resolveCreatureMaturityScale({ genome, config });
+    const maxAgeTicks = resolveCreatureMaxAgeTicks({ genome, config });
     const sexIndex = sexEnabled ? (sexIndices[species] ?? 0) : 0;
     if (sexEnabled) {
       sexIndices[species] = sexIndex + 1;
@@ -229,6 +232,8 @@ export function createCreatures({ config, rng, world }) {
       sex,
       genome,
       traits: createCreatureTraits({ config, species, genome }),
+      maturityScale,
+      maxAgeTicks,
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
       priority: 'thirst',

@@ -1,6 +1,7 @@
 import { createCreatureTraits } from './traits.js';
 import { inheritCreatureGenome, mutateCreatureGenome } from './genetics.js';
 import { resolveTicksPerSecond, createLifeStageState } from './life-stages.js';
+import { resolveCreatureMaturityScale, resolveCreatureMaxAgeTicks } from './aging.js';
 import { SPECIES_LIST } from '../species.js';
 import {
   clampMeter,
@@ -81,7 +82,10 @@ export const isReadyToReproduce = ({
   ) {
     return false;
   }
-  if (!Number.isFinite(creature?.ageTicks) || creature.ageTicks < minAgeTicks) {
+  // Use effective age: fast growers reach maturity sooner
+  const maturityScale = Number.isFinite(creature.maturityScale) ? creature.maturityScale : 1;
+  const effectiveAgeTicks = (creature.ageTicks ?? 0) * maturityScale;
+  if (!Number.isFinite(effectiveAgeTicks) || effectiveAgeTicks < minAgeTicks) {
     return false;
   }
   const energyRatio = meters.energy / baseEnergy;
@@ -498,7 +502,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
           genome: inheritCreatureGenome({
             parentA: creature,
             parentB: mate,
-            config
+            config,
+            rng
           }),
           rng,
           config,
@@ -510,6 +515,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
           species: creature.species,
           genome
         });
+        const maturityScale = resolveCreatureMaturityScale({ genome, config });
+        const maxAgeTicks = resolveCreatureMaxAgeTicks({ genome, config });
         const sex = sexEnabled ? (rng.nextFloat() < 0.5 ? 'male' : 'female') : null;
         const newbornMeterMultiplier = resolveNewbornMeterMultiplier(config, gestationMultiplier);
 
@@ -520,6 +527,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
           sex,
           genome,
           traits,
+          maturityScale,
+          maxAgeTicks,
           ageTicks: 0,
           lifeStage: createLifeStageState(0, config),
           priority: 'thirst',
@@ -684,7 +693,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       genome: inheritCreatureGenome({
         parentA: creature,
         parentB: mate,
-        config
+        config,
+        rng
       }),
       rng,
       config,
@@ -697,6 +707,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       species: creature.species,
       genome
     });
+    const maturityScale = resolveCreatureMaturityScale({ genome, config });
+    const maxAgeTicks = resolveCreatureMaxAgeTicks({ genome, config });
     const sex = sexEnabled ? (rng.nextFloat() < 0.5 ? 'male' : 'female') : null;
 
     newborns.push({
@@ -706,6 +718,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       sex,
       genome,
       traits,
+      maturityScale,
+      maxAgeTicks,
       ageTicks: 0,
       lifeStage: createLifeStageState(0, config),
       priority: 'thirst',

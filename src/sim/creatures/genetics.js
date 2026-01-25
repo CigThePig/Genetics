@@ -18,7 +18,11 @@ const DEFAULT_GENOME = {
   eatThreshold: 0.5,
   eatAmount: 0.5,
   grassEatMin: 0.5,
-  berryEatMin: 0.5
+  berryEatMin: 0.5,
+  // Life history genes
+  gestationMultiplier: 0.5,
+  growthRate: 0.5,
+  longevity: 0.5
 };
 
 const DEFAULT_GENE_RANGES = {
@@ -39,7 +43,11 @@ const DEFAULT_GENE_RANGES = {
   eatThreshold: { min: 0.85, max: 1.15 },
   eatAmount: { min: 0.85, max: 1.2 },
   grassEatMin: { min: 0.85, max: 1.2 },
-  berryEatMin: { min: 0.85, max: 1.2 }
+  berryEatMin: { min: 0.85, max: 1.2 },
+  // Life history gene ranges (conservative to avoid explosive effects)
+  gestationMultiplier: { min: 0.8, max: 1.2 },
+  growthRate: { min: 0.75, max: 1.35 },
+  longevity: { min: 0.75, max: 1.35 }
 };
 
 const PLEIOTROPY_BENEFITS = {
@@ -106,6 +114,28 @@ const resolvePleiotropyScale = (config) => {
   return Math.min(1, Math.max(0, config.creatureGenomePleiotropyScale));
 };
 
+/**
+ * Resolves inheritance noise (small random deviation from inherited base).
+ * Returns value clamped to [0, 0.2], default 0.
+ */
+const resolveInheritanceNoise = (config) => {
+  if (!Number.isFinite(config?.creatureGenomeInheritanceNoise)) {
+    return 0;
+  }
+  return Math.min(0.2, Math.max(0, config.creatureGenomeInheritanceNoise));
+};
+
+/**
+ * Resolves inheritance mix chance (probability of random blend vs midpoint).
+ * Returns value clamped to [0, 1], default 1 (always mix when rng available).
+ */
+const resolveInheritanceMixChance = (config) => {
+  if (!Number.isFinite(config?.creatureGenomeInheritanceMixChance)) {
+    return 1;
+  }
+  return Math.min(1, Math.max(0, config.creatureGenomeInheritanceMixChance));
+};
+
 const normalizeGenome = (genome = {}) => {
   const normalized = {};
   for (const key of Object.keys(genome)) {
@@ -146,10 +176,12 @@ export const createCreatureGenome = ({ config, species, rng } = {}) => {
   return genome;
 };
 
-export const inheritCreatureGenome = ({ parentA, parentB, config } = {}) => {
+export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) => {
   const defaults = resolveGenomeDefaults(config, parentA?.species);
   const keys = getGenomeKeys({ config, species: parentA?.species, parentA, parentB });
   const genome = {};
+  const inheritanceNoise = resolveInheritanceNoise(config);
+  const mixChance = resolveInheritanceMixChance(config);
 
   for (const key of keys) {
     const fallback = defaults[key] ?? 0.5;
@@ -157,7 +189,26 @@ export const inheritCreatureGenome = ({ parentA, parentB, config } = {}) => {
     const valueB = parentB?.genome?.[key];
     const resolvedA = Number.isFinite(valueA) ? valueA : fallback;
     const resolvedB = Number.isFinite(valueB) ? valueB : fallback;
-    genome[key] = clamp01((resolvedA + resolvedB) * 0.5);
+
+    // Compute inherited base: either random blend or midpoint
+    let base;
+    if (rng && rng.nextFloat() < mixChance) {
+      // Random blend between parents
+      const t = rng.nextFloat();
+      base = resolvedA + (resolvedB - resolvedA) * t;
+    } else {
+      // Simple midpoint average
+      base = (resolvedA + resolvedB) * 0.5;
+    }
+
+    // Add inheritance noise if rng available and noise > 0
+    let value = base;
+    if (rng && inheritanceNoise > 0) {
+      const noise = (rng.nextFloat() * 2 - 1) * inheritanceNoise;
+      value = base + noise;
+    }
+
+    genome[key] = clamp01(value);
   }
 
   return genome;

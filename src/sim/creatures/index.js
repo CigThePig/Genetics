@@ -58,6 +58,7 @@ export { createCreatures, findNearestCreature } from './spawn.js';
 /**
  * Updates creature life stages based on age.
  * Increments age and recalculates life stage (juvenile/adult/elder).
+ * Uses effective age = ageTicks * maturityScale for life stage resolution.
  */
 export function updateCreatureLifeStages({ creatures, config }) {
   if (!Array.isArray(creatures)) {
@@ -66,6 +67,12 @@ export function updateCreatureLifeStages({ creatures, config }) {
   for (const creature of creatures) {
     const ageTicks = Number.isFinite(creature.ageTicks) ? creature.ageTicks + 1 : 1;
     creature.ageTicks = ageTicks;
-    creature.lifeStage = createLifeStageState(ageTicks, config);
+    
+    // Calculate effective age based on maturity scale (fast growers age faster through stages)
+    const maturityScale = Number.isFinite(creature.maturityScale) ? creature.maturityScale : 1;
+    const effectiveAgeTicks = ageTicks * maturityScale;
+    creature.effectiveAgeTicks = effectiveAgeTicks;
+    
+    creature.lifeStage = createLifeStageState(effectiveAgeTicks, config);
   }
 }

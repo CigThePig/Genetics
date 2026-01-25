@@ -379,15 +379,21 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     const { section: geneSection, body: geneBody } = createSection('genetics', 'Genetics', '🧬', false);
 
     const genome = creature.genome || {};
-    const geneLabels = {
-      speed: 'Speed gene',
-      perceptionRange: 'Vision gene',
-      alertness: 'Alertness gene',
-      basalEnergyDrain: 'Metabolism'
+    const genomeKeys = Object.keys(genome).filter(key => Number.isFinite(genome[key])).sort();
+
+    // Helper to convert camelCase to readable labels
+    const camelToLabel = (str) => {
+      return str
+        .replace(/([A-Z])/g, ' $1')
+        .replace(/^./, (c) => c.toUpperCase())
+        .trim();
     };
 
-    for (const [key, label] of Object.entries(geneLabels)) {
-      if (Number.isFinite(genome[key])) {
+    if (genomeKeys.length === 0) {
+      geneBody.append(row('Genome', 'No genes'));
+    } else {
+      for (const key of genomeKeys) {
+        const label = camelToLabel(key);
         const deviation = ((genome[key] - 0.5) * 200).toFixed(0);
         const deviationText = deviation > 0 ? `+${deviation}%` : `${deviation}%`;
         const color = deviation > 0 ? '#4ade80' : deviation < 0 ? '#f87171' : null;
