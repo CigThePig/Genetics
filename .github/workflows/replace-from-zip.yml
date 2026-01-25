@@ -1,0 +1,104 @@
+name: Replace Repo from Zip
+
+on:
+  workflow_dispatch:
+    inputs:
+      zip_filename:
+        description: 'Name of the zip file (uploaded to repo root)'
+        required: true
+        default: 'Genetics-behavior-overhaul.zip'
+      nested_folder:
+        description: 'Nested folder name inside zip (e.g., Genetics-main)'
+        required: true
+        default: 'Genetics-main'
+
+jobs:
+  replace-from-zip:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: Verify zip file exists
+        run: |
+          if [ ! -f "${{ github.event.inputs.zip_filename }}" ]; then
+            echo "Error: ${{ github.event.inputs.zip_filename }} not found in repo root"
+            exit 1
+          fi
+          echo "Found zip file: ${{ github.event.inputs.zip_filename }}"
+      
+      - name: Create temp directory and extract zip
+        run: |
+          mkdir -p /tmp/zip-extract
+          unzip -o "${{ github.event.inputs.zip_filename }}" -d /tmp/zip-extract
+          echo "Extracted zip contents:"
+          ls -la /tmp/zip-extract/
+      
+      - name: Verify nested folder exists
+        run: |
+          if [ ! -d "/tmp/zip-extract/${{ github.event.inputs.nested_folder }}" ]; then
+            echo "Error: Nested folder '${{ github.event.inputs.nested_folder }}' not found in zip"
+            echo "Available folders:"
+            ls -la /tmp/zip-extract/
+            exit 1
+          fi
+          echo "Found nested folder: ${{ github.event.inputs.nested_folder }}"
+      
+      - name: Sync files from zip to repo (preserving untracked files)
+        run: |
+          # Store the zip filename to exclude it from deletion
+          ZIP_FILE="${{ github.event.inputs.zip_filename }}"
+          NESTED="${{ github.event.inputs.nested_folder }}"
+          
+          # Copy all files from the nested folder to repo root
+          # Using rsync to handle the merge properly
+          # -a = archive mode (preserves permissions, etc.)
+          # -v = verbose
+          # --exclude = skip .git directory
+          rsync -av --exclude='.git' --exclude="$ZIP_FILE" \
+            "/tmp/zip-extract/$NESTED/" ./
+          
+          echo "Files synced successfully"
+      
+      - name: Remove the zip file from repo
+        run: |
+          rm -f "${{ github.event.inputs.zip_filename }}"
+          echo "Removed zip file from repo"
+      
+      - name: Show changed files
+        run: |
+          echo "=== Git Status ==="
+          git status
+          echo ""
+          echo "=== Changed files ==="
+          git diff --name-only
+      
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add -A
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Update from ${{ github.event.inputs.zip_filename }}
+
+          Applied behavior overhaul:
+          - Phase 1: Removed predator water-camping
+          - Phase 2: Persistent wander headings + max turn rate
+          - Phase 3: Herding alignment + comfort band
+          - Phase 4: Pack patrol waypoints
+          
+          Automated deployment via GitHub Actions"
+            
+            git push
+            echo "Changes pushed successfully"
+          fi
