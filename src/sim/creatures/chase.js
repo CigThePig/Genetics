@@ -56,10 +56,20 @@ const ensureChaseState = (creature) => {
   return creature.chase;
 };
 
-const findTargetById = (creatures, id) => {
-  if (!Array.isArray(creatures)) {
-    return null;
+/**
+ * Finds a creature by ID using spatial index for O(1) lookup,
+ * or falls back to linear scan if no spatial index.
+ */
+const findTargetById = (id, creatures, spatialIndex) => {
+  if (!Number.isFinite(id)) return null;
+  
+  // Use spatial index if provided and has creatures
+  if (spatialIndex && spatialIndex.creatureCount > 0) {
+    return spatialIndex.getById(id);
   }
+  
+  // Fall back to linear scan
+  if (!Array.isArray(creatures)) return null;
   for (const creature of creatures) {
     if (creature?.id === id) {
       return creature;
@@ -107,7 +117,7 @@ const concludeChase = ({ chase, config, metrics, tick, outcome, target }) => {
   }
 };
 
-export function updateCreatureChase({ creatures, config, metrics, tick }) {
+export function updateCreatureChase({ creatures, config, metrics, tick, spatialIndex }) {
   if (!Array.isArray(creatures)) {
     return;
   }
@@ -144,7 +154,7 @@ export function updateCreatureChase({ creatures, config, metrics, tick }) {
       continue;
     }
 
-    const target = findTargetById(creatures, chase.targetId);
+    const target = findTargetById(chase.targetId, creatures, spatialIndex);
     if (!target?.position) {
       concludeChase({ chase, config, metrics, tick, outcome: 'lost' });
       continue;
@@ -181,11 +191,11 @@ export function updateCreatureChase({ creatures, config, metrics, tick }) {
   }
 }
 
-export function getChaseTarget(creature, creatures) {
+export function getChaseTarget(creature, creatures, spatialIndex) {
   if (!creature?.chase || !Number.isFinite(creature.chase.targetId)) {
     return null;
   }
-  return findTargetById(creatures, creature.chase.targetId);
+  return findTargetById(creature.chase.targetId, creatures, spatialIndex);
 }
 
 export function startCreatureChase({ creature, target, metrics, config, tick }) {

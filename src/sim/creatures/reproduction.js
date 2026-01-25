@@ -146,8 +146,47 @@ export const selectMateTarget = ({
   minAgeTicks,
   pairedIds,
   sexEnabled,
-  pregnancyEnabled
+  pregnancyEnabled,
+  spatialIndex
 }) => {
+  // Use spatial index if available for O(k) performance instead of O(n)
+  if (spatialIndex && source?.position) {
+    const maxDistance = Math.sqrt(maxDistanceSq);
+    const nearby = spatialIndex.queryNearby(
+      source.position.x,
+      source.position.y,
+      maxDistance,
+      {
+        exclude: source,
+        filter: (candidate) =>
+          isMateCandidate({
+            candidate,
+            source,
+            baseEnergy,
+            baseWater,
+            minEnergyRatio,
+            minWaterRatio,
+            minAgeTicks,
+            pairedIds,
+            sexEnabled,
+            pregnancyEnabled
+          })
+      }
+    );
+
+    // Find closest mate
+    let chosen = null;
+    let closestDistSq = Infinity;
+    for (const { creature, distanceSq } of nearby) {
+      if (distanceSq < closestDistSq) {
+        chosen = creature;
+        closestDistSq = distanceSq;
+      }
+    }
+    return chosen;
+  }
+
+  // Fallback to linear scan if no spatial index
   let chosen = null;
   let closestDistance = Infinity;
 
@@ -264,10 +303,13 @@ const resolveNewbornMeterMultiplier = (config, gestationMultiplier) => {
   return 1;
 };
 
-export function updateCreatureReproduction({ creatures, config, rng, world, metrics }) {
+export function updateCreatureReproduction({ creatures, config, rng, world, metrics, spatialIndex }) {
   if (!Array.isArray(creatures) || !rng || !world) {
     return;
   }
+
+  // Only use spatial index if explicitly provided and has creatures
+  const index = spatialIndex && spatialIndex.creatureCount > 0 ? spatialIndex : null;
 
   const ticksPerSecond = resolveTicksPerSecond(config);
   const baseEnergy = resolveBaseMeter(config?.creatureBaseEnergy);
@@ -505,7 +547,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       minAgeTicks,
       pairedIds,
       sexEnabled,
-      pregnancyEnabled
+      pregnancyEnabled,
+      spatialIndex: index
     });
 
     if (!mate) {

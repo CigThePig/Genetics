@@ -7,6 +7,7 @@ import { updatePlants } from './plants/index.js';
 import { SPECIES } from './species.js';
 import { createDefaultMetrics } from './metrics-factory.js';
 import { mergeSimConfig } from './utils/config.js';
+import { rebuildSpatialIndex } from './spatial-index.js';
 import {
   createCreatures,
   applyCreatureActions,
@@ -92,6 +93,8 @@ export function createSim(config = simConfig) {
     tick() {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
+      // Rebuild spatial index once per tick for O(1) neighbor queries
+      const spatialIndex = rebuildSpatialIndex(state.creatures);
       updateCreaturePriority({
         creatures: state.creatures,
         config: resolvedConfig
@@ -113,7 +116,8 @@ export function createSim(config = simConfig) {
         creatures: state.creatures,
         config: resolvedConfig,
         metrics: state.metrics,
-        tick: state.tick
+        tick: state.tick,
+        spatialIndex
       });
       applyCreatureCombat({
         creatures: state.creatures,
@@ -127,11 +131,13 @@ export function createSim(config = simConfig) {
         config: resolvedConfig,
         world: state.world,
         metrics: state.metrics,
-        tick: state.tick
+        tick: state.tick,
+        spatialIndex
       });
       updateCreatureHerding({
         creatures: state.creatures,
-        config: resolvedConfig
+        config: resolvedConfig,
+        spatialIndex
       });
       updateCreaturePack({
         creatures: state.creatures,
@@ -168,7 +174,8 @@ export function createSim(config = simConfig) {
         config: resolvedConfig,
         rng,
         world: state.world,
-        metrics: state.metrics
+        metrics: state.metrics,
+        spatialIndex
       });
       applyCreatureDeaths({
         creatures: state.creatures,

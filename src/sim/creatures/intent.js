@@ -118,7 +118,7 @@ export function updateCreaturePriority({ creatures, config }) {
  * Updates creature intent based on priority, perception, memory, and targets.
  * This is the main decision-making function for creature behavior.
  */
-export function updateCreatureIntent({ creatures, config, world, metrics, tick }) {
+export function updateCreatureIntent({ creatures, config, world, metrics, tick, spatialIndex }) {
   if (!Array.isArray(creatures) || !world) {
     return;
   }
@@ -149,7 +149,12 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
   const predatorRestThreshold = resolveRatio(config?.creaturePredatorRestThreshold, 0.9);
   const predatorHuntThreshold = resolveRatio(config?.creaturePredatorHuntThreshold, 0.5);
 
-  const creaturesById = mateSeekingEnabled ? new Map() : null;
+  // Use spatial index for ID lookups if available
+  const creaturesById = mateSeekingEnabled
+    ? spatialIndex
+      ? null // spatial index has getById
+      : new Map()
+    : null;
   if (creaturesById) {
     for (const creature of creatures) {
       if (Number.isFinite(creature?.id)) {
@@ -248,11 +253,13 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     let targeting = null;
     let mateTarget = null;
 
-    if (canConsiderMate && reproductionState.mate && creaturesById) {
+    if (canConsiderMate && reproductionState.mate && (creaturesById || spatialIndex)) {
       const mateState = reproductionState.mate;
       let candidate = null;
       if (Number.isFinite(mateState.targetId)) {
-        const existing = creaturesById.get(mateState.targetId);
+        const existing = spatialIndex
+          ? spatialIndex.getById(mateState.targetId)
+          : creaturesById.get(mateState.targetId);
         const existingReady = existing
           ? isReadyToReproduce({
               creature: existing,
@@ -300,7 +307,8 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
           minWaterRatio,
           minAgeTicks,
           sexEnabled,
-          pregnancyEnabled
+          pregnancyEnabled,
+          spatialIndex
         });
         if (found) {
           mateState.targetId = found.id ?? null;
@@ -324,7 +332,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
     } else if (creature.priority === 'hunger' && canEat) {
       // Resting predators don't chase - they wait until hungry
       const shouldHunt = canEatMeat && !predatorIsResting;
-      const chaseTarget = shouldHunt ? getChaseTarget(creature, creatures) : null;
+      const chaseTarget = shouldHunt ? getChaseTarget(creature, creatures, spatialIndex) : null;
       if (chaseTarget && creature.chase?.lastKnownPosition) {
         intent = 'hunt';
         target = { ...creature.chase.lastKnownPosition };
@@ -340,7 +348,8 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
           const predatorTarget = selectPredatorTarget({
             predator: creature,
             creatures,
-            config
+            config,
+            spatialIndex
           });
           if (predatorTarget) {
             const started = startCreatureChase({
@@ -381,7 +390,8 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick }
             const predatorTarget = selectPredatorTarget({
               predator: creature,
               creatures,
-              config
+              config,
+              spatialIndex
             });
             if (predatorTarget) {
               const started = startCreatureChase({

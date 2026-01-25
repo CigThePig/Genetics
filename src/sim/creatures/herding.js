@@ -10,6 +10,7 @@
  * - Alignment term: neighbors agree on direction, not just position
  * - Comfort band: inside the band, minimal steering (relaxed herd)
  * - Forward-cone weighting: reduces over-correction to rear neighbors
+ * - Spatial index: O(k) neighbor queries instead of O(n) per creature
  */
 
 import { SPECIES } from '../species.js';
@@ -120,8 +121,9 @@ const wrapPi = (angle) => {
 /**
  * Finds nearby creatures of the same species (potential herd members).
  * Includes forward-cone weighting to reduce over-correction to rear neighbors.
+ * Uses spatial index for O(k) performance when available, falls back to O(n).
  */
-const findNearbyHerdMembers = (creature, creatures, rangeSq) => {
+const findNearbyHerdMembers = (creature, creatures, spatialIndex, range) => {
   const members = [];
   const species = creature.species;
   const x = creature.position.x;
@@ -129,33 +131,53 @@ const findNearbyHerdMembers = (creature, creatures, rangeSq) => {
   const myHeading = creature.motion?.heading ?? 0;
   const forwardX = Math.cos(myHeading);
   const forwardY = Math.sin(myHeading);
+  const rangeSq = range * range;
 
-  for (const other of creatures) {
-    if (other === creature || !other?.position) {
-      continue;
-    }
-    if (other.species !== species) {
-      continue;
-    }
-    const dx = other.position.x - x;
-    const dy = other.position.y - y;
-    const distSq = dx * dx + dy * dy;
-    if (distSq <= rangeSq && distSq > 0) {
-      const distance = Math.sqrt(distSq);
-      // Forward-cone weight: neighbors in front have more influence
+  // Use spatial index if available
+  if (spatialIndex) {
+    const nearby = spatialIndex.queryNearby(x, y, range, {
+      exclude: creature,
+      filter: (other) => other.species === species && other.position
+    });
+
+    for (const { creature: other, distanceSq, dx, dy } of nearby) {
+      if (distanceSq <= 0) continue;
+      const distance = Math.sqrt(distanceSq);
       const dotProduct = (dx / distance) * forwardX + (dy / distance) * forwardY;
-      // dotProduct is -1 (behind) to +1 (ahead)
-      // Weight: 0.5 for behind, 1.0 for ahead
       const forwardWeight = 0.5 + 0.5 * Math.max(0, dotProduct);
 
       members.push({
         creature: other,
         dx,
         dy,
-        distSq,
+        distSq: distanceSq,
         distance,
         forwardWeight
       });
+    }
+  } else {
+    // Fall back to linear scan
+    for (const other of creatures) {
+      if (other === creature || !other?.position) continue;
+      if (other.species !== species) continue;
+
+      const dx = other.position.x - x;
+      const dy = other.position.y - y;
+      const distSq = dx * dx + dy * dy;
+      if (distSq <= rangeSq && distSq > 0) {
+        const distance = Math.sqrt(distSq);
+        const dotProduct = (dx / distance) * forwardX + (dy / distance) * forwardY;
+        const forwardWeight = 0.5 + 0.5 * Math.max(0, dotProduct);
+
+        members.push({
+          creature: other,
+          dx,
+          dy,
+          distSq,
+          distance,
+          forwardWeight
+        });
+      }
     }
   }
 
@@ -164,30 +186,49 @@ const findNearbyHerdMembers = (creature, creatures, rangeSq) => {
 
 /**
  * Finds nearby predators (threats).
+ * Uses spatial index for O(k) performance when available, falls back to O(n).
  */
-const findNearbyThreats = (creature, creatures, rangeSq) => {
+const findNearbyThreats = (creature, creatures, spatialIndex, range) => {
   const threats = [];
   const x = creature.position.x;
   const y = creature.position.y;
+  const rangeSq = range * range;
 
-  for (const other of creatures) {
-    if (other === creature || !other?.position) {
-      continue;
-    }
-    if (!isPredator(other.species)) {
-      continue;
-    }
-    const dx = other.position.x - x;
-    const dy = other.position.y - y;
-    const distSq = dx * dx + dy * dy;
-    if (distSq <= rangeSq && distSq > 0) {
+  // Use spatial index if available
+  if (spatialIndex) {
+    const nearby = spatialIndex.queryNearby(x, y, range, {
+      exclude: creature,
+      filter: (other) => isPredator(other.species) && other.position
+    });
+
+    for (const { creature: other, distanceSq, dx, dy } of nearby) {
+      if (distanceSq <= 0) continue;
       threats.push({
         creature: other,
         dx,
         dy,
-        distSq,
-        distance: Math.sqrt(distSq)
+        distSq: distanceSq,
+        distance: Math.sqrt(distanceSq)
       });
+    }
+  } else {
+    // Fall back to linear scan
+    for (const other of creatures) {
+      if (other === creature || !other?.position) continue;
+      if (!isPredator(other.species)) continue;
+
+      const dx = other.position.x - x;
+      const dy = other.position.y - y;
+      const distSq = dx * dx + dy * dy;
+      if (distSq <= rangeSq && distSq > 0) {
+        threats.push({
+          creature: other,
+          dx,
+          dy,
+          distSq,
+          distance: Math.sqrt(distSq)
+        });
+      }
     }
   }
 
@@ -377,7 +418,7 @@ const hasUrgentNeed = (creature) => {
  * - Predators patrol independently
  * - Survival needs always take priority
  */
-export function updateCreatureHerding({ creatures, config }) {
+export function updateCreatureHerding({ creatures, config, spatialIndex }) {
   if (!Array.isArray(creatures)) {
     return;
   }
@@ -386,10 +427,11 @@ export function updateCreatureHerding({ creatures, config }) {
     return;
   }
 
+  // Only use spatial index if explicitly provided and has creatures
+  const useSpatialIndex = spatialIndex && spatialIndex.creatureCount > 0;
+
   const herdRange = resolveHerdingRange(config);
-  const herdRangeSq = herdRange * herdRange;
   const threatRange = resolveThreatRange(config);
-  const threatRangeSq = threatRange * threatRange;
   const baseStrength = resolveHerdingStrength(config);
   const alignmentStrength = resolveAlignmentStrength(config);
   const threatStrength = resolveThreatStrength(config);
@@ -415,9 +457,10 @@ export function updateCreatureHerding({ creatures, config }) {
       continue;
     }
 
-    // Find nearby herd members and threats
-    const members = findNearbyHerdMembers(creature, creatures, herdRangeSq);
-    const threats = findNearbyThreats(creature, creatures, threatRangeSq);
+    // Find nearby herd members and threats using spatial index if available
+    const index = useSpatialIndex ? spatialIndex : null;
+    const members = findNearbyHerdMembers(creature, creatures, index, herdRange);
+    const threats = findNearbyThreats(creature, creatures, index, threatRange);
 
     herding.herdSize = members.length + 1;
     herding.nearbyThreats = threats.length;
