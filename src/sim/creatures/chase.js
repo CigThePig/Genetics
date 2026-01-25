@@ -78,7 +78,7 @@ const findTargetById = (id, creatures, spatialIndex) => {
   return null;
 };
 
-const concludeChase = ({ chase, config, metrics, tick, outcome, target }) => {
+const concludeChase = ({ chase, config, metrics, tick, outcome, target, chaserSpecies }) => {
   const tps = resolveTicksPerSecond(config);
   const restTicks = resolveTimeTicks(config?.creatureChaseRestTime, 0.1, tps);
   chase.status = 'resting';
@@ -113,6 +113,21 @@ const concludeChase = ({ chase, config, metrics, tick, outcome, target }) => {
       metrics.chaseSuccesses = (metrics.chaseSuccesses ?? 0) + 1;
     } else {
       metrics.chaseLosses = (metrics.chaseLosses ?? 0) + 1;
+    }
+    if (chaserSpecies) {
+      if (outcome === 'caught') {
+        if (
+          metrics.chaseSuccessesBySpecies &&
+          metrics.chaseSuccessesBySpecies[chaserSpecies] !== undefined
+        ) {
+          metrics.chaseSuccessesBySpecies[chaserSpecies] += 1;
+        }
+      } else if (
+        metrics.chaseLossesBySpecies &&
+        metrics.chaseLossesBySpecies[chaserSpecies] !== undefined
+      ) {
+        metrics.chaseLossesBySpecies[chaserSpecies] += 1;
+      }
     }
   }
 };
@@ -150,13 +165,27 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
 
     const staminaRatio = getStaminaRatio(creature, baseStamina);
     if (staminaRatio < stopThreshold) {
-      concludeChase({ chase, config, metrics, tick, outcome: 'exhausted' });
+      concludeChase({
+        chase,
+        config,
+        metrics,
+        tick,
+        outcome: 'exhausted',
+        chaserSpecies: creature.species
+      });
       continue;
     }
 
     const target = findTargetById(chase.targetId, creatures, spatialIndex);
     if (!target?.position) {
-      concludeChase({ chase, config, metrics, tick, outcome: 'lost' });
+      concludeChase({
+        chase,
+        config,
+        metrics,
+        tick,
+        outcome: 'lost',
+        chaserSpecies: creature.species
+      });
       continue;
     }
 
@@ -166,7 +195,15 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
     chase.distance = distance;
 
     if (distance <= catchDistance) {
-      concludeChase({ chase, config, metrics, tick, outcome: 'caught', target });
+      concludeChase({
+        chase,
+        config,
+        metrics,
+        tick,
+        outcome: 'caught',
+        target,
+        chaserSpecies: creature.species
+      });
       continue;
     }
 
@@ -183,7 +220,15 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
     const lastSeenTick = Number.isFinite(chase.lastSeenTick) ? chase.lastSeenTick : tick;
     const missingTicks = Math.max(0, tick - lastSeenTick);
     if (missingTicks >= loseTicks) {
-      concludeChase({ chase, config, metrics, tick, outcome: 'lost', target });
+      concludeChase({
+        chase,
+        config,
+        metrics,
+        tick,
+        outcome: 'lost',
+        target,
+        chaserSpecies: creature.species
+      });
       continue;
     }
 
@@ -227,6 +272,12 @@ export function startCreatureChase({ creature, target, metrics, config, tick }) 
   chase.lastTargetPosition = null;
   if (metrics) {
     metrics.chaseAttempts = (metrics.chaseAttempts ?? 0) + 1;
+    if (
+      metrics.chaseAttemptsBySpecies &&
+      metrics.chaseAttemptsBySpecies[creature.species] !== undefined
+    ) {
+      metrics.chaseAttemptsBySpecies[creature.species] += 1;
+    }
   }
   return true;
 }

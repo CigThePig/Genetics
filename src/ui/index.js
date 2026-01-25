@@ -38,6 +38,9 @@ export function createUI({
 
   const formatMetricValue = (key, value) => {
     if (!Number.isFinite(value)) return '--';
+    if (key.includes('mutationStrength') || key.includes('pleiotropyStrength')) {
+      return value.toFixed(3);
+    }
     switch (key) {
       case 'grassAverage':
         return value.toFixed(3);
@@ -49,9 +52,6 @@ export function createUI({
         return value.toFixed(2);
       case 'bushAverageHealth':
         return value.toFixed(2);
-      case 'mutationStrengthLastTick':
-      case 'pleiotropyStrengthLastTick':
-        return value.toFixed(3);
       default:
         return String(Math.round(value));
     }
@@ -201,42 +201,284 @@ export function createUI({
 
   // Metric definitions - matches simulation getSummary() output
   const metricDefinitions = [
-    { key: 'creatureCount', label: 'Creatures', section: 'population' },
-    { key: 'squaresCount', label: 'Squares', section: 'population' },
-    { key: 'trianglesCount', label: 'Triangles', section: 'population' },
-    { key: 'circlesCount', label: 'Circles', section: 'population' },
-    { key: 'octagonsCount', label: 'Octagons', section: 'population' },
-    { key: 'birthsLastTick', label: 'Births (tick)', section: 'population' },
-    { key: 'birthsTotal', label: 'Births total', section: 'population' },
-    { key: 'pregnanciesLastTick', label: 'Pregnancies (tick)', section: 'population' },
-    { key: 'pregnanciesTotal', label: 'Pregnancies total', section: 'population' },
-    { key: 'miscarriagesLastTick', label: 'Miscarriages (tick)', section: 'population' },
-    { key: 'miscarriagesTotal', label: 'Miscarriages total', section: 'population' },
-    { key: 'deathsTotal', label: 'Deaths total', section: 'deaths' },
-    { key: 'deathsAge', label: 'Deaths (age)', section: 'deaths' },
-    { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths' },
-    { key: 'deathsThirst', label: 'Deaths (thirst)', section: 'deaths' },
-    { key: 'deathsInjury', label: 'Deaths (injury)', section: 'deaths' },
-    { key: 'deathsOther', label: 'Deaths (other)', section: 'deaths' },
-    { key: 'grassAverage', label: 'Grass avg', section: 'plants' },
-    { key: 'grassTotal', label: 'Grass total', section: 'plants' },
-    { key: 'grassCoverage', label: 'Grass coverage', section: 'plants' },
-    { key: 'grassHotspotCells', label: 'Hotspot cells', section: 'plants' },
-    { key: 'stressedCells', label: 'Stressed cells', section: 'plants' },
-    { key: 'bushCount', label: 'Bush count', section: 'plants' },
-    { key: 'berryTotal', label: 'Berry total', section: 'plants' },
-    { key: 'berryAverage', label: 'Berries/bush', section: 'plants' },
-    { key: 'bushAverageHealth', label: 'Bush health', section: 'plants' },
-    { key: 'chaseAttempts', label: 'Chase attempts', section: 'chase' },
-    { key: 'chaseSuccesses', label: 'Chase wins', section: 'chase' },
-    { key: 'chaseLosses', label: 'Chase losses', section: 'chase' },
-    { key: 'killsTotal', label: 'Kills total', section: 'hunting' },
-    { key: 'carcassCount', label: 'Carcasses', section: 'hunting' },
-    { key: 'carcassMeatTotal', label: 'Carcass meat', section: 'hunting' },
-    { key: 'mutationsLastTick', label: 'Mutations (tick)', section: 'genetics' },
-    { key: 'mutationStrengthLastTick', label: 'Mutation drift', section: 'genetics' },
-    { key: 'pleiotropyStrengthLastTick', label: 'Pleiotropy drift', section: 'genetics' },
-    { key: 'mutationTotal', label: 'Mutations total', section: 'genetics' }
+    { key: 'creatureCount', label: 'Creatures', section: 'population', group: 'All' },
+    { key: 'birthsLastTick', label: 'Births (tick)', section: 'population', group: 'All' },
+    { key: 'birthsTotal', label: 'Births total', section: 'population', group: 'All' },
+    { key: 'pregnanciesLastTick', label: 'Pregnancies (tick)', section: 'population', group: 'All' },
+    { key: 'pregnanciesTotal', label: 'Pregnancies total', section: 'population', group: 'All' },
+    { key: 'miscarriagesLastTick', label: 'Miscarriages (tick)', section: 'population', group: 'All' },
+    { key: 'miscarriagesTotal', label: 'Miscarriages total', section: 'population', group: 'All' },
+    { key: 'squaresCount', label: 'Population', section: 'population', group: 'Squares' },
+    { key: 'birthsSquaresLastTick', label: 'Births (tick)', section: 'population', group: 'Squares' },
+    { key: 'birthsSquaresTotal', label: 'Births total', section: 'population', group: 'Squares' },
+    { key: 'pregnanciesSquaresLastTick', label: 'Pregnancies (tick)', section: 'population', group: 'Squares' },
+    { key: 'pregnanciesSquaresTotal', label: 'Pregnancies total', section: 'population', group: 'Squares' },
+    { key: 'miscarriagesSquaresLastTick', label: 'Miscarriages (tick)', section: 'population', group: 'Squares' },
+    { key: 'miscarriagesSquaresTotal', label: 'Miscarriages total', section: 'population', group: 'Squares' },
+    { key: 'trianglesCount', label: 'Population', section: 'population', group: 'Triangles' },
+    { key: 'birthsTrianglesLastTick', label: 'Births (tick)', section: 'population', group: 'Triangles' },
+    { key: 'birthsTrianglesTotal', label: 'Births total', section: 'population', group: 'Triangles' },
+    {
+      key: 'pregnanciesTrianglesLastTick',
+      label: 'Pregnancies (tick)',
+      section: 'population',
+      group: 'Triangles'
+    },
+    {
+      key: 'pregnanciesTrianglesTotal',
+      label: 'Pregnancies total',
+      section: 'population',
+      group: 'Triangles'
+    },
+    {
+      key: 'miscarriagesTrianglesLastTick',
+      label: 'Miscarriages (tick)',
+      section: 'population',
+      group: 'Triangles'
+    },
+    {
+      key: 'miscarriagesTrianglesTotal',
+      label: 'Miscarriages total',
+      section: 'population',
+      group: 'Triangles'
+    },
+    { key: 'circlesCount', label: 'Population', section: 'population', group: 'Circles' },
+    { key: 'birthsCirclesLastTick', label: 'Births (tick)', section: 'population', group: 'Circles' },
+    { key: 'birthsCirclesTotal', label: 'Births total', section: 'population', group: 'Circles' },
+    {
+      key: 'pregnanciesCirclesLastTick',
+      label: 'Pregnancies (tick)',
+      section: 'population',
+      group: 'Circles'
+    },
+    {
+      key: 'pregnanciesCirclesTotal',
+      label: 'Pregnancies total',
+      section: 'population',
+      group: 'Circles'
+    },
+    {
+      key: 'miscarriagesCirclesLastTick',
+      label: 'Miscarriages (tick)',
+      section: 'population',
+      group: 'Circles'
+    },
+    {
+      key: 'miscarriagesCirclesTotal',
+      label: 'Miscarriages total',
+      section: 'population',
+      group: 'Circles'
+    },
+    { key: 'octagonsCount', label: 'Population', section: 'population', group: 'Octagons' },
+    {
+      key: 'birthsOctagonsLastTick',
+      label: 'Births (tick)',
+      section: 'population',
+      group: 'Octagons'
+    },
+    { key: 'birthsOctagonsTotal', label: 'Births total', section: 'population', group: 'Octagons' },
+    {
+      key: 'pregnanciesOctagonsLastTick',
+      label: 'Pregnancies (tick)',
+      section: 'population',
+      group: 'Octagons'
+    },
+    {
+      key: 'pregnanciesOctagonsTotal',
+      label: 'Pregnancies total',
+      section: 'population',
+      group: 'Octagons'
+    },
+    {
+      key: 'miscarriagesOctagonsLastTick',
+      label: 'Miscarriages (tick)',
+      section: 'population',
+      group: 'Octagons'
+    },
+    {
+      key: 'miscarriagesOctagonsTotal',
+      label: 'Miscarriages total',
+      section: 'population',
+      group: 'Octagons'
+    },
+    { key: 'deathsTotal', label: 'Deaths total', section: 'deaths', group: 'All' },
+    { key: 'deathsAge', label: 'Deaths (age)', section: 'deaths', group: 'All' },
+    { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths', group: 'All' },
+    { key: 'deathsThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'All' },
+    { key: 'deathsInjury', label: 'Deaths (injury)', section: 'deaths', group: 'All' },
+    { key: 'deathsOther', label: 'Deaths (other)', section: 'deaths', group: 'All' },
+    { key: 'deathsSquaresTotal', label: 'Deaths total', section: 'deaths', group: 'Squares' },
+    { key: 'deathsSquaresAge', label: 'Deaths (age)', section: 'deaths', group: 'Squares' },
+    {
+      key: 'deathsSquaresStarvation',
+      label: 'Deaths (starvation)',
+      section: 'deaths',
+      group: 'Squares'
+    },
+    { key: 'deathsSquaresThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Squares' },
+    { key: 'deathsSquaresInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Squares' },
+    { key: 'deathsSquaresOther', label: 'Deaths (other)', section: 'deaths', group: 'Squares' },
+    { key: 'deathsTrianglesTotal', label: 'Deaths total', section: 'deaths', group: 'Triangles' },
+    { key: 'deathsTrianglesAge', label: 'Deaths (age)', section: 'deaths', group: 'Triangles' },
+    {
+      key: 'deathsTrianglesStarvation',
+      label: 'Deaths (starvation)',
+      section: 'deaths',
+      group: 'Triangles'
+    },
+    { key: 'deathsTrianglesThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Triangles' },
+    { key: 'deathsTrianglesInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Triangles' },
+    { key: 'deathsTrianglesOther', label: 'Deaths (other)', section: 'deaths', group: 'Triangles' },
+    { key: 'deathsCirclesTotal', label: 'Deaths total', section: 'deaths', group: 'Circles' },
+    { key: 'deathsCirclesAge', label: 'Deaths (age)', section: 'deaths', group: 'Circles' },
+    {
+      key: 'deathsCirclesStarvation',
+      label: 'Deaths (starvation)',
+      section: 'deaths',
+      group: 'Circles'
+    },
+    { key: 'deathsCirclesThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Circles' },
+    { key: 'deathsCirclesInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Circles' },
+    { key: 'deathsCirclesOther', label: 'Deaths (other)', section: 'deaths', group: 'Circles' },
+    { key: 'deathsOctagonsTotal', label: 'Deaths total', section: 'deaths', group: 'Octagons' },
+    { key: 'deathsOctagonsAge', label: 'Deaths (age)', section: 'deaths', group: 'Octagons' },
+    {
+      key: 'deathsOctagonsStarvation',
+      label: 'Deaths (starvation)',
+      section: 'deaths',
+      group: 'Octagons'
+    },
+    { key: 'deathsOctagonsThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Octagons' },
+    { key: 'deathsOctagonsInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Octagons' },
+    { key: 'deathsOctagonsOther', label: 'Deaths (other)', section: 'deaths', group: 'Octagons' },
+    { key: 'grassAverage', label: 'Grass avg', section: 'plants', group: 'All' },
+    { key: 'grassTotal', label: 'Grass total', section: 'plants', group: 'All' },
+    { key: 'grassCoverage', label: 'Grass coverage', section: 'plants', group: 'All' },
+    { key: 'grassHotspotCells', label: 'Hotspot cells', section: 'plants', group: 'All' },
+    { key: 'stressedCells', label: 'Stressed cells', section: 'plants', group: 'All' },
+    { key: 'bushCount', label: 'Bush count', section: 'plants', group: 'All' },
+    { key: 'berryTotal', label: 'Berry total', section: 'plants', group: 'All' },
+    { key: 'berryAverage', label: 'Berries/bush', section: 'plants', group: 'All' },
+    { key: 'bushAverageHealth', label: 'Bush health', section: 'plants', group: 'All' },
+    { key: 'chaseAttempts', label: 'Chase attempts', section: 'chase', group: 'All' },
+    { key: 'chaseSuccesses', label: 'Chase wins', section: 'chase', group: 'All' },
+    { key: 'chaseLosses', label: 'Chase losses', section: 'chase', group: 'All' },
+    { key: 'chaseSquaresAttempts', label: 'Chase attempts', section: 'chase', group: 'Squares' },
+    { key: 'chaseSquaresSuccesses', label: 'Chase wins', section: 'chase', group: 'Squares' },
+    { key: 'chaseSquaresLosses', label: 'Chase losses', section: 'chase', group: 'Squares' },
+    {
+      key: 'chaseTrianglesAttempts',
+      label: 'Chase attempts',
+      section: 'chase',
+      group: 'Triangles'
+    },
+    { key: 'chaseTrianglesSuccesses', label: 'Chase wins', section: 'chase', group: 'Triangles' },
+    { key: 'chaseTrianglesLosses', label: 'Chase losses', section: 'chase', group: 'Triangles' },
+    { key: 'chaseCirclesAttempts', label: 'Chase attempts', section: 'chase', group: 'Circles' },
+    { key: 'chaseCirclesSuccesses', label: 'Chase wins', section: 'chase', group: 'Circles' },
+    { key: 'chaseCirclesLosses', label: 'Chase losses', section: 'chase', group: 'Circles' },
+    { key: 'chaseOctagonsAttempts', label: 'Chase attempts', section: 'chase', group: 'Octagons' },
+    { key: 'chaseOctagonsSuccesses', label: 'Chase wins', section: 'chase', group: 'Octagons' },
+    { key: 'chaseOctagonsLosses', label: 'Chase losses', section: 'chase', group: 'Octagons' },
+    { key: 'killsTotal', label: 'Kills total', section: 'hunting', group: 'All' },
+    { key: 'carcassCount', label: 'Carcasses', section: 'hunting', group: 'All' },
+    { key: 'carcassMeatTotal', label: 'Carcass meat', section: 'hunting', group: 'All' },
+    { key: 'killsPredatorSquares', label: 'Kills as predator', section: 'hunting', group: 'Squares' },
+    { key: 'killsPreySquares', label: 'Killed as prey', section: 'hunting', group: 'Squares' },
+    { key: 'killsPredatorTriangles', label: 'Kills as predator', section: 'hunting', group: 'Triangles' },
+    { key: 'killsPreyTriangles', label: 'Killed as prey', section: 'hunting', group: 'Triangles' },
+    { key: 'killsPredatorCircles', label: 'Kills as predator', section: 'hunting', group: 'Circles' },
+    { key: 'killsPreyCircles', label: 'Killed as prey', section: 'hunting', group: 'Circles' },
+    { key: 'killsPredatorOctagons', label: 'Kills as predator', section: 'hunting', group: 'Octagons' },
+    { key: 'killsPreyOctagons', label: 'Killed as prey', section: 'hunting', group: 'Octagons' },
+    { key: 'mutationsLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'All' },
+    { key: 'mutationStrengthLastTick', label: 'Mutation drift', section: 'genetics', group: 'All' },
+    { key: 'pleiotropyStrengthLastTick', label: 'Pleiotropy drift', section: 'genetics', group: 'All' },
+    { key: 'mutationTotal', label: 'Mutations total', section: 'genetics', group: 'All' },
+    { key: 'mutationsSquaresLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Squares' },
+    { key: 'mutationsSquaresTotal', label: 'Mutations total', section: 'genetics', group: 'Squares' },
+    { key: 'mutationStrengthSquaresLastTick', label: 'Mutation drift', section: 'genetics', group: 'Squares' },
+    { key: 'mutationStrengthSquaresTotal', label: 'Mutation drift total', section: 'genetics', group: 'Squares' },
+    { key: 'pleiotropyStrengthSquaresLastTick', label: 'Pleiotropy drift', section: 'genetics', group: 'Squares' },
+    { key: 'pleiotropyStrengthSquaresTotal', label: 'Pleiotropy drift total', section: 'genetics', group: 'Squares' },
+    { key: 'mutationsTrianglesLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Triangles' },
+    { key: 'mutationsTrianglesTotal', label: 'Mutations total', section: 'genetics', group: 'Triangles' },
+    {
+      key: 'mutationStrengthTrianglesLastTick',
+      label: 'Mutation drift',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'mutationStrengthTrianglesTotal',
+      label: 'Mutation drift total',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'pleiotropyStrengthTrianglesLastTick',
+      label: 'Pleiotropy drift',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'pleiotropyStrengthTrianglesTotal',
+      label: 'Pleiotropy drift total',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    { key: 'mutationsCirclesLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Circles' },
+    { key: 'mutationsCirclesTotal', label: 'Mutations total', section: 'genetics', group: 'Circles' },
+    {
+      key: 'mutationStrengthCirclesLastTick',
+      label: 'Mutation drift',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'mutationStrengthCirclesTotal',
+      label: 'Mutation drift total',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'pleiotropyStrengthCirclesLastTick',
+      label: 'Pleiotropy drift',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'pleiotropyStrengthCirclesTotal',
+      label: 'Pleiotropy drift total',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    { key: 'mutationsOctagonsLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Octagons' },
+    { key: 'mutationsOctagonsTotal', label: 'Mutations total', section: 'genetics', group: 'Octagons' },
+    {
+      key: 'mutationStrengthOctagonsLastTick',
+      label: 'Mutation drift',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'mutationStrengthOctagonsTotal',
+      label: 'Mutation drift total',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'pleiotropyStrengthOctagonsLastTick',
+      label: 'Pleiotropy drift',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'pleiotropyStrengthOctagonsTotal',
+      label: 'Pleiotropy drift total',
+      section: 'genetics',
+      group: 'Octagons'
+    }
   ];
 
   // Store references to value elements for updating (plain object)
@@ -253,7 +495,15 @@ export function createUI({
     const list = document.createElement('ul');
     list.className = 'metrics-list';
 
+    let currentGroup = null;
     for (const metric of defs) {
+      if (metric.group && metric.group !== currentGroup) {
+        currentGroup = metric.group;
+        const groupItem = document.createElement('li');
+        groupItem.className = 'metrics-subheading';
+        groupItem.textContent = metric.group;
+        list.appendChild(groupItem);
+      }
       const item = document.createElement('li');
       item.className = 'metrics-item';
 

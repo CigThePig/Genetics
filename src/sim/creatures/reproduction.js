@@ -1,6 +1,7 @@
 import { createCreatureTraits } from './traits.js';
 import { inheritCreatureGenome, mutateCreatureGenome } from './genetics.js';
 import { resolveTicksPerSecond, createLifeStageState } from './life-stages.js';
+import { SPECIES_LIST } from '../species.js';
 import {
   clampMeter,
   resolveRatio,
@@ -391,6 +392,26 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
     metrics.mutationsLastTick = 0;
     metrics.mutationStrengthLastTick = 0;
     metrics.pleiotropyStrengthLastTick = 0;
+    for (const species of SPECIES_LIST) {
+      if (metrics.birthsBySpeciesLastTick?.[species] !== undefined) {
+        metrics.birthsBySpeciesLastTick[species] = 0;
+      }
+      if (metrics.pregnanciesBySpeciesLastTick?.[species] !== undefined) {
+        metrics.pregnanciesBySpeciesLastTick[species] = 0;
+      }
+      if (metrics.miscarriagesBySpeciesLastTick?.[species] !== undefined) {
+        metrics.miscarriagesBySpeciesLastTick[species] = 0;
+      }
+      if (metrics.mutationsBySpeciesLastTick?.[species] !== undefined) {
+        metrics.mutationsBySpeciesLastTick[species] = 0;
+      }
+      if (metrics.mutationStrengthBySpeciesLastTick?.[species] !== undefined) {
+        metrics.mutationStrengthBySpeciesLastTick[species] = 0;
+      }
+      if (metrics.pleiotropyStrengthBySpeciesLastTick?.[species] !== undefined) {
+        metrics.pleiotropyStrengthBySpeciesLastTick[species] = 0;
+      }
+    }
   }
 
   for (let i = 0; i < originalCount; i += 1) {
@@ -446,6 +467,18 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
         if (metrics) {
           metrics.miscarriagesTotal = (metrics.miscarriagesTotal ?? 0) + 1;
           metrics.miscarriagesLastTick = (metrics.miscarriagesLastTick ?? 0) + 1;
+          if (
+            metrics.miscarriagesBySpeciesTotal &&
+            metrics.miscarriagesBySpeciesTotal[creature.species] !== undefined
+          ) {
+            metrics.miscarriagesBySpeciesTotal[creature.species] += 1;
+          }
+          if (
+            metrics.miscarriagesBySpeciesLastTick &&
+            metrics.miscarriagesBySpeciesLastTick[creature.species] !== undefined
+          ) {
+            metrics.miscarriagesBySpeciesLastTick[creature.species] += 1;
+          }
         }
         continue;
       }
@@ -469,7 +502,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
           }),
           rng,
           config,
-          metrics
+          metrics,
+          species: creature.species
         });
         const traits = createCreatureTraits({
           config,
@@ -509,6 +543,19 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
         if (metrics) {
           metrics.birthsTotal = (metrics.birthsTotal ?? 0) + 1;
           metrics.birthsLastTick = (metrics.birthsLastTick ?? 0) + 1;
+          const newbornSpecies = creature.species;
+          if (
+            metrics.birthsBySpeciesTotal &&
+            metrics.birthsBySpeciesTotal[newbornSpecies] !== undefined
+          ) {
+            metrics.birthsBySpeciesTotal[newbornSpecies] += 1;
+          }
+          if (
+            metrics.birthsBySpeciesLastTick &&
+            metrics.birthsBySpeciesLastTick[newbornSpecies] !== undefined
+          ) {
+            metrics.birthsBySpeciesLastTick[newbornSpecies] += 1;
+          }
         }
       }
       continue;
@@ -603,6 +650,18 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
           if (metrics) {
             metrics.pregnanciesTotal = (metrics.pregnanciesTotal ?? 0) + 1;
             metrics.pregnanciesLastTick = (metrics.pregnanciesLastTick ?? 0) + 1;
+            if (
+              metrics.pregnanciesBySpeciesTotal &&
+              metrics.pregnanciesBySpeciesTotal[female.species] !== undefined
+            ) {
+              metrics.pregnanciesBySpeciesTotal[female.species] += 1;
+            }
+            if (
+              metrics.pregnanciesBySpeciesLastTick &&
+              metrics.pregnanciesBySpeciesLastTick[female.species] !== undefined
+            ) {
+              metrics.pregnanciesBySpeciesLastTick[female.species] += 1;
+            }
           }
         } else {
           female.reproduction.pregnancy.fatherId = null;
@@ -629,7 +688,8 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       }),
       rng,
       config,
-      metrics
+      metrics,
+      species: creature.species
     });
 
     const traits = createCreatureTraits({
@@ -665,6 +725,19 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
     if (metrics) {
       metrics.birthsTotal = (metrics.birthsTotal ?? 0) + 1;
       metrics.birthsLastTick = (metrics.birthsLastTick ?? 0) + 1;
+      const newbornSpecies = creature.species;
+      if (
+        metrics.birthsBySpeciesTotal &&
+        metrics.birthsBySpeciesTotal[newbornSpecies] !== undefined
+      ) {
+        metrics.birthsBySpeciesTotal[newbornSpecies] += 1;
+      }
+      if (
+        metrics.birthsBySpeciesLastTick &&
+        metrics.birthsBySpeciesLastTick[newbornSpecies] !== undefined
+      ) {
+        metrics.birthsBySpeciesLastTick[newbornSpecies] += 1;
+      }
     }
   }
 

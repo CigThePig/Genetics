@@ -194,7 +194,8 @@ const updateMutationMetrics = ({
   metrics,
   mutationCount,
   mutationStrength,
-  pleiotropyStrength
+  pleiotropyStrength,
+  species
 }) => {
   if (!metrics) {
     return;
@@ -206,9 +207,41 @@ const updateMutationMetrics = ({
   metrics.pleiotropyStrengthLastTick =
     (metrics.pleiotropyStrengthLastTick ?? 0) + pleiotropyStrength;
   metrics.pleiotropyStrengthTotal = (metrics.pleiotropyStrengthTotal ?? 0) + pleiotropyStrength;
+  if (species) {
+    if (metrics.mutationsBySpeciesLastTick && metrics.mutationsBySpeciesLastTick[species] !== undefined) {
+      metrics.mutationsBySpeciesLastTick[species] += mutationCount;
+    }
+    if (
+      metrics.mutationStrengthBySpeciesLastTick &&
+      metrics.mutationStrengthBySpeciesLastTick[species] !== undefined
+    ) {
+      metrics.mutationStrengthBySpeciesLastTick[species] += mutationStrength;
+    }
+    if (
+      metrics.pleiotropyStrengthBySpeciesLastTick &&
+      metrics.pleiotropyStrengthBySpeciesLastTick[species] !== undefined
+    ) {
+      metrics.pleiotropyStrengthBySpeciesLastTick[species] += pleiotropyStrength;
+    }
+    if (metrics.mutationBySpeciesTotal && metrics.mutationBySpeciesTotal[species] !== undefined) {
+      metrics.mutationBySpeciesTotal[species] += mutationCount;
+    }
+    if (
+      metrics.mutationStrengthBySpeciesTotal &&
+      metrics.mutationStrengthBySpeciesTotal[species] !== undefined
+    ) {
+      metrics.mutationStrengthBySpeciesTotal[species] += mutationStrength;
+    }
+    if (
+      metrics.pleiotropyStrengthBySpeciesTotal &&
+      metrics.pleiotropyStrengthBySpeciesTotal[species] !== undefined
+    ) {
+      metrics.pleiotropyStrengthBySpeciesTotal[species] += pleiotropyStrength;
+    }
+  }
 };
 
-export const mutateCreatureGenome = ({ genome, rng, config, metrics } = {}) => {
+export const mutateCreatureGenome = ({ genome, rng, config, metrics, species } = {}) => {
   if (!genome) {
     return genome;
   }
@@ -263,7 +296,8 @@ export const mutateCreatureGenome = ({ genome, rng, config, metrics } = {}) => {
     metrics,
     mutationCount,
     mutationStrength: mutationStrengthTotal,
-    pleiotropyStrength
+    pleiotropyStrength,
+    species
   });
 
   return normalized;

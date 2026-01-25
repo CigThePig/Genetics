@@ -5,6 +5,26 @@
  * Extracted to avoid duplication between initial state and reset.
  */
 
+import { SPECIES_LIST } from './species.js';
+
+const createSpeciesCounter = (initial = 0) =>
+  SPECIES_LIST.reduce((acc, species) => {
+    acc[species] = initial;
+    return acc;
+  }, {});
+
+const createSpeciesDeathsByCause = () =>
+  SPECIES_LIST.reduce((acc, species) => {
+    acc[species] = {
+      age: 0,
+      starvation: 0,
+      thirst: 0,
+      injury: 0,
+      other: 0
+    };
+    return acc;
+  }, {});
+
 /**
  * Creates a fresh metrics object with all counters at zero.
  * Used for initial sim state and when resetting the sim.
@@ -29,9 +49,14 @@ export function createDefaultMetrics() {
     chaseAttempts: 0,
     chaseSuccesses: 0,
     chaseLosses: 0,
+    chaseAttemptsBySpecies: createSpeciesCounter(),
+    chaseSuccessesBySpecies: createSpeciesCounter(),
+    chaseLossesBySpecies: createSpeciesCounter(),
 
     // Hunting metrics
     killsTotal: 0,
+    killsByPredatorSpecies: createSpeciesCounter(),
+    killsByPreySpecies: createSpeciesCounter(),
 
     // Reproduction metrics
     birthsTotal: 0,
@@ -40,6 +65,12 @@ export function createDefaultMetrics() {
     pregnanciesLastTick: 0,
     miscarriagesTotal: 0,
     miscarriagesLastTick: 0,
+    birthsBySpeciesTotal: createSpeciesCounter(),
+    birthsBySpeciesLastTick: createSpeciesCounter(),
+    pregnanciesBySpeciesTotal: createSpeciesCounter(),
+    pregnanciesBySpeciesLastTick: createSpeciesCounter(),
+    miscarriagesBySpeciesTotal: createSpeciesCounter(),
+    miscarriagesBySpeciesLastTick: createSpeciesCounter(),
 
     // Mutation metrics
     mutationsLastTick: 0,
@@ -48,9 +79,17 @@ export function createDefaultMetrics() {
     mutationStrengthTotal: 0,
     pleiotropyStrengthLastTick: 0,
     pleiotropyStrengthTotal: 0,
+    mutationsBySpeciesLastTick: createSpeciesCounter(),
+    mutationStrengthBySpeciesLastTick: createSpeciesCounter(),
+    pleiotropyStrengthBySpeciesLastTick: createSpeciesCounter(),
+    mutationBySpeciesTotal: createSpeciesCounter(),
+    mutationStrengthBySpeciesTotal: createSpeciesCounter(),
+    pleiotropyStrengthBySpeciesTotal: createSpeciesCounter(),
 
     // Death metrics
     deathsTotal: 0,
+    deathsBySpeciesTotal: createSpeciesCounter(),
+    deathsByCauseBySpecies: createSpeciesDeathsByCause(),
     deathsByCause: {
       age: 0,
       starvation: 0,

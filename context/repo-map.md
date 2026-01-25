@@ -101,6 +101,8 @@ Rules:
   - Contains: Track 10.5 spec/blueprint/plan (Timebase + Survival + Visibility + Map Scale)
 - tracks/2026-01-30-track-10p6-gender-pregnancy-birth/
   - Contains: Track 10.6 spec/blueprint/plan (Gender + Pregnancy + Birth)
+- tracks/2026-02-01-track-maintenance-per-species-metrics/
+  - Contains: Maintenance spec/blueprint/plan (Per-species metrics expansion)
 - tracks/2026-01-27-track-maintenance-touch-gesture-guardrails/
   - Contains: Maintenance spec/blueprint/plan (Touch gesture guardrails)
 - tracks/2026-01-28-track-maintenance-camera-change-callback/

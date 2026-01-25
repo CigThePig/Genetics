@@ -50,6 +50,15 @@ export function applyCreatureCombat({ creatures, world, config, metrics, tick })
     processed.add(preyId);
     if (metrics) {
       metrics.killsTotal = (metrics.killsTotal ?? 0) + 1;
+      if (
+        metrics.killsByPredatorSpecies &&
+        metrics.killsByPredatorSpecies[creature.species] !== undefined
+      ) {
+        metrics.killsByPredatorSpecies[creature.species] += 1;
+      }
+      if (metrics.killsByPreySpecies && metrics.killsByPreySpecies[prey.species] !== undefined) {
+        metrics.killsByPreySpecies[prey.species] += 1;
+      }
     }
   }
 }
