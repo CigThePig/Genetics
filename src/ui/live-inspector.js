@@ -251,19 +251,24 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     statusBody.append(
       row('Species', `${speciesEmoji} ${species}`),
       row('ID', `#${creature.id}`),
-      row('Age', ticksToTime(creature.age)),
+      row('Age', ticksToTime(creature.ageTicks)),
       row('Stage', creature.lifeStage?.label || '--'),
       row('Position', `(${num(creature.position?.x, 0)}, ${num(creature.position?.y, 0)})`)
     );
 
-    if (creature.gender) {
-      statusBody.append(row('Gender', creature.gender === 'male' ? '♂ Male' : '♀ Female'));
+    if (creature.sex) {
+      statusBody.append(row('Sex', creature.sex === 'male' ? '♂ Male' : '♀ Female'));
     }
 
-    if (creature.pregnancy?.active) {
+    // Pregnancy status
+    const pregnancy = creature.reproduction?.pregnancy;
+    if (pregnancy?.isPregnant) {
+      const remaining = pregnancy.gestationTicksRemaining ?? 0;
+      const total = pregnancy.gestationTicksTotal ?? 1;
+      const progress = Math.round(((total - remaining) / Math.max(1, total)) * 100);
       statusBody.append(
-        row('Pregnant', '🤰 Yes'),
-        row('Due in', ticksToTime(creature.pregnancy.gestationRemaining))
+        row('Pregnant', `🤰 ${progress}%`),
+        row('Due in', ticksToTime(remaining))
       );
     }
 
@@ -272,11 +277,12 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     // VITALS SECTION
     const { section: vitalsSection, body: vitalsBody } = createSection('vitals', 'Vitals', '❤️', true);
 
+    const meters = creature.meters || {};
     vitalsBody.append(
-      meterBar('Energy', creature.energy, 1, 'energy'),
-      meterBar('Water', creature.water, 1, 'water'),
-      meterBar('Health', creature.health, 1, 'health'),
-      meterBar('Stamina', creature.stamina, 1, 'stamina')
+      meterBar('Energy', meters.energy, 1, 'energy'),
+      meterBar('Water', meters.water, 1, 'water'),
+      meterBar('Health', meters.hp, 1, 'health'),
+      meterBar('Stamina', meters.stamina, 1, 'stamina')
     );
 
     content.append(vitalsSection);
@@ -284,24 +290,36 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     // BEHAVIOR SECTION
     const { section: behaviorSection, body: behaviorBody } = createSection('behavior', 'Behavior', '🧠', false);
 
-    const intent = creature.intent?.action || 'idle';
+    const priority = creature.priority ?? 'unknown';
+    const intentType = creature.intent?.type ?? 'unknown';
+    
+    const priorityLabels = {
+      hunger: '🍽️ Looking for food',
+      thirst: '💧 Looking for water',
+      flee: '🏃 Running away!',
+      mate: '💕 Looking for a mate',
+      rest: '😴 Resting'
+    };
+    
     const intentLabels = {
-      idle: '😴 Idle',
-      wander: '🚶 Wandering',
-      flee: '🏃 Fleeing!',
-      seekFood: '🍽️ Seeking food',
-      seekWater: '💧 Seeking water',
-      seekMate: '💕 Seeking mate',
-      hunt: '🎯 Hunting',
-      graze: '🌿 Grazing',
+      eat: '🍽️ Eating',
       drink: '💧 Drinking',
-      eat: '🍖 Eating',
-      rest: '😌 Resting'
+      wander: '🚶 Wandering',
+      seek_food: '🔍 Searching for food',
+      seek_water: '🔍 Searching for water',
+      seek_mate: '💕 Seeking a mate',
+      flee: '🏃 Fleeing!',
+      chase: '🎯 Chasing prey',
+      idle: '😴 Idle'
     };
 
+    const currentActivity = intentLabels[intentType] || priorityLabels[priority] || `${priority} / ${intentType}`;
+
     behaviorBody.append(
-      row('Action', intentLabels[intent] || intent),
-      row('Alertness', pct(creature.alertness?.level))
+      row('Activity', currentActivity),
+      row('Priority', priority),
+      row('Alertness', pct(creature.alertness?.level)),
+      row('Sprinting', creature.sprinting ? '🏃 Yes' : 'No')
     );
 
     if (creature.intent?.foodType) {

@@ -174,26 +174,44 @@ export function createUI({
   const metricsBody = document.createElement('div');
   metricsBody.className = 'metrics-grid';
 
-  // Metric definitions
+  // Metric definitions - matches simulation getSummary() output
   const metricDefinitions = [
     { key: 'creatureCount', label: 'Creatures', section: 'population' },
     { key: 'squaresCount', label: 'Squares', section: 'population' },
     { key: 'trianglesCount', label: 'Triangles', section: 'population' },
     { key: 'circlesCount', label: 'Circles', section: 'population' },
     { key: 'octagonsCount', label: 'Octagons', section: 'population' },
-    { key: 'birthsTotal', label: 'Births', section: 'population' },
-    { key: 'deathsTotal', label: 'Deaths', section: 'deaths' },
-    { key: 'deathsAge', label: 'Age', section: 'deaths' },
-    { key: 'deathsStarvation', label: 'Starved', section: 'deaths' },
-    { key: 'deathsThirst', label: 'Thirst', section: 'deaths' },
-    { key: 'deathsInjury', label: 'Injury', section: 'deaths' },
+    { key: 'birthsLastTick', label: 'Births (tick)', section: 'population' },
+    { key: 'birthsTotal', label: 'Births total', section: 'population' },
+    { key: 'pregnanciesLastTick', label: 'Pregnancies (tick)', section: 'population' },
+    { key: 'pregnanciesTotal', label: 'Pregnancies total', section: 'population' },
+    { key: 'miscarriagesLastTick', label: 'Miscarriages (tick)', section: 'population' },
+    { key: 'miscarriagesTotal', label: 'Miscarriages total', section: 'population' },
+    { key: 'deathsTotal', label: 'Deaths total', section: 'deaths' },
+    { key: 'deathsAge', label: 'Deaths (age)', section: 'deaths' },
+    { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths' },
+    { key: 'deathsThirst', label: 'Deaths (thirst)', section: 'deaths' },
+    { key: 'deathsInjury', label: 'Deaths (injury)', section: 'deaths' },
+    { key: 'deathsOther', label: 'Deaths (other)', section: 'deaths' },
     { key: 'grassAverage', label: 'Grass avg', section: 'plants' },
-    { key: 'bushCount', label: 'Bushes', section: 'plants' },
-    { key: 'berryTotal', label: 'Berries', section: 'plants' },
+    { key: 'grassTotal', label: 'Grass total', section: 'plants' },
+    { key: 'grassCoverage', label: 'Grass coverage', section: 'plants' },
+    { key: 'grassHotspotCells', label: 'Hotspot cells', section: 'plants' },
+    { key: 'stressedCells', label: 'Stressed cells', section: 'plants' },
+    { key: 'bushCount', label: 'Bush count', section: 'plants' },
+    { key: 'berryTotal', label: 'Berry total', section: 'plants' },
+    { key: 'berryAverage', label: 'Berries/bush', section: 'plants' },
+    { key: 'bushAverageHealth', label: 'Bush health', section: 'plants' },
+    { key: 'chaseAttempts', label: 'Chase attempts', section: 'chase' },
+    { key: 'chaseSuccesses', label: 'Chase wins', section: 'chase' },
+    { key: 'chaseLosses', label: 'Chase losses', section: 'chase' },
+    { key: 'killsTotal', label: 'Kills total', section: 'hunting' },
     { key: 'carcassCount', label: 'Carcasses', section: 'hunting' },
-    { key: 'killsTotal', label: 'Kills', section: 'hunting' },
-    { key: 'chaseSuccesses', label: 'Catches', section: 'hunting' },
-    { key: 'mutationTotal', label: 'Mutations', section: 'genetics' }
+    { key: 'carcassMeatTotal', label: 'Carcass meat', section: 'hunting' },
+    { key: 'mutationsLastTick', label: 'Mutations (tick)', section: 'genetics' },
+    { key: 'mutationStrengthLastTick', label: 'Mutation drift', section: 'genetics' },
+    { key: 'pleiotropyStrengthLastTick', label: 'Pleiotropy drift', section: 'genetics' },
+    { key: 'mutationTotal', label: 'Mutations total', section: 'genetics' }
   ];
 
   const metricRows = new Map();
@@ -234,6 +252,7 @@ export function createUI({
     { key: 'population', title: 'Population' },
     { key: 'deaths', title: 'Deaths' },
     { key: 'plants', title: 'Plants' },
+    { key: 'chase', title: 'Chase' },
     { key: 'hunting', title: 'Hunting' },
     { key: 'genetics', title: 'Genetics' }
   ];
@@ -348,12 +367,18 @@ export function createUI({
     if (!Number.isFinite(value)) return '--';
     switch (key) {
       case 'grassAverage':
-        return value.toFixed(2);
-      case 'grassCoverage':
-        return `${(value * 100).toFixed(0)}%`;
-      case 'berryAverage':
-      case 'bushAverageHealth':
+        return value.toFixed(3);
+      case 'grassTotal':
         return value.toFixed(1);
+      case 'grassCoverage':
+        return `${(value * 100).toFixed(1)}%`;
+      case 'berryAverage':
+        return value.toFixed(2);
+      case 'bushAverageHealth':
+        return value.toFixed(2);
+      case 'mutationStrengthLastTick':
+      case 'pleiotropyStrengthLastTick':
+        return value.toFixed(3);
       default:
         return String(Math.round(value));
     }
