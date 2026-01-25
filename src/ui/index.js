@@ -33,6 +33,31 @@ export function createUI({
   if (oldTitle) oldTitle.remove();
 
   // ═══════════════════════════════════════════════════════════════════════════
+  // FORMAT HELPER (defined early so it's available)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const formatMetricValue = (key, value) => {
+    if (!Number.isFinite(value)) return '--';
+    switch (key) {
+      case 'grassAverage':
+        return value.toFixed(3);
+      case 'grassTotal':
+        return value.toFixed(1);
+      case 'grassCoverage':
+        return `${(value * 100).toFixed(1)}%`;
+      case 'berryAverage':
+        return value.toFixed(2);
+      case 'bushAverageHealth':
+        return value.toFixed(2);
+      case 'mutationStrengthLastTick':
+      case 'pleiotropyStrengthLastTick':
+        return value.toFixed(3);
+      default:
+        return String(Math.round(value));
+    }
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
   // TOP STATUS BAR
   // ═══════════════════════════════════════════════════════════════════════════
 
@@ -104,7 +129,7 @@ export function createUI({
   container.append(playbackBar);
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // QUICK ACTIONS (Right side - Zoom controls)
+  // QUICK ACTIONS (Right Side - Middle)
   // ═══════════════════════════════════════════════════════════════════════════
 
   const quickActions = document.createElement('div');
@@ -124,7 +149,7 @@ export function createUI({
 
   const recenterBtn = document.createElement('button');
   recenterBtn.className = 'quick-action-btn';
-  recenterBtn.innerHTML = '◎';
+  recenterBtn.innerHTML = '⌖';
   recenterBtn.title = 'Recenter';
   recenterBtn.addEventListener('click', () => onRecenter?.());
 
@@ -214,15 +239,16 @@ export function createUI({
     { key: 'mutationTotal', label: 'Mutations total', section: 'genetics' }
   ];
 
-  const metricRows = new Map();
+  // Store references to value elements for updating (plain object)
+  const metricNodes = {};
 
-  const createMetricSection = (title, defs) => {
+  const createMetricSection = (sectionTitle, defs) => {
     const section = document.createElement('div');
     section.className = 'metrics-section';
 
-    const sectionTitle = document.createElement('h3');
-    sectionTitle.className = 'metrics-section-title';
-    sectionTitle.textContent = title;
+    const titleEl = document.createElement('h3');
+    titleEl.className = 'metrics-section-title';
+    titleEl.textContent = sectionTitle;
 
     const list = document.createElement('ul');
     list.className = 'metrics-list';
@@ -231,20 +257,22 @@ export function createUI({
       const item = document.createElement('li');
       item.className = 'metrics-item';
 
-      const label = document.createElement('span');
-      label.className = 'metrics-item-label';
-      label.textContent = metric.label;
+      const labelSpan = document.createElement('span');
+      labelSpan.className = 'metrics-item-label';
+      labelSpan.textContent = metric.label;
 
-      const value = document.createElement('span');
-      value.className = 'metrics-item-value';
-      value.textContent = '--';
+      const valueSpan = document.createElement('span');
+      valueSpan.className = 'metrics-item-value';
+      valueSpan.textContent = '--';
 
-      item.append(label, value);
+      item.append(labelSpan, valueSpan);
       list.append(item);
-      metricRows.set(metric.key, value);
+      
+      // Store reference using plain object
+      metricNodes[metric.key] = valueSpan;
     }
 
-    section.append(sectionTitle, list);
+    section.append(titleEl, list);
     return section;
   };
 
@@ -257,10 +285,10 @@ export function createUI({
     { key: 'genetics', title: 'Genetics' }
   ];
 
-  for (const { key, title } of sections) {
+  for (const { key, title: sectionTitle } of sections) {
     const defs = metricDefinitions.filter(m => m.section === key);
     if (defs.length) {
-      metricsBody.append(createMetricSection(title, defs));
+      metricsBody.append(createMetricSection(sectionTitle, defs));
     }
   }
 
@@ -334,7 +362,7 @@ export function createUI({
   configFab.addEventListener('click', toggleConfig);
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FPS TOGGLE FAB
+  // FPS FAB
   // ═══════════════════════════════════════════════════════════════════════════
 
   const fpsFab = document.createElement('button');
@@ -358,31 +386,6 @@ export function createUI({
   // Assemble right FABs
   fabContainerRight.append(metricsFab, configFab, fpsFab);
   container.append(fabContainerRight);
-
-  // ═══════════════════════════════════════════════════════════════════════════
-  // FORMAT HELPERS
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  const formatMetricValue = (key, value) => {
-    if (!Number.isFinite(value)) return '--';
-    switch (key) {
-      case 'grassAverage':
-        return value.toFixed(3);
-      case 'grassTotal':
-        return value.toFixed(1);
-      case 'grassCoverage':
-        return `${(value * 100).toFixed(1)}%`;
-      case 'berryAverage':
-        return value.toFixed(2);
-      case 'bushAverageHealth':
-        return value.toFixed(2);
-      case 'mutationStrengthLastTick':
-      case 'pleiotropyStrengthLastTick':
-        return value.toFixed(3);
-      default:
-        return String(Math.round(value));
-    }
-  };
 
   // ═══════════════════════════════════════════════════════════════════════════
   // PUBLIC API
@@ -416,10 +419,14 @@ export function createUI({
       fpsOverlay.style.display = visible ? 'block' : 'none';
     },
 
-    setMetrics(summary = {}) {
-      metricRows.forEach((node, key) => {
-        node.textContent = formatMetricValue(key, summary[key]);
-      });
+    setMetrics(summary) {
+      if (!summary) return;
+      
+      for (const key in metricNodes) {
+        const node = metricNodes[key];
+        const value = summary[key];
+        node.textContent = formatMetricValue(key, value);
+      }
     },
 
     updateFps(fps) {
