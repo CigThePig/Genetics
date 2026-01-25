@@ -76,6 +76,21 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
     } else if (counts) {
       counts.other += 1;
     }
+    if (metrics?.deathsBySpeciesTotal && metrics.deathsBySpeciesTotal[creature.species] !== undefined) {
+      metrics.deathsBySpeciesTotal[creature.species] += 1;
+    }
+    if (
+      metrics?.deathsByCauseBySpecies &&
+      metrics.deathsByCauseBySpecies[creature.species] &&
+      metrics.deathsByCauseBySpecies[creature.species][cause] !== undefined
+    ) {
+      metrics.deathsByCauseBySpecies[creature.species][cause] += 1;
+    } else if (
+      metrics?.deathsByCauseBySpecies &&
+      metrics.deathsByCauseBySpecies[creature.species]
+    ) {
+      metrics.deathsByCauseBySpecies[creature.species].other += 1;
+    }
   }
 
   creatures.length = writeIndex;
