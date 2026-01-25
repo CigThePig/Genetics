@@ -4,10 +4,11 @@ import { getSpatialIndex } from '../spatial-index.js';
 const DEFAULT_TARGET_WEIGHTS = Object.freeze({
   [SPECIES.TRIANGLE]: {
     [SPECIES.CIRCLE]: 1,
-    [SPECIES.OCTAGON]: 0.85
+    [SPECIES.SQUARE]: 0.8
   },
   [SPECIES.OCTAGON]: {
-    [SPECIES.SQUARE]: 1
+    [SPECIES.SQUARE]: 1,
+    [SPECIES.CIRCLE]: 0.8
   }
 });
 

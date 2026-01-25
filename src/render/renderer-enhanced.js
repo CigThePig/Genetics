@@ -620,6 +620,82 @@ export function createRenderer(container, { camera }) {
       }
     }
 
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // PASS 6B: Carcasses (meat remains)
+    // ─────────────────────────────────────────────────────────────────────────
+
+    if (Array.isArray(world.carcasses) && world.carcasses.length > 0) {
+      const maxMeatPerCell = Number.isFinite(config?.carcassMaxMeatPerCell) ? config.carcassMaxMeatPerCell : 2;
+      const baseRadius = tileSize * 0.18;
+      const extraRadius = tileSize * 0.14;
+
+      const hashId = (value) => {
+        const str = String(value ?? '');
+        let h = 0;
+        for (let i = 0; i < str.length; i += 1) {
+          h = (h * 31 + str.charCodeAt(i)) | 0;
+        }
+        return Math.abs(h);
+      };
+
+      for (const carcass of world.carcasses) {
+        const x = Number.isFinite(carcass?.x) ? carcass.x : null;
+        const y = Number.isFinite(carcass?.y) ? carcass.y : null;
+        if (x === null || y === null) continue;
+        if (x < startCol - 1 || x >= endCol + 1 || y < startRow - 1 || y >= endRow + 1) continue;
+
+        const meat = Number.isFinite(carcass?.meat) ? Math.max(0, carcass.meat) : 0;
+        const ratio = maxMeatPerCell > 0 ? Math.min(1, meat / maxMeatPerCell) : 0;
+
+        const centerX = originX + (x + 0.5) * tileSize;
+        const centerY = originY + (y + 0.5) * tileSize;
+
+        const radius = baseRadius + extraRadius * ratio;
+        const seed = hashId(carcass.id) + (x * 131 + y * 137);
+
+        // Dark, irregular "splatter" that reads as non-living at a glance
+        ctx.save();
+        ctx.translate(centerX, centerY);
+
+        const points = 7;
+        const angleOffset = ((seed % 360) * Math.PI) / 180;
+
+        ctx.beginPath();
+        for (let i = 0; i <= points; i += 1) {
+          const t = (i / points) * Math.PI * 2 + angleOffset;
+          const wobbleBits = (seed >> (i * 3)) & 7;
+          const wobble = 0.75 + (wobbleBits / 7) * 0.45;
+          const px = Math.cos(t) * radius * wobble;
+          const py = Math.sin(t) * radius * wobble;
+          if (i === 0) ctx.moveTo(px, py);
+          else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+
+        const bodyAlpha = 0.35 + ratio * 0.45;
+        ctx.fillStyle = `rgba(70, 35, 25, ${bodyAlpha})`;
+        ctx.fill();
+
+        ctx.lineWidth = Math.max(0.8, 1.2 / state.zoom);
+        ctx.strokeStyle = `rgba(20, 10, 8, ${0.35 + ratio * 0.35})`;
+        ctx.stroke();
+
+        // Bone-ish mark (tiny "X") so it doesn't read as a creature
+        const boneAlpha = 0.25 + ratio * 0.55;
+        ctx.strokeStyle = `rgba(225, 225, 210, ${boneAlpha})`;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(-radius * 0.55, -radius * 0.25);
+        ctx.lineTo(radius * 0.55, radius * 0.25);
+        ctx.moveTo(-radius * 0.45, radius * 0.35);
+        ctx.lineTo(radius * 0.45, -radius * 0.35);
+        ctx.stroke();
+
+        ctx.restore();
+      }
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // PASS 7: Map border with glow
     // ─────────────────────────────────────────────────────────────────────────

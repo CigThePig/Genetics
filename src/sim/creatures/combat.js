@@ -36,6 +36,9 @@ export function applyCreatureCombat({ creatures, world, config, metrics, tick })
     const scaledYield = baseYield * resolveLifeStageScale(prey);
     const cellX = Math.floor(prey.position.x);
     const cellY = Math.floor(prey.position.y);
+    if (!prey.meters) {
+      prey.meters = {};
+    }
     prey.meters.hp = 0;
     spawnCarcass({
       world,

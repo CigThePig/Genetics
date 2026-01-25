@@ -128,8 +128,8 @@ export const simConfig = {
   creatureTargetingRange: 12, // (was 10 - predators can spot prey further)
   creatureTargetingDistanceWeight: 0.12,
   creatureTargetingPreferences: {
-    triangle: { circle: 1, octagon: 0.85 },
-    octagon: { square: 1 }
+    triangle: { circle: 1, square: 0.8 },
+    octagon: { square: 1, circle: 0.8 }
   },
   creatureChaseStartThreshold: 0.55, // (was 0.6 - start chasing with less stamina)
   creatureChaseStopThreshold: 0.2, // (was 0.25 - push harder before giving up)
