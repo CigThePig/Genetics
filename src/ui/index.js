@@ -131,7 +131,7 @@ export function createUI({
   const fpsToggleBtn = document.createElement('button');
   fpsToggleBtn.className = 'fps-toggle-btn';
   fpsToggleBtn.textContent = 'FPS';
-  fpsToggleBtn.title = 'Toggle FPS display';
+  fpsToggleBtn.title = 'Performance';
 
   playbackRow.append(stepBtn, playBtn, pauseBtn, speedSelect, fpsToggleBtn);
 
@@ -209,27 +209,205 @@ export function createUI({
   container.append(quickActions);
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // FPS OVERLAY
+  // FPS VISIBILITY STATE
   // ═══════════════════════════════════════════════════════════════════════════
 
-  const fpsOverlay = document.createElement('div');
-  fpsOverlay.className = 'fps-overlay';
-  fpsOverlay.textContent = 'FPS: --';
-  fpsOverlay.style.display = initialFpsVisible ? 'block' : 'none';
-  container.append(fpsOverlay);
-
-  // FPS toggle button handler
   let fpsVisible = initialFpsVisible;
-  fpsToggleBtn.classList.toggle('active', fpsVisible);
-  
-  fpsToggleBtn.addEventListener('click', () => {
-    fpsVisible = !fpsVisible;
+  const applyFpsVisible = (nextVisible, { save = true } = {}) => {
+    fpsVisible = Boolean(nextVisible);
     fpsToggleBtn.classList.toggle('active', fpsVisible);
-    fpsOverlay.style.display = fpsVisible ? 'block' : 'none';
-    if (metrics?.setVisible) {
-      metrics.setVisible(fpsVisible);
+    metrics?.setVisible?.(fpsVisible);
+    if (save) onFpsToggle?.(fpsVisible);
+  };
+
+  applyFpsVisible(fpsVisible, { save: false });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PERFORMANCE PANEL
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const perfPanel = document.createElement('div');
+  perfPanel.className = 'overlay-panel performance-panel bottom-right';
+
+  const perfPanelHeader = document.createElement('div');
+  perfPanelHeader.className = 'panel-header';
+
+  const perfPanelTitle = document.createElement('h2');
+  perfPanelTitle.className = 'panel-title';
+  perfPanelTitle.innerHTML = '⚡ Performance';
+
+  const perfPanelClose = document.createElement('button');
+  perfPanelClose.className = 'panel-close';
+  perfPanelClose.innerHTML = '×';
+
+  perfPanelHeader.append(perfPanelTitle, perfPanelClose);
+
+  const perfPanelBody = document.createElement('div');
+  perfPanelBody.className = 'panel-body';
+
+  const perfSummaryList = document.createElement('div');
+  perfSummaryList.className = 'metrics-list';
+
+  const createSummaryItem = (label) => {
+    const item = document.createElement('div');
+    item.className = 'metrics-item';
+    const labelEl = document.createElement('span');
+    labelEl.className = 'metrics-item-label';
+    labelEl.textContent = label;
+    const valueEl = document.createElement('span');
+    valueEl.className = 'metrics-item-value';
+    valueEl.textContent = '--';
+    item.append(labelEl, valueEl);
+    return { item, valueEl };
+  };
+
+  const summaryNodes = {
+    fps: createSummaryItem('FPS'),
+    tps: createSummaryItem('TPS'),
+    frameMs: createSummaryItem('Frame'),
+    tickAvg: createSummaryItem('Tick avg'),
+    renderAvg: createSummaryItem('Render avg')
+  };
+
+  Object.values(summaryNodes).forEach(({ item }) => perfSummaryList.append(item));
+
+  const perfControls = document.createElement('div');
+  perfControls.className = 'perf-controls';
+
+  const fpsOverlayBtn = document.createElement('button');
+  fpsOverlayBtn.className = 'perf-toggle-btn';
+  fpsOverlayBtn.addEventListener('click', () => applyFpsVisible(!fpsVisible));
+
+  const profilerBtn = document.createElement('button');
+  profilerBtn.className = 'perf-toggle-btn';
+  profilerBtn.addEventListener('click', () => {
+    const nextEnabled = !metrics?.isPerfEnabled?.();
+    metrics?.setPerfEnabled?.(nextEnabled);
+    updatePerfPanel();
+  });
+
+  const tickTimersBtn = document.createElement('button');
+  tickTimersBtn.className = 'perf-toggle-btn';
+  tickTimersBtn.addEventListener('click', () => {
+    const groups = metrics?.getPerfGroups?.();
+    metrics?.setPerfGroupEnabled?.('tick', !groups?.tick);
+    updatePerfPanel();
+  });
+
+  const renderTimersBtn = document.createElement('button');
+  renderTimersBtn.className = 'perf-toggle-btn';
+  renderTimersBtn.addEventListener('click', () => {
+    const groups = metrics?.getPerfGroups?.();
+    metrics?.setPerfGroupEnabled?.('render', !groups?.render);
+    updatePerfPanel();
+  });
+
+  perfControls.append(fpsOverlayBtn, profilerBtn, tickTimersBtn, renderTimersBtn);
+
+  const perfTimersList = document.createElement('div');
+  perfTimersList.className = 'metrics-list';
+
+  perfPanelBody.append(perfSummaryList, perfControls, perfTimersList);
+  perfPanel.append(perfPanelHeader, perfPanelBody);
+  container.append(perfPanel);
+
+  const formatNumber = (value, digits = 0) => {
+    if (!Number.isFinite(value)) return '--';
+    return digits > 0 ? value.toFixed(digits) : String(Math.round(value));
+  };
+
+  const formatMs = (value) => {
+    if (!Number.isFinite(value)) return '--';
+    return `${value.toFixed(2)} ms`;
+  };
+
+  const findTimer = (timers, name) => timers.find(timer => timer.name === name);
+
+  const updatePerfPanel = () => {
+    const snap = metrics?.snapshot?.();
+    const perfSnap = metrics?.getPerfSnapshot?.();
+    const timers = Array.isArray(perfSnap?.timers) ? perfSnap.timers : [];
+
+    summaryNodes.fps.valueEl.textContent = formatNumber(snap?.fps);
+    summaryNodes.tps.valueEl.textContent = formatNumber(snap?.tps);
+    summaryNodes.frameMs.valueEl.textContent = formatMs(snap?.frameMs);
+    summaryNodes.tickAvg.valueEl.textContent = formatMs(findTimer(timers, 'tick.total')?.avgMs);
+    summaryNodes.renderAvg.valueEl.textContent = formatMs(findTimer(timers, 'render.total')?.avgMs);
+
+    fpsOverlayBtn.classList.toggle('active', fpsVisible);
+    fpsOverlayBtn.textContent = `FPS Overlay: ${fpsVisible ? 'ON' : 'OFF'}`;
+
+    const profilerEnabled = metrics?.isPerfEnabled?.() ?? false;
+    profilerBtn.classList.toggle('active', profilerEnabled);
+    profilerBtn.textContent = `Profiler: ${profilerEnabled ? 'ON' : 'OFF'}`;
+
+    const groups = metrics?.getPerfGroups?.() ?? { tick: false, render: false };
+    tickTimersBtn.classList.toggle('active', groups.tick);
+    tickTimersBtn.textContent = `Tick timers: ${groups.tick ? 'ON' : 'OFF'}`;
+    renderTimersBtn.classList.toggle('active', groups.render);
+    renderTimersBtn.textContent = `Render timers: ${groups.render ? 'ON' : 'OFF'}`;
+
+    if (!profilerEnabled) {
+      perfTimersList.innerHTML =
+        '<div class="metrics-item"><span class="metrics-item-label">Profiler</span><span class="metrics-item-value">Disabled</span></div>';
+      return;
     }
-    onFpsToggle?.(fpsVisible);
+
+    const tickTimers = timers
+      .filter(timer => timer.group === 'tick')
+      .sort((a, b) => b.totalMs - a.totalMs)
+      .slice(0, 6);
+    const renderTimers = timers
+      .filter(timer => timer.group === 'render')
+      .sort((a, b) => b.totalMs - a.totalMs)
+      .slice(0, 6);
+
+    const renderTimerRows = (label, items) => {
+      if (!items.length) return '';
+      const rows = items
+        .map(
+          timer => `<div class="metrics-item">
+            <span class="metrics-item-label">${timer.name}</span>
+            <span class="metrics-item-value">${timer.totalMs.toFixed(1)} ms • avg ${timer.avgMs.toFixed(
+              2
+            )} • max ${timer.maxMs.toFixed(2)} • ${timer.calls}x</span>
+          </div>`
+        )
+        .join('');
+      return `<div class="metrics-subheading">${label}</div>${rows}`;
+    };
+
+    const content =
+      renderTimerRows('Tick timers', tickTimers) + renderTimerRows('Render timers', renderTimers);
+    perfTimersList.innerHTML =
+      content ||
+      '<div class="metrics-item"><span class="metrics-item-label">Timers</span><span class="metrics-item-value">No data</span></div>';
+  };
+
+  let perfVisible = false;
+  let perfIntervalId = null;
+
+  const setPerfVisible = (nextVisible) => {
+    perfVisible = Boolean(nextVisible);
+    perfPanel.classList.toggle('visible', perfVisible);
+    if (perfIntervalId) {
+      clearInterval(perfIntervalId);
+      perfIntervalId = null;
+    }
+    if (perfVisible) {
+      if (metricsVisible) toggleMetrics();
+      if (configVisible) toggleConfig();
+      updatePerfPanel();
+      perfIntervalId = setInterval(updatePerfPanel, 250);
+    }
+  };
+
+  fpsToggleBtn.addEventListener('click', () => {
+    setPerfVisible(!perfVisible);
+  });
+
+  perfPanelClose.addEventListener('click', () => {
+    setPerfVisible(false);
   });
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -692,6 +870,7 @@ export function createUI({
     metricsFab.classList.toggle('active', metricsVisible);
     // Close other panels
     if (metricsVisible && configVisible) toggleConfig();
+    if (metricsVisible && perfVisible) setPerfVisible(false);
   };
 
   metricsFab.addEventListener('click', toggleMetrics);
@@ -718,6 +897,7 @@ export function createUI({
     configFab.classList.toggle('active', configVisible);
     // Close other panels
     if (configVisible && metricsVisible) toggleMetrics();
+    if (configVisible && perfVisible) setPerfVisible(false);
   };
 
   configFab.addEventListener('click', toggleConfig);
@@ -765,9 +945,7 @@ export function createUI({
     },
 
     setFpsVisible(visible) {
-      fpsVisible = visible;
-      fpsToggleBtn.classList.toggle('active', visible);
-      fpsOverlay.style.display = visible ? 'block' : 'none';
+      applyFpsVisible(visible, { save: false });
     },
 
     setMetrics(summary) {
@@ -778,10 +956,6 @@ export function createUI({
         const value = summary[key];
         node.textContent = formatMetricValue(key, value);
       }
-    },
-
-    updateFps(fps) {
-      fpsOverlay.textContent = `FPS: ${fps} | TPS: ${fps}`;
     },
 
     setTracking(creatureId, isFollowing = false) {

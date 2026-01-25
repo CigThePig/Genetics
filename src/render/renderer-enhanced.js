@@ -1,5 +1,6 @@
 import { SPECIES } from '../sim/species.js';
 import { createNoise, normalize } from '../sim/noise.js';
+import { getActivePerf } from '../metrics/perf-registry.js';
 
 /**
  * Enhanced Renderer with Polished Terrain Visuals
@@ -871,15 +872,27 @@ export function createRenderer(container, { camera }) {
   return {
     canvas,
     render(sim) {
-      const state = camera?.getState?.() ?? { x: 0, y: 0, zoom: 1 };
-      drawTerrain(state, sim.state?.world, sim.config);
-      drawCreatures(state, sim.state?.world, sim.state?.creatures, sim.config);
+      const perf = getActivePerf();
+      const tTotal = perf?.start('render.total');
+      try {
+        const state = camera?.getState?.() ?? { x: 0, y: 0, zoom: 1 };
 
-      const roll = Number.isFinite(sim.state?.lastRoll) ? sim.state.lastRoll.toFixed(4) : '--';
-      const grassAverage = Number.isFinite(sim.state?.metrics?.grassAverage)
-        ? sim.state.metrics.grassAverage.toFixed(2)
-        : '--';
-      footer.textContent = `Seed: ${sim.config.seed} · Last roll: ${roll} · Avg grass: ${grassAverage}`;
+        const tTerrain = perf?.start('render.terrain');
+        drawTerrain(state, sim.state?.world, sim.config);
+        perf?.end('render.terrain', tTerrain);
+
+        const tCreatures = perf?.start('render.creatures');
+        drawCreatures(state, sim.state?.world, sim.state?.creatures, sim.config);
+        perf?.end('render.creatures', tCreatures);
+
+        const roll = Number.isFinite(sim.state?.lastRoll) ? sim.state.lastRoll.toFixed(4) : '--';
+        const grassAverage = Number.isFinite(sim.state?.metrics?.grassAverage)
+          ? sim.state.metrics.grassAverage.toFixed(2)
+          : '--';
+        footer.textContent = `Seed: ${sim.config.seed} · Last roll: ${roll} · Avg grass: ${grassAverage}`;
+      } finally {
+        perf?.end('render.total', tTotal);
+      }
     }
   };
 }

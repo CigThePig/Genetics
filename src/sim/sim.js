@@ -8,6 +8,7 @@ import { SPECIES } from './species.js';
 import { createDefaultMetrics } from './metrics-factory.js';
 import { mergeSimConfig } from './utils/config.js';
 import { rebuildSpatialIndex } from './spatial-index.js';
+import { getActivePerf } from '../metrics/perf-registry.js';
 import {
   createCreatures,
   applyCreatureActions,
@@ -91,105 +92,171 @@ export function createSim(config = simConfig) {
       state.metrics = createDefaultMetrics();
     },
     tick() {
-      state.tick += 1;
-      state.lastRoll = rng.nextFloat();
-      
-      // Rebuild spatial index once per tick for O(1) neighbor queries
-      const spatialIndex = rebuildSpatialIndex(state.creatures);
-      updateCreaturePriority({
-        creatures: state.creatures,
-        config: resolvedConfig
-      });
-      updateCreaturePerception({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        world: state.world
-      });
-      updateCreatureAlertness({
-        creatures: state.creatures,
-        config: resolvedConfig
-      });
-      updateCreatureMemory({
-        creatures: state.creatures,
-        config: resolvedConfig
-      });
-      updateCreatureChase({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        metrics: state.metrics,
-        tick: state.tick,
-        spatialIndex
-      });
-      applyCreatureCombat({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        world: state.world,
-        metrics: state.metrics,
-        tick: state.tick
-      });
-      updateCreatureIntent({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        rng,
-        world: state.world,
-        metrics: state.metrics,
-        tick: state.tick,
-        spatialIndex
-      });
-      updateCreatureHerding({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        spatialIndex
-      });
-      updateCreaturePack({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        rng,
-        world: state.world
-      });
-      updateCreatureSprintDecision({
-        creatures: state.creatures,
-        config: resolvedConfig
-      });
-      updateCreatureMovement({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        rng,
-        world: state.world
-      });
-      applyCreatureActions({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        world: state.world
-      });
-      updateCreatureBasalMetabolism({
-        creatures: state.creatures,
-        config: resolvedConfig
-      });
-      applyCreatureSprintCosts({
-        creatures: state.creatures,
-        config: resolvedConfig
-      });
-      updateCreatureLifeStages({ creatures: state.creatures, config: resolvedConfig });
-      updateCreatureReproduction({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        rng,
-        world: state.world,
-        metrics: state.metrics,
-        spatialIndex
-      });
-      applyCreatureDeaths({
-        creatures: state.creatures,
-        config: resolvedConfig,
-        metrics: state.metrics
-      });
-      regenerateCreatureStamina({
-        creatures: state.creatures,
-        config: resolvedConfig
-      });
-      updatePlants({ state, config: resolvedConfig, rng });
-      return state.lastRoll;
+      const perf = getActivePerf();
+      const tTotal = perf?.start('tick.total');
+      try {
+        state.tick += 1;
+        state.lastRoll = rng.nextFloat();
+
+        // Rebuild spatial index once per tick for O(1) neighbor queries
+        const tSpatial = perf?.start('tick.spatialIndex');
+        const spatialIndex = rebuildSpatialIndex(state.creatures);
+        perf?.end('tick.spatialIndex', tSpatial);
+
+        const tPriority = perf?.start('tick.priority');
+        updateCreaturePriority({
+          creatures: state.creatures,
+          config: resolvedConfig
+        });
+        perf?.end('tick.priority', tPriority);
+
+        const tPerception = perf?.start('tick.perception');
+        updateCreaturePerception({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          world: state.world
+        });
+        perf?.end('tick.perception', tPerception);
+
+        const tAlertness = perf?.start('tick.alertness');
+        updateCreatureAlertness({
+          creatures: state.creatures,
+          config: resolvedConfig
+        });
+        perf?.end('tick.alertness', tAlertness);
+
+        const tMemory = perf?.start('tick.memory');
+        updateCreatureMemory({
+          creatures: state.creatures,
+          config: resolvedConfig
+        });
+        perf?.end('tick.memory', tMemory);
+
+        const tChase = perf?.start('tick.chase');
+        updateCreatureChase({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          metrics: state.metrics,
+          tick: state.tick,
+          spatialIndex
+        });
+        perf?.end('tick.chase', tChase);
+
+        const tCombat = perf?.start('tick.combat');
+        applyCreatureCombat({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          world: state.world,
+          metrics: state.metrics,
+          tick: state.tick
+        });
+        perf?.end('tick.combat', tCombat);
+
+        const tIntent = perf?.start('tick.intent');
+        updateCreatureIntent({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          rng,
+          world: state.world,
+          metrics: state.metrics,
+          tick: state.tick,
+          spatialIndex
+        });
+        perf?.end('tick.intent', tIntent);
+
+        const tHerding = perf?.start('tick.herding');
+        updateCreatureHerding({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          spatialIndex
+        });
+        perf?.end('tick.herding', tHerding);
+
+        const tPack = perf?.start('tick.pack');
+        updateCreaturePack({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          rng,
+          world: state.world
+        });
+        perf?.end('tick.pack', tPack);
+
+        const tSprintDecision = perf?.start('tick.sprintDecision');
+        updateCreatureSprintDecision({
+          creatures: state.creatures,
+          config: resolvedConfig
+        });
+        perf?.end('tick.sprintDecision', tSprintDecision);
+
+        const tMovement = perf?.start('tick.movement');
+        updateCreatureMovement({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          rng,
+          world: state.world
+        });
+        perf?.end('tick.movement', tMovement);
+
+        const tActions = perf?.start('tick.actions');
+        applyCreatureActions({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          world: state.world
+        });
+        perf?.end('tick.actions', tActions);
+
+        const tBasal = perf?.start('tick.basalMetabolism');
+        updateCreatureBasalMetabolism({
+          creatures: state.creatures,
+          config: resolvedConfig
+        });
+        perf?.end('tick.basalMetabolism', tBasal);
+
+        const tSprintCosts = perf?.start('tick.sprintCosts');
+        applyCreatureSprintCosts({
+          creatures: state.creatures,
+          config: resolvedConfig
+        });
+        perf?.end('tick.sprintCosts', tSprintCosts);
+
+        const tLifeStages = perf?.start('tick.lifeStages');
+        updateCreatureLifeStages({ creatures: state.creatures, config: resolvedConfig });
+        perf?.end('tick.lifeStages', tLifeStages);
+
+        const tReproduction = perf?.start('tick.reproduction');
+        updateCreatureReproduction({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          rng,
+          world: state.world,
+          metrics: state.metrics,
+          spatialIndex
+        });
+        perf?.end('tick.reproduction', tReproduction);
+
+        const tDeaths = perf?.start('tick.deaths');
+        applyCreatureDeaths({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          metrics: state.metrics
+        });
+        perf?.end('tick.deaths', tDeaths);
+
+        const tStamina = perf?.start('tick.staminaRegen');
+        regenerateCreatureStamina({
+          creatures: state.creatures,
+          config: resolvedConfig
+        });
+        perf?.end('tick.staminaRegen', tStamina);
+
+        const tPlants = perf?.start('tick.plants');
+        updatePlants({ state, config: resolvedConfig, rng });
+        perf?.end('tick.plants', tPlants);
+
+        return state.lastRoll;
+      } finally {
+        perf?.end('tick.total', tTotal);
+      }
     },
     getSummary() {
       const speciesCounts = countSpecies(state.creatures);

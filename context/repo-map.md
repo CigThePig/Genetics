@@ -204,6 +204,10 @@ Rules:
   - Role: input system entry point with touch pan/pinch camera controls
 - src/metrics/index.js
   - Role: metrics system entry point (FPS overlay + toggle support)
+- src/metrics/perf.js
+  - Role: lightweight perf sampler with windowed timing rollups
+- src/metrics/perf-registry.js
+  - Role: global registry for active perf sampler to avoid circular imports
 - src/ui/index.js
   - Role: touch-first UI shell (FPS toggle + status updates)
 - src/ui/config-panel.js
