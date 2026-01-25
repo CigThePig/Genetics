@@ -93,6 +93,7 @@ export function createSim(config = simConfig) {
     tick() {
       state.tick += 1;
       state.lastRoll = rng.nextFloat();
+      
       // Rebuild spatial index once per tick for O(1) neighbor queries
       const spatialIndex = rebuildSpatialIndex(state.creatures);
       updateCreaturePriority({

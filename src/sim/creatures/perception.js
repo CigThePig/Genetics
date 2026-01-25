@@ -11,6 +11,41 @@ const resolveMinimum = (value, fallback) =>
 const buildSignature = ({ waterDistance, foodType, foodDistance }) =>
   `${waterDistance ?? 'none'}:${foodType ?? 'none'}:${foodDistance ?? 'none'}`;
 
+/**
+ * Generates cells to scan in spiral order from center outward.
+ * This allows early exit when we find something close enough.
+ */
+function* spiralCells(radius) {
+  // Center first
+  yield { dx: 0, dy: 0, distSq: 0 };
+  
+  // Then expanding rings
+  for (let r = 1; r <= radius; r++) {
+    const rSq = r * r;
+    // Top and bottom rows of ring
+    for (let dx = -r; dx <= r; dx++) {
+      const distSq = dx * dx + rSq;
+      yield { dx, dy: -r, distSq };
+      yield { dx, dy: r, distSq };
+    }
+    // Left and right columns (excluding corners already done)
+    for (let dy = -r + 1; dy < r; dy++) {
+      const distSq = rSq + dy * dy;
+      yield { dx: -r, dy, distSq };
+      yield { dx: r, dy, distSq };
+    }
+  }
+}
+
+// Pre-generate spiral patterns for common radii to avoid generator overhead
+const spiralCache = new Map();
+function getSpiralPattern(radius) {
+  if (!spiralCache.has(radius)) {
+    spiralCache.set(radius, [...spiralCells(radius)]);
+  }
+  return spiralCache.get(radius);
+}
+
 export function updateCreaturePerception({ creatures, config, world }) {
   if (!Array.isArray(creatures) || !world) {
     return;
@@ -20,23 +55,35 @@ export function updateCreaturePerception({ creatures, config, world }) {
   const maxRange = resolveRangeMax(config?.creaturePerceptionRangeMax);
   const fallbackGrassMin = resolveMinimum(config?.creatureGrassEatMin, 0.05);
   const fallbackBerryMin = resolveMinimum(config?.creatureBerryEatMin, 0.1);
-  // Meat should never have a 0 minimum, otherwise "no meat" can look like "valid meat".
-  // Use a conservative fallback that works for both predators and opportunistic scavenging.
   const fallbackMeatMin = Math.min(fallbackGrassMin, fallbackBerryMin);
   const waterTerrain = config?.waterTerrain ?? 'water';
   const shoreTerrain = config?.shoreTerrain ?? 'shore';
+  // Early exit threshold - stop scanning once we find something this close
+  const earlyExitThreshold = 1.5;
+  const earlyExitThresholdSq = earlyExitThreshold * earlyExitThreshold;
 
   for (const creature of creatures) {
     if (!creature?.position) {
       continue;
     }
 
+    const cellX = Math.floor(creature.position.x);
+    const cellY = Math.floor(creature.position.y);
+    
+    // OPTIMIZATION: Skip full rescan if creature is in same cell as last tick
+    // and world tick hasn't advanced much (food/water changes slowly)
+    const lastCell = creature._perceptionCache;
+    if (lastCell && lastCell.x === cellX && lastCell.y === cellY && creature.perception) {
+      // Still update the changed flag based on signature
+      creature.perception.changed = false;
+      continue;
+    }
+    
+    // Cache current cell for next tick
+    creature._perceptionCache = { x: cellX, y: cellY };
+
     const creatureRange = resolveRange(creature?.traits?.perceptionRange, baseRange);
-    const cell = {
-      x: Math.floor(creature.position.x),
-      y: Math.floor(creature.position.y)
-    };
-    const terrainEffects = getTerrainEffectsAt(world, cell.x, cell.y);
+    const terrainEffects = getTerrainEffectsAt(world, cellX, cellY);
     const terrainModifier = Number.isFinite(terrainEffects?.perception)
       ? terrainEffects.perception
       : 1;
@@ -48,6 +95,8 @@ export function updateCreaturePerception({ creatures, config, world }) {
     let foodDistance = null;
     let foodType = null;
     let foodCell = null;
+    let foundCloseWater = false;
+    let foundCloseFood = false;
 
     if (range > 0) {
       const radius = Math.ceil(range);
@@ -58,29 +107,44 @@ export function updateCreaturePerception({ creatures, config, world }) {
         meat: resolveMinimum(creature?.traits?.meatEatMin, fallbackMeatMin)
       };
 
-      for (let dy = -radius; dy <= radius; dy += 1) {
-        for (let dx = -radius; dx <= radius; dx += 1) {
-          const distanceSq = dx * dx + dy * dy;
-          if (distanceSq > rangeSq) {
-            continue;
-          }
-          const x = cell.x + dx;
-          const y = cell.y + dy;
-          if (typeof world.isInBounds === 'function' && !world.isInBounds(x, y)) {
-            continue;
-          }
-          const distance = Math.sqrt(distanceSq);
+      // Use spiral pattern for outward search (enables early exit)
+      const pattern = getSpiralPattern(radius);
+      
+      for (const { dx, dy, distSq } of pattern) {
+        // Early exit: found both water and food close enough
+        if (foundCloseWater && foundCloseFood) {
+          break;
+        }
+        
+        if (distSq > rangeSq) {
+          continue;
+        }
+        
+        const x = cellX + dx;
+        const y = cellY + dy;
+        if (typeof world.isInBounds === 'function' && !world.isInBounds(x, y)) {
+          continue;
+        }
 
+        // Only check water if we haven't found close water yet
+        if (!foundCloseWater) {
           if (
             typeof world.isWaterAt === 'function' &&
             world.isWaterAt(x, y, waterTerrain, shoreTerrain)
           ) {
+            const distance = Math.sqrt(distSq);
             if (waterDistance === null || distance < waterDistance) {
               waterDistance = distance;
               waterCell = { x, y };
+              if (distSq <= earlyExitThresholdSq) {
+                foundCloseWater = true;
+              }
             }
           }
+        }
 
+        // Only check food if we haven't found close food yet
+        if (!foundCloseFood) {
           const availability = getFoodAvailabilityAtCell({
             world,
             cell: { x, y }
@@ -90,10 +154,14 @@ export function updateCreaturePerception({ creatures, config, world }) {
             availability,
             minimums
           });
-          if (choice && (foodDistance === null || distance < foodDistance)) {
+          if (choice && (foodDistance === null || distSq < foodDistance * foodDistance)) {
+            const distance = Math.sqrt(distSq);
             foodDistance = distance;
             foodType = choice.type;
             foodCell = { x, y };
+            if (distSq <= earlyExitThresholdSq) {
+              foundCloseFood = true;
+            }
           }
         }
       }
