@@ -65,12 +65,9 @@ export function createGraphsPanel({ container }) {
   const panel = document.createElement('div');
   panel.className = 'graphs-panel';
   
-  // Header with drag handle
+  // Header
   const header = document.createElement('div');
   header.className = 'graphs-header';
-  
-  const dragHandle = document.createElement('div');
-  dragHandle.className = 'graphs-drag-handle';
   
   const headerTitle = document.createElement('h2');
   headerTitle.className = 'graphs-title';
@@ -85,7 +82,7 @@ export function createGraphsPanel({ container }) {
   closeBtn.innerHTML = '×';
   closeBtn.addEventListener('click', () => toggle(false));
   
-  header.append(dragHandle, headerTitle, headerHint, closeBtn);
+  header.append(headerTitle, headerHint, closeBtn);
   
   // Tracked metrics chips (shows what's currently being graphed)
   const trackedChips = document.createElement('div');

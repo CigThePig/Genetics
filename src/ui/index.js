@@ -58,53 +58,55 @@ export function createUI({
   };
 
   // ═══════════════════════════════════════════════════════════════════════════
-  // TOP STATUS BAR
+  // TOP CONTROL BAR (Collapsible)
   // ═══════════════════════════════════════════════════════════════════════════
 
   const topBar = document.createElement('div');
   topBar.className = 'top-bar';
 
+  // Header row (always visible)
+  const topBarHeader = document.createElement('div');
+  topBarHeader.className = 'top-bar-header';
+
   const title = document.createElement('h1');
   title.className = 'top-bar-title';
   title.innerHTML = '🧬 Genetics';
 
-  const status = document.createElement('span');
-  status.className = 'top-bar-status';
-  status.textContent = 'Ready';
+  // State indicator shows play state when collapsed
+  const stateIndicator = document.createElement('div');
+  stateIndicator.className = 'top-bar-state';
+  stateIndicator.innerHTML = '<span class="state-icon">⏸</span><span class="state-speed">1×</span>';
 
-  topBar.append(title, status);
-  container.append(topBar);
+  // Expand/collapse toggle
+  const expandBtn = document.createElement('button');
+  expandBtn.className = 'top-bar-expand';
+  expandBtn.innerHTML = '▼';
+  expandBtn.title = 'Expand controls';
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // TRACKING INDICATOR
-  // ═══════════════════════════════════════════════════════════════════════════
+  topBarHeader.append(title, stateIndicator, expandBtn);
 
-  const trackingIndicator = document.createElement('div');
-  trackingIndicator.className = 'tracking-indicator';
-  trackingIndicator.innerHTML = '<span class="pulse"></span><span class="tracking-text">Following #--</span>';
-  container.append(trackingIndicator);
+  // Controls panel (collapsible)
+  const controlsPanel = document.createElement('div');
+  controlsPanel.className = 'top-bar-controls';
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // PLAYBACK CONTROLS (Bottom Center)
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  const playbackBar = document.createElement('div');
-  playbackBar.className = 'playback-bar';
+  // Playback row
+  const playbackRow = document.createElement('div');
+  playbackRow.className = 'playback-row';
 
   const stepBtn = document.createElement('button');
-  stepBtn.className = 'playback-btn';
+  stepBtn.className = 'control-btn';
   stepBtn.innerHTML = '⏭';
   stepBtn.title = 'Step';
   stepBtn.addEventListener('click', () => onStep?.());
 
   const playBtn = document.createElement('button');
-  playBtn.className = 'playback-btn primary';
+  playBtn.className = 'control-btn play-btn';
   playBtn.innerHTML = '▶';
   playBtn.title = 'Play';
   playBtn.addEventListener('click', () => onPlay?.());
 
   const pauseBtn = document.createElement('button');
-  pauseBtn.className = 'playback-btn';
+  pauseBtn.className = 'control-btn';
   pauseBtn.innerHTML = '⏸';
   pauseBtn.title = 'Pause';
   pauseBtn.addEventListener('click', () => onPause?.());
@@ -125,8 +127,58 @@ export function createUI({
     onSpeedChange?.(Number(speedSelect.value));
   });
 
-  playbackBar.append(stepBtn, playBtn, pauseBtn, speedSelect);
-  container.append(playbackBar);
+  // FPS toggle (small text button)
+  const fpsToggleBtn = document.createElement('button');
+  fpsToggleBtn.className = 'fps-toggle-btn';
+  fpsToggleBtn.textContent = 'FPS';
+  fpsToggleBtn.title = 'Toggle FPS display';
+
+  playbackRow.append(stepBtn, playBtn, pauseBtn, speedSelect, fpsToggleBtn);
+
+  // Status row
+  const statusRow = document.createElement('div');
+  statusRow.className = 'status-row';
+
+  const status = document.createElement('span');
+  status.className = 'top-bar-status';
+  status.textContent = 'Ready';
+
+  statusRow.append(status);
+
+  controlsPanel.append(playbackRow, statusRow);
+  topBar.append(topBarHeader, controlsPanel);
+  container.append(topBar);
+
+  // Control panel expand/collapse
+  let controlsExpanded = false;
+  const toggleControls = () => {
+    controlsExpanded = !controlsExpanded;
+    topBar.classList.toggle('expanded', controlsExpanded);
+    expandBtn.innerHTML = controlsExpanded ? '▲' : '▼';
+    expandBtn.title = controlsExpanded ? 'Collapse controls' : 'Expand controls';
+  };
+
+  expandBtn.addEventListener('click', toggleControls);
+  // Also toggle when tapping the state indicator
+  stateIndicator.addEventListener('click', toggleControls);
+
+  // Update state indicator
+  const updateStateIndicator = (isRunning, speed) => {
+    const iconEl = stateIndicator.querySelector('.state-icon');
+    const speedEl = stateIndicator.querySelector('.state-speed');
+    if (iconEl) iconEl.textContent = isRunning ? '▶' : '⏸';
+    if (speedEl) speedEl.textContent = `${speed}×`;
+    stateIndicator.classList.toggle('running', isRunning);
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TRACKING INDICATOR
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const trackingIndicator = document.createElement('div');
+  trackingIndicator.className = 'tracking-indicator';
+  trackingIndicator.innerHTML = '<span class="pulse"></span><span class="tracking-text">Following #--</span>';
+  container.append(trackingIndicator);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // QUICK ACTIONS (Right Side - Middle)
@@ -165,6 +217,20 @@ export function createUI({
   fpsOverlay.textContent = 'FPS: --';
   fpsOverlay.style.display = initialFpsVisible ? 'block' : 'none';
   container.append(fpsOverlay);
+
+  // FPS toggle button handler
+  let fpsVisible = initialFpsVisible;
+  fpsToggleBtn.classList.toggle('active', fpsVisible);
+  
+  fpsToggleBtn.addEventListener('click', () => {
+    fpsVisible = !fpsVisible;
+    fpsToggleBtn.classList.toggle('active', fpsVisible);
+    fpsOverlay.style.display = fpsVisible ? 'block' : 'none';
+    if (metrics?.setVisible) {
+      metrics.setVisible(fpsVisible);
+    }
+    onFpsToggle?.(fpsVisible);
+  });
 
   // ═══════════════════════════════════════════════════════════════════════════
   // FAB CONTAINERS
@@ -656,35 +722,16 @@ export function createUI({
 
   configFab.addEventListener('click', toggleConfig);
 
-  // ═══════════════════════════════════════════════════════════════════════════
-  // FPS FAB
-  // ═══════════════════════════════════════════════════════════════════════════
-
-  const fpsFab = document.createElement('button');
-  fpsFab.className = 'fab fab-sm';
-  fpsFab.innerHTML = '📈';
-  fpsFab.title = 'Toggle FPS';
-
-  let fpsVisible = initialFpsVisible;
-  fpsFab.classList.toggle('active', fpsVisible);
-
-  fpsFab.addEventListener('click', () => {
-    fpsVisible = !fpsVisible;
-    fpsFab.classList.toggle('active', fpsVisible);
-    fpsOverlay.style.display = fpsVisible ? 'block' : 'none';
-    if (metrics?.setVisible) {
-      metrics.setVisible(fpsVisible);
-    }
-    onFpsToggle?.(fpsVisible);
-  });
-
-  // Assemble right FABs
-  fabContainerRight.append(metricsFab, configFab, fpsFab);
+  // Assemble right FABs (FPS moved to top bar)
+  fabContainerRight.append(metricsFab, configFab);
   container.append(fabContainerRight);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // PUBLIC API
   // ═══════════════════════════════════════════════════════════════════════════
+  
+  // Track current speed for state indicator
+  let currentSpeed = 1;
 
   return {
     setStatus(message) {
@@ -696,12 +743,21 @@ export function createUI({
       pauseBtn.disabled = !isRunning;
       stepBtn.disabled = isRunning;
       
-      // Update play button icon
-      playBtn.innerHTML = isRunning ? '▶' : '▶';
+      // Update play button style
+      playBtn.classList.toggle('active', isRunning);
+      pauseBtn.classList.toggle('active', !isRunning);
+      
+      // Update state indicator in collapsed header
+      updateStateIndicator(isRunning, currentSpeed);
     },
 
     setSpeed(speed) {
+      currentSpeed = speed;
       speedSelect.value = String(speed);
+      // Update state indicator
+      const stateIcon = stateIndicator.querySelector('.state-icon');
+      const isRunning = stateIcon?.textContent === '▶';
+      updateStateIndicator(isRunning, speed);
     },
 
     setSeed(seed) {
@@ -710,7 +766,7 @@ export function createUI({
 
     setFpsVisible(visible) {
       fpsVisible = visible;
-      fpsFab.classList.toggle('active', visible);
+      fpsToggleBtn.classList.toggle('active', visible);
       fpsOverlay.style.display = visible ? 'block' : 'none';
     },
 
