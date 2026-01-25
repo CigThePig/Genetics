@@ -8,24 +8,18 @@ import { createNoise, normalize } from '../sim/noise.js';
 export function createRenderer(container, { camera }) {
   const wrapper = document.createElement('div');
   wrapper.className = 'renderer-shell';
-  wrapper.style.display = 'flex';
-  wrapper.style.flexDirection = 'column';
-  wrapper.style.width = '100%';
-  wrapper.style.height = '60vh';
-  wrapper.style.minHeight = '240px';
 
   const canvas = document.createElement('canvas');
   canvas.className = 'renderer-canvas';
   canvas.setAttribute('role', 'img');
   canvas.setAttribute('aria-label', 'Simulation canvas');
-  canvas.style.flex = '1 1 auto';
-  canvas.style.touchAction = 'none';
 
   const footer = document.createElement('p');
   footer.className = 'renderer-footer';
 
   wrapper.append(canvas, footer);
-  container.append(wrapper);
+  // Insert at the beginning so it's behind all UI elements
+  container.insertBefore(wrapper, container.firstChild);
 
   const ctx = canvas.getContext('2d', { alpha: false });
 
@@ -33,21 +27,23 @@ export function createRenderer(container, { camera }) {
   const texNoise = createNoise(42);
 
   const resizeToContainer = () => {
-    const width = wrapper.clientWidth;
-    const height = wrapper.clientHeight - footer.getBoundingClientRect().height;
-    const canvasHeight = Math.max(1, height);
+    const width = window.innerWidth;
+    const height = window.innerHeight;
     const ratio = window.devicePixelRatio || 1;
     canvas.width = Math.max(1, Math.floor(width * ratio));
-    canvas.height = Math.max(1, Math.floor(canvasHeight * ratio));
+    canvas.height = Math.max(1, Math.floor(height * ratio));
     canvas.style.width = `${width}px`;
-    canvas.style.height = `${canvasHeight}px`;
+    canvas.style.height = `${height}px`;
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    
+    // Update camera viewport for bounds clamping
+    if (camera?.setViewport) {
+      camera.setViewport(width, height);
+    }
   };
 
-  const resizeObserver = new ResizeObserver(() => {
-    resizeToContainer();
-  });
-  resizeObserver.observe(wrapper);
+  // Use window resize event for full-screen canvas
+  window.addEventListener('resize', resizeToContainer);
   resizeToContainer();
 
   // ═══════════════════════════════════════════════════════════════════════════

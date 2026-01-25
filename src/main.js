@@ -1,3 +1,13 @@
+/**
+ * Genetics Simulation - Main Entry Point
+ * 
+ * Mobile-first design with:
+ * - Full-screen canvas
+ * - Camera bounds clamping
+ * - Creature following
+ * - Floating panel UI
+ */
+
 import { createSim } from './sim/sim.js';
 import { createSimWorkerStub } from './sim/worker.js';
 import { findNearestCreature } from './sim/creatures/index.js';
@@ -14,41 +24,86 @@ import { cloneConfigValue } from './sim/utils/config.js';
 
 const app = document.querySelector('#app');
 
-const title = document.createElement('h1');
-title.textContent = 'Genetics';
-
-const status = document.createElement('p');
-status.textContent = 'Initializing simulation...';
-
-app.append(title, status);
-
+// Initialize settings
 const settings = createSettings();
 const initialSettings = settings.load();
-// Flip to true once the worker-backed sim proxy is implemented.
+
+// Simulation setup
 const useWorker = false;
 const simWorker = createSimWorkerStub({ enabled: useWorker });
 const sim = useWorker
   ? simWorker.connect({ createSim, seed: initialSettings.seed })
   : createSim({ seed: initialSettings.seed });
-const camera = createCamera();
+
+// Camera with enhanced features
+const camera = createCamera({
+  minZoom: 0.25,
+  maxZoom: 5,
+  zoom: 1,
+  followSmoothing: 0.12
+});
+
+// Renderer (full-screen)
 const renderer = createRenderer(app, { camera });
+
+// Metrics overlay
 const metrics = createMetrics({ container: app });
+
+// Simulation loop state
 let running = false;
 let speed = initialSettings.speed;
 let rafId = null;
 let tickTimerId = null;
 let lastTickTime = null;
 let accumulatorMs = 0;
-// Drive the simulation tick loop at a steady cadence (independent of TPS).
-// The accumulator determines how many sim ticks to run.
+
 const tickLoopIntervalMs = 16;
-// Clamp catch-up time to avoid spirals when the tab sleeps or the device stutters.
 const maxTickDeltaMs = 250;
-// Hard cap on ticks per interval to keep UI responsive under extreme catch-up.
 const maxTicksPerInterval = 240;
+
+// ═══════════════════════════════════════════════════════════════════════════
+// HELPER FUNCTIONS
+// ═══════════════════════════════════════════════════════════════════════════
+
+const getTileSize = () => {
+  return Number.isFinite(sim.config?.tileSize) ? sim.config.tileSize : 20;
+};
+
+const getWorldDimensions = () => {
+  const world = sim.state?.world;
+  return {
+    width: world?.width || 0,
+    height: world?.height || 0
+  };
+};
+
+const updateCameraBounds = () => {
+  const world = sim.state?.world;
+  const tileSize = getTileSize();
+  if (world?.width && world?.height) {
+    camera.setBoundsFromWorld(world, tileSize);
+  }
+};
+
+const resolveTilePoint = (worldPoint) => {
+  const world = sim.state?.world;
+  const tileSize = getTileSize();
+  if (!world || !Number.isFinite(world.width) || !Number.isFinite(world.height)) {
+    return worldPoint;
+  }
+  return {
+    x: (worldPoint.x + (world.width * tileSize) / 2) / tileSize,
+    y: (worldPoint.y + (world.height * tileSize) / 2) / tileSize
+  };
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// SIMULATION LOOP
+// ═══════════════════════════════════════════════════════════════════════════
 
 const tickOnce = () => {
   sim.tick();
+  updateCameraFollow();
   renderer.render(sim);
   ui.setMetrics?.(sim.getSummary());
   inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
@@ -60,52 +115,62 @@ const resetTickTimebase = () => {
   accumulatorMs = 0;
 };
 
-const runFrame = (_time) => {
-  renderer.render(sim);
-  ui.setMetrics?.(sim.getSummary());
-  inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
-  if (running) {
-    rafId = requestAnimationFrame(runFrame);
-  }
-};
-
 const getTickIntervalMs = () => {
   const ticksPerSecond = sim.config?.ticksPerSecond ?? 1;
   return 1000 / Math.max(1, ticksPerSecond);
 };
 
-const runTicks = () => {
-  if (!running) {
-    return;
+const updateCameraFollow = () => {
+  const creatures = sim.state?.creatures;
+  const tileSize = getTileSize();
+  const { width, height } = getWorldDimensions();
+  camera.updateFollow(creatures, tileSize, width, height);
+};
+
+const runFrame = (_time) => {
+  updateCameraFollow();
+  renderer.render(sim);
+  ui.setMetrics?.(sim.getSummary());
+  inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
+  
+  if (running) {
+    rafId = requestAnimationFrame(runFrame);
   }
+};
+
+const runTicks = () => {
+  if (!running) return;
+  
   const now = performance.now();
   if (lastTickTime === null) {
     lastTickTime = now;
     return;
   }
+  
   const deltaMs = Math.min(now - lastTickTime, maxTickDeltaMs);
   lastTickTime = now;
   accumulatorMs += deltaMs * speed;
+  
   const tickIntervalMs = getTickIntervalMs();
   let ticksThisInterval = 0;
+  
   while (accumulatorMs >= tickIntervalMs && ticksThisInterval < maxTicksPerInterval) {
     sim.tick();
     accumulatorMs -= tickIntervalMs;
     ticksThisInterval += 1;
   }
+  
   if (ticksThisInterval >= maxTicksPerInterval) {
-    // Drop most backlog to keep the UI responsive.
     accumulatorMs = Math.min(accumulatorMs, tickIntervalMs);
   }
+  
   if (ticksThisInterval > 0) {
     metrics.update({ ticks: ticksThisInterval, time: now });
   }
 };
 
 const startTickLoop = () => {
-  if (tickTimerId) {
-    return;
-  }
+  if (tickTimerId) return;
   tickTimerId = window.setInterval(runTicks, tickLoopIntervalMs);
 };
 
@@ -117,9 +182,7 @@ const stopTickLoop = () => {
 };
 
 const start = () => {
-  if (running) {
-    return;
-  }
+  if (running) return;
   running = true;
   ui.setRunning(true);
   resetTickTimebase();
@@ -128,9 +191,7 @@ const start = () => {
 };
 
 const pause = () => {
-  if (!running) {
-    return;
-  }
+  if (!running) return;
   running = false;
   ui.setRunning(false);
   stopTickLoop();
@@ -141,8 +202,36 @@ const pause = () => {
   resetTickTimebase();
 };
 
+// ═══════════════════════════════════════════════════════════════════════════
+// CAMERA CONTROLS
+// ═══════════════════════════════════════════════════════════════════════════
+
+const zoomIn = () => {
+  const state = camera.getState();
+  camera.zoomTo(state.zoom * 1.3);
+  if (!running) renderer.render(sim);
+};
+
+const zoomOut = () => {
+  const state = camera.getState();
+  camera.zoomTo(state.zoom / 1.3);
+  if (!running) renderer.render(sim);
+};
+
+const recenter = () => {
+  camera.stopFollowing();
+  camera.reset();
+  updateCameraBounds();
+  ui.setTracking(null, false);
+  if (!running) renderer.render(sim);
+};
+
+// ═══════════════════════════════════════════════════════════════════════════
+// UI SETUP
+// ═══════════════════════════════════════════════════════════════════════════
+
 const ui = createUI({
-  statusNode: status,
+  statusNode: null,
   metrics,
   onPlay: start,
   onPause: pause,
@@ -160,37 +249,46 @@ const ui = createUI({
     pause();
     sim.setSeed(nextSeed);
     ui.setSeed(sim.getSeed());
+    updateCameraBounds();
     renderer.render(sim);
     settings.save({ seed: sim.getSeed() });
-    ui.setStatus(`Seed updated to ${sim.getSeed()}.`);
+    ui.setStatus(`Seed: ${sim.getSeed()}`);
   },
   onFpsToggle: (visible) => {
     settings.save({ fpsVisible: visible });
   },
+  onZoomIn: zoomIn,
+  onZoomOut: zoomOut,
+  onRecenter: recenter,
   initialFpsVisible: initialSettings.fpsVisible
 });
 
-// Create config panel for live parameter adjustment
+// ═══════════════════════════════════════════════════════════════════════════
+// CONFIG PANEL
+// ═══════════════════════════════════════════════════════════════════════════
+
+const configPanelContainer = ui.getConfigPanelContainer();
+
 const configPanel = createConfigPanel({
-  container: app,
+  container: configPanelContainer,
   config: sim.config,
   onConfigChange: (key, value) => {
     if (key === '__reset__') {
-      // Reset all config values to defaults
       for (const [configKey, defaultValue] of Object.entries(simConfig)) {
         sim.config[configKey] = cloneConfigValue(defaultValue);
       }
       configPanel.update(sim.config);
-      ui.setStatus('Config reset to defaults.');
+      ui.setStatus('Config reset');
     } else {
       sim.config[key] = value;
-      ui.setStatus(`Updated ${key} = ${value}`);
+      ui.setStatus(`${key} = ${value}`);
     }
 
     if (key === 'ticksPerSecond' || key === '__reset__') {
       inspector.setTicksPerSecond?.(sim.config?.ticksPerSecond ?? 60);
       resetTickTimebase();
     }
+    
     if (!running) {
       renderer.render(sim);
       ui.setMetrics?.(sim.getSummary());
@@ -198,29 +296,39 @@ const configPanel = createConfigPanel({
   }
 });
 
-// Create live inspector for tracking creatures
+// ═══════════════════════════════════════════════════════════════════════════
+// LIVE INSPECTOR
+// ═══════════════════════════════════════════════════════════════════════════
+
 const inspector = createLiveInspector({
   container: app,
-  ticksPerSecond: sim.config?.ticksPerSecond ?? 60
+  ticksPerSecond: sim.config?.ticksPerSecond ?? 60,
+  onFollowToggle: (creatureId, isFollowing) => {
+    if (isFollowing && creatureId !== null) {
+      camera.followCreature(creatureId);
+      ui.setTracking(creatureId, true);
+    } else {
+      camera.stopFollowing();
+      ui.setTracking(creatureId, false);
+    }
+    
+    if (!running) renderer.render(sim);
+  }
 });
 
-const resolveTilePoint = (worldPoint) => {
-  const worldState = sim.state?.world;
-  const tileSize = Number.isFinite(sim.config?.tileSize) ? sim.config.tileSize : 20;
-  if (!worldState || !Number.isFinite(worldState.width) || !Number.isFinite(worldState.height)) {
-    return worldPoint;
-  }
-  return {
-    x: (worldPoint.x + (worldState.width * tileSize) / 2) / tileSize,
-    y: (worldPoint.y + (worldState.height * tileSize) / 2) / tileSize
-  };
-};
+// ═══════════════════════════════════════════════════════════════════════════
+// INPUT HANDLING
+// ═══════════════════════════════════════════════════════════════════════════
 
 const input = createInput({
   canvas: renderer.canvas,
   camera,
   worldToTile: (worldPoint) => resolveTilePoint(worldPoint),
   onCameraChange: () => {
+    // Stop following when user manually pans
+    if (camera.getState().isFollowing) {
+      // Camera handles this internally
+    }
     if (!running) {
       renderer.render(sim);
       ui.setMetrics?.(sim.getSummary());
@@ -233,18 +341,61 @@ const input = createInput({
       tilePoint,
       sim.config?.creatureInspectRadius
     );
-    // Update the live inspector with selected creature
+    
+    // Update inspector with selected creature
     inspector.selectCreature(creature, tilePoint);
+    
+    // If we tapped on a creature, update tracking indicator
+    if (creature) {
+      ui.setTracking(creature.id, camera.isFollowingCreature(creature.id));
+    } else {
+      camera.stopFollowing();
+      ui.setTracking(null, false);
+    }
+    
     // Initial update to show creature data immediately
     inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
   }
 });
 
+// ═══════════════════════════════════════════════════════════════════════════
+// INITIALIZATION
+// ═══════════════════════════════════════════════════════════════════════════
+
+// Set up camera bounds from world
+updateCameraBounds();
+
+// Initial render
 renderer.render(sim);
-ui.setStatus('Ready. Press Play to start.');
+
+// Set initial UI state
+ui.setStatus('Ready');
 ui.setRunning(running);
 ui.setSpeed(speed);
 ui.setSeed(sim.getSeed());
 ui.setFpsVisible(initialSettings.fpsVisible);
 ui.setMetrics?.(sim.getSummary());
+
+// Attach input handlers
 input.attach();
+
+// Handle window resize for camera viewport
+window.addEventListener('resize', () => {
+  camera.setViewport(window.innerWidth, window.innerHeight);
+  if (!running) renderer.render(sim);
+});
+
+// Initial viewport setup
+camera.setViewport(window.innerWidth, window.innerHeight);
+
+// Prevent pull-to-refresh on mobile
+document.body.addEventListener('touchmove', (e) => {
+  if (e.touches.length > 1) {
+    e.preventDefault();
+  }
+}, { passive: false });
+
+// Log startup
+console.log('🧬 Genetics Simulation initialized');
+console.log(`   Seed: ${sim.getSeed()}`);
+console.log(`   World: ${sim.state?.world?.width}x${sim.state?.world?.height}`);

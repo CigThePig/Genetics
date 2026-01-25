@@ -1,3 +1,14 @@
+/**
+ * Mobile-First UI System
+ * 
+ * Features:
+ * - Full-screen immersive canvas
+ * - Floating action buttons (FABs)
+ * - Tap-to-open overlay panels
+ * - Playback controls bar
+ * - Top status bar
+ */
+
 export function createUI({
   statusNode,
   metrics,
@@ -7,239 +18,187 @@ export function createUI({
   onSpeedChange,
   onSeedChange,
   onFpsToggle,
+  onRecenter,
+  onZoomIn,
+  onZoomOut,
   initialFpsVisible = true
 }) {
-  const container = statusNode?.parentElement ?? document.body;
-
-  // Wrap header elements
-  const header = document.createElement('header');
-  header.className = 'app-header';
-
-  const titleNode = container.querySelector('h1');
-  if (titleNode) {
-    titleNode.textContent = 'Genetics';
-    header.appendChild(titleNode);
+  const container = document.querySelector('#app') || document.body;
+  
+  // Remove the old status node and title if they exist
+  if (statusNode?.parentElement) {
+    statusNode.remove();
   }
+  const oldTitle = container.querySelector('h1');
+  if (oldTitle) oldTitle.remove();
 
-  statusNode.className = 'status';
-  header.appendChild(statusNode);
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TOP STATUS BAR
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  // Insert header at the beginning
-  container.insertBefore(header, container.firstChild);
+  const topBar = document.createElement('div');
+  topBar.className = 'top-bar';
 
-  // Controls bar
-  const controls = document.createElement('div');
-  controls.className = 'controls-bar';
+  const title = document.createElement('h1');
+  title.className = 'top-bar-title';
+  title.innerHTML = '🧬 Genetics';
 
-  const createButton = (label, className = '') => {
-    const button = document.createElement('button');
-    button.type = 'button';
-    button.textContent = label;
-    button.className = `btn ${className}`.trim();
-    return button;
-  };
+  const status = document.createElement('span');
+  status.className = 'top-bar-status';
+  status.textContent = 'Ready';
 
-  // Playback controls group
-  const playbackGroup = document.createElement('div');
-  playbackGroup.className = 'control-group';
+  topBar.append(title, status);
+  container.append(topBar);
 
-  const playButton = createButton('▶ Play', 'btn-primary');
-  const pauseButton = createButton('⏸ Pause');
-  const stepButton = createButton('⏭ Step');
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TRACKING INDICATOR
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  playbackGroup.append(playButton, pauseButton, stepButton);
+  const trackingIndicator = document.createElement('div');
+  trackingIndicator.className = 'tracking-indicator';
+  trackingIndicator.innerHTML = '<span class="pulse"></span><span class="tracking-text">Following #--</span>';
+  container.append(trackingIndicator);
 
-  // Speed control group
-  const speedGroup = document.createElement('div');
-  speedGroup.className = 'control-group';
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PLAYBACK CONTROLS (Bottom Center)
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const playbackBar = document.createElement('div');
+  playbackBar.className = 'playback-bar';
+
+  const stepBtn = document.createElement('button');
+  stepBtn.className = 'playback-btn';
+  stepBtn.innerHTML = '⏭';
+  stepBtn.title = 'Step';
+  stepBtn.addEventListener('click', () => onStep?.());
+
+  const playBtn = document.createElement('button');
+  playBtn.className = 'playback-btn primary';
+  playBtn.innerHTML = '▶';
+  playBtn.title = 'Play';
+  playBtn.addEventListener('click', () => onPlay?.());
+
+  const pauseBtn = document.createElement('button');
+  pauseBtn.className = 'playback-btn';
+  pauseBtn.innerHTML = '⏸';
+  pauseBtn.title = 'Pause';
+  pauseBtn.addEventListener('click', () => onPause?.());
 
   const speedSelect = document.createElement('select');
-  speedSelect.className = 'select';
-
-  const speedOptions = [
-    { label: '1× Speed', value: '1' },
-    { label: '2× Speed', value: '2' },
-    { label: '4× Speed', value: '4' }
-  ];
-
-  for (const option of speedOptions) {
-    const entry = document.createElement('option');
-    entry.value = option.value;
-    entry.textContent = option.label;
-    speedSelect.append(entry);
-  }
-
-  speedGroup.append(speedSelect);
-
-  playButton.addEventListener('click', () => {
-    if (onPlay) {
-      onPlay();
-    }
+  speedSelect.className = 'speed-select';
+  [
+    { label: '1×', value: '1' },
+    { label: '2×', value: '2' },
+    { label: '4×', value: '4' }
+  ].forEach(opt => {
+    const option = document.createElement('option');
+    option.value = opt.value;
+    option.textContent = opt.label;
+    speedSelect.append(option);
   });
-
-  pauseButton.addEventListener('click', () => {
-    if (onPause) {
-      onPause();
-    }
-  });
-
-  stepButton.addEventListener('click', () => {
-    if (onStep) {
-      onStep();
-    }
-  });
-
   speedSelect.addEventListener('change', () => {
-    if (onSpeedChange) {
-      onSpeedChange(Number(speedSelect.value));
-    }
+    onSpeedChange?.(Number(speedSelect.value));
   });
 
-  // Seed control group
-  const seedGroup = document.createElement('div');
-  seedGroup.className = 'control-group seed-group';
+  playbackBar.append(stepBtn, playBtn, pauseBtn, speedSelect);
+  container.append(playbackBar);
 
-  const seedLabel = document.createElement('label');
-  seedLabel.textContent = 'Seed';
-  seedLabel.className = 'input-label';
+  // ═══════════════════════════════════════════════════════════════════════════
+  // QUICK ACTIONS (Right side - Zoom controls)
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  const seedInput = document.createElement('input');
-  const seedInputId = 'seed-input';
-  seedInput.id = seedInputId;
-  seedLabel.setAttribute('for', seedInputId);
-  seedInput.type = 'number';
-  seedInput.inputMode = 'numeric';
-  seedInput.className = 'input';
+  const quickActions = document.createElement('div');
+  quickActions.className = 'quick-actions';
 
-  const seedApply = createButton('Apply');
+  const zoomInBtn = document.createElement('button');
+  zoomInBtn.className = 'quick-action-btn';
+  zoomInBtn.innerHTML = '+';
+  zoomInBtn.title = 'Zoom In';
+  zoomInBtn.addEventListener('click', () => onZoomIn?.());
 
-  const commitSeedChange = () => {
-    if (onSeedChange) {
-      const value = Number(seedInput.value);
-      onSeedChange(Number.isFinite(value) ? Math.trunc(value) : 0);
-    }
-  };
+  const zoomOutBtn = document.createElement('button');
+  zoomOutBtn.className = 'quick-action-btn';
+  zoomOutBtn.innerHTML = '−';
+  zoomOutBtn.title = 'Zoom Out';
+  zoomOutBtn.addEventListener('click', () => onZoomOut?.());
 
-  seedApply.addEventListener('click', commitSeedChange);
-  seedInput.addEventListener('change', commitSeedChange);
+  const recenterBtn = document.createElement('button');
+  recenterBtn.className = 'quick-action-btn';
+  recenterBtn.innerHTML = '◎';
+  recenterBtn.title = 'Recenter';
+  recenterBtn.addEventListener('click', () => onRecenter?.());
 
-  if (!onSeedChange) {
-    seedInput.disabled = true;
-    seedApply.disabled = true;
-  }
+  quickActions.append(zoomInBtn, zoomOutBtn, recenterBtn);
+  container.append(quickActions);
 
-  seedGroup.append(seedLabel, seedInput, seedApply);
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FPS OVERLAY
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  // FPS toggle
-  const fpsGroup = document.createElement('div');
-  fpsGroup.className = 'control-group';
+  const fpsOverlay = document.createElement('div');
+  fpsOverlay.className = 'fps-overlay';
+  fpsOverlay.textContent = 'FPS: --';
+  fpsOverlay.style.display = initialFpsVisible ? 'block' : 'none';
+  container.append(fpsOverlay);
 
-  const fpsToggle = createButton('FPS: On');
-  fpsToggle.setAttribute('aria-pressed', 'true');
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FAB CONTAINERS
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  let fpsVisible = true;
-  const setFpsVisible = (visible) => {
-    fpsVisible = visible;
-    fpsToggle.textContent = `FPS: ${visible ? 'On' : 'Off'}`;
-    fpsToggle.setAttribute('aria-pressed', String(visible));
-    if (metrics?.setVisible) {
-      metrics.setVisible(visible);
-    }
-  };
+  const fabContainerRight = document.createElement('div');
+  fabContainerRight.className = 'fab-container fab-container-right';
 
-  fpsToggle.addEventListener('click', () => {
-    const nextVisible = !fpsVisible;
-    setFpsVisible(nextVisible);
-    if (onFpsToggle) {
-      onFpsToggle(nextVisible);
-    }
-  });
+  // ═══════════════════════════════════════════════════════════════════════════
+  // METRICS PANEL & FAB
+  // ═══════════════════════════════════════════════════════════════════════════
 
-  if (!metrics?.setVisible) {
-    fpsToggle.disabled = true;
-    fpsToggle.textContent = 'FPS: N/A';
-    fpsToggle.setAttribute('aria-pressed', 'false');
-  } else {
-    setFpsVisible(Boolean(initialFpsVisible));
-  }
+  const metricsPanel = document.createElement('div');
+  metricsPanel.className = 'overlay-panel metrics-panel bottom-right';
 
-  fpsGroup.append(fpsToggle);
+  const metricsPanelHeader = document.createElement('div');
+  metricsPanelHeader.className = 'panel-header';
 
-  controls.append(playbackGroup, speedGroup, seedGroup, fpsGroup);
-  container.append(controls);
+  const metricsPanelTitle = document.createElement('h2');
+  metricsPanelTitle.className = 'panel-title';
+  metricsPanelTitle.innerHTML = '📊 Metrics';
 
-  // Metrics Panel
-  const metricsSection = document.createElement('section');
-  metricsSection.className = 'panel';
+  const metricsPanelClose = document.createElement('button');
+  metricsPanelClose.className = 'panel-close';
+  metricsPanelClose.innerHTML = '×';
 
-  const metricsHeader = document.createElement('div');
-  metricsHeader.className = 'panel-header';
+  metricsPanelHeader.append(metricsPanelTitle, metricsPanelClose);
 
-  const metricsTitle = document.createElement('h2');
-  metricsTitle.className = 'panel-title';
-  metricsTitle.innerHTML = '📊 Simulation Metrics';
-
-  const metricsToggle = document.createElement('span');
-  metricsToggle.className = 'panel-toggle expanded';
-  metricsToggle.textContent = '▼';
-
-  metricsHeader.append(metricsTitle, metricsToggle);
-
-  const metricsContent = document.createElement('div');
-  metricsContent.className = 'panel-content';
+  const metricsPanelContent = document.createElement('div');
+  metricsPanelContent.className = 'panel-content';
 
   const metricsBody = document.createElement('div');
   metricsBody.className = 'metrics-grid';
 
-  let metricsExpanded = true;
-  metricsHeader.addEventListener('click', () => {
-    metricsExpanded = !metricsExpanded;
-    metricsContent.style.display = metricsExpanded ? 'block' : 'none';
-    metricsToggle.classList.toggle('expanded', metricsExpanded);
-  });
-
+  // Metric definitions
   const metricDefinitions = [
     { key: 'creatureCount', label: 'Creatures', section: 'population' },
     { key: 'squaresCount', label: 'Squares', section: 'population' },
     { key: 'trianglesCount', label: 'Triangles', section: 'population' },
     { key: 'circlesCount', label: 'Circles', section: 'population' },
     { key: 'octagonsCount', label: 'Octagons', section: 'population' },
-    { key: 'birthsLastTick', label: 'Births (tick)', section: 'population' },
-    { key: 'birthsTotal', label: 'Births total', section: 'population' },
-    { key: 'pregnanciesLastTick', label: 'Pregnancies (tick)', section: 'population' },
-    { key: 'pregnanciesTotal', label: 'Pregnancies total', section: 'population' },
-    { key: 'miscarriagesLastTick', label: 'Miscarriages (tick)', section: 'population' },
-    { key: 'miscarriagesTotal', label: 'Miscarriages total', section: 'population' },
-    { key: 'mutationsLastTick', label: 'Mutations (tick)', section: 'genetics' },
-    { key: 'mutationStrengthLastTick', label: 'Mutation drift', section: 'genetics' },
-    { key: 'pleiotropyStrengthLastTick', label: 'Pleiotropy drift', section: 'genetics' },
-    { key: 'mutationTotal', label: 'Mutations total', section: 'genetics' },
-    { key: 'deathsTotal', label: 'Deaths total', section: 'deaths' },
-    { key: 'deathsAge', label: 'Deaths (age)', section: 'deaths' },
-    { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths' },
-    { key: 'deathsThirst', label: 'Deaths (thirst)', section: 'deaths' },
-    { key: 'deathsInjury', label: 'Deaths (injury)', section: 'deaths' },
-    { key: 'deathsOther', label: 'Deaths (other)', section: 'deaths' },
+    { key: 'birthsTotal', label: 'Births', section: 'population' },
+    { key: 'deathsTotal', label: 'Deaths', section: 'deaths' },
+    { key: 'deathsAge', label: 'Age', section: 'deaths' },
+    { key: 'deathsStarvation', label: 'Starved', section: 'deaths' },
+    { key: 'deathsThirst', label: 'Thirst', section: 'deaths' },
+    { key: 'deathsInjury', label: 'Injury', section: 'deaths' },
     { key: 'grassAverage', label: 'Grass avg', section: 'plants' },
-    { key: 'grassTotal', label: 'Grass total', section: 'plants' },
-    { key: 'grassCoverage', label: 'Grass coverage', section: 'plants' },
-    { key: 'grassHotspotCells', label: 'Hotspot cells', section: 'plants' },
-    { key: 'stressedCells', label: 'Stressed cells', section: 'plants' },
-    { key: 'bushCount', label: 'Bush count', section: 'plants' },
-    { key: 'berryTotal', label: 'Berry total', section: 'plants' },
-    { key: 'berryAverage', label: 'Berries per bush', section: 'plants' },
-    { key: 'bushAverageHealth', label: 'Bush avg health', section: 'plants' },
-    { key: 'chaseAttempts', label: 'Chase attempts', section: 'chase' },
-    { key: 'chaseSuccesses', label: 'Chase successes', section: 'chase' },
-    { key: 'chaseLosses', label: 'Chase losses', section: 'chase' },
-    { key: 'killsTotal', label: 'Kills total', section: 'hunting' },
+    { key: 'bushCount', label: 'Bushes', section: 'plants' },
+    { key: 'berryTotal', label: 'Berries', section: 'plants' },
     { key: 'carcassCount', label: 'Carcasses', section: 'hunting' },
-    { key: 'carcassMeatTotal', label: 'Carcass meat', section: 'hunting' }
+    { key: 'killsTotal', label: 'Kills', section: 'hunting' },
+    { key: 'chaseSuccesses', label: 'Catches', section: 'hunting' },
+    { key: 'mutationTotal', label: 'Mutations', section: 'genetics' }
   ];
 
   const metricRows = new Map();
 
-  const createMetricSection = (title, definitions) => {
+  const createMetricSection = (title, defs) => {
     const section = document.createElement('div');
     section.className = 'metrics-section';
 
@@ -247,102 +206,226 @@ export function createUI({
     sectionTitle.className = 'metrics-section-title';
     sectionTitle.textContent = title;
 
-    const sectionList = document.createElement('ul');
-    sectionList.className = 'metrics-list';
+    const list = document.createElement('ul');
+    list.className = 'metrics-list';
 
-    for (const metric of definitions) {
+    for (const metric of defs) {
       const item = document.createElement('li');
       item.className = 'metrics-item';
 
-      const labelSpan = document.createElement('span');
-      labelSpan.className = 'metrics-item-label';
-      labelSpan.textContent = metric.label;
+      const label = document.createElement('span');
+      label.className = 'metrics-item-label';
+      label.textContent = metric.label;
 
-      const valueSpan = document.createElement('span');
-      valueSpan.className = 'metrics-item-value';
-      valueSpan.textContent = '--';
+      const value = document.createElement('span');
+      value.className = 'metrics-item-value';
+      value.textContent = '--';
 
-      item.append(labelSpan, valueSpan);
-      sectionList.append(item);
-      metricRows.set(metric.key, { label: metric.label, node: valueSpan });
+      item.append(label, value);
+      list.append(item);
+      metricRows.set(metric.key, value);
     }
 
-    section.append(sectionTitle, sectionList);
+    section.append(sectionTitle, list);
     return section;
   };
 
-  const sectionOrder = [
+  const sections = [
     { key: 'population', title: 'Population' },
     { key: 'deaths', title: 'Deaths' },
     { key: 'plants', title: 'Plants' },
-    { key: 'chase', title: 'Chase' },
     { key: 'hunting', title: 'Hunting' },
     { key: 'genetics', title: 'Genetics' }
   ];
 
-  for (const { key, title } of sectionOrder) {
-    const sectionMetrics = metricDefinitions.filter((m) => m.section === key);
-    if (sectionMetrics.length) {
-      metricsBody.append(createMetricSection(title, sectionMetrics));
+  for (const { key, title } of sections) {
+    const defs = metricDefinitions.filter(m => m.section === key);
+    if (defs.length) {
+      metricsBody.append(createMetricSection(title, defs));
     }
   }
 
-  metricsContent.append(metricsBody);
-  metricsSection.append(metricsHeader, metricsContent);
-  container.append(metricsSection);
+  // Seed input row
+  const seedRow = document.createElement('div');
+  seedRow.className = 'seed-row';
+
+  const seedInput = document.createElement('input');
+  seedInput.type = 'number';
+  seedInput.className = 'seed-input';
+  seedInput.placeholder = 'Seed';
+
+  const seedApplyBtn = document.createElement('button');
+  seedApplyBtn.className = 'btn btn-sm';
+  seedApplyBtn.textContent = 'Apply';
+  seedApplyBtn.addEventListener('click', () => {
+    const value = Number(seedInput.value);
+    if (Number.isFinite(value)) {
+      onSeedChange?.(Math.trunc(value));
+    }
+  });
+
+  seedRow.append(seedInput, seedApplyBtn);
+  metricsBody.append(seedRow);
+
+  metricsPanelContent.append(metricsBody);
+  metricsPanel.append(metricsPanelHeader, metricsPanelContent);
+  container.append(metricsPanel);
+
+  // Metrics FAB
+  const metricsFab = document.createElement('button');
+  metricsFab.className = 'fab';
+  metricsFab.innerHTML = '📊';
+  metricsFab.title = 'Metrics';
+
+  let metricsVisible = false;
+  const toggleMetrics = () => {
+    metricsVisible = !metricsVisible;
+    metricsPanel.classList.toggle('visible', metricsVisible);
+    metricsFab.classList.toggle('active', metricsVisible);
+    // Close other panels
+    if (metricsVisible && configVisible) toggleConfig();
+  };
+
+  metricsFab.addEventListener('click', toggleMetrics);
+  metricsPanelClose.addEventListener('click', toggleMetrics);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CONFIG PANEL & FAB
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const configPanel = document.createElement('div');
+  configPanel.className = 'overlay-panel config-panel bottom-right';
+  // Will be populated by config-panel.js
+  container.append(configPanel);
+
+  const configFab = document.createElement('button');
+  configFab.className = 'fab';
+  configFab.innerHTML = '⚙️';
+  configFab.title = 'Config';
+
+  let configVisible = false;
+  const toggleConfig = () => {
+    configVisible = !configVisible;
+    configPanel.classList.toggle('visible', configVisible);
+    configFab.classList.toggle('active', configVisible);
+    // Close other panels
+    if (configVisible && metricsVisible) toggleMetrics();
+  };
+
+  configFab.addEventListener('click', toggleConfig);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FPS TOGGLE FAB
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const fpsFab = document.createElement('button');
+  fpsFab.className = 'fab fab-sm';
+  fpsFab.innerHTML = '📈';
+  fpsFab.title = 'Toggle FPS';
+
+  let fpsVisible = initialFpsVisible;
+  fpsFab.classList.toggle('active', fpsVisible);
+
+  fpsFab.addEventListener('click', () => {
+    fpsVisible = !fpsVisible;
+    fpsFab.classList.toggle('active', fpsVisible);
+    fpsOverlay.style.display = fpsVisible ? 'block' : 'none';
+    if (metrics?.setVisible) {
+      metrics.setVisible(fpsVisible);
+    }
+    onFpsToggle?.(fpsVisible);
+  });
+
+  // Assemble right FABs
+  fabContainerRight.append(metricsFab, configFab, fpsFab);
+  container.append(fabContainerRight);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // FORMAT HELPERS
+  // ═══════════════════════════════════════════════════════════════════════════
 
   const formatMetricValue = (key, value) => {
-    if (!Number.isFinite(value)) {
-      return '--';
-    }
+    if (!Number.isFinite(value)) return '--';
     switch (key) {
       case 'grassAverage':
-        return value.toFixed(3);
-      case 'grassTotal':
-        return value.toFixed(1);
+        return value.toFixed(2);
       case 'grassCoverage':
-        return `${(value * 100).toFixed(1)}%`;
+        return `${(value * 100).toFixed(0)}%`;
       case 'berryAverage':
-        return value.toFixed(2);
       case 'bushAverageHealth':
-        return value.toFixed(2);
-      case 'mutationStrengthLastTick':
-      case 'pleiotropyStrengthLastTick':
-        return value.toFixed(3);
+        return value.toFixed(1);
       default:
         return String(Math.round(value));
     }
   };
 
-  const setMetrics = (summary = {}) => {
-    metricRows.forEach(({ node }, key) => {
-      const value = formatMetricValue(key, summary[key]);
-      node.textContent = value;
-    });
-  };
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PUBLIC API
+  // ═══════════════════════════════════════════════════════════════════════════
 
   return {
     setStatus(message) {
-      statusNode.textContent = message;
+      status.textContent = message;
     },
+
     setRunning(isRunning) {
-      playButton.disabled = isRunning;
-      pauseButton.disabled = !isRunning;
-      stepButton.disabled = isRunning;
+      playBtn.disabled = isRunning;
+      pauseBtn.disabled = !isRunning;
+      stepBtn.disabled = isRunning;
+      
+      // Update play button icon
+      playBtn.innerHTML = isRunning ? '▶' : '▶';
     },
+
     setSpeed(speed) {
-      const value = String(speed);
-      if (speedSelect.value !== value) {
-        speedSelect.value = value;
-      }
+      speedSelect.value = String(speed);
     },
+
     setSeed(seed) {
-      const value = String(seed);
-      if (seedInput.value !== value) {
-        seedInput.value = value;
+      seedInput.value = String(seed);
+    },
+
+    setFpsVisible(visible) {
+      fpsVisible = visible;
+      fpsFab.classList.toggle('active', visible);
+      fpsOverlay.style.display = visible ? 'block' : 'none';
+    },
+
+    setMetrics(summary = {}) {
+      metricRows.forEach((node, key) => {
+        node.textContent = formatMetricValue(key, summary[key]);
+      });
+    },
+
+    updateFps(fps) {
+      fpsOverlay.textContent = `FPS: ${fps} | TPS: ${fps}`;
+    },
+
+    setTracking(creatureId, isFollowing = false) {
+      const textEl = trackingIndicator.querySelector('.tracking-text');
+      if (creatureId !== null) {
+        textEl.textContent = isFollowing ? `Following #${creatureId}` : `Tracking #${creatureId}`;
+        trackingIndicator.classList.add('visible');
+      } else {
+        trackingIndicator.classList.remove('visible');
       }
     },
-    setFpsVisible,
-    setMetrics
+
+    // Get the config panel container for config-panel.js to populate
+    getConfigPanelContainer() {
+      return configPanel;
+    },
+
+    // Close a specific panel
+    closePanel(panelName) {
+      if (panelName === 'metrics' && metricsVisible) toggleMetrics();
+      if (panelName === 'config' && configVisible) toggleConfig();
+    },
+
+    // Toggle a panel
+    togglePanel(panelName) {
+      if (panelName === 'metrics') toggleMetrics();
+      if (panelName === 'config') toggleConfig();
+    }
   };
 }

@@ -1,431 +1,355 @@
 /**
- * Live Inspector Module
+ * Live Inspector Module - Mobile-First Floating Panel
  *
- * A live-updating, collapsible inspector panel for tracking creatures.
- * Designed to be readable for non-programmers while still providing
- * useful debugging information.
+ * A floating inspector panel for tracking creatures with camera follow support.
+ * Optimized for touch interaction and mobile screens.
  */
 
 import { getSpeciesLabel } from '../sim/species.js';
 import { FOOD_LABELS } from '../sim/creatures/food.js';
 
 /**
- * Creates a live inspector panel that tracks a selected creature.
+ * Creates a floating live inspector panel that tracks a selected creature.
  * @param {Object} options
  * @param {HTMLElement} options.container - Parent element
  * @param {number} options.ticksPerSecond - For converting ticks to seconds
+ * @param {Function} options.onFollowToggle - Callback when follow is toggled
  * @returns {Object} Inspector API
  */
-export function createLiveInspector({ container, ticksPerSecond = 60 }) {
+export function createLiveInspector({ container, ticksPerSecond = 60, onFollowToggle }) {
   // State
   let trackedCreatureId = null;
-  const sectionStates = {};
+  let isFollowing = false;
+  let currentTicksPerSecond = ticksPerSecond;
+  const sectionStates = { status: true, vitals: true };
 
-  // Create main panel
-  const panel = document.createElement('section');
-  panel.className = 'panel';
+  // Create FAB for inspector
+  const fabContainer = document.createElement('div');
+  fabContainer.className = 'fab-container fab-container-left';
+
+  const inspectorFab = document.createElement('button');
+  inspectorFab.className = 'fab';
+  inspectorFab.innerHTML = '🔍';
+  inspectorFab.title = 'Inspector';
+
+  fabContainer.append(inspectorFab);
+  container.append(fabContainer);
+
+  // Create floating panel
+  const panel = document.createElement('div');
+  panel.className = 'overlay-panel inspector-panel bottom-left';
 
   // Header
   const header = document.createElement('div');
   header.className = 'panel-header';
-  header.style.cursor = 'default';
+
+  const titleContainer = document.createElement('div');
+  titleContainer.style.display = 'flex';
+  titleContainer.style.alignItems = 'center';
+  titleContainer.style.gap = '8px';
 
   const title = document.createElement('h2');
   title.className = 'panel-title';
   title.innerHTML = '🔍 Inspector';
 
-  const clearButton = document.createElement('button');
-  clearButton.textContent = '✕ Clear';
-  clearButton.className = 'btn';
-  clearButton.style.padding = '4px 10px';
-  clearButton.style.minHeight = '28px';
-  clearButton.style.minWidth = 'auto';
-  clearButton.style.fontSize = '12px';
-  clearButton.style.display = 'none';
+  const followBtn = document.createElement('button');
+  followBtn.className = 'follow-btn';
+  followBtn.innerHTML = '📍 Follow';
+  followBtn.style.display = 'none';
 
-  header.append(title, clearButton);
+  titleContainer.append(title);
+
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'panel-close';
+  closeBtn.innerHTML = '×';
+
+  header.append(titleContainer, followBtn, closeBtn);
 
   // Content area
   const content = document.createElement('div');
   content.className = 'panel-content inspector-content';
-  content.style.display = 'block';
 
-  // Placeholder message
+  // Placeholder
   const placeholder = document.createElement('p');
   placeholder.className = 'inspector-empty';
-  placeholder.textContent =
-    'Tap on a creature to track it. The display will update live as the simulation runs.';
+  placeholder.innerHTML = 'Tap a creature on the map to inspect it.<br><br>📍 Tap "Follow" to track its movement.';
 
   content.append(placeholder);
   panel.append(header, content);
   container.append(panel);
 
-  // Helper: format percentage
+  // Panel visibility
+  let panelVisible = false;
+
+  const togglePanel = () => {
+    panelVisible = !panelVisible;
+    panel.classList.toggle('visible', panelVisible);
+    inspectorFab.classList.toggle('active', panelVisible);
+  };
+
+  inspectorFab.addEventListener('click', togglePanel);
+  closeBtn.addEventListener('click', togglePanel);
+
+  // Follow button handler
+  followBtn.addEventListener('click', () => {
+    if (trackedCreatureId !== null) {
+      isFollowing = !isFollowing;
+      followBtn.classList.toggle('active', isFollowing);
+      followBtn.innerHTML = isFollowing ? '📍 Following' : '📍 Follow';
+      onFollowToggle?.(trackedCreatureId, isFollowing);
+    }
+  });
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // HELPER FUNCTIONS
+  // ═══════════════════════════════════════════════════════════════════════════
+
   const pct = (value, decimals = 0) => {
     if (!Number.isFinite(value)) return '--';
     return `${(value * 100).toFixed(decimals)}%`;
   };
 
-  // Helper: format number
   const num = (value, decimals = 1) => {
     if (!Number.isFinite(value)) return '--';
     return value.toFixed(decimals);
   };
 
-  // Helper: format ticks as time
   const ticksToTime = (ticks) => {
     if (!Number.isFinite(ticks)) return '--';
-    const seconds = ticks / ticksPerSecond;
+    const seconds = ticks / currentTicksPerSecond;
     if (seconds < 60) return `${seconds.toFixed(1)}s`;
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
     return `${mins}m ${secs}s`;
   };
 
-  // Helper: create collapsible section
-  const createSection = (id, titleText, defaultOpen = false) => {
-    // Initialize open/closed state once per section.
+  // ═══════════════════════════════════════════════════════════════════════════
+  // CREATE SECTION HELPER
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  const createSection = (id, titleText, emoji, defaultOpen = false) => {
     if (typeof sectionStates[id] !== 'boolean') {
-      sectionStates[id] = Boolean(defaultOpen);
+      sectionStates[id] = defaultOpen;
     }
+
     const section = document.createElement('div');
-    section.style.marginBottom = '10px';
-    section.style.background = 'var(--bg-tertiary)';
-    section.style.borderRadius = 'var(--radius-md)';
-    section.style.overflow = 'hidden';
+    section.className = 'inspector-section';
 
     const sectionHeader = document.createElement('div');
-    sectionHeader.style.padding = '10px 14px';
-    sectionHeader.style.cursor = 'pointer';
-    sectionHeader.style.display = 'flex';
-    sectionHeader.style.justifyContent = 'space-between';
-    sectionHeader.style.alignItems = 'center';
-    sectionHeader.style.userSelect = 'none';
-    sectionHeader.style.transition = 'background 0.15s';
-
-    sectionHeader.addEventListener('mouseenter', () => {
-      sectionHeader.style.background = 'var(--bg-elevated)';
-    });
-    sectionHeader.addEventListener('mouseleave', () => {
-      sectionHeader.style.background = 'transparent';
-    });
+    sectionHeader.className = 'inspector-section-header';
 
     const sectionTitle = document.createElement('span');
-    sectionTitle.textContent = titleText;
-    sectionTitle.style.fontWeight = '600';
-    sectionTitle.style.fontSize = '13px';
-    sectionTitle.style.color = 'var(--text-primary)';
+    sectionTitle.className = 'inspector-section-title';
+    sectionTitle.innerHTML = `${emoji} ${titleText}`;
 
     const arrow = document.createElement('span');
-    arrow.textContent = sectionStates[id] ? '▼' : '▶';
-    arrow.style.fontSize = '10px';
-    arrow.style.color = 'var(--text-muted)';
-    arrow.style.transition = 'transform 0.2s';
+    arrow.className = 'inspector-section-arrow';
+    arrow.classList.toggle('expanded', sectionStates[id]);
+    arrow.textContent = '▶';
 
     sectionHeader.append(sectionTitle, arrow);
 
     const sectionBody = document.createElement('div');
-    sectionBody.style.padding = sectionStates[id] ? '10px 14px' : '0 14px';
-    sectionBody.style.maxHeight = sectionStates[id] ? '500px' : '0';
-    sectionBody.style.overflow = 'hidden';
-    sectionBody.style.transition = 'all 0.2s ease';
-    sectionBody.style.fontSize = '13px';
-    sectionBody.style.lineHeight = '1.6';
-    sectionBody.style.borderTop = sectionStates[id] ? '1px solid var(--border-subtle)' : 'none';
+    sectionBody.className = 'inspector-section-body';
+    sectionBody.classList.toggle('expanded', sectionStates[id]);
+
+    const sectionContent = document.createElement('div');
+    sectionContent.className = 'inspector-section-content';
+
+    sectionBody.append(sectionContent);
 
     sectionHeader.addEventListener('click', () => {
       sectionStates[id] = !sectionStates[id];
-      sectionBody.style.maxHeight = sectionStates[id] ? '500px' : '0';
-      sectionBody.style.padding = sectionStates[id] ? '10px 14px' : '0 14px';
-      sectionBody.style.borderTop = sectionStates[id] ? '1px solid var(--border-subtle)' : 'none';
-      arrow.textContent = sectionStates[id] ? '▼' : '▶';
+      sectionBody.classList.toggle('expanded', sectionStates[id]);
+      arrow.classList.toggle('expanded', sectionStates[id]);
     });
 
     section.append(sectionHeader, sectionBody);
-    return { section, body: sectionBody };
+    return { section, body: sectionContent };
   };
 
-  // Helper: create a row with label and value
+  // ═══════════════════════════════════════════════════════════════════════════
+  // ROW HELPERS
+  // ═══════════════════════════════════════════════════════════════════════════
+
   const row = (label, value, color = null) => {
     const div = document.createElement('div');
-    div.style.display = 'flex';
-    div.style.justifyContent = 'space-between';
-    div.style.padding = '3px 0';
+    div.className = 'inspector-row';
 
     const labelSpan = document.createElement('span');
+    labelSpan.className = 'inspector-label';
     labelSpan.textContent = label;
-    labelSpan.style.color = 'var(--text-secondary)';
 
     const valueSpan = document.createElement('span');
+    valueSpan.className = 'inspector-value';
     valueSpan.textContent = value;
-    valueSpan.style.fontWeight = '500';
-    valueSpan.style.color = color || 'var(--text-primary)';
+    if (color) valueSpan.style.color = color;
 
     div.append(labelSpan, valueSpan);
     return div;
   };
 
-  // Helper: create a meter bar
-  const meterBar = (label, value, max = 1, color = '#58b448') => {
+  const meterBar = (label, value, max = 1, colorClass = 'energy') => {
     const container = document.createElement('div');
-    container.style.marginBottom = '8px';
+    container.className = 'meter-container';
 
     const labelRow = document.createElement('div');
-    labelRow.style.display = 'flex';
-    labelRow.style.justifyContent = 'space-between';
-    labelRow.style.marginBottom = '4px';
-    labelRow.style.fontSize = '12px';
+    labelRow.className = 'meter-label-row';
 
     const labelSpan = document.createElement('span');
+    labelSpan.className = 'inspector-label';
     labelSpan.textContent = label;
-    labelSpan.style.color = 'var(--text-secondary)';
 
     const valueSpan = document.createElement('span');
     const percentage = Number.isFinite(value) ? (value / max) * 100 : 0;
     valueSpan.textContent = `${percentage.toFixed(0)}%`;
-    valueSpan.style.fontWeight = '500';
-    valueSpan.style.color = 'var(--text-primary)';
+    valueSpan.className = 'inspector-value';
 
     labelRow.append(labelSpan, valueSpan);
 
-    const barOuter = document.createElement('div');
-    barOuter.style.height = '6px';
-    barOuter.style.background = 'var(--bg-primary)';
-    barOuter.style.borderRadius = '3px';
-    barOuter.style.overflow = 'hidden';
+    const bar = document.createElement('div');
+    bar.className = 'meter-bar';
 
-    const barInner = document.createElement('div');
-    barInner.style.height = '100%';
-    barInner.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
-    barInner.style.background = color;
-    barInner.style.borderRadius = '3px';
-    barInner.style.transition = 'width 0.2s';
+    const fill = document.createElement('div');
+    fill.className = `meter-fill ${colorClass}`;
+    fill.style.width = `${Math.min(100, Math.max(0, percentage))}%`;
 
-    barOuter.append(barInner);
-    container.append(labelRow, barOuter);
+    bar.append(fill);
+    container.append(labelRow, bar);
     return container;
   };
 
-  // Build the inspector content for a creature
+  // ═══════════════════════════════════════════════════════════════════════════
+  // BUILD CREATURE DISPLAY
+  // ═══════════════════════════════════════════════════════════════════════════
+
   const buildCreatureDisplay = (creature, tick) => {
     content.innerHTML = '';
 
     if (!creature) {
-      const lost = document.createElement('p');
-      lost.innerHTML = `<strong>Creature lost!</strong><br>The tracked creature may have died or moved out of range.`;
-      lost.style.color = '#c62828';
-      lost.style.margin = '0';
+      const lost = document.createElement('div');
+      lost.className = 'inspector-empty';
+      lost.innerHTML = `<strong style="color: var(--accent-red);">Creature lost!</strong><br>May have died or moved out of range.`;
       content.append(lost);
+      followBtn.style.display = 'none';
       return;
     }
 
-    // === STATUS SECTION (always open) ===
-    const { section: statusSection, body: statusBody } = createSection('status', '📋 Status', true);
+    followBtn.style.display = 'block';
+
+    // STATUS SECTION
+    const { section: statusSection, body: statusBody } = createSection('status', 'Status', '📋', true);
 
     const species = getSpeciesLabel(creature.species) || 'Unknown';
-    const speciesEmoji =
-      {
-        Squares: '🟦',
-        Triangles: '🔺',
-        Circles: '🟢',
-        Octagons: '🛑'
-      }[species] || '❓';
+    const speciesEmoji = {
+      Squares: '🟨',
+      Triangles: '🔺',
+      Circles: '🔵',
+      Octagons: '🟣'
+    }[species] || '❓';
 
     statusBody.append(
-      row('Creature ID', `#${creature.id}`),
       row('Species', `${speciesEmoji} ${species}`),
-      row('Life Stage', creature.lifeStage?.label ?? 'Unknown'),
-      row('Age', ticksToTime(creature.ageTicks)),
-      row('Position', `${num(creature.position?.x)}, ${num(creature.position?.y)}`)
+      row('ID', `#${creature.id}`),
+      row('Age', ticksToTime(creature.age)),
+      row('Stage', creature.lifeStage?.label || '--'),
+      row('Position', `(${num(creature.position?.x, 0)}, ${num(creature.position?.y, 0)})`)
     );
 
-    // Current activity
-    const priority = creature.priority ?? 'unknown';
-    const intent = creature.intent?.type ?? 'unknown';
-    const priorityLabels = {
-      hunger: '🍽️ Looking for food',
-      thirst: '💧 Looking for water',
-      flee: '🏃 Running away!',
-      mate: '💕 Looking for a mate',
-      rest: '😴 Resting'
-    };
-    const intentLabels = {
-      eat: '🍽️ Eating',
-      drink: '💧 Drinking',
-      wander: '🚶 Wandering',
-      seek_food: '🔍 Searching for food',
-      seek_water: '🔍 Searching for water',
-      seek_mate: '💕 Seeking a mate',
-      flee: '🏃 Fleeing!',
-      chase: '🎯 Chasing prey'
-    };
+    if (creature.gender) {
+      statusBody.append(row('Gender', creature.gender === 'male' ? '♂ Male' : '♀ Female'));
+    }
 
-    const activityDiv = document.createElement('div');
-    activityDiv.style.marginTop = '8px';
-    activityDiv.style.padding = '8px';
-    activityDiv.style.background = '#f0f7ff';
-    activityDiv.style.borderRadius = '6px';
-    activityDiv.style.textAlign = 'center';
-
-    const currentActivity =
-      intentLabels[intent] || priorityLabels[priority] || `${priority} / ${intent}`;
-    activityDiv.innerHTML = `<strong>Currently:</strong> ${currentActivity}`;
-    statusBody.append(activityDiv);
+    if (creature.pregnancy?.active) {
+      statusBody.append(
+        row('Pregnant', '🤰 Yes'),
+        row('Due in', ticksToTime(creature.pregnancy.gestationRemaining))
+      );
+    }
 
     content.append(statusSection);
 
-    // === NEEDS SECTION ===
-    const { section: needsSection, body: needsBody } = createSection(
-      'needs',
-      '❤️ Needs & Health',
-      true
+    // VITALS SECTION
+    const { section: vitalsSection, body: vitalsBody } = createSection('vitals', 'Vitals', '❤️', true);
+
+    vitalsBody.append(
+      meterBar('Energy', creature.energy, 1, 'energy'),
+      meterBar('Water', creature.water, 1, 'water'),
+      meterBar('Health', creature.health, 1, 'health'),
+      meterBar('Stamina', creature.stamina, 1, 'stamina')
     );
 
-    const meters = creature.meters || {};
-    needsBody.append(
-      meterBar('Energy (hunger)', meters.energy, 1, '#FF9800'),
-      meterBar('Water (thirst)', meters.water, 1, '#2196F3'),
-      meterBar('Stamina', meters.stamina, 1, '#9C27B0'),
-      meterBar('Health', meters.hp, 1, '#F44336')
-    );
+    content.append(vitalsSection);
 
-    // Pregnancy status
-    const pregnancy = creature.reproduction?.pregnancy;
-    if (pregnancy?.isPregnant) {
-      const pregDiv = document.createElement('div');
-      pregDiv.style.marginTop = '8px';
-      pregDiv.style.padding = '6px';
-      pregDiv.style.background = '#fff3e0';
-      pregDiv.style.borderRadius = '4px';
-      pregDiv.style.fontSize = '12px';
+    // BEHAVIOR SECTION
+    const { section: behaviorSection, body: behaviorBody } = createSection('behavior', 'Behavior', '🧠', false);
 
-      const remaining = Number.isFinite(pregnancy.gestationTicksRemaining)
-        ? pregnancy.gestationTicksRemaining
-        : 0;
-      const total = Number.isFinite(pregnancy.gestationTicksTotal)
-        ? pregnancy.gestationTicksTotal
-        : 0;
-      const safeTotal = Math.max(1, total);
-      const progress = ((safeTotal - remaining) / safeTotal) * 100;
-      pregDiv.innerHTML = `🤰 <strong>Pregnant!</strong> ${Math.max(
-        0,
-        Math.min(100, Math.round(progress))
-      )}% (${ticksToTime(remaining)} remaining)`;
-      needsBody.append(pregDiv);
-    }
-
-    content.append(needsSection);
-
-    // === BEHAVIOR SECTION ===
-    const { section: behaviorSection, body: behaviorBody } = createSection(
-      'behavior',
-      '🧠 Behavior',
-      false
-    );
-
-    // What they can see
-    const perception = creature.perception || {};
-    const canSeeFood = perception.foodType && perception.foodDistance;
-    const canSeeWater = Number.isFinite(perception.waterDistance);
-
-    let seesText = 'Nothing nearby';
-    if (canSeeFood && canSeeWater) {
-      seesText = `${FOOD_LABELS[perception.foodType] || 'Food'} (${num(perception.foodDistance)} tiles) and Water (${num(perception.waterDistance)} tiles)`;
-    } else if (canSeeFood) {
-      seesText = `${FOOD_LABELS[perception.foodType] || 'Food'} (${num(perception.foodDistance)} tiles away)`;
-    } else if (canSeeWater) {
-      seesText = `Water (${num(perception.waterDistance)} tiles away)`;
-    }
+    const intent = creature.intent?.action || 'idle';
+    const intentLabels = {
+      idle: '😴 Idle',
+      wander: '🚶 Wandering',
+      flee: '🏃 Fleeing!',
+      seekFood: '🍽️ Seeking food',
+      seekWater: '💧 Seeking water',
+      seekMate: '💕 Seeking mate',
+      hunt: '🎯 Hunting',
+      graze: '🌿 Grazing',
+      drink: '💧 Drinking',
+      eat: '🍖 Eating',
+      rest: '😌 Resting'
+    };
 
     behaviorBody.append(
-      row('Can see', seesText),
-      row('Vision range', `${num(perception.range || creature.traits?.perceptionRange)} tiles`),
-      row('Alertness', pct(creature.alertness?.level)),
-      row('Sprinting', creature.sprinting ? '🏃 Yes' : 'No')
+      row('Action', intentLabels[intent] || intent),
+      row('Alertness', pct(creature.alertness?.level))
     );
 
-    // Food preference
     if (creature.intent?.foodType) {
-      behaviorBody.append(
-        row('Seeking', FOOD_LABELS[creature.intent.foodType] || creature.intent.foodType)
-      );
+      behaviorBody.append(row('Seeking', FOOD_LABELS[creature.intent.foodType] || creature.intent.foodType));
+    }
+
+    if (creature.targeting?.targetId) {
+      behaviorBody.append(row('Target', `#${creature.targeting.targetId}`));
     }
 
     content.append(behaviorSection);
 
-    // === BODY SECTION ===
-    const { section: bodySection, body: bodyBody } = createSection(
-      'body',
-      '🦵 Physical Traits',
-      false
-    );
+    // TRAITS SECTION
+    const { section: traitsSection, body: traitsBody } = createSection('traits', 'Traits', '🦵', false);
 
     const traits = creature.traits || {};
-    bodyBody.append(
-      row('Movement speed', `${num(traits.speed)} tiles/sec`),
-      row('Sprint speed', `${num(traits.speed * (traits.sprintSpeedMultiplier || 1.6))} tiles/sec`),
-      row('Energy burn rate', `${num(traits.basalEnergyDrain * 100, 2)}%/sec`),
-      row('Water burn rate', `${num(traits.basalWaterDrain * 100, 2)}%/sec`)
+    traitsBody.append(
+      row('Speed', `${num(traits.speed)} tiles/s`),
+      row('Sprint', `${num(traits.speed * (traits.sprintSpeedMultiplier || 1.6))} tiles/s`),
+      row('Vision', `${num(traits.perceptionRange)} tiles`),
+      row('Energy burn', `${num(traits.basalEnergyDrain * 100, 2)}%/s`),
+      row('Water burn', `${num(traits.basalWaterDrain * 100, 2)}%/s`)
     );
 
-    // Life stage effects
-    const lifeStage = creature.lifeStage || {};
-    if (lifeStage.movementScale !== 1 || lifeStage.metabolismScale !== 1) {
-      const effectsDiv = document.createElement('div');
-      effectsDiv.style.marginTop = '6px';
-      effectsDiv.style.fontSize = '12px';
-      effectsDiv.style.color = '#666';
+    content.append(traitsSection);
 
-      let effects = [];
-      if (lifeStage.movementScale < 1)
-        effects.push(`${((1 - lifeStage.movementScale) * 100).toFixed(0)}% slower`);
-      if (lifeStage.movementScale > 1)
-        effects.push(`${((lifeStage.movementScale - 1) * 100).toFixed(0)}% faster`);
-      if (lifeStage.metabolismScale < 1)
-        effects.push(`${((1 - lifeStage.metabolismScale) * 100).toFixed(0)}% less hungry`);
-      if (lifeStage.metabolismScale > 1)
-        effects.push(`${((lifeStage.metabolismScale - 1) * 100).toFixed(0)}% hungrier`);
-
-      effectsDiv.textContent = `${lifeStage.label} effects: ${effects.join(', ')}`;
-      bodyBody.append(effectsDiv);
-    }
-
-    content.append(bodySection);
-
-    // === HUNTING SECTION (for predators) ===
+    // HUNTING SECTION (predators only)
     const chase = creature.chase;
-    const targeting = creature.targeting;
-    const isHunting =
-      chase?.status === 'pursuing' || chase?.status === 'losing' || targeting?.targetId;
+    if (chase?.status && chase.status !== 'idle') {
+      const { section: huntSection, body: huntBody } = createSection('hunting', 'Hunting', '🎯', false);
 
-    if (isHunting || chase?.lastOutcome) {
-      const { section: huntSection, body: huntBody } = createSection(
-        'hunting',
-        '🎯 Hunting',
-        false
+      const chaseLabels = {
+        pursuing: '🏃 Pursuing',
+        losing: '👀 Losing sight',
+        resting: '😮‍💨 Resting'
+      };
+
+      huntBody.append(
+        row('Status', chaseLabels[chase.status] || chase.status),
+        row('Target', `#${chase.targetId || '--'}`),
+        row('Distance', `${num(chase.distance)} tiles`)
       );
 
-      if (chase?.status && chase.status !== 'idle') {
-        const statusLabels = {
-          pursuing: '🏃 Actively chasing',
-          losing: '👀 Losing sight...',
-          resting: '😮‍💨 Catching breath'
-        };
-        huntBody.append(
-          row('Status', statusLabels[chase.status] || chase.status),
-          row(
-            'Target',
-            `#${chase.targetId || '--'} (${getSpeciesLabel(chase.preySpecies) || 'Unknown'})`
-          ),
-          row('Distance', `${num(chase.distance)} tiles`)
-        );
-      }
-
-      if (chase?.lastOutcome) {
+      if (chase.lastOutcome) {
         const outcomeLabels = {
-          caught: '✅ Caught prey',
-          lost: '❌ Lost them',
-          exhausted: '😓 Too tired'
+          caught: '✅ Caught',
+          lost: '❌ Lost',
+          exhausted: '😓 Exhausted'
         };
         huntBody.append(row('Last hunt', outcomeLabels[chase.lastOutcome] || chase.lastOutcome));
       }
@@ -433,92 +357,41 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
       content.append(huntSection);
     }
 
-    // === MEMORY SECTION ===
-    const memories = creature.memory?.entries;
-    if (Array.isArray(memories) && memories.length > 0) {
-      const { section: memSection, body: memBody } = createSection('memory', '🧠 Memory', false);
-
-      const sorted = [...memories]
-        .sort((a, b) => (b?.strength ?? 0) - (a?.strength ?? 0))
-        .slice(0, 5);
-
-      for (const mem of sorted) {
-        const typeLabels = {
-          food: `🍽️ ${FOOD_LABELS[mem.foodType] || 'Food'}`,
-          water: '💧 Water',
-          danger: '⚠️ Danger',
-          mate: '💕 Mate'
-        };
-        const label = typeLabels[mem.type] || mem.type;
-        const strength = pct(mem.strength);
-        const age = ticksToTime(mem.ageTicks);
-
-        const memRow = document.createElement('div');
-        memRow.style.fontSize = '12px';
-        memRow.style.padding = '2px 0';
-        memRow.style.borderBottom = '1px solid #f0f0f0';
-        memRow.innerHTML = `${label} at (${num(mem.x)}, ${num(mem.y)}) - ${strength} fresh, ${age} ago`;
-        memBody.append(memRow);
-      }
-
-      content.append(memSection);
-    }
-
-    // === GENETICS SECTION ===
-    const { section: geneSection, body: geneBody } = createSection(
-      'genetics',
-      '🧬 Genetics',
-      false
-    );
+    // GENETICS SECTION
+    const { section: geneSection, body: geneBody } = createSection('genetics', 'Genetics', '🧬', false);
 
     const genome = creature.genome || {};
     const geneLabels = {
       speed: 'Speed gene',
       perceptionRange: 'Vision gene',
       alertness: 'Alertness gene',
-      basalEnergyDrain: 'Metabolism gene'
+      basalEnergyDrain: 'Metabolism'
     };
 
     for (const [key, label] of Object.entries(geneLabels)) {
       if (Number.isFinite(genome[key])) {
-        const value = genome[key];
-        const deviation = ((value - 0.5) * 200).toFixed(0);
+        const deviation = ((genome[key] - 0.5) * 200).toFixed(0);
         const deviationText = deviation > 0 ? `+${deviation}%` : `${deviation}%`;
-        const color = deviation > 0 ? '#4CAF50' : deviation < 0 ? '#f44336' : '#666';
+        const color = deviation > 0 ? '#4ade80' : deviation < 0 ? '#f87171' : null;
         geneBody.append(row(label, deviationText, color));
       }
     }
 
-    // Food efficiency
-    const eff = traits.foodEfficiency;
-    if (eff) {
-      const effDiv = document.createElement('div');
-      effDiv.style.marginTop = '6px';
-      effDiv.style.fontSize = '12px';
-      effDiv.innerHTML = `<strong>Digestion:</strong> Grass ${num(eff.grass)}x, Berries ${num(eff.berries)}x, Meat ${num(eff.meat)}x`;
-      geneBody.append(effDiv);
-    }
-
     content.append(geneSection);
 
-    // Tick counter at bottom
+    // Tick footer
     const tickDiv = document.createElement('div');
-    tickDiv.style.marginTop = '8px';
+    tickDiv.style.marginTop = '12px';
     tickDiv.style.fontSize = '11px';
-    tickDiv.style.color = '#999';
+    tickDiv.style.color = 'var(--text-muted)';
     tickDiv.style.textAlign = 'right';
-    tickDiv.textContent = `Tick: ${tick} | Updated live`;
+    tickDiv.textContent = `Tick: ${tick} • Live`;
     content.append(tickDiv);
   };
 
-  // Clear button handler
-  clearButton.addEventListener('click', () => {
-    trackedCreatureId = null;
-    clearButton.style.display = 'none';
-    title.textContent = '🔍 Inspector';
-    content.innerHTML = '';
-    content.append(placeholder);
-  });
+  // ═══════════════════════════════════════════════════════════════════════════
+  // PUBLIC API
+  // ═══════════════════════════════════════════════════════════════════════════
 
   return {
     /**
@@ -527,40 +400,45 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     selectCreature(creature, tapLocation) {
       if (creature) {
         trackedCreatureId = creature.id;
-        clearButton.style.display = 'block';
-        title.textContent = `🔍 Tracking #${creature.id}`;
+        isFollowing = false;
+        followBtn.classList.remove('active');
+        followBtn.innerHTML = '📍 Follow';
+        title.textContent = `🔍 #${creature.id}`;
+        
+        // Auto-open panel when selecting a creature
+        if (!panelVisible) {
+          togglePanel();
+        }
       } else {
-        // Tapped but no creature found
         trackedCreatureId = null;
-        clearButton.style.display = 'none';
+        isFollowing = false;
+        followBtn.classList.remove('active');
+        followBtn.innerHTML = '📍 Follow';
+        followBtn.style.display = 'none';
         title.textContent = '🔍 Inspector';
         content.innerHTML = '';
 
         const noCreature = document.createElement('p');
-        noCreature.style.margin = '0';
-        noCreature.style.color = '#666';
-        noCreature.innerHTML = `No creature at (${num(tapLocation?.x)}, ${num(tapLocation?.y)}).<br>Tap directly on a creature to track it.`;
+        noCreature.className = 'inspector-empty';
+        noCreature.innerHTML = `No creature at (${num(tapLocation?.x, 0)}, ${num(tapLocation?.y, 0)}).<br>Tap directly on a creature.`;
         content.append(noCreature);
       }
     },
 
     /**
      * Called every tick/frame to update the display.
-     * @param {Object} options
-     * @param {Array} options.creatures - Current creatures array
-     * @param {number} options.tick - Current tick number
      */
     update({ creatures, tick }) {
       if (trackedCreatureId === null) return;
 
-      // Find the tracked creature
-      const creature = creatures?.find((c) => c?.id === trackedCreatureId);
+      const creature = creatures?.find(c => c?.id === trackedCreatureId);
       buildCreatureDisplay(creature, tick);
 
       if (!creature) {
-        // Creature died - update title
         title.textContent = `🔍 Lost #${trackedCreatureId}`;
-        clearButton.style.display = 'block';
+        isFollowing = false;
+        followBtn.classList.remove('active');
+        onFollowToggle?.(null, false);
       }
     },
 
@@ -572,10 +450,41 @@ export function createLiveInspector({ container, ticksPerSecond = 60 }) {
     },
 
     /**
+     * Check if currently following.
+     */
+    isFollowing() {
+      return isFollowing && trackedCreatureId !== null;
+    },
+
+    /**
      * Sets the ticks per second for time formatting.
      */
     setTicksPerSecond(tps) {
-      ticksPerSecond = Number.isFinite(tps) && tps > 0 ? tps : 60;
+      currentTicksPerSecond = Number.isFinite(tps) && tps > 0 ? tps : 60;
+    },
+
+    /**
+     * Open or close the panel programmatically.
+     */
+    setVisible(visible) {
+      if (visible !== panelVisible) {
+        togglePanel();
+      }
+    },
+
+    /**
+     * Clear tracking.
+     */
+    clear() {
+      trackedCreatureId = null;
+      isFollowing = false;
+      followBtn.classList.remove('active');
+      followBtn.innerHTML = '📍 Follow';
+      followBtn.style.display = 'none';
+      title.textContent = '🔍 Inspector';
+      content.innerHTML = '';
+      content.append(placeholder.cloneNode(true));
+      onFollowToggle?.(null, false);
     }
   };
 }

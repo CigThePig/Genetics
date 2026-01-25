@@ -1,26 +1,22 @@
 /**
- * Config Panel Module
+ * Config Panel Module - Floating Overlay Version
  *
- * Provides a collapsible UI panel for viewing and editing simulation config values.
- * Groups config by category and provides appropriate input controls for each type.
+ * Populates the config panel container with simulation configuration options.
+ * Designed to work within the floating overlay panel system.
  */
 
 import { configMeta } from '../sim/config.js';
 
 /**
- * Creates a config panel UI component.
+ * Creates config panel content within an existing panel container.
  * @param {Object} options - Configuration options
- * @param {HTMLElement} options.container - Parent element to append panel to
+ * @param {HTMLElement} options.container - The overlay panel container (from UI)
  * @param {Object} options.config - Current simulation config object
  * @param {Function} options.onConfigChange - Callback when a config value changes
  * @returns {Object} Panel API with update methods
  */
 export function createConfigPanel({ container, config, onConfigChange }) {
-  // Create main panel container
-  const panel = document.createElement('section');
-  panel.className = 'panel';
-
-  // Create header with toggle
+  // Create header
   const header = document.createElement('div');
   header.className = 'panel-header';
 
@@ -28,23 +24,15 @@ export function createConfigPanel({ container, config, onConfigChange }) {
   title.className = 'panel-title';
   title.innerHTML = '⚙️ Configuration';
 
-  const toggleIcon = document.createElement('span');
-  toggleIcon.className = 'panel-toggle';
-  toggleIcon.textContent = '▼';
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'panel-close';
+  closeBtn.innerHTML = '×';
 
-  header.append(title, toggleIcon);
+  header.append(title, closeBtn);
 
-  // Create content area (collapsible)
+  // Create content area
   const content = document.createElement('div');
   content.className = 'panel-content';
-  content.style.display = 'none';
-
-  let isExpanded = false;
-  header.addEventListener('click', () => {
-    isExpanded = !isExpanded;
-    content.style.display = isExpanded ? 'block' : 'none';
-    toggleIcon.classList.toggle('expanded', isExpanded);
-  });
 
   // Group config meta by category
   const categories = {};
@@ -56,19 +44,19 @@ export function createConfigPanel({ container, config, onConfigChange }) {
     categories[category].push({ key, ...meta });
   }
 
-  // Category display names
-  const categoryLabels = {
-    simulation: 'Simulation',
-    creatures: 'Creatures',
-    metabolism: 'Metabolism',
-    predator: 'Predator Behavior',
-    herding: 'Herding Behavior',
-    reproduction: 'Reproduction',
-    lifespan: 'Lifespan',
-    chase: 'Chase',
-    plants: 'Plants & Carcasses',
-    genetics: 'Genetics',
-    other: 'Other'
+  // Category display names and icons
+  const categoryInfo = {
+    simulation: { label: 'Simulation', icon: '🎮' },
+    creatures: { label: 'Creatures', icon: '🦎' },
+    metabolism: { label: 'Metabolism', icon: '🔥' },
+    predator: { label: 'Predator', icon: '🦁' },
+    herding: { label: 'Herding', icon: '🐑' },
+    reproduction: { label: 'Reproduction', icon: '🥚' },
+    lifespan: { label: 'Lifespan', icon: '⏳' },
+    chase: { label: 'Chase', icon: '🏃' },
+    plants: { label: 'Plants', icon: '🌿' },
+    genetics: { label: 'Genetics', icon: '🧬' },
+    other: { label: 'Other', icon: '📦' }
   };
 
   // Store input elements for updating
@@ -88,6 +76,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
     'genetics',
     'other'
   ];
+
   for (const category of categoryOrder) {
     const items = categories[category];
     if (!items || items.length === 0) continue;
@@ -95,9 +84,11 @@ export function createConfigPanel({ container, config, onConfigChange }) {
     const section = document.createElement('div');
     section.className = 'config-section';
 
+    const info = categoryInfo[category] || { label: category, icon: '📦' };
+    
     const sectionTitle = document.createElement('h3');
     sectionTitle.className = 'config-section-title';
-    sectionTitle.textContent = categoryLabels[category] || category;
+    sectionTitle.textContent = `${info.icon} ${info.label}`;
 
     section.append(sectionTitle);
 
@@ -125,10 +116,13 @@ export function createConfigPanel({ container, config, onConfigChange }) {
       input.addEventListener('change', () => {
         const value = parseFloat(input.value);
         if (Number.isFinite(value)) {
-          if (onConfigChange) {
-            onConfigChange(item.key, value);
-          }
+          onConfigChange?.(item.key, value);
         }
+      });
+
+      // Make inputs easier to use on mobile
+      input.addEventListener('focus', () => {
+        input.select();
       });
 
       inputs.set(item.key, input);
@@ -140,21 +134,34 @@ export function createConfigPanel({ container, config, onConfigChange }) {
   }
 
   // Add reset button
+  const resetSection = document.createElement('div');
+  resetSection.style.marginTop = 'var(--space-lg)';
+  resetSection.style.paddingTop = 'var(--space-lg)';
+  resetSection.style.borderTop = '1px solid var(--border-subtle)';
+
   const resetButton = document.createElement('button');
-  resetButton.textContent = 'Reset to Defaults';
+  resetButton.textContent = '🔄 Reset to Defaults';
   resetButton.className = 'btn';
-  resetButton.style.marginTop = 'var(--space-md)';
+  resetButton.style.width = '100%';
 
   resetButton.addEventListener('click', () => {
-    if (onConfigChange) {
-      onConfigChange('__reset__', null);
-    }
+    onConfigChange?.('__reset__', null);
   });
 
-  content.append(resetButton);
+  resetSection.append(resetButton);
+  content.append(resetSection);
 
-  panel.append(header, content);
-  container.append(panel);
+  // Assemble panel
+  container.innerHTML = '';
+  container.append(header, content);
+
+  // Close button handler - dispatch custom event for UI to handle
+  closeBtn.addEventListener('click', () => {
+    container.classList.remove('visible');
+    // Find the config FAB and remove active class
+    const configFab = document.querySelector('.fab-container-right .fab:nth-child(2)');
+    if (configFab) configFab.classList.remove('active');
+  });
 
   return {
     /**
@@ -168,16 +175,6 @@ export function createConfigPanel({ container, config, onConfigChange }) {
           input.value = value;
         }
       }
-    },
-
-    /**
-     * Expands or collapses the panel.
-     * @param {boolean} expanded - Whether to expand
-     */
-    setExpanded(expanded) {
-      isExpanded = expanded;
-      content.style.display = isExpanded ? 'block' : 'none';
-      toggleIcon.classList.toggle('expanded', isExpanded);
     }
   };
 }
