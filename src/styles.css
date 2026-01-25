@@ -1064,3 +1064,345 @@ body {
 .text-muted { color: var(--text-muted); }
 
 .font-mono { font-family: var(--font-mono); }
+
+/* ===========================================
+   Graphs Panel - Mobile-Optimized
+   Bottom sheet pattern with swipeable tabs
+   =========================================== */
+
+.graphs-panel {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 250;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-default);
+  transform: translateY(100%);
+  transition: transform var(--transition-slow);
+  display: flex;
+  flex-direction: column;
+  max-height: 75vh;
+  max-height: 75dvh;
+  overflow: hidden;
+}
+
+.graphs-panel.visible {
+  transform: translateY(0);
+}
+
+/* Header */
+.graphs-header {
+  display: flex;
+  align-items: center;
+  padding: var(--space-sm) var(--space-lg);
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.graphs-drag-handle {
+  position: absolute;
+  top: var(--space-sm);
+  left: 50%;
+  transform: translateX(-50%);
+  width: 36px;
+  height: 4px;
+  background: var(--border-emphasis);
+  border-radius: var(--radius-full);
+}
+
+.graphs-title {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  flex: 1;
+  padding-top: var(--space-sm);
+}
+
+.graphs-close {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.graphs-close:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+/* Category Tabs */
+.graphs-tabs-container {
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.graphs-tabs-container::-webkit-scrollbar {
+  display: none;
+}
+
+.graphs-tabs {
+  display: flex;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  min-width: max-content;
+}
+
+.graphs-tab {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  padding: var(--space-sm) var(--space-md);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.graphs-tab .tab-icon {
+  font-size: 1rem;
+}
+
+.graphs-tab:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.graphs-tab.active {
+  background: var(--accent-tertiary);
+  border-color: var(--accent-secondary);
+  color: #fff;
+}
+
+/* Graph Area */
+.graphs-area {
+  flex: 1;
+  min-height: 180px;
+  max-height: 280px;
+  padding: var(--space-sm);
+  position: relative;
+}
+
+.graphs-canvas {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Controls Row */
+.graphs-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--bg-tertiary);
+  border-top: 1px solid var(--border-subtle);
+  flex-shrink: 0;
+}
+
+.graphs-series-group,
+.graphs-time-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.graphs-control-label {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-weight: 500;
+  flex-shrink: 0;
+}
+
+.graphs-series-toggles {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+}
+
+.graphs-series-toggle {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.6875rem;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  opacity: 0.5;
+}
+
+.graphs-series-toggle .toggle-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--series-color, var(--text-muted));
+}
+
+.graphs-series-toggle.active {
+  opacity: 1;
+  border-color: var(--series-color, var(--border-emphasis));
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.graphs-series-toggle:hover {
+  opacity: 0.85;
+}
+
+.graphs-time-buttons {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-sm);
+  padding: 2px;
+}
+
+.graphs-time-btn {
+  padding: 4px 10px;
+  border: none;
+  border-radius: calc(var(--radius-sm) - 2px);
+  background: transparent;
+  color: var(--text-secondary);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.graphs-time-btn:hover {
+  color: var(--text-primary);
+}
+
+.graphs-time-btn.active {
+  background: var(--accent-tertiary);
+  color: #fff;
+}
+
+/* Stats Row */
+.graphs-stats {
+  display: flex;
+  gap: var(--space-md);
+  padding: var(--space-sm) var(--space-md);
+  padding-bottom: calc(var(--space-md) + var(--safe-bottom));
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  flex-shrink: 0;
+}
+
+.graphs-stats::-webkit-scrollbar {
+  display: none;
+}
+
+.graphs-stat {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  white-space: nowrap;
+}
+
+.graphs-stat .stat-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.graphs-stat .stat-label {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.graphs-stat .stat-value {
+  font-size: 0.75rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  color: var(--text-primary);
+}
+
+/* Graphs FAB positioning - goes in left FAB container */
+.graphs-fab {
+  /* Will be positioned by fab-container-left */
+}
+
+/* Tablet+ adjustments */
+@media (min-width: 768px) {
+  .graphs-panel {
+    left: var(--space-xl);
+    right: var(--space-xl);
+    max-width: 600px;
+    margin: 0 auto;
+    border-radius: var(--radius-xl);
+    bottom: var(--space-xl);
+    max-height: 65vh;
+  }
+  
+  .graphs-panel.visible {
+    transform: translateY(0);
+  }
+  
+  .graphs-area {
+    max-height: 320px;
+  }
+  
+  .graphs-controls {
+    flex-direction: row;
+    justify-content: space-between;
+  }
+  
+  .graphs-stats {
+    padding-bottom: var(--space-md);
+  }
+}
+
+/* Landscape phone adjustments */
+@media (max-height: 500px) {
+  .graphs-panel {
+    max-height: 85vh;
+    max-height: 85dvh;
+  }
+  
+  .graphs-area {
+    min-height: 120px;
+    max-height: 180px;
+  }
+}
+
+/* Hide tab labels on very small screens */
+@media (max-width: 360px) {
+  .graphs-tab .tab-label {
+    display: none;
+  }
+  
+  .graphs-tab {
+    padding: var(--space-sm);
+  }
+  
+  .graphs-tab .tab-icon {
+    font-size: 1.25rem;
+  }
+}

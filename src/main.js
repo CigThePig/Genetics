@@ -18,6 +18,7 @@ import { createMetrics } from './metrics/index.js';
 import { createUI } from './ui/index.js';
 import { createConfigPanel } from './ui/config-panel.js';
 import { createLiveInspector } from './ui/live-inspector.js';
+import { createGraphsPanel } from './ui/graphs-panel.js';
 import { createSettings } from './app/settings.js';
 import { simConfig } from './sim/config.js';
 import { cloneConfigValue } from './sim/utils/config.js';
@@ -105,7 +106,9 @@ const tickOnce = () => {
   sim.tick();
   updateCameraFollow();
   renderer.render(sim);
-  ui.setMetrics?.(sim.getSummary());
+  const summary = sim.getSummary();
+  ui.setMetrics?.(summary);
+  graphsPanel.recordMetrics(summary);
   inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
   metrics.update({ ticks: 1 });
 };
@@ -130,7 +133,9 @@ const updateCameraFollow = () => {
 const runFrame = (_time) => {
   updateCameraFollow();
   renderer.render(sim);
-  ui.setMetrics?.(sim.getSummary());
+  const summary = sim.getSummary();
+  ui.setMetrics?.(summary);
+  graphsPanel.recordMetrics(summary);
   inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
   
   if (running) {
@@ -251,6 +256,7 @@ const ui = createUI({
     ui.setSeed(sim.getSeed());
     updateCameraBounds();
     renderer.render(sim);
+    graphsPanel.reset();
     settings.save({ seed: sim.getSeed() });
     ui.setStatus(`Seed: ${sim.getSeed()}`);
   },
@@ -315,6 +321,20 @@ const inspector = createLiveInspector({
     if (!running) renderer.render(sim);
   }
 });
+
+// ═══════════════════════════════════════════════════════════════════════════
+// GRAPHS PANEL
+// ═══════════════════════════════════════════════════════════════════════════
+
+const graphsPanel = createGraphsPanel({
+  container: app
+});
+
+// Add graphs FAB to the left FAB container (create if needed)
+const fabContainerLeft = document.createElement('div');
+fabContainerLeft.className = 'fab-container fab-container-left';
+fabContainerLeft.append(graphsPanel.fab);
+app.append(fabContainerLeft);
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INPUT HANDLING
