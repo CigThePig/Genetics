@@ -483,6 +483,12 @@ export function createUI({
 
   // Store references to value elements for updating (plain object)
   const metricNodes = {};
+  
+  // Store references to metric items for tracking indicators
+  const metricItems = {};
+  
+  // Reference to graphs panel (set later via setGraphsPanel)
+  let graphsPanel = null;
 
   const createMetricSection = (sectionTitle, defs) => {
     const section = document.createElement('div');
@@ -505,8 +511,13 @@ export function createUI({
         list.appendChild(groupItem);
       }
       const item = document.createElement('li');
-      item.className = 'metrics-item';
-
+      item.className = 'metrics-item metrics-item-clickable';
+      item.dataset.metricKey = metric.key;
+      
+      // Tracking indicator dot (hidden by default)
+      const trackingDot = document.createElement('span');
+      trackingDot.className = 'metrics-tracking-dot';
+      
       const labelSpan = document.createElement('span');
       labelSpan.className = 'metrics-item-label';
       labelSpan.textContent = metric.label;
@@ -514,16 +525,50 @@ export function createUI({
       const valueSpan = document.createElement('span');
       valueSpan.className = 'metrics-item-value';
       valueSpan.textContent = '--';
+      
+      // Build display label for graphs (include group context)
+      const displayLabel = metric.group && metric.group !== 'All' 
+        ? `${metric.group} ${metric.label}` 
+        : metric.label;
 
-      item.append(labelSpan, valueSpan);
+      // Click handler to toggle graph tracking
+      item.addEventListener('click', () => {
+        if (!graphsPanel) return;
+        
+        if (graphsPanel.isTracked(metric.key)) {
+          graphsPanel.removeMetric(metric.key);
+        } else {
+          graphsPanel.addMetric(metric.key, displayLabel);
+        }
+        updateMetricHighlights();
+      });
+
+      item.append(trackingDot, labelSpan, valueSpan);
       list.append(item);
       
-      // Store reference using plain object
+      // Store references
       metricNodes[metric.key] = valueSpan;
+      metricItems[metric.key] = { item, trackingDot };
     }
 
     section.append(titleEl, list);
     return section;
+  };
+  
+  // Update tracking indicators on all metrics
+  const updateMetricHighlights = () => {
+    if (!graphsPanel) return;
+    
+    for (const [key, refs] of Object.entries(metricItems)) {
+      const isTracked = graphsPanel.isTracked(key);
+      const color = graphsPanel.getTrackedColor(key);
+      
+      refs.item.classList.toggle('tracking', isTracked);
+      refs.trackingDot.classList.toggle('visible', isTracked);
+      if (color) {
+        refs.trackingDot.style.backgroundColor = color;
+      }
+    }
   };
 
   const sections = [
@@ -708,6 +753,16 @@ export function createUI({
     togglePanel(panelName) {
       if (panelName === 'metrics') toggleMetrics();
       if (panelName === 'config') toggleConfig();
+    },
+    
+    // Set graphs panel reference for metric click handling
+    setGraphsPanel(panel) {
+      graphsPanel = panel;
+    },
+    
+    // Update metric tracking highlights (called when graphs panel changes)
+    updateMetricHighlights() {
+      updateMetricHighlights();
     }
   };
 }

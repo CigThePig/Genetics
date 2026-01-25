@@ -330,11 +330,13 @@ const graphsPanel = createGraphsPanel({
   container: app
 });
 
-// Add graphs FAB to the left FAB container (create if needed)
-const fabContainerLeft = document.createElement('div');
-fabContainerLeft.className = 'fab-container fab-container-left';
-fabContainerLeft.append(graphsPanel.fab);
-app.append(fabContainerLeft);
+// Wire up the graphs panel change callback to update UI
+graphsPanel.setOnMetricsChanged(() => {
+  ui.updateMetricHighlights?.();
+});
+
+// Give UI access to graphs panel for metric click handling
+ui.setGraphsPanel?.(graphsPanel);
 
 // ═══════════════════════════════════════════════════════════════════════════
 // INPUT HANDLING

@@ -1,86 +1,30 @@
 /**
- * Graphs Panel - Mobile-Optimized Time-Series Visualization
+ * Graphs Panel - Integrated with Metrics Panel
+ * 
+ * Click any metric in the metrics panel to track it on the graph.
+ * Multiple metrics can be compared together.
  * 
  * Features:
- * - Touch-friendly bottom sheet pattern
- * - Swipeable metric categories
- * - Species comparison overlays
- * - Births vs Deaths toggle
- * - Efficient canvas rendering with ring buffer
+ * - Bottom sheet pattern (mobile optimized)
+ * - Ring buffer for efficient history storage
+ * - Canvas rendering for performance
+ * - Dynamic metric selection from metrics panel
  */
-
-import { SPECIES } from '../sim/species.js';
 
 // Ring buffer size - how many ticks of history to keep
 const HISTORY_SIZE = 600;
-const SAMPLE_INTERVAL = 1; // Record every N ticks
 
-// Species colors matching your existing theme
-const SPECIES_COLORS = {
-  [SPECIES.SQUARE]: '#4ade80',    // Green
-  [SPECIES.TRIANGLE]: '#f87171',  // Red
-  [SPECIES.CIRCLE]: '#60a5fa',    // Blue
-  [SPECIES.OCTAGON]: '#fb923c'    // Orange
-};
-
-const ALL_COLOR = '#e7e9ea'; // White for totals
-
-// Metric definitions grouped by category
-const METRIC_CATEGORIES = {
-  population: {
-    label: 'Population',
-    icon: '👥',
-    metrics: {
-      total: { key: 'creatureCount', label: 'Total', color: ALL_COLOR },
-      [SPECIES.SQUARE]: { key: 'squaresCount', label: 'Squares', color: SPECIES_COLORS[SPECIES.SQUARE] },
-      [SPECIES.TRIANGLE]: { key: 'trianglesCount', label: 'Triangles', color: SPECIES_COLORS[SPECIES.TRIANGLE] },
-      [SPECIES.CIRCLE]: { key: 'circlesCount', label: 'Circles', color: SPECIES_COLORS[SPECIES.CIRCLE] },
-      [SPECIES.OCTAGON]: { key: 'octagonsCount', label: 'Octagons', color: SPECIES_COLORS[SPECIES.OCTAGON] }
-    }
-  },
-  births: {
-    label: 'Births',
-    icon: '🐣',
-    metrics: {
-      total: { key: 'birthsTotal', label: 'Total', color: ALL_COLOR },
-      [SPECIES.SQUARE]: { key: 'birthsSquaresTotal', label: 'Squares', color: SPECIES_COLORS[SPECIES.SQUARE] },
-      [SPECIES.TRIANGLE]: { key: 'birthsTrianglesTotal', label: 'Triangles', color: SPECIES_COLORS[SPECIES.TRIANGLE] },
-      [SPECIES.CIRCLE]: { key: 'birthsCirclesTotal', label: 'Circles', color: SPECIES_COLORS[SPECIES.CIRCLE] },
-      [SPECIES.OCTAGON]: { key: 'birthsOctagonsTotal', label: 'Octagons', color: SPECIES_COLORS[SPECIES.OCTAGON] }
-    }
-  },
-  deaths: {
-    label: 'Deaths',
-    icon: '💀',
-    metrics: {
-      total: { key: 'deathsTotal', label: 'Total', color: ALL_COLOR },
-      [SPECIES.SQUARE]: { key: 'deathsSquaresTotal', label: 'Squares', color: SPECIES_COLORS[SPECIES.SQUARE] },
-      [SPECIES.TRIANGLE]: { key: 'deathsTrianglesTotal', label: 'Triangles', color: SPECIES_COLORS[SPECIES.TRIANGLE] },
-      [SPECIES.CIRCLE]: { key: 'deathsCirclesTotal', label: 'Circles', color: SPECIES_COLORS[SPECIES.CIRCLE] },
-      [SPECIES.OCTAGON]: { key: 'deathsOctagonsTotal', label: 'Octagons', color: SPECIES_COLORS[SPECIES.OCTAGON] }
-    }
-  },
-  resources: {
-    label: 'Resources',
-    icon: '🌿',
-    metrics: {
-      grass: { key: 'grassTotal', label: 'Grass', color: '#4ade80' },
-      bushes: { key: 'bushCount', label: 'Bushes', color: '#22c55e' },
-      berries: { key: 'berryTotal', label: 'Berries', color: '#a78bfa' },
-      carcasses: { key: 'carcassCount', label: 'Carcasses', color: '#f87171' }
-    }
-  },
-  hunting: {
-    label: 'Hunting',
-    icon: '🎯',
-    metrics: {
-      attempts: { key: 'chaseAttempts', label: 'Attempts', color: '#60a5fa' },
-      successes: { key: 'chaseSuccesses', label: 'Catches', color: '#4ade80' },
-      losses: { key: 'chaseLosses', label: 'Escapes', color: '#f87171' },
-      kills: { key: 'killsTotal', label: 'Kills', color: '#fb923c' }
-    }
-  }
-};
+// Color palette for tracked metrics (cycles through these)
+const METRIC_COLORS = [
+  '#4ade80',  // Green
+  '#60a5fa',  // Blue  
+  '#f87171',  // Red
+  '#fb923c',  // Orange
+  '#a78bfa',  // Purple
+  '#22d3ee',  // Cyan
+  '#fbbf24',  // Yellow
+  '#e879f9',  // Pink
+];
 
 // Time window presets
 const TIME_WINDOWS = [
@@ -98,25 +42,20 @@ export function createGraphsPanel({ container }) {
   // ═══════════════════════════════════════════════════════════════════════════
   
   let visible = false;
-  let currentCategory = 'population';
-  let enabledSeries = new Set(['total', SPECIES.SQUARE, SPECIES.TRIANGLE, SPECIES.CIRCLE, SPECIES.OCTAGON]);
   let timeWindow = HISTORY_SIZE;
   let lastRecordedTick = -1;
+  
+  // Tracked metrics: Map of metricKey -> { label, color }
+  const trackedMetrics = new Map();
+  let colorIndex = 0;
   
   // Ring buffer for time-series data
   const history = {
     ticks: new Array(HISTORY_SIZE).fill(0),
-    data: {},
+    data: {},  // metricKey -> Float32Array
     head: 0,
     count: 0
   };
-  
-  // Initialize data arrays for all metrics
-  for (const cat of Object.values(METRIC_CATEGORIES)) {
-    for (const metric of Object.values(cat.metrics)) {
-      history.data[metric.key] = new Array(HISTORY_SIZE).fill(0);
-    }
-  }
   
   // ═══════════════════════════════════════════════════════════════════════════
   // DOM CREATION
@@ -135,34 +74,22 @@ export function createGraphsPanel({ container }) {
   
   const headerTitle = document.createElement('h2');
   headerTitle.className = 'graphs-title';
-  headerTitle.textContent = '📈 Graphs';
+  headerTitle.textContent = '📉 Graphs';
+  
+  const headerHint = document.createElement('span');
+  headerHint.className = 'graphs-hint';
+  headerHint.textContent = 'Tap metrics to track';
   
   const closeBtn = document.createElement('button');
   closeBtn.className = 'graphs-close';
   closeBtn.innerHTML = '×';
   closeBtn.addEventListener('click', () => toggle(false));
   
-  header.append(dragHandle, headerTitle, closeBtn);
+  header.append(dragHandle, headerTitle, headerHint, closeBtn);
   
-  // Category tabs (horizontal scroll on mobile)
-  const tabsContainer = document.createElement('div');
-  tabsContainer.className = 'graphs-tabs-container';
-  
-  const tabs = document.createElement('div');
-  tabs.className = 'graphs-tabs';
-  
-  const categoryButtons = {};
-  for (const [catKey, cat] of Object.entries(METRIC_CATEGORIES)) {
-    const tab = document.createElement('button');
-    tab.className = 'graphs-tab';
-    tab.dataset.category = catKey;
-    tab.innerHTML = `<span class="tab-icon">${cat.icon}</span><span class="tab-label">${cat.label}</span>`;
-    tab.addEventListener('click', () => setCategory(catKey));
-    tabs.append(tab);
-    categoryButtons[catKey] = tab;
-  }
-  
-  tabsContainer.append(tabs);
+  // Tracked metrics chips (shows what's currently being graphed)
+  const trackedChips = document.createElement('div');
+  trackedChips.className = 'graphs-tracked-chips';
   
   // Graph area
   const graphArea = document.createElement('div');
@@ -175,22 +102,9 @@ export function createGraphsPanel({ container }) {
   
   graphArea.append(canvas);
   
-  // Controls row (series toggles + time window)
+  // Controls row (time window + clear)
   const controls = document.createElement('div');
   controls.className = 'graphs-controls';
-  
-  // Series toggles
-  const seriesGroup = document.createElement('div');
-  seriesGroup.className = 'graphs-series-group';
-  
-  const seriesLabel = document.createElement('span');
-  seriesLabel.className = 'graphs-control-label';
-  seriesLabel.textContent = 'Show:';
-  seriesGroup.append(seriesLabel);
-  
-  const seriesToggles = document.createElement('div');
-  seriesToggles.className = 'graphs-series-toggles';
-  seriesGroup.append(seriesToggles);
   
   // Time window selector
   const timeGroup = document.createElement('div');
@@ -198,7 +112,7 @@ export function createGraphsPanel({ container }) {
   
   const timeLabel = document.createElement('span');
   timeLabel.className = 'graphs-control-label';
-  timeLabel.textContent = 'Ticks:';
+  timeLabel.textContent = 'Window:';
   timeGroup.append(timeLabel);
   
   const timeButtons = document.createElement('div');
@@ -214,22 +128,62 @@ export function createGraphsPanel({ container }) {
   }
   
   timeGroup.append(timeButtons);
-  controls.append(seriesGroup, timeGroup);
+  
+  // Clear all button
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'graphs-clear-btn';
+  clearBtn.textContent = '✕ Clear All';
+  clearBtn.addEventListener('click', () => {
+    trackedMetrics.clear();
+    colorIndex = 0;
+    updateTrackedChips();
+    renderGraph();
+    // Notify UI to update metric highlights
+    onMetricsChanged?.();
+  });
+  
+  controls.append(timeGroup, clearBtn);
   
   // Stats row (current values)
   const statsRow = document.createElement('div');
   statsRow.className = 'graphs-stats';
   
   // Assemble panel
-  panel.append(header, tabsContainer, graphArea, controls, statsRow);
+  panel.append(header, trackedChips, graphArea, controls, statsRow);
   container.append(panel);
   
-  // FAB button
-  const fab = document.createElement('button');
-  fab.className = 'fab graphs-fab';
-  fab.innerHTML = '📈';
-  fab.title = 'Graphs';
-  fab.addEventListener('click', () => toggle());
+  // Callback for when tracked metrics change (UI will update highlights)
+  let onMetricsChanged = null;
+  
+  // ═══════════════════════════════════════════════════════════════════════════
+  // TRACKED CHIPS
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  const updateTrackedChips = () => {
+    trackedChips.innerHTML = '';
+    
+    if (trackedMetrics.size === 0) {
+      const emptyHint = document.createElement('span');
+      emptyHint.className = 'graphs-empty-hint';
+      emptyHint.textContent = 'No metrics tracked. Tap 📊 Metrics → select items to graph.';
+      trackedChips.append(emptyHint);
+      headerHint.style.display = 'block';
+      return;
+    }
+    
+    headerHint.style.display = 'none';
+    
+    for (const [key, info] of trackedMetrics) {
+      const chip = document.createElement('button');
+      chip.className = 'graphs-chip';
+      chip.style.setProperty('--chip-color', info.color);
+      chip.innerHTML = `<span class="chip-dot"></span><span class="chip-label">${info.label}</span><span class="chip-remove">×</span>`;
+      chip.addEventListener('click', () => {
+        removeMetric(key);
+      });
+      trackedChips.append(chip);
+    }
+  };
   
   // ═══════════════════════════════════════════════════════════════════════════
   // RENDERING
@@ -242,6 +196,7 @@ export function createGraphsPanel({ container }) {
     canvas.height = rect.height * dpr;
     canvas.style.width = `${rect.width}px`;
     canvas.style.height = `${rect.height}px`;
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.scale(dpr, dpr);
   };
   
@@ -257,23 +212,31 @@ export function createGraphsPanel({ container }) {
     // Clear
     ctx.clearRect(0, 0, width, height);
     
-    const cat = METRIC_CATEGORIES[currentCategory];
-    if (!cat) return;
+    if (trackedMetrics.size === 0) {
+      // No data yet
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.font = '14px system-ui';
+      ctx.textAlign = 'center';
+      ctx.fillText('Tap metrics in 📊 panel to track them here', width / 2, height / 2);
+      return;
+    }
     
-    // Gather data points for enabled series
+    // Gather data points for tracked metrics
     const seriesData = [];
     let globalMin = Infinity;
     let globalMax = -Infinity;
     
-    for (const [seriesKey, metric] of Object.entries(cat.metrics)) {
-      if (!enabledSeries.has(seriesKey)) continue;
+    for (const [key, info] of trackedMetrics) {
+      const dataArr = history.data[key];
+      if (!dataArr) continue;
       
       const points = [];
-      const dataArr = history.data[metric.key];
       const tickArr = history.ticks;
       
       // Calculate how many points to show based on time window
       const pointCount = Math.min(history.count, timeWindow);
+      if (pointCount === 0) continue;
+      
       const startIdx = (history.head - pointCount + HISTORY_SIZE) % HISTORY_SIZE;
       
       for (let i = 0; i < pointCount; i++) {
@@ -285,19 +248,18 @@ export function createGraphsPanel({ container }) {
       }
       
       seriesData.push({
-        key: seriesKey,
-        label: metric.label,
-        color: metric.color,
+        key,
+        label: info.label,
+        color: info.color,
         points
       });
     }
     
     if (seriesData.length === 0 || seriesData[0].points.length === 0) {
-      // No data yet
       ctx.fillStyle = 'rgba(255,255,255,0.3)';
       ctx.font = '14px system-ui';
       ctx.textAlign = 'center';
-      ctx.fillText('No data yet - run simulation', width / 2, height / 2);
+      ctx.fillText('Run simulation to see data', width / 2, height / 2);
       return;
     }
     
@@ -310,7 +272,7 @@ export function createGraphsPanel({ container }) {
     // Draw grid
     const gridColor = 'rgba(255,255,255,0.08)';
     const labelColor = 'rgba(255,255,255,0.4)';
-    const marginLeft = 45;
+    const marginLeft = 50;
     const marginRight = 10;
     const marginTop = 10;
     const marginBottom = 25;
@@ -376,11 +338,13 @@ export function createGraphsPanel({ container }) {
   };
   
   const formatValue = (value) => {
+    if (!Number.isFinite(value)) return '--';
     if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
     if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
     if (value >= 100) return Math.round(value).toString();
     if (value >= 10) return value.toFixed(1);
-    return value.toFixed(2);
+    if (value >= 1) return value.toFixed(2);
+    return value.toFixed(3);
   };
   
   const updateStats = (seriesData) => {
@@ -406,43 +370,6 @@ export function createGraphsPanel({ container }) {
   // CONTROLS
   // ═══════════════════════════════════════════════════════════════════════════
   
-  const setCategory = (catKey) => {
-    currentCategory = catKey;
-    
-    // Update tab active state
-    for (const [key, btn] of Object.entries(categoryButtons)) {
-      btn.classList.toggle('active', key === catKey);
-    }
-    
-    // Rebuild series toggles for this category
-    rebuildSeriesToggle();
-    renderGraph();
-  };
-  
-  const rebuildSeriesToggle = () => {
-    seriesToggles.innerHTML = '';
-    const cat = METRIC_CATEGORIES[currentCategory];
-    if (!cat) return;
-    
-    for (const [seriesKey, metric] of Object.entries(cat.metrics)) {
-      const toggle = document.createElement('button');
-      toggle.className = 'graphs-series-toggle';
-      toggle.classList.toggle('active', enabledSeries.has(seriesKey));
-      toggle.style.setProperty('--series-color', metric.color);
-      toggle.innerHTML = `<span class="toggle-dot"></span><span class="toggle-label">${metric.label}</span>`;
-      toggle.addEventListener('click', () => {
-        if (enabledSeries.has(seriesKey)) {
-          enabledSeries.delete(seriesKey);
-        } else {
-          enabledSeries.add(seriesKey);
-        }
-        toggle.classList.toggle('active', enabledSeries.has(seriesKey));
-        renderGraph();
-      });
-      seriesToggles.append(toggle);
-    }
-  };
-  
   const setTimeWindow = (ticks) => {
     timeWindow = ticks;
     
@@ -457,7 +384,6 @@ export function createGraphsPanel({ container }) {
   const toggle = (forceState) => {
     visible = forceState !== undefined ? forceState : !visible;
     panel.classList.toggle('visible', visible);
-    fab.classList.toggle('active', visible);
     
     if (visible) {
       // Resize and render when becoming visible
@@ -469,6 +395,46 @@ export function createGraphsPanel({ container }) {
   };
   
   // ═══════════════════════════════════════════════════════════════════════════
+  // METRIC TRACKING
+  // ═══════════════════════════════════════════════════════════════════════════
+  
+  const addMetric = (key, label) => {
+    if (trackedMetrics.has(key)) return false;
+    
+    // Assign a color
+    const color = METRIC_COLORS[colorIndex % METRIC_COLORS.length];
+    colorIndex++;
+    
+    trackedMetrics.set(key, { label, color });
+    
+    // Ensure we have a data array for this metric
+    if (!history.data[key]) {
+      history.data[key] = new Float32Array(HISTORY_SIZE);
+    }
+    
+    updateTrackedChips();
+    
+    // Auto-open the graphs panel when first metric is added
+    if (trackedMetrics.size === 1 && !visible) {
+      toggle(true);
+    }
+    
+    renderGraph();
+    return true;
+  };
+  
+  const removeMetric = (key) => {
+    trackedMetrics.delete(key);
+    updateTrackedChips();
+    renderGraph();
+    onMetricsChanged?.();
+  };
+  
+  const isTracked = (key) => trackedMetrics.has(key);
+  
+  const getTrackedColor = (key) => trackedMetrics.get(key)?.color ?? null;
+  
+  // ═══════════════════════════════════════════════════════════════════════════
   // DATA RECORDING
   // ═══════════════════════════════════════════════════════════════════════════
   
@@ -477,20 +443,21 @@ export function createGraphsPanel({ container }) {
     
     const tick = summary.tick ?? 0;
     
-    // Skip if we already recorded this tick or not enough interval passed
+    // Skip if we already recorded this tick
     if (tick <= lastRecordedTick) return;
-    if ((tick - lastRecordedTick) < SAMPLE_INTERVAL && lastRecordedTick > 0) return;
     
     lastRecordedTick = tick;
     
     // Store tick number
     history.ticks[history.head] = tick;
     
-    // Store all metric values
-    for (const cat of Object.values(METRIC_CATEGORIES)) {
-      for (const metric of Object.values(cat.metrics)) {
-        const value = summary[metric.key];
-        history.data[metric.key][history.head] = Number.isFinite(value) ? value : 0;
+    // Store all values from summary (so we have data when metrics are added later)
+    for (const [key, value] of Object.entries(summary)) {
+      if (typeof value === 'number' && Number.isFinite(value)) {
+        if (!history.data[key]) {
+          history.data[key] = new Float32Array(HISTORY_SIZE);
+        }
+        history.data[key][history.head] = value;
       }
     }
     
@@ -522,8 +489,8 @@ export function createGraphsPanel({ container }) {
   // ═══════════════════════════════════════════════════════════════════════════
   
   // Set initial states
-  setCategory('population');
   setTimeWindow(HISTORY_SIZE);
+  updateTrackedChips();
   
   // Handle resize
   const resizeObserver = new ResizeObserver(() => {
@@ -539,10 +506,20 @@ export function createGraphsPanel({ container }) {
   // ═══════════════════════════════════════════════════════════════════════════
   
   return {
-    fab,
     toggle,
     recordMetrics,
     reset,
-    isVisible: () => visible
+    isVisible: () => visible,
+    
+    // Metric tracking API (called by metrics panel)
+    addMetric,
+    removeMetric,
+    isTracked,
+    getTrackedColor,
+    
+    // Callback setter
+    setOnMetricsChanged(callback) {
+      onMetricsChanged = callback;
+    }
   };
 }
