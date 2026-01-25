@@ -81,6 +81,12 @@ export const simConfig = {
   creatureWanderTurnJitter: 0.4, // radians - noise only on retarget, not every tick
   creatureFleeMaxTurnMultiplier: 2.5, // faster turning when threatened
 
+  // Long-range need search (when no target is perceived or remembered)
+  creatureSearchRadiusMin: 12, // tiles
+  creatureSearchRadiusMax: 90, // tiles
+  creatureSearchRadiusGrowth: 1.35, // multiplier per failed attempt
+  creatureSearchArriveDistance: 1.25, // tiles (distance to consider target reached)
+
   // === CREATURES: HERDING ===
   // Only herbivores (squares, circles) herd - predators hunt independently
   creatureHerdingEnabled: true,
@@ -433,6 +439,35 @@ export const configMeta = {
     min: 1,
     max: 6,
     step: 0.5,
+    category: 'movement'
+  },
+
+  creatureSearchRadiusMin: {
+    label: 'Search Radius Min',
+    min: 2,
+    max: 60,
+    step: 1,
+    category: 'movement'
+  },
+  creatureSearchRadiusMax: {
+    label: 'Search Radius Max',
+    min: 10,
+    max: 200,
+    step: 5,
+    category: 'movement'
+  },
+  creatureSearchRadiusGrowth: {
+    label: 'Search Growth',
+    min: 1.05,
+    max: 2,
+    step: 0.05,
+    category: 'movement'
+  },
+  creatureSearchArriveDistance: {
+    label: 'Search Arrive Dist',
+    min: 0.5,
+    max: 5,
+    step: 0.25,
     category: 'movement'
   },
 

@@ -130,6 +130,7 @@ export function createSim(config = simConfig) {
       updateCreatureIntent({
         creatures: state.creatures,
         config: resolvedConfig,
+        rng,
         world: state.world,
         metrics: state.metrics,
         tick: state.tick,
