@@ -29,3 +29,35 @@
 
 ### Stop point
 - Stop after completing Phase 1 tasks and verification for review.
+
+---
+
+## Phase 2 — Herding + Grazing realism
+
+### Tasks
+- [x] Add Movement category to config UI so movement sliders render.
+- [x] Expose movement + herding tuning keys in configMeta (wander jitter, herding range/comfort, smoothing, graze controls).
+- [x] Update movement defaults to calmer cadence and add graze duty-cycle movement handling.
+- [x] Smooth herding offsets + make separation multiplier configurable in sync + worker paths.
+- [x] Add graze intent selection for herbivores with healthy meters.
+- [x] Update /context/repo-map.md if any file roles change. (checkbox)
+
+### Files touched
+- src/ui/config-panel.js
+- src/sim/config.js
+- src/sim/creatures/movement.js
+- src/sim/creatures/herding.js
+- src/workers/herding-worker.js
+- src/sim/creatures/intent.js
+- context/active-track.md
+- tracks/2026-02-03-track-maintenance-world-scale-pack-relocation/plan.md
+- context/history.md
+
+### Verification
+- [ ] npm run verify (fails: prettier check reports existing formatting issues)
+- [ ] Manual sim observation: herbivores align and move cohesively with less jitter.
+- [ ] Manual sim observation: herds idle/graze instead of constant pacing, but flee instantly on threat.
+- [ ] Manual UI check: Movement category shows wander retarget/jitter controls.
+
+### Stop point
+- Stop after completing Phase 2 tasks and verification for review.

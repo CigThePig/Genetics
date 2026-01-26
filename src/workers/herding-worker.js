@@ -95,7 +95,7 @@ function computeHerding(data) {
   }
 
   // Reconstruct typed arrays from transferred buffers
-  const ids = new Int32Array(buffers.ids);
+  const _ids = new Int32Array(buffers.ids);
   const x = new Float32Array(buffers.x);
   const y = new Float32Array(buffers.y);
   const heading = new Float32Array(buffers.heading);
@@ -117,6 +117,7 @@ function computeHerding(data) {
     threatStrength,
     minGroupSize,
     separation: separationDist,
+    separationMultiplier = 1.5,
     comfortMax,
     idealDistance
   } = params;
@@ -264,8 +265,8 @@ function computeHerding(data) {
     }
 
     // SEPARATION: Always apply (stronger than cohesion)
-    offsetX += sepX * baseStrength * 3;
-    offsetY += sepY * baseStrength * 3;
+    offsetX += sepX * baseStrength * separationMultiplier;
+    offsetY += sepY * baseStrength * separationMultiplier;
 
     // ALIGNMENT: Only if enough members
     if (membersCount >= minGroupSize - 1 && totalAlignWeight >= 0.5) {
