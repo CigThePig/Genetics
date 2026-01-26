@@ -110,6 +110,7 @@ export const simConfig = {
   creatureHerdingAlignmentStrength: 0.4, // relative to base strength
   creatureHerdingComfortMin: 2.0, // inside comfort band, minimal steering
   creatureHerdingComfortMax: 4.5, // outside this, cohesion kicks in
+  creatureHerdingUseWorker: 0, // 0 = sync (default), 1 = offload to Web Worker
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
@@ -446,6 +447,13 @@ export const configMeta = {
     min: 2,
     max: 10,
     step: 0.5,
+    category: 'herding'
+  },
+  creatureHerdingUseWorker: {
+    label: 'Herding Worker',
+    min: 0,
+    max: 1,
+    step: 1,
     category: 'herding'
   },
 

@@ -11,14 +11,31 @@
  * - Comfort band: inside the band, minimal steering (relaxed herd)
  * - Forward-cone weighting: reduces over-correction to rear neighbors
  * - Spatial index: O(k) neighbor queries instead of O(n) per creature
+ *
+ * Worker mode (optional):
+ * - When config.creatureHerdingUseWorker === 1 and Worker is available,
+ *   herding computation is offloaded to a Web Worker
+ * - Uses 1-tick latency: apply last result, then queue next job
+ * - Falls back to synchronous mode if worker unavailable
  */
 
 import { SPECIES } from '../species.js';
+import { getActivePerf } from '../../metrics/perf-registry.js';
 
 /**
  * Predator species - these hunt, they don't herd.
  */
 const PREDATOR_SPECIES = new Set([SPECIES.TRIANGLE, SPECIES.OCTAGON]);
+
+/**
+ * Species code mapping for typed array packing.
+ */
+const SPECIES_CODE = {
+  [SPECIES.SQUARE]: 0,
+  [SPECIES.TRIANGLE]: 1,
+  [SPECIES.CIRCLE]: 2,
+  [SPECIES.OCTAGON]: 3
+};
 
 /**
  * Checks if a species is a predator.
@@ -109,6 +126,12 @@ const resolveIdealDistance = (config) =>
 const isHerdingEnabled = (config) => config?.creatureHerdingEnabled !== false;
 
 /**
+ * Checks if worker mode is enabled.
+ */
+const isWorkerModeEnabled = (config) =>
+  config?.creatureHerdingUseWorker === 1 && typeof globalThis.Worker !== 'undefined';
+
+/**
  * Wraps an angle to the range [-PI, PI].
  */
 const wrapPi = (angle) => {
@@ -117,6 +140,168 @@ const wrapPi = (angle) => {
   if (a < -Math.PI) a += 2 * Math.PI;
   return a;
 };
+
+// ============================================================================
+// WORKER STATE - Module-level state for worker mode
+// ============================================================================
+
+/**
+ * Worker state object.
+ * Contains worker instance, in-flight status, latest results, and buffer pool.
+ */
+const workerState = {
+  worker: null,
+  inFlight: false,
+  lastAppliedTick: -1,
+  latestResult: null,
+  jobIdCounter: 1,
+  tickCounter: 0,
+  pool: [null, null], // Two buffer slots for double-buffering
+  initFailed: false
+};
+
+/**
+ * Creates a buffer slot with typed arrays for the given capacity.
+ */
+function createBufferSlot(capacity) {
+  return {
+    inUse: false,
+    capacity,
+    ids: new Int32Array(capacity),
+    x: new Float32Array(capacity),
+    y: new Float32Array(capacity),
+    heading: new Float32Array(capacity),
+    speciesCode: new Uint8Array(capacity),
+    predator: new Uint8Array(capacity),
+    urgent: new Uint8Array(capacity),
+    outOffsetX: new Float32Array(capacity),
+    outOffsetY: new Float32Array(capacity),
+    outHerdSize: new Uint16Array(capacity),
+    outThreatCount: new Uint16Array(capacity),
+    outThreatened: new Uint8Array(capacity)
+  };
+}
+
+/**
+ * Ensures a buffer slot has sufficient capacity, recreating if necessary.
+ */
+function ensureSlotCapacity(slot, neededCapacity) {
+  if (!slot || slot.capacity < neededCapacity) {
+    // Allocate with 25% headroom to reduce reallocations
+    const newCapacity = Math.ceil(neededCapacity * 1.25);
+    return createBufferSlot(newCapacity);
+  }
+  return slot;
+}
+
+/**
+ * Finds an available buffer slot from the pool, resizing if needed.
+ */
+function getAvailableSlot(neededCapacity) {
+  // Try to find a free slot
+  for (let i = 0; i < workerState.pool.length; i++) {
+    const slot = workerState.pool[i];
+    if (!slot) {
+      workerState.pool[i] = createBufferSlot(Math.ceil(neededCapacity * 1.25));
+      return { slot: workerState.pool[i], slotIndex: i };
+    }
+    if (!slot.inUse) {
+      workerState.pool[i] = ensureSlotCapacity(slot, neededCapacity);
+      return { slot: workerState.pool[i], slotIndex: i };
+    }
+  }
+  // All slots in use (shouldn't happen with proper scheduling)
+  return null;
+}
+
+/**
+ * Reconstructs typed arrays from returned buffers and reattaches to slot.
+ */
+function reattachBuffersToSlot(slot, buffers) {
+  slot.ids = new Int32Array(buffers.ids);
+  slot.x = new Float32Array(buffers.x);
+  slot.y = new Float32Array(buffers.y);
+  slot.heading = new Float32Array(buffers.heading);
+  slot.speciesCode = new Uint8Array(buffers.speciesCode);
+  slot.predator = new Uint8Array(buffers.predator);
+  slot.urgent = new Uint8Array(buffers.urgent);
+  slot.outOffsetX = new Float32Array(buffers.outOffsetX);
+  slot.outOffsetY = new Float32Array(buffers.outOffsetY);
+  slot.outHerdSize = new Uint16Array(buffers.outHerdSize);
+  slot.outThreatCount = new Uint16Array(buffers.outThreatCount);
+  slot.outThreatened = new Uint8Array(buffers.outThreatened);
+  slot.capacity = slot.ids.length;
+  slot.inUse = false;
+}
+
+/**
+ * Initializes or returns the herding worker.
+ */
+function ensureHerdingWorker() {
+  if (workerState.worker) return workerState.worker;
+  if (workerState.initFailed) return null;
+
+  try {
+    const w = new Worker(new URL('../../workers/herding-worker.js', import.meta.url), {
+      type: 'module'
+    });
+
+    w.onmessage = (ev) => {
+      const data = ev.data;
+      if (data?.type === 'result' || data?.type === 'error') {
+        // Store result for next tick application
+        workerState.latestResult = data;
+        workerState.inFlight = false;
+
+        // Reattach buffers to the pool slot
+        // Find which slot this was by checking jobId mapping (we'll use a simple approach)
+        // Since we have 2 slots and only 1 in-flight at a time, the in-use one gets freed
+        for (const slot of workerState.pool) {
+          if (slot && slot.inUse) {
+            reattachBuffersToSlot(slot, data.buffers);
+            break;
+          }
+        }
+      }
+    };
+
+    w.onerror = (err) => {
+      console.error('[Herding] Worker error:', err);
+      workerState.worker = null;
+      workerState.inFlight = false;
+      // Don't set initFailed to allow retry
+    };
+
+    workerState.worker = w;
+    return w;
+  } catch (err) {
+    console.error('[Herding] Failed to create worker:', err);
+    workerState.initFailed = true;
+    return null;
+  }
+}
+
+/**
+ * Terminates the herding worker and resets state.
+ */
+function disableHerdingWorker() {
+  if (workerState.worker) {
+    workerState.worker.terminate();
+  }
+  workerState.worker = null;
+  workerState.inFlight = false;
+  workerState.latestResult = null;
+  workerState.lastAppliedTick = -1;
+  workerState.initFailed = false;
+  // Mark all pool slots as not in use
+  for (const slot of workerState.pool) {
+    if (slot) slot.inUse = false;
+  }
+}
+
+// ============================================================================
+// SYNCHRONOUS HERDING IMPLEMENTATION
+// ============================================================================
 
 /**
  * Finds nearby creatures of the same species (potential herd members).
@@ -275,7 +460,7 @@ const calculateFleeVector = (threats, threatRange) => {
  * Only considers neighbors moving in a roughly similar direction (within 90°).
  */
 const calculateAlignment = (creature, members) => {
-  const myHeading = creature.motion?.heading ?? 0;
+  const myHeading = creature?.motion?.heading ?? 0;
   let ax = 0;
   let ay = 0;
   let totalWeight = 0;
@@ -413,12 +598,12 @@ const hasUrgentNeed = (creature) => {
 };
 
 /**
- * Updates herding behavior for all creatures.
- * - Only herbivores herd
- * - Predators patrol independently
- * - Survival needs always take priority
+ * Synchronous herding update (original implementation).
+ * Used when worker mode is disabled or as fallback.
  */
-export function updateCreatureHerding({ creatures, config, spatialIndex }) {
+function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
+  const perf = getActivePerf();
+
   if (!Array.isArray(creatures)) {
     return;
   }
@@ -426,6 +611,8 @@ export function updateCreatureHerding({ creatures, config, spatialIndex }) {
   if (!isHerdingEnabled(config)) {
     return;
   }
+
+  const tSync = perf?.start('tick.herding.sync');
 
   // Only use spatial index if explicitly provided and has creatures
   const useSpatialIndex = spatialIndex && spatialIndex.creatureCount > 0;
@@ -526,6 +713,261 @@ export function updateCreatureHerding({ creatures, config, spatialIndex }) {
     } else {
       herding.targetOffset = null;
     }
+  }
+
+  perf?.end('tick.herding.sync', tSync);
+}
+
+// ============================================================================
+// WORKER MODE IMPLEMENTATION
+// ============================================================================
+
+/**
+ * Applies worker results to creatures.
+ * Uses creature IDs to handle array reordering/compaction.
+ */
+function applyWorkerResults(result, spatialIndex) {
+  const perf = getActivePerf();
+  const tApply = perf?.start('tick.herding.workerApply');
+
+  const { count, buffers } = result;
+
+  // Find the slot that has these buffers
+  let slot = null;
+  for (const s of workerState.pool) {
+    if (s && !s.inUse) {
+      // This should be the slot that was just returned
+      // Check if buffers match
+      if (s.ids.buffer === buffers.ids) {
+        slot = s;
+        break;
+      }
+    }
+  }
+
+  // If we didn't find a matching slot, reconstruct from buffers
+  if (!slot) {
+    slot = {
+      ids: new Int32Array(buffers.ids),
+      outOffsetX: new Float32Array(buffers.outOffsetX),
+      outOffsetY: new Float32Array(buffers.outOffsetY),
+      outHerdSize: new Uint16Array(buffers.outHerdSize),
+      outThreatCount: new Uint16Array(buffers.outThreatCount),
+      outThreatened: new Uint8Array(buffers.outThreatened)
+    };
+  }
+
+  for (let i = 0; i < count; i++) {
+    const id = slot.ids[i];
+    const creature = spatialIndex?.getById?.(id);
+    if (!creature || !creature.position) continue;
+
+    const herding = ensureHerdingState(creature);
+
+    // Predators don't herd (recheck current state)
+    if (isPredator(creature.species)) {
+      herding.herdSize = 1;
+      herding.nearbyThreats = 0;
+      herding.isThreatened = false;
+      herding.targetOffset = null;
+      continue;
+    }
+
+    herding.herdSize = slot.outHerdSize[i] || 1;
+    herding.nearbyThreats = slot.outThreatCount[i];
+    herding.isThreatened = slot.outThreatened[i] === 1;
+
+    // Recheck urgent need on apply (because worker data is 1-tick old)
+    if (hasUrgentNeed(creature)) {
+      herding.targetOffset = null;
+      continue;
+    }
+
+    const ox = slot.outOffsetX[i];
+    const oy = slot.outOffsetY[i];
+    if (Math.abs(ox) > 0.001 || Math.abs(oy) > 0.001) {
+      herding.targetOffset = { x: ox, y: oy };
+    } else {
+      herding.targetOffset = null;
+    }
+  }
+
+  perf?.end('tick.herding.workerApply', tApply);
+}
+
+/**
+ * Packs creature data into typed arrays for worker transfer.
+ */
+function packCreatureSnapshot(creatures, slot, config) {
+  const perf = getActivePerf();
+  const tPack = perf?.start('tick.herding.workerPack');
+
+  const count = creatures.length;
+
+  for (let i = 0; i < count; i++) {
+    const c = creatures[i];
+    if (!c || !c.position) {
+      // Fill with defaults for invalid creatures
+      slot.ids[i] = -1;
+      slot.x[i] = 0;
+      slot.y[i] = 0;
+      slot.heading[i] = 0;
+      slot.speciesCode[i] = 0;
+      slot.predator[i] = 0;
+      slot.urgent[i] = 0;
+      continue;
+    }
+
+    slot.ids[i] = c.id;
+    slot.x[i] = c.position.x;
+    slot.y[i] = c.position.y;
+    slot.heading[i] = c.motion?.heading ?? 0;
+    slot.speciesCode[i] = SPECIES_CODE[c.species] ?? 0;
+    slot.predator[i] = isPredator(c.species) ? 1 : 0;
+    slot.urgent[i] = hasUrgentNeed(c) ? 1 : 0;
+  }
+
+  perf?.end('tick.herding.workerPack', tPack);
+  return count;
+}
+
+/**
+ * Posts a compute job to the worker.
+ */
+function postWorkerJob(slot, count, config, tick) {
+  const perf = getActivePerf();
+  const tPost = perf?.start('tick.herding.workerPost');
+
+  const worker = workerState.worker;
+  const jobId = workerState.jobIdCounter++;
+
+  // Resolve herding params on main thread
+  const params = {
+    herdRange: resolveHerdingRange(config),
+    threatRange: resolveThreatRange(config),
+    baseStrength: resolveHerdingStrength(config),
+    alignmentStrength: resolveAlignmentStrength(config),
+    threatStrength: resolveThreatStrength(config),
+    minGroupSize: resolveHerdingMinGroupSize(config),
+    separation: resolveHerdingSeparation(config),
+    comfortMax: resolveComfortMax(config),
+    idealDistance: resolveIdealDistance(config)
+  };
+
+  // Prepare buffers for transfer
+  const buffers = {
+    ids: slot.ids.buffer,
+    x: slot.x.buffer,
+    y: slot.y.buffer,
+    heading: slot.heading.buffer,
+    speciesCode: slot.speciesCode.buffer,
+    predator: slot.predator.buffer,
+    urgent: slot.urgent.buffer,
+    outOffsetX: slot.outOffsetX.buffer,
+    outOffsetY: slot.outOffsetY.buffer,
+    outHerdSize: slot.outHerdSize.buffer,
+    outThreatCount: slot.outThreatCount.buffer,
+    outThreatened: slot.outThreatened.buffer
+  };
+
+  const transferList = Object.values(buffers);
+
+  worker.postMessage(
+    {
+      type: 'compute',
+      jobId,
+      tick,
+      count,
+      params,
+      buffers
+    },
+    transferList
+  );
+
+  slot.inUse = true;
+  workerState.inFlight = true;
+
+  perf?.end('tick.herding.workerPost', tPost);
+}
+
+// ============================================================================
+// MAIN EXPORT - Orchestrator function
+// ============================================================================
+
+/**
+ * Updates herding behavior for all creatures.
+ * - Only herbivores herd
+ * - Predators patrol independently
+ * - Survival needs always take priority
+ *
+ * When worker mode is enabled:
+ * - Applies results from previous tick
+ * - Queues new computation for next tick
+ * - Falls back to sync if worker unavailable
+ */
+export function updateCreatureHerding({ creatures, config, spatialIndex }) {
+  const perf = getActivePerf();
+
+  if (!Array.isArray(creatures)) {
+    return;
+  }
+
+  if (!isHerdingEnabled(config)) {
+    disableHerdingWorker();
+    return;
+  }
+
+  // Check if worker mode should be used
+  const useWorker = isWorkerModeEnabled(config);
+
+  // If worker mode is disabled, clean up and use sync
+  if (!useWorker) {
+    disableHerdingWorker();
+    updateCreatureHerdingSync({ creatures, config, spatialIndex });
+    return;
+  }
+
+  // Worker mode enabled - try to initialize worker
+  const worker = ensureHerdingWorker();
+  if (!worker) {
+    // Worker init failed, fall back to sync
+    updateCreatureHerdingSync({ creatures, config, spatialIndex });
+    return;
+  }
+
+  // Increment tick counter
+  workerState.tickCounter++;
+  const currentTick = workerState.tickCounter;
+
+  // Step 1: Apply results from previous tick if available
+  if (workerState.latestResult && workerState.latestResult.tick > workerState.lastAppliedTick) {
+    applyWorkerResults(workerState.latestResult, spatialIndex);
+    workerState.lastAppliedTick = workerState.latestResult.tick;
+    workerState.latestResult = null;
+  }
+
+  // Step 2: Queue next job if not already in-flight
+  if (workerState.inFlight) {
+    // Worker is busy, record metric and skip
+    const tBusy = perf?.start('tick.herding.workerBusy');
+    perf?.end('tick.herding.workerBusy', tBusy);
+    return;
+  }
+
+  // Get an available buffer slot
+  const slotInfo = getAvailableSlot(creatures.length);
+  if (!slotInfo) {
+    // No slots available (shouldn't happen), fall back to sync
+    updateCreatureHerdingSync({ creatures, config, spatialIndex });
+    return;
+  }
+
+  const { slot } = slotInfo;
+
+  // Pack creature data and post job
+  const count = packCreatureSnapshot(creatures, slot, config);
+  if (count > 0) {
+    postWorkerJob(slot, count, config, currentTick);
   }
 }
 
