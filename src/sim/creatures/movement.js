@@ -170,6 +170,16 @@ const resolveHerdingTargetBlendIsolationBoost = (config) =>
     ? Math.max(0, Math.min(0.5, config.creatureHerdingTargetBlendIsolationBoost))
     : 0.25;
 
+const resolvePostDrinkRegroupSeconds = (config) =>
+  Number.isFinite(config?.creaturePostDrinkRegroupSeconds)
+    ? Math.max(0, config.creaturePostDrinkRegroupSeconds)
+    : 4.0;
+
+const resolvePostDrinkRegroupTargetBlendBoost = (config) =>
+  Number.isFinite(config?.creaturePostDrinkRegroupTargetBlendBoost)
+    ? Math.max(0, Math.min(1, config.creaturePostDrinkRegroupTargetBlendBoost))
+    : 0.22;
+
 const resolveHerdingMinGroupSize = (config) =>
   Number.isFinite(config?.creatureHerdingMinGroupSize)
     ? Math.max(1, Math.trunc(config.creatureHerdingMinGroupSize))
@@ -180,6 +190,12 @@ const resolveHerdingMinGroupSize = (config) =>
  */
 const resolveTicksPerSecond = (config) =>
   Number.isFinite(config?.ticksPerSecond) ? Math.max(1, config.ticksPerSecond) : 60;
+
+const resolvePostDrinkRegroupMaxTicks = (config) => {
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const seconds = resolvePostDrinkRegroupSeconds(config);
+  return Math.max(0, Math.floor(seconds * ticksPerSecond));
+};
 
 /**
  * Resolves boundary avoidance distance from config.
@@ -394,6 +410,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const herdingTargetBlendEnabled = resolveHerdingTargetBlendEnabled(config);
   const herdingTargetBlendMax = resolveHerdingTargetBlendMax(config);
   const herdingTargetBlendIsolationBoost = resolveHerdingTargetBlendIsolationBoost(config);
+  const postDrinkTargetBlendBoost = resolvePostDrinkRegroupTargetBlendBoost(config);
+  const maxPostDrinkTicks = resolvePostDrinkRegroupMaxTicks(config);
   const herdingMinGroupSize = resolveHerdingMinGroupSize(config);
   const grazeEnabled = resolveGrazeEnabled(config);
   const grazeSpeedMultiplier = resolveGrazeSpeedMultiplier(config);
@@ -491,14 +509,25 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       ) {
         const herdMag = Math.hypot(herdingOffset.x, herdingOffset.y);
         if (herdMag > 0.01) {
-          let blendWeight = Math.min(herdingTargetBlendMax, herdMag);
+          const rendezvousCap =
+            intentType === 'seek' && creature.search?.goal === 'water-rendezvous' ? 0.55 : 0.35;
+          const postDrinkRatio =
+            maxPostDrinkTicks > 0
+              ? clamp01((creature.herding?.postDrinkRegroupTicks ?? 0) / maxPostDrinkTicks)
+              : 0;
+          let blendMax = herdingTargetBlendMax;
+          if (postDrinkRatio > 0 && !isThreatened) {
+            blendMax += postDrinkTargetBlendBoost * postDrinkRatio;
+          }
+          blendMax = Math.min(rendezvousCap, Math.max(0, blendMax));
+          let blendWeight = Math.min(blendMax, herdMag);
           if (localHerdSize < herdingRegroupMinLocalHerdSize) {
             const isolationRatio = clamp01(
               (herdingRegroupMinLocalHerdSize - localHerdSize) / herdingRegroupMinLocalHerdSize
             );
             blendWeight += herdingTargetBlendIsolationBoost * isolationRatio;
           }
-          blendWeight = Math.min(0.35, Math.max(0, blendWeight));
+          blendWeight = Math.min(blendMax, Math.max(0, blendWeight));
           if (blendWeight > 0.001) {
             const targetDirX = Math.cos(desiredHeading);
             const targetDirY = Math.sin(desiredHeading);

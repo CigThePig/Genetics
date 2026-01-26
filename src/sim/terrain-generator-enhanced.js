@@ -7,6 +7,60 @@ import { createNoise, normalize } from './noise.js';
 
 const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
+const resolveWaterCoverageMultiplier = (config) =>
+  clamp(
+    Number.isFinite(config?.terrainWaterCoverageMultiplier)
+      ? config.terrainWaterCoverageMultiplier
+      : 1,
+    0.05,
+    1
+  );
+
+const resolveEffectiveWaterConfig = ({ heightMap, config, world }) => {
+  const baseWaterLevel = Number.isFinite(config?.terrainWaterLevel)
+    ? config.terrainWaterLevel
+    : -0.15;
+  const baseShoreLevel = Number.isFinite(config?.terrainShoreLevel)
+    ? config.terrainShoreLevel
+    : -0.05;
+  const mult = resolveWaterCoverageMultiplier(config);
+  let effectiveWaterLevel = baseWaterLevel;
+
+  let baselineCount = 0;
+  for (let i = 0; i < heightMap.length; i++) {
+    if (heightMap[i] < baseWaterLevel) {
+      baselineCount += 1;
+    }
+  }
+
+  const desiredCount = Math.floor(baselineCount * mult);
+  if (baselineCount > 0 && desiredCount > 0) {
+    const sortedHeights = Array.from(heightMap);
+    sortedHeights.sort((a, b) => a - b);
+    const index = Math.min(sortedHeights.length - 1, Math.max(0, desiredCount - 1));
+    effectiveWaterLevel = sortedHeights[index];
+  }
+
+  const delta = baseShoreLevel - baseWaterLevel;
+  const effectiveShoreLevel = effectiveWaterLevel + delta;
+  const corridorCount = Math.max(
+    0,
+    Math.round((Number.isFinite(config?.waterCorridorCount) ? config.waterCorridorCount : 8) * mult)
+  );
+
+  if (world) {
+    world.terrainWaterLevelEffective = effectiveWaterLevel;
+    world.terrainWaterCoverageMultiplier = mult;
+  }
+
+  return {
+    ...config,
+    terrainWaterLevel: effectiveWaterLevel,
+    terrainShoreLevel: effectiveShoreLevel,
+    waterCorridorCount: corridorCount
+  };
+};
+
 /**
  * Generate terrain height map using fractal noise
  */
@@ -334,6 +388,8 @@ export function generateTerrain({ world, rng, config }) {
   const moistureMap = generateMoistureMap(width, height, noise, config);
   const roughnessMap = generateRoughnessMap(width, height, noise, config);
 
+  const effectiveConfig = resolveEffectiveWaterConfig({ heightMap, config, world });
+
   // Assign initial biomes based on maps
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
@@ -341,14 +397,14 @@ export function generateTerrain({ world, rng, config }) {
       const h = heightMap[idx];
       const m = moistureMap[idx];
       const r = roughnessMap[idx];
-      const biome = getBiome(h, m, r, config);
+      const biome = getBiome(h, m, r, effectiveConfig);
       world.setTerrainAt(x, y, biome);
     }
   }
 
   // Generate water bodies and rivers
-  generateWaterBodies(world, heightMap, noise, config);
-  generateRivers(world, heightMap, noise, rng, config);
+  generateWaterBodies(world, heightMap, noise, effectiveConfig);
+  generateRivers(world, heightMap, noise, rng, effectiveConfig);
 
   // Store metadata for enhanced rendering
   storeTerrainMetadata(world, heightMap, moistureMap, roughnessMap);

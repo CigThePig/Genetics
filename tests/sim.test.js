@@ -67,4 +67,36 @@ describe('sim scaffold', () => {
       expect(sim.state.world.isWaterAt(targetX, targetY)).toBe(false);
     }
   });
+
+  it('reduces water coverage when multiplier is lower', () => {
+    const seed = 4242;
+    const buildSim = (terrainWaterCoverageMultiplier) =>
+      createSim({
+        seed,
+        terrainWaterCoverageMultiplier
+      });
+
+    const full = buildSim(1);
+    const reduced = buildSim(0.5);
+    const waterTerrain = full.config.waterTerrain ?? 'water';
+
+    const countWaterTiles = (world) => {
+      let count = 0;
+      for (let y = 0; y < world.height; y += 1) {
+        for (let x = 0; x < world.width; x += 1) {
+          if (world.getTerrainAt(x, y) === waterTerrain) {
+            count += 1;
+          }
+        }
+      }
+      return count;
+    };
+
+    const fullCount = countWaterTiles(full.state.world);
+    const reducedCount = countWaterTiles(reduced.state.world);
+
+    expect(full.state.world.terrainWaterLevelEffective).toBeDefined();
+    expect(reduced.state.world.terrainWaterLevelEffective).toBeDefined();
+    expect(reducedCount).toBeLessThan(fullCount);
+  });
 });

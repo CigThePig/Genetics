@@ -7,7 +7,7 @@
 import { consumeGrassAt } from '../plants/grass.js';
 import { consumeBerriesAt } from '../plants/bushes.js';
 import { consumeMeatAt } from '../plants/carcasses.js';
-import { clampMeter } from '../utils/resolvers.js';
+import { clampMeter, resolveTicksPerSecond } from '../utils/resolvers.js';
 import { resolveTickScale, resolveNeedMeterBase } from './metabolism.js';
 import { getCreatureCell, hasNearbyWater, getGrassAtCell, resolveActionAmount } from './intent.js';
 import {
@@ -51,6 +51,24 @@ export function applyCreatureActions({ creatures, config, world }) {
 
     if (intentType === 'drink' && hasNearbyWater(world, cell, config)) {
       meters.water = clampMeter(Math.min(baseWater, meters.water + drinkAmountPerTick));
+      const ticksPerSecond = resolveTicksPerSecond(config);
+      const seconds = Number.isFinite(config?.creaturePostDrinkRegroupSeconds)
+        ? config.creaturePostDrinkRegroupSeconds
+        : 4.0;
+      const regroupTicks = Math.max(0, Math.floor(seconds * ticksPerSecond));
+      if (regroupTicks > 0) {
+        if (!creature.herding) {
+          creature.herding = {};
+        }
+        creature.herding.postDrinkRegroupTicks = Math.max(
+          creature.herding.postDrinkRegroupTicks ?? 0,
+          regroupTicks
+        );
+        creature.herding.postDrinkRegroupMaxTicks = Math.max(
+          creature.herding.postDrinkRegroupMaxTicks ?? 0,
+          regroupTicks
+        );
+      }
       continue;
     }
 
