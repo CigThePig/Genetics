@@ -10,14 +10,26 @@ Update the renderer to cache viewport dimensions/background gradients and conver
   - Cache viewport width/height in renderer state.
   - Add a gradient cache helper keyed by size.
   - Add terrain cache layers for base/detail/grass and helpers to rebuild/update them.
+  - Crop terrain cache blits to the viewport to avoid full-surface draws.
+  - Throttle grass cache refreshes and key them to a grass dirty counter.
+- src/sim/world-grid.js
+  - Track grassDirtyCounter for grass cache invalidation.
+- src/sim/plants/grass.js
+  - Increment grassDirtyCounter when grass values change.
+- src/sim/plant-generator.js
+  - Increment grassDirtyCounter when initial grass seeding changes values.
+- src/main.js
+  - Add frame.delta and frame.wait perf timers.
 - src/ui/index.js
-  - Extend render timer ordering with terrain cache build/update timers.
+  - Extend frame timer ordering with frame.delta/frame.wait and keep render timers ordered.
 
 ## Data/State
 
 - Add cached viewportWidth/viewportHeight in createRenderer closure scope.
 - Add cached background gradient + last gradient size for reuse.
 - Add a terrain cache object with offscreen canvases and metadata (tile size, world ref, last grass update).
+- Track last grass dirty counter and a refresh interval for grass cache updates.
+- Track last frame start/total durations for profiling.
 
 ## Functions/Responsibilities
 
@@ -38,7 +50,8 @@ Update the renderer to cache viewport dimensions/background gradients and conver
 - ensureTerrainCache(...)
   - Rebuild base/detail/grass layers when world or tile size changes.
 - maybeUpdateGrassCache(...)
-  - Refresh grass layer on a short interval (~100ms).
+  - Refresh grass layer on a throttled interval (~250ms) only when grass dirty counter changes.
+- add frame.delta + frame.wait timers in the RAF loop (frame start delta + wait gap).
 
 ## Risks
 

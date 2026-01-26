@@ -15,7 +15,10 @@ export function consumeGrassAt({ world, x, y, amount }) {
   }
   const current = Number.isFinite(world.grass[index]) ? world.grass[index] : 0;
   const next = Math.max(0, current - resolvedAmount);
-  world.grass[index] = next;
+  if (next !== current) {
+    world.grass[index] = next;
+    world.grassDirtyCounter = (world.grassDirtyCounter ?? 0) + 1;
+  }
   return current - next;
 }
 
@@ -62,6 +65,7 @@ export function updateGrass({ world, config }) {
   let stressedCells = 0;
   let coveredCells = 0;
   let hotspotCells = 0;
+  let changed = false;
   for (let i = 0; i < grass.length; i += 1) {
     const current = Number.isFinite(grass[i]) ? grass[i] : 0;
     let cellCap = cap;
@@ -73,6 +77,9 @@ export function updateGrass({ world, config }) {
       cellCap = Math.max(0, cap * plantCap);
     }
     if (cellCap <= 0) {
+      if (current !== 0) {
+        changed = true;
+      }
       grass[i] = 0;
       if (grassStress) {
         grassStress[i] = 0;
@@ -85,6 +92,9 @@ export function updateGrass({ world, config }) {
     const scaledRegrowth = regrowth * Math.pow(normalizedRemaining, diminishPower);
     const next = Math.min(cellCap, current + scaledRegrowth);
     grass[i] = next;
+    if (next !== current) {
+      changed = true;
+    }
     total += next;
     const fullness = cellCap > 0 ? next / cellCap : 0;
     if (fullness >= coverageThreshold) {
@@ -113,6 +123,9 @@ export function updateGrass({ world, config }) {
 
   const average = grass.length ? total / grass.length : 0;
   const coverageRatio = grass.length ? coveredCells / grass.length : 0;
+  if (changed) {
+    world.grassDirtyCounter = (world.grassDirtyCounter ?? 0) + 1;
+  }
   return {
     average,
     total,

@@ -76,6 +76,7 @@ export function createWorldGrid({
     cells,
     grass,
     grassStress,
+    grassDirtyCounter: 0,
     isInBounds,
     getIndex,
     getTerrainAt,

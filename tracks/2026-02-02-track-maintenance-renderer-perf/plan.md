@@ -52,3 +52,37 @@
 ### Stop point
 
 - Stop after Phase 2 verification and update active-track.md with current phase/task.
+
+## Deviation Note (2026-02-02)
+
+- Added viewport-cropped cache blits, grass dirty tracking, and frame-level perf timers to address new performance profiling requirements.
+- Scope expanded beyond Phase 2; see Phase 3 for implementation and verification.
+
+## Phase 3 — Cropped terrain blits + grass dirty throttling + frame timers
+
+### Tasks
+
+- [x] Replace full-surface cache blits with viewport-cropped drawImage blits and keep PASS 1/2/4 timers scoped to blit work.
+- [x] Add grassDirtyCounter to world state and increment only when grass values change (growth, consumption, seeding).
+- [x] Throttle grass cache updates to 250ms and skip refresh when dirty counter is unchanged.
+- [x] Add frame.delta and frame.wait perf timers and include them in UI ordering.
+- [ ] Reminder: update /context/repo-map.md if files/roles change.
+
+### Files touched
+
+- src/render/renderer-enhanced.js
+- src/sim/world-grid.js
+- src/sim/plants/grass.js
+- src/sim/plant-generator.js
+- src/main.js
+- src/ui/index.js
+
+### Verification checklist
+
+- [ ] Manual: confirm terrain blits scale with viewport and grass cache updates are throttled/dirty-only.
+- [ ] Manual: confirm frame.delta and frame.wait appear in perf snapshot ordering.
+- [ ] Optional: npm test
+
+### Stop point
+
+- Stop after Phase 3 verification and update active-track.md with current phase/task.
