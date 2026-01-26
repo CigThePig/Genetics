@@ -16,6 +16,11 @@ import { getTerrainEffectsAt } from '../terrain-effects.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 import { resolveTickScale, resolveSprintMultiplier } from './metabolism.js';
 import { getHerdingOffset } from './herding.js';
+import { SPECIES } from '../species.js';
+
+const PREDATOR_SPECIES = new Set([SPECIES.TRIANGLE, SPECIES.OCTAGON]);
+
+const isPredator = (species) => PREDATOR_SPECIES.has(species);
 
 /**
  * Resolves base movement speed from config.
@@ -132,6 +137,19 @@ const resolveHerdingHeadingBlendMax = (config) =>
     ? Math.max(0, Math.min(1, config.creatureHerdingHeadingBlendMax))
     : 0.25;
 
+const resolveHerdingTargetBlendEnabled = (config) =>
+  config?.creatureHerdingTargetBlendEnabled !== false;
+
+const resolveHerdingTargetBlendMax = (config) =>
+  Number.isFinite(config?.creatureHerdingTargetBlendMax)
+    ? Math.max(0, Math.min(0.35, config.creatureHerdingTargetBlendMax))
+    : 0.12;
+
+const resolveHerdingTargetBlendIsolationBoost = (config) =>
+  Number.isFinite(config?.creatureHerdingTargetBlendIsolationBoost)
+    ? Math.max(0, Math.min(0.5, config.creatureHerdingTargetBlendIsolationBoost))
+    : 0.25;
+
 /**
  * Resolves ticks per second from config.
  */
@@ -187,6 +205,13 @@ const resolveGrazeMinLocalHerdSize = (config) =>
   Number.isFinite(config?.creatureGrazeMinLocalHerdSize)
     ? Math.max(1, Math.trunc(config.creatureGrazeMinLocalHerdSize))
     : 3;
+
+const resolveHerdingRegroupMinLocalHerdSize = (config) =>
+  Number.isFinite(config?.creatureHerdingRegroupMinLocalHerdSize)
+    ? Math.max(1, Math.trunc(config.creatureHerdingRegroupMinLocalHerdSize))
+    : 3;
+
+const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 /**
  * Ensures wander state exists on creature motion.
@@ -338,11 +363,15 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const boundaryAvoidDistance = resolveBoundaryAvoidDistance(config);
   const boundaryAvoidStrength = resolveBoundaryAvoidStrength(config);
   const herdingHeadingBlendMax = resolveHerdingHeadingBlendMax(config);
+  const herdingTargetBlendEnabled = resolveHerdingTargetBlendEnabled(config);
+  const herdingTargetBlendMax = resolveHerdingTargetBlendMax(config);
+  const herdingTargetBlendIsolationBoost = resolveHerdingTargetBlendIsolationBoost(config);
   const grazeEnabled = resolveGrazeEnabled(config);
   const grazeSpeedMultiplier = resolveGrazeSpeedMultiplier(config);
   const grazeIdleRange = resolveGrazeIdleRange(config);
   const grazeMoveRange = resolveGrazeMoveRange(config);
   const grazeMinLocalHerdSize = resolveGrazeMinLocalHerdSize(config);
+  const herdingRegroupMinLocalHerdSize = resolveHerdingRegroupMinLocalHerdSize(config);
 
   // Small noise for targeted movement (much less than before)
   const targetHeadingNoise = 0.08;
@@ -388,6 +417,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const herdingOffset = getHerdingOffset(creature);
     const isThreatened = creature.herding?.isThreatened ?? false;
     const localHerdSize = creature.herding?.herdSize ?? 1;
+    const isPredatorSpecies = isPredator(creature.species);
     const isWandering = intentType === 'wander' || intentType === 'graze';
     const canGraze = localHerdSize >= grazeMinLocalHerdSize && !isThreatened;
     const isGrazing = intentType === 'graze' && grazeEnabled && canGraze;
@@ -422,6 +452,34 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
         desiredHeading = Math.atan2(dy, dx);
         // Add small noise for natural movement
         desiredHeading += (rng.nextFloat() * 2 - 1) * targetHeadingNoise;
+      }
+      if (
+        !isThreatened &&
+        herdingOffset &&
+        herdingTargetBlendEnabled &&
+        !isPredatorSpecies &&
+        (intentType === 'seek' || intentType === 'mate')
+      ) {
+        const herdMag = Math.hypot(herdingOffset.x, herdingOffset.y);
+        if (herdMag > 0.01) {
+          let blendWeight = Math.min(herdingTargetBlendMax, herdMag);
+          if (localHerdSize < herdingRegroupMinLocalHerdSize) {
+            const isolationRatio = clamp01(
+              (herdingRegroupMinLocalHerdSize - localHerdSize) / herdingRegroupMinLocalHerdSize
+            );
+            blendWeight += herdingTargetBlendIsolationBoost * isolationRatio;
+          }
+          blendWeight = Math.min(0.35, Math.max(0, blendWeight));
+          if (blendWeight > 0.001) {
+            const targetDirX = Math.cos(desiredHeading);
+            const targetDirY = Math.sin(desiredHeading);
+            const herdDirX = herdingOffset.x / herdMag;
+            const herdDirY = herdingOffset.y / herdMag;
+            const blendedX = targetDirX * (1 - blendWeight) + herdDirX * blendWeight;
+            const blendedY = targetDirY * (1 - blendWeight) + herdDirY * blendWeight;
+            desiredHeading = Math.atan2(blendedY, blendedX);
+          }
+        }
       }
     }
     // PRIORITY 3: Herding influence while wandering/grazing (not threatened)
