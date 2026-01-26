@@ -558,7 +558,8 @@ const calculateAlignment = (creature, members) => {
 
 /**
  * Calculates gentle cohesion toward herd center.
- * Only pulls if creature is outside the comfort band.
+ * Uses graduated strength - always pulls gently toward center, stronger when farther.
+ * This eliminates the "dead zone" where no attractive force acted.
  */
 const calculateCohesion = (creature, members, comfortMax, idealDistance) => {
   if (members.length === 0) {
@@ -589,14 +590,31 @@ const calculateCohesion = (creature, members, comfortMax, idealDistance) => {
     return null;
   }
 
-  // Only apply cohesion if we're outside comfort band
-  if (distance <= comfortMax) {
-    return null; // Inside comfort band, no cohesion needed
-  }
+  // Graduated cohesion strength based on distance:
+  // - Very weak when close (inside idealDistance)
+  // - Stronger when far (outside idealDistance, approaching comfortMax)
+  // - Maximum strength when beyond comfortMax
+  //
+  // This creates continuous attraction that:
+  // - Doesn't fight separation when very close
+  // - Gently maintains herd cohesion at medium distances (the old "dead zone")
+  // - Strongly pulls back scattered members
 
-  // Strength increases as we get farther from comfort band
-  const excessDistance = distance - comfortMax;
-  const strength = Math.min(1, excessDistance / idealDistance);
+  let strength;
+  if (distance <= idealDistance) {
+    // Close: very gentle pull (0 to 0.15)
+    // This won't overpower separation but provides gentle drift toward center
+    strength = (distance / idealDistance) * 0.15;
+  } else if (distance <= comfortMax) {
+    // Medium (old dead zone): moderate pull (0.15 to 0.5)
+    // This is the key fix - now there's attraction in this range
+    const ratio = (distance - idealDistance) / (comfortMax - idealDistance);
+    strength = 0.15 + ratio * 0.35;
+  } else {
+    // Far: strong pull (0.5 to 1.0)
+    const excessDistance = distance - comfortMax;
+    strength = 0.5 + Math.min(0.5, excessDistance / idealDistance);
+  }
 
   return {
     x: (towardX / distance) * strength,
@@ -634,6 +652,11 @@ const calculateSeparation = (members, separationDist) => {
 /**
  * Computes a long-range regroup assist vector for scattered herbivores.
  * Returns a normalized vector toward the nearest herd mate, scaled by distance.
+ * 
+ * PERSISTENCE FIX: Instead of returning null on non-compute ticks (which caused
+ * the regroup effect to decay), we now cache the last computed vector and return
+ * it until the next compute interval. This provides continuous regrouping pull
+ * for isolated creatures.
  */
 const computeRegroupAssist = (creature, creatures, spatialIndex, config) => {
   if (!creature?.position) {
@@ -645,28 +668,41 @@ const computeRegroupAssist = (creature, creatures, spatialIndex, config) => {
   if (isPredator(creature.species)) {
     return null;
   }
+  
+  const herding = creature.herding;
+  
+  // Clear cached regroup if urgent need or threatened (creature has other priorities)
   if (hasUrgentNeed(creature)) {
+    if (herding) herding.lastRegroupVector = null;
     return null;
   }
-  if (creature.herding?.isThreatened) {
+  if (herding?.isThreatened) {
+    if (herding) herding.lastRegroupVector = null;
     return null;
   }
 
   const minLocalHerdSize = resolveRegroupMinLocalHerdSize(config);
-  const herdSize = creature.herding?.herdSize ?? 1;
+  const herdSize = herding?.herdSize ?? 1;
+  
+  // Clear cached regroup if creature now has enough herdmates
   if (herdSize >= minLocalHerdSize) {
+    if (herding) herding.lastRegroupVector = null;
     return null;
   }
 
   const intervalTicks = resolveRegroupIntervalTicks(config);
   const ageTicks = Number.isFinite(creature.ageTicks) ? creature.ageTicks : 0;
   const idOffset = Number.isFinite(creature.id) ? creature.id : 0;
+  
+  // On non-compute ticks, return the cached regroup vector (if any)
+  // This maintains continuous regroup pull instead of pulsing
   if ((ageTicks + idOffset) % intervalTicks !== 0) {
-    return null;
+    return herding?.lastRegroupVector ?? null;
   }
 
   const range = resolveRegroupRange(config);
   if (range <= 0) {
+    if (herding) herding.lastRegroupVector = null;
     return null;
   }
 
@@ -698,18 +734,25 @@ const computeRegroupAssist = (creature, creatures, spatialIndex, config) => {
   }
 
   if (!nearest) {
+    if (herding) herding.lastRegroupVector = null;
     return null;
   }
 
   const distance = Math.sqrt(nearest.distanceSq);
   if (distance <= 0.001) {
+    if (herding) herding.lastRegroupVector = null;
     return null;
   }
   const strength = Math.min(1, Math.max(0.15, distance / range));
-  return {
+  const result = {
     x: (nearest.dx / distance) * strength,
     y: (nearest.dy / distance) * strength
   };
+  
+  // Cache the computed vector for persistence
+  if (herding) herding.lastRegroupVector = result;
+  
+  return result;
 };
 
 /**
@@ -722,7 +765,8 @@ const ensureHerdingState = (creature) => {
       nearbyThreats: 0,
       isThreatened: false,
       targetOffset: null,
-      smoothedOffset: { x: 0, y: 0 }
+      smoothedOffset: { x: 0, y: 0 },
+      lastRegroupVector: null // Cached regroup vector for persistence between compute intervals
     };
   }
   return creature.herding;
