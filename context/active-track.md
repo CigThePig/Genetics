@@ -1,6 +1,6 @@
-Active track: Maintenance — Renderer Perf Micro-optimizations
-Path: tracks/2026-02-02-track-maintenance-renderer-perf/
-Current phase: Phase 4 — Incremental grass cache rebuild slices (verification pending)
-Next task: Run manual verification with profiler (grass slice timing, rebuild total timer) and capture a screenshot.
+Active track: Maintenance — World Scale + Resource Scarcity + Pack Relocation
+Path: tracks/2026-02-03-track-maintenance-world-scale-pack-relocation/
+Current phase: Phase 1 — Config tuning + pack relocation behavior (verification pending)
+Next task: Run manual sim verification for map scale, scarcity, and pack relocation behavior.
 Last updated: 2026-02-03
-Notes: Incremental grass rebuild implemented; awaiting verification.
+Notes: Config and pack logic updates applied; awaiting manual verification.
