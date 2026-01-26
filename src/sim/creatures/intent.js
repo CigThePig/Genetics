@@ -12,6 +12,7 @@ import {
   resolveWaterTerrain,
   isWaterTile
 } from '../utils/resolvers.js';
+import { SPECIES } from '../species.js';
 import { resolveNeedMeterBase, resolveActionThreshold, normalizeNeedRatio } from './metabolism.js';
 import {
   FOOD_TYPES,
@@ -57,6 +58,71 @@ const resolveGrazeMinLocalHerdSize = (config) =>
     ? Math.max(1, Math.trunc(config.creatureGrazeMinLocalHerdSize))
     : 3;
 
+const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+const clamp01 = (value) => clamp(value, 0, 1);
+
+const HERBIVORE_SPECIES = [SPECIES.SQUARE, SPECIES.CIRCLE];
+
+const isHerbivoreSpecies = (species) => species === SPECIES.SQUARE || species === SPECIES.CIRCLE;
+
+const getSpeciesKey = (species) => (isHerbivoreSpecies(species) ? species : null);
+
+const resolveHerdingMinGroupSize = (config) =>
+  Number.isFinite(config?.creatureHerdingMinGroupSize)
+    ? Math.max(1, Math.trunc(config.creatureHerdingMinGroupSize))
+    : 2;
+
+const resolveDrinkConcernMargin = (config) =>
+  Number.isFinite(config?.creatureDrinkConcernMargin)
+    ? Math.max(0, Math.min(0.35, config.creatureDrinkConcernMargin))
+    : 0.18;
+
+const resolveWaterRendezvousEnabled = (config) => config?.creatureWaterRendezvousEnabled !== false;
+
+const resolveWaterRendezvousEvalSeconds = (config) =>
+  Number.isFinite(config?.creatureWaterRendezvousEvalSeconds)
+    ? Math.max(0.25, config.creatureWaterRendezvousEvalSeconds)
+    : 1.0;
+
+const resolveWaterRendezvousCooldownSeconds = (config) =>
+  Number.isFinite(config?.creatureWaterRendezvousCooldownSeconds)
+    ? Math.max(0, config.creatureWaterRendezvousCooldownSeconds)
+    : 5.0;
+
+const resolveWaterRendezvousSearchRadius = (config) =>
+  Number.isFinite(config?.creatureWaterRendezvousSearchRadius)
+    ? Math.max(5, config.creatureWaterRendezvousSearchRadius)
+    : 26;
+
+const resolveWaterRendezvousCandidateCount = (config) =>
+  Number.isFinite(config?.creatureWaterRendezvousCandidateCount)
+    ? Math.max(4, Math.trunc(config.creatureWaterRendezvousCandidateCount))
+    : 18;
+
+const resolveWaterRendezvousThirstPressureThreshold = (config) =>
+  Number.isFinite(config?.creatureWaterRendezvousThirstPressureThreshold)
+    ? clamp01(config.creatureWaterRendezvousThirstPressureThreshold)
+    : 0.12;
+
+const resolveWaterRendezvousMaxDistance = (config) =>
+  Number.isFinite(config?.creatureWaterRendezvousMaxDistance)
+    ? Math.max(5, config.creatureWaterRendezvousMaxDistance)
+    : 70;
+
+const resolveWaterRendezvousPreferHerdAnchor = (config) =>
+  config?.creatureWaterRendezvousPreferHerdAnchor !== false;
+
+const resolveWaterRendezvousCommitSeconds = (config) =>
+  Number.isFinite(config?.creatureWaterRendezvousCommitSeconds)
+    ? Math.max(0.25, config.creatureWaterRendezvousCommitSeconds)
+    : 2.5;
+
+/**
+ * Per-species water rendezvous state cache.
+ */
+const herdWaterState = new Map();
+
 
 /**
  * Search / exploration helpers.
@@ -91,7 +157,14 @@ const resolveSearchConfig = (config, world) => {
 
 const ensureSearchState = (creature) => {
   if (!creature.search) {
-    creature.search = { goal: null, radius: 0, heading: 0, attempts: 0, target: null };
+    creature.search = {
+      goal: null,
+      radius: 0,
+      heading: 0,
+      attempts: 0,
+      target: null,
+      commitTicksRemaining: 0
+    };
   }
   return creature.search;
 };
@@ -104,6 +177,7 @@ const clearSearchState = (creature) => {
   creature.search.target = null;
   creature.search.radius = 0;
   creature.search.attempts = 0;
+  creature.search.commitTicksRemaining = 0;
 };
 
 const pickSearchTarget = ({ creature, goal, config, world, rng }) => {
@@ -197,6 +271,9 @@ const hasNearbyWater = (world, cell, config) => {
   return false;
 };
 
+const isDrinkableCell = (world, x, y, config) =>
+  hasNearbyWater(world, { x, y }, config);
+
 /**
  * Gets the grass amount at a cell.
  */
@@ -206,6 +283,277 @@ const getGrassAtCell = (world, cell) => {
   }
   const amount = world.getGrassAt(cell.x, cell.y);
   return Number.isFinite(amount) ? amount : 0;
+};
+
+const resolveWorldBounds = (world) => ({
+  maxX: Number.isFinite(world?.width) ? Math.max(0, world.width - 1) : 0,
+  maxY: Number.isFinite(world?.height) ? Math.max(0, world.height - 1) : 0
+});
+
+const clampToWorld = (point, world) => {
+  const { maxX, maxY } = resolveWorldBounds(world);
+  return {
+    x: Math.max(0, Math.min(maxX, point.x)),
+    y: Math.max(0, Math.min(maxY, point.y))
+  };
+};
+
+const applyRallyJitter = ({ point, rng, world, waterTerrain }) => {
+  if (!point || !rng || !world) {
+    return point;
+  }
+  const radius = 2 + rng.nextFloat() * 2;
+  const angle = rng.nextFloat() * Math.PI * 2;
+  const jittered = clampToWorld(
+    {
+      x: point.x + Math.cos(angle) * radius,
+      y: point.y + Math.sin(angle) * radius
+    },
+    world
+  );
+  const ix = Math.round(jittered.x);
+  const iy = Math.round(jittered.y);
+  if (isWaterTile(world, ix, iy, waterTerrain)) {
+    return point;
+  }
+  return jittered;
+};
+
+const scoreWaterRendezvousCandidate = ({
+  candidate,
+  center,
+  world,
+  config,
+  spatialIndex
+}) => {
+  const dx = candidate.x - center.x;
+  const dy = candidate.y - center.y;
+  const dist = Math.hypot(dx, dy);
+  const searchRadius = resolveWaterRendezvousSearchRadius(config);
+  const distanceScore = 1 - clamp01(dist / Math.max(1, searchRadius));
+
+  let boundaryPenalty = 0;
+  if (world) {
+    const { maxX, maxY } = resolveWorldBounds(world);
+    const edgeDistance = Math.min(candidate.x, candidate.y, maxX - candidate.x, maxY - candidate.y);
+    const edgeThreshold = Math.max(3, searchRadius * 0.2);
+    boundaryPenalty =
+      edgeDistance < edgeThreshold ? clamp01((edgeThreshold - edgeDistance) / edgeThreshold) : 0;
+  }
+
+  let predatorPenalty = 0;
+  if (spatialIndex?.countNearby) {
+    const threatCount = spatialIndex.countNearby(candidate.x, candidate.y, 10, {
+      filter: (creature) =>
+        creature?.species === SPECIES.TRIANGLE || creature?.species === SPECIES.OCTAGON
+    });
+    predatorPenalty = clamp01(threatCount / 4);
+  }
+
+  return distanceScore - boundaryPenalty * 0.6 - predatorPenalty * 0.8;
+};
+
+const updateHerdWaterTargetsOncePerTick = ({
+  creatures,
+  config,
+  world,
+  spatialIndex,
+  tick,
+  rng,
+  baseWater,
+  fallbackDrinkThreshold
+}) => {
+  if (!resolveWaterRendezvousEnabled(config) || !world || !Array.isArray(creatures)) {
+    if (world) {
+      world.herdWaterTargets = {};
+    }
+    return;
+  }
+
+  const resolvedTick = Number.isFinite(tick) ? tick : 0;
+  if (resolvedTick <= 1) {
+    herdWaterState.clear();
+  }
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const evalTicks = Math.max(1, Math.floor(resolveWaterRendezvousEvalSeconds(config) * ticksPerSecond));
+  const cooldownTicksBase = Math.max(
+    0,
+    Math.floor(resolveWaterRendezvousCooldownSeconds(config) * ticksPerSecond)
+  );
+  const searchRadius = resolveWaterRendezvousSearchRadius(config);
+  const candidateCount = resolveWaterRendezvousCandidateCount(config);
+  const pressureThreshold = resolveWaterRendezvousThirstPressureThreshold(config);
+  const preferAnchor = resolveWaterRendezvousPreferHerdAnchor(config);
+  const concernMargin = resolveDrinkConcernMargin(config);
+  const waterTerrain = resolveWaterTerrain(config);
+
+  const membersBySpecies = new Map();
+  for (const species of HERBIVORE_SPECIES) {
+    membersBySpecies.set(species, []);
+  }
+
+  for (const creature of creatures) {
+    if (!creature?.position || !isHerbivoreSpecies(creature.species)) {
+      continue;
+    }
+    membersBySpecies.get(creature.species)?.push(creature);
+  }
+
+  const targetsSnapshot = {};
+
+  for (const species of HERBIVORE_SPECIES) {
+    const members = membersBySpecies.get(species) ?? [];
+    if (members.length === 0) {
+      herdWaterState.delete(species);
+      continue;
+    }
+
+    let concernedCount = 0;
+    for (const member of members) {
+      const drinkThreshold = resolveActionThreshold(
+        member?.traits?.drinkThreshold,
+        fallbackDrinkThreshold
+      );
+      const concernThreshold = Math.min(0.98, drinkThreshold + concernMargin);
+      const waterRatio = normalizeNeedRatio(member?.meters?.water ?? baseWater, baseWater);
+      if (waterRatio < concernThreshold) {
+        concernedCount += 1;
+      }
+    }
+
+    const thirstPressure = clamp01(concernedCount / members.length);
+    const state =
+      herdWaterState.get(species) ?? {
+        target: null,
+        lastScore: -Infinity,
+        nextEvalTick: 0,
+        cooldownTicks: 0
+      };
+
+    if (state.cooldownTicks > 0) {
+      state.cooldownTicks -= 1;
+    }
+
+    const hasTarget =
+      state.target && Number.isFinite(state.target.x) && Number.isFinite(state.target.y);
+
+    if (thirstPressure < pressureThreshold && hasTarget) {
+      state.nextEvalTick = resolvedTick + evalTicks;
+      herdWaterState.set(species, state);
+      targetsSnapshot[species] = {
+        x: state.target.x,
+        y: state.target.y,
+        score: state.lastScore,
+        softRadius: Math.max(4, searchRadius * 0.35),
+        thirstPressure
+      };
+      continue;
+    }
+
+    const shouldEval =
+      resolvedTick >= state.nextEvalTick &&
+      state.cooldownTicks <= 0 &&
+      (thirstPressure >= pressureThreshold || !hasTarget);
+
+    if (shouldEval) {
+      let center = null;
+      const anchor = preferAnchor ? world.herdAnchors?.[species] : null;
+      if (anchor?.target || anchor?.pos) {
+        center = anchor.target ?? anchor.pos;
+      }
+
+      if (!center) {
+        let sumX = 0;
+        let sumY = 0;
+        for (const member of members) {
+          sumX += member.position.x;
+          sumY += member.position.y;
+        }
+        center = {
+          x: sumX / members.length,
+          y: sumY / members.length
+        };
+      }
+
+      const candidates = [];
+      for (let i = 0; i < candidateCount; i += 1) {
+        const angle = rng ? rng.nextFloat() * Math.PI * 2 : (i / candidateCount) * Math.PI * 2;
+        const radius =
+          searchRadius * (rng ? Math.sqrt(rng.nextFloat()) : 0.35 + (i % 4) * 0.15);
+        const point = clampToWorld(
+          {
+            x: center.x + Math.cos(angle) * radius,
+            y: center.y + Math.sin(angle) * radius
+          },
+          world
+        );
+        const cx = Math.round(point.x);
+        const cy = Math.round(point.y);
+        if (!world.isInBounds?.(cx, cy)) {
+          continue;
+        }
+        if (isWaterTile(world, cx, cy, waterTerrain)) {
+          continue;
+        }
+        if (!isDrinkableCell(world, cx, cy, config)) {
+          continue;
+        }
+        candidates.push({ x: cx, y: cy });
+      }
+
+      let best = null;
+      let bestScore = -Infinity;
+
+      for (const candidate of candidates) {
+        let score = scoreWaterRendezvousCandidate({
+          candidate,
+          center,
+          world,
+          config,
+          spatialIndex
+        });
+        if (rng) {
+          score += 0.02 + rng.nextFloat() * 0.06;
+        }
+        if (score > bestScore) {
+          bestScore = score;
+          best = candidate;
+        }
+      }
+
+      const currentScore = Number.isFinite(state.lastScore) ? state.lastScore : -Infinity;
+      const shouldSwitch =
+        best &&
+        (bestScore > currentScore * (1 + 0.15) || bestScore - currentScore > 0.15);
+
+      if (shouldSwitch) {
+        state.target = { x: best.x, y: best.y };
+        state.lastScore = bestScore;
+        state.cooldownTicks = cooldownTicksBase;
+      } else if (Number.isFinite(bestScore)) {
+        state.lastScore = bestScore;
+      }
+    }
+
+    if (shouldEval) {
+      state.nextEvalTick = resolvedTick + evalTicks;
+    } else if (!Number.isFinite(state.nextEvalTick) || state.nextEvalTick <= resolvedTick) {
+      state.nextEvalTick = resolvedTick + evalTicks;
+    }
+    herdWaterState.set(species, state);
+
+    if (state.target) {
+      targetsSnapshot[species] = {
+        x: state.target.x,
+        y: state.target.y,
+        score: state.lastScore,
+        softRadius: Math.max(4, searchRadius * 0.35),
+        thirstPressure
+      };
+    }
+  }
+
+  world.herdWaterTargets = targetsSnapshot;
 };
 
 /**
@@ -277,6 +625,17 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
   const fallbackGrassEatMin = resolveActionAmount(config?.creatureGrassEatMin, 0.05);
   const fallbackBerryEatMin = resolveActionAmount(config?.creatureBerryEatMin, 0.1);
 
+  updateHerdWaterTargetsOncePerTick({
+    creatures,
+    config,
+    world,
+    spatialIndex,
+    tick,
+    rng,
+    baseWater,
+    fallbackDrinkThreshold
+  });
+
   // Predator rest behavior settings
   const predatorRestEnabled = config?.creaturePredatorRestEnabled !== false;
   const predatorRestThreshold = resolveRatio(config?.creaturePredatorRestThreshold, 0.9);
@@ -317,13 +676,25 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
     const cell = getCreatureCell(creature);
     const waterRatio = normalizeNeedRatio(meters.water, baseWater);
     const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
+    const concernThreshold = Math.min(0.98, drinkThreshold + resolveDrinkConcernMargin(config));
+    const urgentThirst = waterRatio < drinkThreshold;
+    const concernedThirst = waterRatio < concernThreshold;
+    const localHerdSize = creature.herding?.herdSize ?? 1;
+    const minLocalHerdSize = resolveHerdingMinGroupSize(config);
+    const isInHerd = localHerdSize >= minLocalHerdSize;
+    const speciesKey = getSpeciesKey(creature.species);
+    const waterTarget = speciesKey ? world?.herdWaterTargets?.[speciesKey] : null;
+    if (creature.search?.goal === 'water-rendezvous' && waterRatio >= concernThreshold) {
+      clearSearchState(creature);
+    }
     if (creature.search?.goal === 'water' && waterRatio >= drinkThreshold) {
       clearSearchState(creature);
     }
     if (creature.search?.goal === 'food' && energyRatio >= eatThreshold) {
       clearSearchState(creature);
     }
-    const canDrink = waterRatio < drinkThreshold && hasNearbyWater(world, cell, config);
+    const nearbyWater = hasNearbyWater(world, cell, config);
+    const canDrink = waterRatio < drinkThreshold && nearbyWater;
     const canEat = energyRatio < eatThreshold;
     const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
     const dietPreferences = getDietPreferences(creature.species);
@@ -383,7 +754,16 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
         sexEnabled,
         pregnancyEnabled
       });
-    const canConsiderMate = canSeekMate && (mateSeekOverridesNeeds || (!canDrink && !canEat));
+    const herbivoreConcernedNoWater =
+      isHerbivoreSpecies(creature.species) && concernedThirst && !nearbyWater;
+    const canConsiderMate =
+      canSeekMate &&
+      (mateSeekOverridesNeeds || (!canDrink && !canEat)) &&
+      !herbivoreConcernedNoWater;
+    if (herbivoreConcernedNoWater && reproductionState.mate) {
+      reproductionState.mate.targetId = null;
+      reproductionState.mate.commitTicksRemaining = 0;
+    }
     if (creature.search?.goal === 'mate' && !canConsiderMate) {
       clearSearchState(creature);
     }
@@ -466,26 +846,95 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
       reproductionState.mate.commitTicksRemaining = 0;
     }
 
-    if (mateTarget) {
+    const rendezvousCommitTicks = resolveCommitTicks(
+      resolveWaterRendezvousCommitSeconds(config),
+      2.5,
+      ticksPerSecond
+    );
+    const maxRendezvousDistance = resolveWaterRendezvousMaxDistance(config);
+    let handled = false;
+
+    if (
+      herbivoreConcernedNoWater &&
+      waterTarget &&
+      isInHerd &&
+      !creature.herding?.isThreatened
+    ) {
+      const search = ensureSearchState(creature);
+      if (
+        search.goal === 'water-rendezvous' &&
+        search.target &&
+        search.commitTicksRemaining > 0
+      ) {
+        search.commitTicksRemaining = Math.max(0, search.commitTicksRemaining - 1);
+        intent = 'seek';
+        target = { ...search.target };
+      } else {
+        search.goal = 'water-rendezvous';
+        search.target = { x: waterTarget.x + 0.5, y: waterTarget.y + 0.5 };
+        search.commitTicksRemaining = rendezvousCommitTicks;
+        intent = 'seek';
+        target = { ...search.target };
+      }
+      handled = true;
+    }
+
+    if (!handled && mateTarget) {
       clearSearchState(creature);
       intent = 'mate';
       target = { x: mateTarget.position.x, y: mateTarget.position.y };
-    } else if (canConsiderMate) {
-      const searchTarget = pickSearchTarget({
-        creature,
-        goal: 'mate',
-        config,
-        world,
-        rng
-      });
-      if (searchTarget) {
-        intent = 'seek';
-        target = { ...searchTarget };
+    } else if (!handled && canConsiderMate) {
+      if (isHerbivoreSpecies(creature.species) && !creature.herding?.isThreatened) {
+        if (isInHerd) {
+          clearSearchState(creature);
+          intent = 'wander';
+          target = null;
+        } else if (localHerdSize <= 2) {
+          const anchor = speciesKey ? world?.herdAnchors?.[speciesKey] : null;
+          const rallyPoint =
+            concernedThirst && waterTarget
+              ? { x: waterTarget.x + 0.5, y: waterTarget.y + 0.5 }
+              : anchor?.pos ?? anchor?.target ?? null;
+          if (rallyPoint) {
+            const jittered = applyRallyJitter({
+              point: rallyPoint,
+              rng,
+              world,
+              waterTerrain: resolveWaterTerrain(config)
+            });
+            intent = 'seek';
+            target = { x: jittered.x, y: jittered.y };
+          } else {
+            const searchTarget = pickSearchTarget({
+              creature,
+              goal: 'mate',
+              config,
+              world,
+              rng
+            });
+            if (searchTarget) {
+              intent = 'seek';
+              target = { ...searchTarget };
+            }
+          }
+        }
+      } else {
+        const searchTarget = pickSearchTarget({
+          creature,
+          goal: 'mate',
+          config,
+          world,
+          rng
+        });
+        if (searchTarget) {
+          intent = 'seek';
+          target = { ...searchTarget };
+        }
       }
-    } else if (creature.priority === 'thirst' && canDrink) {
+    } else if (!handled && (creature.priority === 'thirst' || herbivoreConcernedNoWater) && canDrink) {
       clearSearchState(creature);
       intent = 'drink';
-    } else if (creature.priority === 'hunger' && canEat) {
+    } else if (!handled && creature.priority === 'hunger' && canEat) {
       // Resting predators don't chase - they wait until hungry
       const shouldHunt = canEatMeat && !predatorIsResting;
       const chaseTarget = shouldHunt ? getChaseTarget(creature, creatures, spatialIndex) : null;
@@ -599,29 +1048,52 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
           target = { ...searchTarget };
         }
       }
-    } else if (creature.priority === 'thirst' && waterRatio < drinkThreshold) {
-      if (perceivedWaterCell && !hasNearbyWater(world, cell, config)) {
-        clearSearchState(creature);
-        intent = 'seek';
-        target = { ...perceivedWaterCell };
-      } else {
-        memoryEntry = selectMemoryTarget({
-          creature,
-          type: MEMORY_TYPES.WATER
-        });
-        if (memoryEntry) {
+    } else if (
+      !handled &&
+      (creature.priority === 'thirst' || herbivoreConcernedNoWater) &&
+      concernedThirst
+    ) {
+      if (urgentThirst && waterTarget && !nearbyWater) {
+        const dx = waterTarget.x + 0.5 - creature.position.x;
+        const dy = waterTarget.y + 0.5 - creature.position.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist <= maxRendezvousDistance) {
+          const search = ensureSearchState(creature);
+          search.goal = 'water-rendezvous';
+          search.target = { x: waterTarget.x + 0.5, y: waterTarget.y + 0.5 };
+          search.commitTicksRemaining = Math.max(
+            search.commitTicksRemaining ?? 0,
+            rendezvousCommitTicks
+          );
+          intent = 'seek';
+          target = { ...search.target };
+        }
+      }
+
+      if (intent === 'wander') {
+        if (perceivedWaterCell && !nearbyWater) {
           clearSearchState(creature);
-        } else if (!hasNearbyWater(world, cell, config)) {
-          const searchTarget = pickSearchTarget({
+          intent = 'seek';
+          target = { ...perceivedWaterCell };
+        } else {
+          memoryEntry = selectMemoryTarget({
             creature,
-            goal: 'water',
-            config,
-            world,
-            rng
+            type: MEMORY_TYPES.WATER
           });
-          if (searchTarget) {
-            intent = 'seek';
-            target = { ...searchTarget };
+          if (memoryEntry) {
+            clearSearchState(creature);
+          } else if (!nearbyWater) {
+            const searchTarget = pickSearchTarget({
+              creature,
+              goal: 'water',
+              config,
+              world,
+              rng
+            });
+            if (searchTarget) {
+              intent = 'seek';
+              target = { ...searchTarget };
+            }
           }
         }
       }

@@ -32,6 +32,7 @@ export const simConfig = {
   terrainNoiseScale: 0.035, // Controls terrain feature size (smaller = larger features)
   terrainWaterLevel: -0.28, // Height threshold for water (-1 to 1)
   terrainShoreLevel: -0.18, // Height threshold for shore
+  terrainWaterCoverageMultiplier: 0.75, // 0..1 scales total water coverage
   terrainRockThreshold: 0.72, // Roughness threshold for rock formation
   terrainForestMoisture: 0.58, // Moisture threshold for forest biome
   terrainSandMoisture: 0.32, // Moisture threshold below which sand appears
@@ -153,6 +154,23 @@ export const simConfig = {
   creatureHerdingAnchorSwitchMargin: 0.15,
   creatureHerdingAnchorRandomness: 0.08,
 
+  // === CREATURES: WATER RENDEZVOUS ===
+  creatureWaterRendezvousEnabled: true,
+  creatureWaterRendezvousEvalSeconds: 1.0,
+  creatureWaterRendezvousCooldownSeconds: 5.0,
+  creatureWaterRendezvousSearchRadius: 26,
+  creatureWaterRendezvousCandidateCount: 18,
+  creatureWaterRendezvousThirstPressureThreshold: 0.12,
+  creatureWaterRendezvousMaxDistance: 70,
+  creatureWaterRendezvousPreferHerdAnchor: true,
+  creatureWaterRendezvousCommitSeconds: 2.5,
+
+  // === CREATURES: POST-DRINK REGROUP ===
+  creaturePostDrinkRegroupSeconds: 4.0,
+  creaturePostDrinkRegroupAnchorBoost: 0.35,
+  creaturePostDrinkRegroupDeadzoneMultiplier: 0.6,
+  creaturePostDrinkRegroupTargetBlendBoost: 0.22,
+
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
   creatureBaseWater: 1,
@@ -208,6 +226,7 @@ export const simConfig = {
   creatureMemoryMinStrength: 0.05,
   creatureMemoryMergeDistance: 1.5,
   creatureMemoryVisitPenalty: 0.5,
+  creatureWaterMemoryInHerdEnabled: false,
 
   // === CREATURES: METABOLISM ===
   creatureBasalEnergyDrain: 0.007, // (was 0.008 - slightly slower drain)
@@ -266,6 +285,7 @@ export const simConfig = {
 
   // === CREATURES: NEEDS & EATING ===
   creatureNeedSwitchMargin: 0.05,
+  creatureDrinkConcernMargin: 0.18,
   creatureDrinkThreshold: 0.75, // (was 0.8 - drink slightly less often)
   creatureDrinkAmount: 0.7, // (was 0.6 - drink faster)
   creatureEatThreshold: 0.75, // (was 0.8 - eat slightly less often)
@@ -387,6 +407,15 @@ export const configMeta = {
   // Simulation
   ticksPerSecond: { label: 'Ticks/Second', min: 1, max: 120, step: 1, category: 'simulation' },
 
+  // World
+  terrainWaterCoverageMultiplier: {
+    label: 'Water Coverage Mult',
+    min: 0.1,
+    max: 1,
+    step: 0.05,
+    category: 'world'
+  },
+
   // Creatures: Base Stats
   creatureCount: { label: 'Creature Count', min: 0, max: 500, step: 10, category: 'creatures' },
   creaturePredatorCount: {
@@ -449,6 +478,13 @@ export const configMeta = {
     min: 0.1,
     max: 2,
     step: 0.1,
+    category: 'metabolism'
+  },
+  creatureDrinkConcernMargin: {
+    label: 'Drink Concern Margin',
+    min: 0,
+    max: 0.35,
+    step: 0.01,
     category: 'metabolism'
   },
 
@@ -727,6 +763,106 @@ export const configMeta = {
     max: 0.25,
     step: 0.01,
     category: 'herding'
+  },
+  creatureWaterRendezvousEnabled: {
+    label: 'Water Rendezvous',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'herding'
+  },
+  creatureWaterRendezvousEvalSeconds: {
+    label: 'Water Rendezvous Eval (s)',
+    min: 0.25,
+    max: 12,
+    step: 0.25,
+    category: 'herding'
+  },
+  creatureWaterRendezvousCooldownSeconds: {
+    label: 'Water Rendezvous Cooldown (s)',
+    min: 0.25,
+    max: 12,
+    step: 0.25,
+    category: 'herding'
+  },
+  creatureWaterRendezvousSearchRadius: {
+    label: 'Water Rendezvous Radius',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureWaterRendezvousCandidateCount: {
+    label: 'Water Rendezvous Candidates',
+    min: 4,
+    max: 32,
+    step: 1,
+    category: 'herding'
+  },
+  creatureWaterRendezvousThirstPressureThreshold: {
+    label: 'Water Rendezvous Pressure',
+    min: 0,
+    max: 0.5,
+    step: 0.01,
+    category: 'herding'
+  },
+  creatureWaterRendezvousMaxDistance: {
+    label: 'Water Rendezvous Max Dist',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureWaterRendezvousPreferHerdAnchor: {
+    label: 'Water Rendezvous Anchor',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'herding'
+  },
+  creatureWaterRendezvousCommitSeconds: {
+    label: 'Water Rendezvous Commit (s)',
+    min: 0.25,
+    max: 12,
+    step: 0.25,
+    category: 'herding'
+  },
+  creaturePostDrinkRegroupSeconds: {
+    label: 'Post-Drink Regroup (s)',
+    min: 0.25,
+    max: 12,
+    step: 0.25,
+    category: 'herding'
+  },
+  creaturePostDrinkRegroupAnchorBoost: {
+    label: 'Post-Drink Anchor Boost',
+    min: 0,
+    max: 1,
+    step: 0.02,
+    category: 'herding'
+  },
+  creaturePostDrinkRegroupDeadzoneMultiplier: {
+    label: 'Post-Drink Deadzone Mult',
+    min: 0,
+    max: 1,
+    step: 0.02,
+    category: 'herding'
+  },
+  creaturePostDrinkRegroupTargetBlendBoost: {
+    label: 'Post-Drink Target Blend',
+    min: 0,
+    max: 1,
+    step: 0.02,
+    category: 'herding'
+  },
+
+  // Memory
+  creatureWaterMemoryInHerdEnabled: {
+    label: 'Water Memory In Herd',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'memory'
   },
 
   // Movement Style

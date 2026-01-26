@@ -37,3 +37,37 @@
 
 ### Stop point
 - Stop after Phase 1 verification for review.
+
+---
+
+## Phase 2 — Herd water rendezvous + thirst hysteresis + mating mingle
+
+### Tasks
+- [x] Add world water coverage multiplier config and apply effective water/shore thresholds in terrain generation.
+- [x] Add thirst concern hysteresis config and herd water rendezvous config/meta entries.
+- [x] Implement herd water rendezvous selection and herd-core mating mingle rules in creature intent.
+- [x] Add post-drink regroup timer in actions and apply regroup boosts in herding.
+- [x] (Optional) Add water memory suppression in herds and movement blending tweaks if needed.
+- [x] Add or update automated test if core determinism-sensitive logic changes. (checkbox)
+- [x] Update /context/repo-map.md if any file roles change. (checkbox)
+- [x] Update /context/active-track.md with current phase + next task.
+
+### Files touched
+- src/sim/config.js
+- src/sim/terrain-generator-enhanced.js
+- src/sim/creatures/intent.js
+- src/sim/creatures/actions.js
+- src/sim/creatures/herding.js
+- src/sim/creatures/movement.js (optional)
+- src/sim/creatures/memory.js (optional)
+- tests/ (optional)
+- context/active-track.md
+- tracks/2026-02-04-track-maintenance-herd-anchor-stability/plan.md
+
+### Verification
+- [x] npm test
+- [ ] npm run verify (or lint/format/build as defined) (fails: format check warnings)
+- [ ] Manual sim: herds rally to shared water, regroup after drink, and mate within herd.
+
+### Stop point
+- Stop after Phase 2 verification for review.

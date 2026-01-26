@@ -232,6 +232,21 @@ const resolveHerdingAnchorRandomness = (config) =>
     ? Math.max(0, Math.min(0.25, config.creatureHerdingAnchorRandomness))
     : 0.08;
 
+const resolvePostDrinkRegroupSeconds = (config) =>
+  Number.isFinite(config?.creaturePostDrinkRegroupSeconds)
+    ? Math.max(0, config.creaturePostDrinkRegroupSeconds)
+    : 4.0;
+
+const resolvePostDrinkRegroupAnchorBoost = (config) =>
+  Number.isFinite(config?.creaturePostDrinkRegroupAnchorBoost)
+    ? Math.max(0, Math.min(1, config.creaturePostDrinkRegroupAnchorBoost))
+    : 0.35;
+
+const resolvePostDrinkRegroupDeadzoneMultiplier = (config) =>
+  Number.isFinite(config?.creaturePostDrinkRegroupDeadzoneMultiplier)
+    ? Math.max(0, Math.min(1, config.creaturePostDrinkRegroupDeadzoneMultiplier))
+    : 0.6;
+
 /**
  * Resolves regroup assist enabled flag.
  */
@@ -270,6 +285,12 @@ const resolveRegroupIntervalTicks = (config) => {
     ? Math.max(0.05, config.creatureHerdingRegroupIntervalSeconds)
     : 0.6;
   return Math.max(1, Math.floor(seconds * ticksPerSecond));
+};
+
+const resolvePostDrinkRegroupMaxTicks = (config) => {
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const seconds = resolvePostDrinkRegroupSeconds(config);
+  return Math.max(0, Math.floor(seconds * ticksPerSecond));
 };
 
 /**
@@ -853,7 +874,9 @@ const ensureHerdingState = (creature) => {
       isThreatened: false,
       targetOffset: null,
       smoothedOffset: { x: 0, y: 0 },
-      lastRegroupVector: null // Cached regroup vector for persistence between compute intervals
+      lastRegroupVector: null, // Cached regroup vector for persistence between compute intervals
+      postDrinkRegroupTicks: 0,
+      postDrinkRegroupMaxTicks: 0
     };
   }
   return creature.herding;
@@ -1373,6 +1396,9 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
   const offsetSmoothing = resolveOffsetSmoothing(config);
   const regroupStrength = resolveRegroupStrength(config);
   const anchorPullStrength = resolveHerdingAnchorPullStrength(config);
+  const postDrinkAnchorBoost = resolvePostDrinkRegroupAnchorBoost(config);
+  const postDrinkDeadzoneMultiplier = resolvePostDrinkRegroupDeadzoneMultiplier(config);
+  const maxPostDrinkTicks = resolvePostDrinkRegroupMaxTicks(config);
 
   for (const creature of creatures) {
     if (!creature?.position) {
@@ -1380,6 +1406,15 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
     }
 
     const herding = ensureHerdingState(creature);
+    if (herding.postDrinkRegroupTicks > 0) {
+      herding.postDrinkRegroupTicks -= 1;
+    }
+    if (maxPostDrinkTicks > 0) {
+      herding.postDrinkRegroupMaxTicks = Math.max(
+        herding.postDrinkRegroupMaxTicks ?? 0,
+        maxPostDrinkTicks
+      );
+    }
 
     // Predators don't herd - they hunt
     if (isPredator(creature.species)) {
@@ -1399,6 +1434,12 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
     herding.herdSize = members.length + 1;
     herding.nearbyThreats = threats.length;
     herding.isThreatened = threats.length > 0;
+
+    const postDrinkMax = herding.postDrinkRegroupMaxTicks ?? maxPostDrinkTicks;
+    const postDrinkRatio =
+      postDrinkMax > 0 ? clamp01((herding.postDrinkRegroupTicks ?? 0) / postDrinkMax) : 0;
+    const allowPostDrinkBoost =
+      postDrinkRatio > 0 && !hasUrgentNeed(creature) && !herding.isThreatened;
 
     // If creature has urgent survival needs, don't apply herding
     // Let them go get food/water
@@ -1457,23 +1498,34 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
 
     const regroup = computeRegroupAssist(creature, creatures, index, config);
     if (regroup) {
-      offsetX += regroup.x * baseStrength * regroupStrength;
-      offsetY += regroup.y * baseStrength * regroupStrength;
+      let effectiveRegroupStrength = regroupStrength;
+      if (allowPostDrinkBoost) {
+        effectiveRegroupStrength += postDrinkAnchorBoost * 0.15 * postDrinkRatio;
+      }
+      offsetX += regroup.x * baseStrength * effectiveRegroupStrength;
+      offsetY += regroup.y * baseStrength * effectiveRegroupStrength;
       hasOffset = true;
     }
 
     const anchorState = herdAnchors.get(creature.species);
     const anchorPull = computeAnchorPull(creature, anchorState, config);
     if (anchorPull) {
-      offsetX += anchorPull.x * baseStrength * anchorPullStrength;
-      offsetY += anchorPull.y * baseStrength * anchorPullStrength;
+      let effectiveAnchorPullStrength = anchorPullStrength;
+      if (allowPostDrinkBoost) {
+        effectiveAnchorPullStrength += postDrinkAnchorBoost * postDrinkRatio;
+      }
+      offsetX += anchorPull.x * baseStrength * effectiveAnchorPullStrength;
+      offsetY += anchorPull.y * baseStrength * effectiveAnchorPullStrength;
       hasOffset = true;
     }
 
     // Store result
     if (hasOffset) {
-      const effectiveDeadzone =
-        offsetDeadzone * (herding.herdSize >= minGroupSize ? 0.5 : 1.0);
+      let effectiveDeadzone = offsetDeadzone * (herding.herdSize >= minGroupSize ? 0.5 : 1.0);
+      if (allowPostDrinkBoost) {
+        effectiveDeadzone *=
+          1 - (1 - postDrinkDeadzoneMultiplier) * clamp01(postDrinkRatio);
+      }
       applySmoothedOffset(herding, offsetX, offsetY, effectiveDeadzone, offsetSmoothing);
     } else {
       herding.targetOffset = null;
@@ -1503,6 +1555,9 @@ function applyWorkerResults(result, spatialIndex, config) {
   const baseStrength = resolveHerdingStrength(config);
   const regroupStrength = resolveRegroupStrength(config);
   const anchorPullStrength = resolveHerdingAnchorPullStrength(config);
+  const postDrinkAnchorBoost = resolvePostDrinkRegroupAnchorBoost(config);
+  const postDrinkDeadzoneMultiplier = resolvePostDrinkRegroupDeadzoneMultiplier(config);
+  const maxPostDrinkTicks = resolvePostDrinkRegroupMaxTicks(config);
   const minGroupSize = resolveHerdingMinGroupSize(config);
 
   // Always create fresh TypedArray views from the result buffers.
@@ -1522,6 +1577,15 @@ function applyWorkerResults(result, spatialIndex, config) {
     if (!creature || !creature.position) continue;
 
     const herding = ensureHerdingState(creature);
+    if (herding.postDrinkRegroupTicks > 0) {
+      herding.postDrinkRegroupTicks -= 1;
+    }
+    if (maxPostDrinkTicks > 0) {
+      herding.postDrinkRegroupMaxTicks = Math.max(
+        herding.postDrinkRegroupMaxTicks ?? 0,
+        maxPostDrinkTicks
+      );
+    }
 
     // Predators don't herd (recheck current state)
     if (isPredator(creature.species)) {
@@ -1536,6 +1600,12 @@ function applyWorkerResults(result, spatialIndex, config) {
     herding.herdSize = outHerdSize[i] || 1;
     herding.nearbyThreats = outThreatCount[i];
     herding.isThreatened = outThreatened[i] === 1;
+
+    const postDrinkMax = herding.postDrinkRegroupMaxTicks ?? maxPostDrinkTicks;
+    const postDrinkRatio =
+      postDrinkMax > 0 ? clamp01((herding.postDrinkRegroupTicks ?? 0) / postDrinkMax) : 0;
+    const allowPostDrinkBoost =
+      postDrinkRatio > 0 && !hasUrgentNeed(creature) && !herding.isThreatened;
 
     // Recheck urgent need on apply (because worker data is 1-tick old)
     if (hasUrgentNeed(creature)) {
@@ -1555,16 +1625,27 @@ function applyWorkerResults(result, spatialIndex, config) {
 
     const regroup = computeRegroupAssist(creature, null, spatialIndex, config);
     if (regroup) {
-      ox += regroup.x * baseStrength * regroupStrength;
-      oy += regroup.y * baseStrength * regroupStrength;
+      let effectiveRegroupStrength = regroupStrength;
+      if (allowPostDrinkBoost) {
+        effectiveRegroupStrength += postDrinkAnchorBoost * 0.15 * postDrinkRatio;
+      }
+      ox += regroup.x * baseStrength * effectiveRegroupStrength;
+      oy += regroup.y * baseStrength * effectiveRegroupStrength;
     }
     const anchorState = herdAnchors.get(creature.species);
     const anchorPull = computeAnchorPull(creature, anchorState, config);
     if (anchorPull) {
-      ox += anchorPull.x * baseStrength * anchorPullStrength;
-      oy += anchorPull.y * baseStrength * anchorPullStrength;
+      let effectiveAnchorPullStrength = anchorPullStrength;
+      if (allowPostDrinkBoost) {
+        effectiveAnchorPullStrength += postDrinkAnchorBoost * postDrinkRatio;
+      }
+      ox += anchorPull.x * baseStrength * effectiveAnchorPullStrength;
+      oy += anchorPull.y * baseStrength * effectiveAnchorPullStrength;
     }
-    const effectiveDeadzone = offsetDeadzone * (herding.herdSize >= minGroupSize ? 0.5 : 1.0);
+    let effectiveDeadzone = offsetDeadzone * (herding.herdSize >= minGroupSize ? 0.5 : 1.0);
+    if (allowPostDrinkBoost) {
+      effectiveDeadzone *= 1 - (1 - postDrinkDeadzoneMultiplier) * clamp01(postDrinkRatio);
+    }
     applySmoothedOffset(herding, ox, oy, effectiveDeadzone, offsetSmoothing);
   }
 

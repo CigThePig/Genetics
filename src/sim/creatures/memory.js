@@ -1,4 +1,5 @@
 import { resolveTicksPerSecond } from '../utils/resolvers.js';
+import { SPECIES } from '../species.js';
 
 const clamp01 = (value) => {
   if (!Number.isFinite(value)) {
@@ -38,6 +39,16 @@ const resolveMemoryConfig = (config) => {
 };
 
 const resolveVisitPenalty = (config) => resolveNonNegative(config?.creatureMemoryVisitPenalty, 0.5);
+
+const resolveHerdingMinGroupSize = (config) =>
+  Number.isFinite(config?.creatureHerdingMinGroupSize)
+    ? Math.max(1, Math.trunc(config.creatureHerdingMinGroupSize))
+    : 2;
+
+const resolveWaterMemoryInHerdEnabled = (config) =>
+  config?.creatureWaterMemoryInHerdEnabled === true;
+
+const isHerbivoreSpecies = (species) => species === SPECIES.SQUARE || species === SPECIES.CIRCLE;
 
 const getMemoryStrength = ({ distance, range }) => {
   const safeRange = resolvePositive(range, 1);
@@ -100,6 +111,8 @@ export function updateCreatureMemory({ creatures, config }) {
     return;
   }
   const { maxEntries, decay, minStrength, mergeDistance } = resolveMemoryConfig(config);
+  const minHerdSize = resolveHerdingMinGroupSize(config);
+  const waterMemoryInHerdEnabled = resolveWaterMemoryInHerdEnabled(config);
 
   for (const creature of creatures) {
     const memory = ensureMemoryState(creature);
@@ -132,6 +145,15 @@ export function updateCreatureMemory({ creatures, config }) {
     }
 
     if (perception?.waterCell) {
+      const localHerdSize = creature?.herding?.herdSize ?? 1;
+      const suppressWaterMemory =
+        !waterMemoryInHerdEnabled &&
+        isHerbivoreSpecies(creature?.species) &&
+        localHerdSize >= minHerdSize;
+      if (suppressWaterMemory) {
+        trimEntries(entries, maxEntries);
+        continue;
+      }
       const distance = Number.isFinite(perception.waterDistance) ? perception.waterDistance : range;
       const strength = getMemoryStrength({ distance, range });
       addOrMergeEntry({
