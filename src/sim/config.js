@@ -91,6 +91,9 @@ export const simConfig = {
   creatureWanderRetargetTimeMin: 4.0, // seconds before picking new wander heading
   creatureWanderRetargetTimeMax: 10.0, // seconds max before retarget
   creatureWanderTurnJitter: 0.12, // radians - noise only on retarget, not every tick
+  creatureWanderInHerdRetargetMultiplier: 1.6,
+  creatureWanderInHerdJitterMultiplier: 0.35,
+  creatureWanderInHerdHeadingBias: 0.65,
   creatureFleeMaxTurnMultiplier: 2.5, // faster turning when threatened
   creatureGrazeEnabled: true,
   creatureGrazeSpeedMultiplier: 0.35,
@@ -121,10 +124,10 @@ export const simConfig = {
   creatureHerdingAlignmentStrength: 0.7, // relative to base strength
   creatureHerdingComfortMin: 2.0, // inside comfort band, minimal steering
   creatureHerdingComfortMax: 6.5, // outside this, cohesion kicks in
-  creatureHerdingSeparationMultiplier: 1.5,
-  creatureHerdingOffsetDeadzone: 0.04,
+  creatureHerdingSeparationMultiplier: 0.95,
+  creatureHerdingOffsetDeadzone: 0.02,
   creatureHerdingOffsetSmoothing: 0.25,
-  creatureHerdingHeadingBlendMax: 0.25,
+  creatureHerdingHeadingBlendMax: 0.32,
   creatureHerdingTargetBlendEnabled: true,
   creatureHerdingTargetBlendMax: 0.12,
   creatureHerdingTargetBlendIsolationBoost: 0.25,
@@ -134,6 +137,21 @@ export const simConfig = {
   creatureHerdingRegroupRange: 45,
   creatureHerdingRegroupStrength: 0.35,
   creatureHerdingRegroupIntervalSeconds: 0.6,
+  creatureHerdingAnchorEnabled: true,
+  creatureHerdingAnchorEvalSeconds: 1.5,
+  creatureHerdingAnchorCooldownSeconds: 4.0,
+  creatureHerdingAnchorSearchRadius: 28,
+  creatureHerdingAnchorCandidateCount: 12,
+  creatureHerdingAnchorDriftSpeed: 2.2,
+  creatureHerdingAnchorPullStrength: 0.55,
+  creatureHerdingAnchorSoftRadiusBase: 6.0,
+  creatureHerdingAnchorSoftRadiusScale: 1.25,
+  creatureHerdingAnchorMaxInfluenceDistance: 60,
+  creatureHerdingAnchorFoodSampleRadius: 3,
+  creatureHerdingAnchorWaterSearchMax: 16,
+  creatureHerdingAnchorThreatHalfLifeSeconds: 8.0,
+  creatureHerdingAnchorSwitchMargin: 0.15,
+  creatureHerdingAnchorRandomness: 0.08,
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
@@ -605,6 +623,111 @@ export const configMeta = {
     step: 0.1,
     category: 'herding'
   },
+  creatureHerdingAnchorEnabled: {
+    label: 'Anchor Enabled',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorEvalSeconds: {
+    label: 'Anchor Eval (s)',
+    min: 0.25,
+    max: 6,
+    step: 0.25,
+    category: 'herding'
+  },
+  creatureHerdingAnchorCooldownSeconds: {
+    label: 'Anchor Cooldown (s)',
+    min: 0.25,
+    max: 6,
+    step: 0.25,
+    category: 'herding'
+  },
+  creatureHerdingAnchorSearchRadius: {
+    label: 'Anchor Search Radius',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorCandidateCount: {
+    label: 'Anchor Candidates',
+    min: 1,
+    max: 40,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorDriftSpeed: {
+    label: 'Anchor Drift Speed',
+    min: 0,
+    max: 10,
+    step: 0.1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorPullStrength: {
+    label: 'Anchor Pull Strength',
+    min: 0,
+    max: 2,
+    step: 0.05,
+    category: 'herding'
+  },
+  creatureHerdingAnchorSoftRadiusBase: {
+    label: 'Anchor Soft Radius Base',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorSoftRadiusScale: {
+    label: 'Anchor Soft Radius Scale',
+    min: 0.1,
+    max: 3,
+    step: 0.05,
+    category: 'herding'
+  },
+  creatureHerdingAnchorMaxInfluenceDistance: {
+    label: 'Anchor Max Influence',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorFoodSampleRadius: {
+    label: 'Anchor Food Radius',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorWaterSearchMax: {
+    label: 'Anchor Water Search',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingAnchorThreatHalfLifeSeconds: {
+    label: 'Anchor Threat Half-Life (s)',
+    min: 1,
+    max: 30,
+    step: 0.5,
+    category: 'herding'
+  },
+  creatureHerdingAnchorSwitchMargin: {
+    label: 'Anchor Switch Margin',
+    min: 0.1,
+    max: 1,
+    step: 0.05,
+    category: 'herding'
+  },
+  creatureHerdingAnchorRandomness: {
+    label: 'Anchor Randomness',
+    min: 0,
+    max: 0.25,
+    step: 0.01,
+    category: 'herding'
+  },
 
   // Movement Style
   creatureMaxTurnRateRadPerSecond: {
@@ -640,6 +763,27 @@ export const configMeta = {
     min: 0,
     max: 1,
     step: 0.02,
+    category: 'movement'
+  },
+  creatureWanderInHerdRetargetMultiplier: {
+    label: 'Wander Herd Retarget Mult',
+    min: 0.1,
+    max: 3,
+    step: 0.05,
+    category: 'movement'
+  },
+  creatureWanderInHerdJitterMultiplier: {
+    label: 'Wander Herd Jitter Mult',
+    min: 0.1,
+    max: 3,
+    step: 0.05,
+    category: 'movement'
+  },
+  creatureWanderInHerdHeadingBias: {
+    label: 'Wander Herd Heading Bias',
+    min: 0,
+    max: 1,
+    step: 0.05,
     category: 'movement'
   },
   creatureGrazeSpeedMultiplier: {

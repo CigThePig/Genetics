@@ -83,6 +83,11 @@ const wrapPi = (angle) => {
   return a;
 };
 
+const blendAngles = (from, to, weight) => {
+  const delta = wrapPi(to - from);
+  return from + delta * clamp01(weight);
+};
+
 /**
  * Turns current heading toward desired heading by at most maxDelta radians.
  */
@@ -121,6 +126,21 @@ const resolveWanderJitter = (config) =>
     ? Math.max(0, config.creatureWanderTurnJitter)
     : 0.4;
 
+const resolveWanderInHerdRetargetMultiplier = (config) =>
+  Number.isFinite(config?.creatureWanderInHerdRetargetMultiplier)
+    ? Math.max(0.1, Math.min(3, config.creatureWanderInHerdRetargetMultiplier))
+    : 1.6;
+
+const resolveWanderInHerdJitterMultiplier = (config) =>
+  Number.isFinite(config?.creatureWanderInHerdJitterMultiplier)
+    ? Math.max(0, Math.min(1, config.creatureWanderInHerdJitterMultiplier))
+    : 0.35;
+
+const resolveWanderInHerdHeadingBias = (config) =>
+  Number.isFinite(config?.creatureWanderInHerdHeadingBias)
+    ? Math.max(0, Math.min(1, config.creatureWanderInHerdHeadingBias))
+    : 0.65;
+
 /**
  * Resolves flee turn multiplier from config.
  */
@@ -149,6 +169,11 @@ const resolveHerdingTargetBlendIsolationBoost = (config) =>
   Number.isFinite(config?.creatureHerdingTargetBlendIsolationBoost)
     ? Math.max(0, Math.min(0.5, config.creatureHerdingTargetBlendIsolationBoost))
     : 0.25;
+
+const resolveHerdingMinGroupSize = (config) =>
+  Number.isFinite(config?.creatureHerdingMinGroupSize)
+    ? Math.max(1, Math.trunc(config.creatureHerdingMinGroupSize))
+    : 2;
 
 /**
  * Resolves ticks per second from config.
@@ -359,6 +384,9 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const maxTurnPerTick = maxTurnRatePerSecond * tickScale;
   const wanderRetarget = resolveWanderRetargetTime(config);
   const wanderJitter = resolveWanderJitter(config);
+  const wanderInHerdRetargetMultiplier = resolveWanderInHerdRetargetMultiplier(config);
+  const wanderInHerdJitterMultiplier = resolveWanderInHerdJitterMultiplier(config);
+  const wanderInHerdHeadingBias = resolveWanderInHerdHeadingBias(config);
   const fleeTurnMultiplier = resolveFleeTurnMultiplier(config);
   const boundaryAvoidDistance = resolveBoundaryAvoidDistance(config);
   const boundaryAvoidStrength = resolveBoundaryAvoidStrength(config);
@@ -366,6 +394,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const herdingTargetBlendEnabled = resolveHerdingTargetBlendEnabled(config);
   const herdingTargetBlendMax = resolveHerdingTargetBlendMax(config);
   const herdingTargetBlendIsolationBoost = resolveHerdingTargetBlendIsolationBoost(config);
+  const herdingMinGroupSize = resolveHerdingMinGroupSize(config);
   const grazeEnabled = resolveGrazeEnabled(config);
   const grazeSpeedMultiplier = resolveGrazeSpeedMultiplier(config);
   const grazeIdleRange = resolveGrazeIdleRange(config);
@@ -533,17 +562,30 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
 
       // Pick new heading when timer expires, no heading set, or forced by boundary
       if (wander.ticksRemaining <= 0 || wander.targetHeading === null || forceRetarget) {
+        const herdMag =
+          shouldApplyHerding && herdingOffset
+            ? Math.hypot(herdingOffset.x, herdingOffset.y)
+            : 0;
+        const inHerd =
+          shouldApplyHerding && localHerdSize >= herdingMinGroupSize && herdMag > 0.01;
+        const herdHeading = inHerd ? Math.atan2(herdingOffset.y, herdingOffset.x) : heading;
+        const baseHeading = inHerd
+          ? blendAngles(heading, herdHeading, wanderInHerdHeadingBias)
+          : heading;
+        const effectiveJitter = wanderJitter * (inHerd ? wanderInHerdJitterMultiplier : 1);
+        const retargetMultiplier = inHerd ? wanderInHerdRetargetMultiplier : 1;
+
         wander.targetHeading = pickNewWanderHeading(
-          heading,
+          baseHeading,
           rng,
-          wanderJitter,
+          effectiveJitter,
           boundaryAvoid,
           boundaryAvoidStrength
         );
         wander.ticksRemaining = pickRetargetTicks(
           rng,
-          wanderRetarget.min,
-          wanderRetarget.max,
+          wanderRetarget.min * retargetMultiplier,
+          wanderRetarget.max * retargetMultiplier,
           ticksPerSecond
         );
       }

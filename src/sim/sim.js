@@ -168,7 +168,10 @@ export function createSim(config = simConfig) {
         updateCreatureHerding({
           creatures: state.creatures,
           config: resolvedConfig,
-          spatialIndex
+          spatialIndex,
+          world: state.world,
+          tick: state.tick,
+          rng
         });
         perf?.end('tick.herding', tHerding);
 
