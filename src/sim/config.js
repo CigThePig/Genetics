@@ -85,11 +85,19 @@ export const simConfig = {
 
   // === CREATURES: MOVEMENT STYLE ===
   // Controls how creatures turn and commit to directions
-  creatureMaxTurnRateRadPerSecond: 3.5, // ~200°/sec - smooth but responsive
-  creatureWanderRetargetTimeMin: 0.8, // seconds before picking new wander heading
-  creatureWanderRetargetTimeMax: 2.5, // seconds max before retarget
-  creatureWanderTurnJitter: 0.4, // radians - noise only on retarget, not every tick
+  creatureMaxTurnRateRadPerSecond: 1.8, // slower turns for calmer movement
+  creatureWanderRetargetTimeMin: 4.0, // seconds before picking new wander heading
+  creatureWanderRetargetTimeMax: 10.0, // seconds max before retarget
+  creatureWanderTurnJitter: 0.12, // radians - noise only on retarget, not every tick
   creatureFleeMaxTurnMultiplier: 2.5, // faster turning when threatened
+  creatureGrazeEnabled: true,
+  creatureGrazeSpeedMultiplier: 0.35,
+  creatureGrazeIdleSecondsMin: 1.5,
+  creatureGrazeIdleSecondsMax: 4.0,
+  creatureGrazeMoveSecondsMin: 1.0,
+  creatureGrazeMoveSecondsMax: 3.0,
+  creatureGrazeMinEnergyRatio: 0.75,
+  creatureGrazeMinWaterRatio: 0.75,
 
   // Long-range need search (when no target is perceived or remembered)
   creatureSearchRadiusMin: 12, // tiles
@@ -102,14 +110,18 @@ export const simConfig = {
   creatureHerdingEnabled: true,
   creatureHerdingRange: 14, // (was 12 - wider herding awareness)
   creatureHerdingThreatRange: 10, // (was 8 - better predator detection)
-  creatureHerdingStrength: 0.4, // (was 0.02 - slightly tighter groups)
+  creatureHerdingStrength: 0.18, // calmer cohesion
   creatureHerdingThreatStrength: 0.25, // (was 0.2 - stronger flee response)
   creatureHerdingMinGroupSize: 2,
-  creatureHerdingSeparation: 2.0,
-  creatureHerdingIdealDistance: 5,
-  creatureHerdingAlignmentStrength: 0.4, // relative to base strength
+  creatureHerdingSeparation: 2.6,
+  creatureHerdingIdealDistance: 5.0,
+  creatureHerdingAlignmentStrength: 0.7, // relative to base strength
   creatureHerdingComfortMin: 2.0, // inside comfort band, minimal steering
-  creatureHerdingComfortMax: 4.5, // outside this, cohesion kicks in
+  creatureHerdingComfortMax: 6.5, // outside this, cohesion kicks in
+  creatureHerdingSeparationMultiplier: 1.5,
+  creatureHerdingOffsetDeadzone: 0.04,
+  creatureHerdingOffsetSmoothing: 0.25,
+  creatureHerdingHeadingBlendMax: 0.25,
   creatureHerdingUseWorker: 0, // 0 = sync (default), 1 = offload to Web Worker
 
   // === CREATURES: BASE STATS ===
@@ -456,6 +468,55 @@ export const configMeta = {
     step: 0.5,
     category: 'herding'
   },
+  creatureHerdingRange: {
+    label: 'Herd Range',
+    min: 4,
+    max: 30,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingSeparation: {
+    label: 'Herd Separation',
+    min: 1,
+    max: 6,
+    step: 0.2,
+    category: 'herding'
+  },
+  creatureHerdingComfortMax: {
+    label: 'Herd Comfort Max',
+    min: 2,
+    max: 12,
+    step: 0.5,
+    category: 'herding'
+  },
+  creatureHerdingSeparationMultiplier: {
+    label: 'Separation Multiplier',
+    min: 0.5,
+    max: 4,
+    step: 0.1,
+    category: 'herding'
+  },
+  creatureHerdingOffsetDeadzone: {
+    label: 'Offset Deadzone',
+    min: 0,
+    max: 0.2,
+    step: 0.01,
+    category: 'herding'
+  },
+  creatureHerdingOffsetSmoothing: {
+    label: 'Offset Smoothing',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'herding'
+  },
+  creatureHerdingHeadingBlendMax: {
+    label: 'Herd Heading Blend',
+    min: 0,
+    max: 0.5,
+    step: 0.05,
+    category: 'herding'
+  },
   creatureHerdingUseWorker: {
     label: 'Herding Worker',
     min: 0,
@@ -475,15 +536,78 @@ export const configMeta = {
   creatureWanderRetargetTimeMin: {
     label: 'Wander Min (s)',
     min: 0.2,
-    max: 3,
+    max: 10,
     step: 0.1,
     category: 'movement'
   },
   creatureWanderRetargetTimeMax: {
     label: 'Wander Max (s)',
     min: 1,
-    max: 6,
+    max: 12,
     step: 0.5,
+    category: 'movement'
+  },
+  creatureGrazeEnabled: {
+    label: 'Graze Enabled',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'movement'
+  },
+  creatureWanderTurnJitter: {
+    label: 'Wander Turn Jitter',
+    min: 0,
+    max: 1,
+    step: 0.02,
+    category: 'movement'
+  },
+  creatureGrazeSpeedMultiplier: {
+    label: 'Graze Speed Mult',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'movement'
+  },
+  creatureGrazeIdleSecondsMin: {
+    label: 'Graze Idle Min (s)',
+    min: 0,
+    max: 10,
+    step: 0.5,
+    category: 'movement'
+  },
+  creatureGrazeIdleSecondsMax: {
+    label: 'Graze Idle Max (s)',
+    min: 0,
+    max: 12,
+    step: 0.5,
+    category: 'movement'
+  },
+  creatureGrazeMoveSecondsMin: {
+    label: 'Graze Move Min (s)',
+    min: 0,
+    max: 10,
+    step: 0.5,
+    category: 'movement'
+  },
+  creatureGrazeMoveSecondsMax: {
+    label: 'Graze Move Max (s)',
+    min: 0,
+    max: 12,
+    step: 0.5,
+    category: 'movement'
+  },
+  creatureGrazeMinEnergyRatio: {
+    label: 'Graze Min Energy',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'movement'
+  },
+  creatureGrazeMinWaterRatio: {
+    label: 'Graze Min Water',
+    min: 0,
+    max: 1,
+    step: 0.05,
     category: 'movement'
   },
 

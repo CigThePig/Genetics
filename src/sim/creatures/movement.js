@@ -125,6 +125,14 @@ const resolveFleeTurnMultiplier = (config) =>
     : 2.5;
 
 /**
+ * Resolves herding heading blend max from config.
+ */
+const resolveHerdingHeadingBlendMax = (config) =>
+  Number.isFinite(config?.creatureHerdingHeadingBlendMax)
+    ? Math.max(0, Math.min(1, config.creatureHerdingHeadingBlendMax))
+    : 0.25;
+
+/**
  * Resolves ticks per second from config.
  */
 const resolveTicksPerSecond = (config) =>
@@ -148,6 +156,33 @@ const resolveBoundaryAvoidStrength = (config) =>
     ? Math.max(0, Math.min(1, config.creatureBoundaryAvoidStrength))
     : 0.6;
 
+const resolveGrazeEnabled = (config) => config?.creatureGrazeEnabled !== false;
+
+const resolveGrazeSpeedMultiplier = (config) =>
+  Number.isFinite(config?.creatureGrazeSpeedMultiplier)
+    ? Math.max(0, Math.min(1, config.creatureGrazeSpeedMultiplier))
+    : 0.35;
+
+const resolveGrazeIdleRange = (config) => {
+  const min = Number.isFinite(config?.creatureGrazeIdleSecondsMin)
+    ? Math.max(0, config.creatureGrazeIdleSecondsMin)
+    : 1.5;
+  const max = Number.isFinite(config?.creatureGrazeIdleSecondsMax)
+    ? Math.max(min, config.creatureGrazeIdleSecondsMax)
+    : 4.0;
+  return { min, max };
+};
+
+const resolveGrazeMoveRange = (config) => {
+  const min = Number.isFinite(config?.creatureGrazeMoveSecondsMin)
+    ? Math.max(0, config.creatureGrazeMoveSecondsMin)
+    : 1.0;
+  const max = Number.isFinite(config?.creatureGrazeMoveSecondsMax)
+    ? Math.max(min, config.creatureGrazeMoveSecondsMax)
+    : 3.0;
+  return { min, max };
+};
+
 /**
  * Ensures wander state exists on creature motion.
  */
@@ -162,6 +197,27 @@ const ensureWanderState = (creature) => {
     };
   }
   return creature.motion.wander;
+};
+
+const ensureGrazeState = (creature) => {
+  if (!creature.motion) {
+    creature.motion = {};
+  }
+  if (!creature.motion.graze) {
+    creature.motion.graze = {
+      idleTicksRemaining: 0,
+      moveTicksRemaining: 0
+    };
+  }
+  return creature.motion.graze;
+};
+
+const clearGrazeState = (creature) => {
+  if (!creature?.motion?.graze) {
+    return;
+  }
+  creature.motion.graze.idleTicksRemaining = 0;
+  creature.motion.graze.moveTicksRemaining = 0;
 };
 
 /**
@@ -243,6 +299,11 @@ const pickRetargetTicks = (rng, minSeconds, maxSeconds, ticksPerSecond) => {
   return Math.max(1, Math.trunc(seconds * ticksPerSecond));
 };
 
+const pickGrazeTicks = (rng, minSeconds, maxSeconds, ticksPerSecond) => {
+  const seconds = minSeconds + rng.nextFloat() * (maxSeconds - minSeconds);
+  return Math.max(0, Math.trunc(seconds * ticksPerSecond));
+};
+
 /**
  * Updates creature positions based on intent, terrain, and speed.
  * Avoids water tiles by trying alternate headings.
@@ -271,6 +332,11 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const fleeTurnMultiplier = resolveFleeTurnMultiplier(config);
   const boundaryAvoidDistance = resolveBoundaryAvoidDistance(config);
   const boundaryAvoidStrength = resolveBoundaryAvoidStrength(config);
+  const herdingHeadingBlendMax = resolveHerdingHeadingBlendMax(config);
+  const grazeEnabled = resolveGrazeEnabled(config);
+  const grazeSpeedMultiplier = resolveGrazeSpeedMultiplier(config);
+  const grazeIdleRange = resolveGrazeIdleRange(config);
+  const grazeMoveRange = resolveGrazeMoveRange(config);
 
   // Small noise for targeted movement (much less than before)
   const targetHeadingNoise = 0.08;
@@ -316,6 +382,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     const herdingOffset = getHerdingOffset(creature);
     const isThreatened = creature.herding?.isThreatened ?? false;
     const isWandering = intentType === 'wander' || intentType === 'graze';
+    const isGrazing = intentType === 'graze' && grazeEnabled;
     const shouldApplyHerding = herdingOffset && isWandering;
 
     // Calculate boundary avoidance for wandering creatures
@@ -362,7 +429,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
         const herdDirY = herdingOffset.y / herdMag;
 
         // Weighted blend - herding is subtle influence
-        const blendWeight = Math.min(0.5, herdMag);
+        const blendWeight = Math.min(herdingHeadingBlendMax, herdMag);
         let blendedX = currentDirX * (1 - blendWeight) + herdDirX * blendWeight;
         let blendedY = currentDirY * (1 - blendWeight) + herdDirY * blendWeight;
 
@@ -428,14 +495,56 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       }
     }
 
+    // Resolve grazing duty-cycle (idle vs move)
+    let grazeMode = null;
+    if (isGrazing && !isThreatened && !target) {
+      const graze = ensureGrazeState(creature);
+      if (graze.idleTicksRemaining > 0) {
+        graze.idleTicksRemaining -= 1;
+        grazeMode = 'idle';
+      } else if (graze.moveTicksRemaining > 0) {
+        graze.moveTicksRemaining -= 1;
+        grazeMode = 'move';
+      } else {
+        graze.idleTicksRemaining = pickGrazeTicks(
+          rng,
+          grazeIdleRange.min,
+          grazeIdleRange.max,
+          ticksPerSecond
+        );
+        graze.moveTicksRemaining = pickGrazeTicks(
+          rng,
+          grazeMoveRange.min,
+          grazeMoveRange.max,
+          ticksPerSecond
+        );
+        if (graze.idleTicksRemaining > 0) {
+          graze.idleTicksRemaining -= 1;
+          grazeMode = 'idle';
+        } else if (graze.moveTicksRemaining > 0) {
+          graze.moveTicksRemaining -= 1;
+          grazeMode = 'move';
+        }
+      }
+    } else {
+      clearGrazeState(creature);
+    }
+
     // Apply max turn rate (smooth turning)
     const nextHeading = turnToward(heading, desiredHeading, effectiveMaxTurn);
+
+    if (grazeMode === 'idle') {
+      creature.motion.heading = nextHeading;
+      continue;
+    }
 
     // Calculate movement
     const { friction } = getTerrainEffectsAt(world, Math.floor(x), Math.floor(y));
     const terrainFriction = Number.isFinite(friction) && friction > 0 ? friction : 1;
+    const grazeMultiplier = grazeMode === 'move' ? grazeSpeedMultiplier : 1;
     const distance =
-      (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * tickScale) / terrainFriction;
+      (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * grazeMultiplier * tickScale) /
+      terrainFriction;
     let nextX = clampPosition(x + Math.cos(nextHeading) * distance, 0, maxX);
     let nextY = clampPosition(y + Math.sin(nextHeading) * distance, 0, maxY);
 

@@ -5,7 +5,13 @@
  */
 
 import { resolveTicksPerSecond } from './life-stages.js';
-import { resolveRatio, resolveDistance, resolveMinAgeTicks, resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
+import {
+  resolveRatio,
+  resolveDistance,
+  resolveMinAgeTicks,
+  resolveWaterTerrain,
+  isWaterTile
+} from '../utils/resolvers.js';
 import { resolveNeedMeterBase, resolveActionThreshold, normalizeNeedRatio } from './metabolism.js';
 import {
   FOOD_TYPES,
@@ -40,6 +46,11 @@ const resolveCommitTicks = (seconds, fallbackSeconds, ticksPerSecond) => {
   const value = Number.isFinite(seconds) ? seconds : fallbackSeconds;
   return Math.max(0, Math.trunc(value * tps));
 };
+
+const resolveGrazeEnabled = (config) => config?.creatureGrazeEnabled !== false;
+
+const resolveGrazeMinRatio = (value, fallback) =>
+  Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
 
 
 /**
@@ -252,6 +263,9 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
     ticksPerSecond
   );
   const mateSeekOverridesNeeds = config?.creatureMateSeekPriorityOverridesNeeds === true;
+  const grazeEnabled = resolveGrazeEnabled(config);
+  const grazeMinEnergyRatio = resolveGrazeMinRatio(config?.creatureGrazeMinEnergyRatio, 0.75);
+  const grazeMinWaterRatio = resolveGrazeMinRatio(config?.creatureGrazeMinWaterRatio, 0.75);
   const fallbackDrinkThreshold = resolveActionThreshold(config?.creatureDrinkThreshold, 0.8);
   const fallbackEatThreshold = resolveActionThreshold(config?.creatureEatThreshold, 0.8);
   const fallbackGrassEatMin = resolveActionAmount(config?.creatureGrassEatMin, 0.05);
@@ -611,6 +625,15 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
     // Now they simply wander when full, letting the pack module
     // (if enabled) or natural wander behavior take over.
     // Thirst logic still handles water seeking when needed.
+
+    if (intent === 'wander' && !memoryEntry && grazeEnabled && !isPredator) {
+      const hasGrazeMeters =
+        energyRatio >= grazeMinEnergyRatio && waterRatio >= grazeMinWaterRatio;
+      if (hasGrazeMeters) {
+        intent = 'graze';
+        target = null;
+      }
+    }
 
     if (memoryEntry) {
       intent = 'seek';

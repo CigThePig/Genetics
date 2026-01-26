@@ -97,6 +97,14 @@ const resolveHerdingSeparation = (config) =>
     : 2.5;
 
 /**
+ * Resolves separation multiplier strength.
+ */
+const resolveSeparationMultiplier = (config) =>
+  Number.isFinite(config?.creatureHerdingSeparationMultiplier)
+    ? Math.max(0, config.creatureHerdingSeparationMultiplier)
+    : 1.5;
+
+/**
  * Resolves comfort band min (same as separation, inside = no steering).
  */
 const resolveComfortMin = (config) =>
@@ -119,6 +127,22 @@ const resolveIdealDistance = (config) =>
   Number.isFinite(config?.creatureHerdingIdealDistance)
     ? Math.max(0, config.creatureHerdingIdealDistance)
     : 4;
+
+/**
+ * Resolves deadzone below which offsets are ignored.
+ */
+const resolveOffsetDeadzone = (config) =>
+  Number.isFinite(config?.creatureHerdingOffsetDeadzone)
+    ? Math.max(0, config.creatureHerdingOffsetDeadzone)
+    : 0.04;
+
+/**
+ * Resolves smoothing alpha for herding offsets.
+ */
+const resolveOffsetSmoothing = (config) =>
+  Number.isFinite(config?.creatureHerdingOffsetSmoothing)
+    ? Math.max(0, Math.min(1, config.creatureHerdingOffsetSmoothing))
+    : 0.25;
 
 /**
  * Checks if herding is enabled.
@@ -575,10 +599,46 @@ const ensureHerdingState = (creature) => {
       herdSize: 0,
       nearbyThreats: 0,
       isThreatened: false,
-      targetOffset: null
+      targetOffset: null,
+      smoothedOffset: { x: 0, y: 0 }
     };
   }
   return creature.herding;
+};
+
+const clearSmoothedOffset = (herding) => {
+  if (!herding) {
+    return;
+  }
+  if (!herding.smoothedOffset) {
+    herding.smoothedOffset = { x: 0, y: 0 };
+  } else {
+    herding.smoothedOffset.x = 0;
+    herding.smoothedOffset.y = 0;
+  }
+};
+
+const applySmoothedOffset = (herding, rawX, rawY, deadzone, smoothing) => {
+  const magnitude = Math.hypot(rawX, rawY);
+  const useX = magnitude < deadzone ? 0 : rawX;
+  const useY = magnitude < deadzone ? 0 : rawY;
+  const alpha = smoothing;
+  if (!herding.smoothedOffset) {
+    herding.smoothedOffset = { x: 0, y: 0 };
+  }
+  herding.smoothedOffset.x = herding.smoothedOffset.x * (1 - alpha) + useX * alpha;
+  herding.smoothedOffset.y = herding.smoothedOffset.y * (1 - alpha) + useY * alpha;
+
+  const smoothMag = Math.hypot(herding.smoothedOffset.x, herding.smoothedOffset.y);
+  if (smoothMag > 0.001) {
+    herding.targetOffset = {
+      x: herding.smoothedOffset.x,
+      y: herding.smoothedOffset.y
+    };
+  } else {
+    herding.targetOffset = null;
+    clearSmoothedOffset(herding);
+  }
 };
 
 /**
@@ -624,9 +684,12 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
   const threatStrength = resolveThreatStrength(config);
   const minGroupSize = resolveHerdingMinGroupSize(config);
   const separation = resolveHerdingSeparation(config);
+  const separationMultiplier = resolveSeparationMultiplier(config);
   const _comfortMin = resolveComfortMin(config); // Reserved for future comfort band logic
   const comfortMax = resolveComfortMax(config);
   const idealDistance = resolveIdealDistance(config);
+  const offsetDeadzone = resolveOffsetDeadzone(config);
+  const offsetSmoothing = resolveOffsetSmoothing(config);
 
   for (const creature of creatures) {
     if (!creature?.position) {
@@ -641,6 +704,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
       herding.nearbyThreats = 0;
       herding.isThreatened = false;
       herding.targetOffset = null;
+      clearSmoothedOffset(herding);
       continue;
     }
 
@@ -657,6 +721,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
     // Let them go get food/water
     if (hasUrgentNeed(creature)) {
       herding.targetOffset = null;
+      clearSmoothedOffset(herding);
       continue;
     }
 
@@ -678,8 +743,8 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
     const sep = calculateSeparation(members, separation);
     if (sep) {
       // Separation is stronger than cohesion
-      offsetX += sep.x * baseStrength * 3;
-      offsetY += sep.y * baseStrength * 3;
+      offsetX += sep.x * baseStrength * separationMultiplier;
+      offsetY += sep.y * baseStrength * separationMultiplier;
       hasOffset = true;
     }
 
@@ -708,10 +773,11 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
     }
 
     // Store result
-    if (hasOffset && (Math.abs(offsetX) > 0.001 || Math.abs(offsetY) > 0.001)) {
-      herding.targetOffset = { x: offsetX, y: offsetY };
+    if (hasOffset) {
+      applySmoothedOffset(herding, offsetX, offsetY, offsetDeadzone, offsetSmoothing);
     } else {
       herding.targetOffset = null;
+      clearSmoothedOffset(herding);
     }
   }
 
@@ -726,11 +792,13 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
  * Applies worker results to creatures.
  * Uses creature IDs to handle array reordering/compaction.
  */
-function applyWorkerResults(result, spatialIndex) {
+function applyWorkerResults(result, spatialIndex, config) {
   const perf = getActivePerf();
   const tApply = perf?.start('tick.herding.workerApply');
 
   const { count, buffers } = result;
+  const offsetDeadzone = resolveOffsetDeadzone(config);
+  const offsetSmoothing = resolveOffsetSmoothing(config);
 
   // Find the slot that has these buffers
   let slot = null;
@@ -770,6 +838,7 @@ function applyWorkerResults(result, spatialIndex) {
       herding.nearbyThreats = 0;
       herding.isThreatened = false;
       herding.targetOffset = null;
+      clearSmoothedOffset(herding);
       continue;
     }
 
@@ -780,16 +849,13 @@ function applyWorkerResults(result, spatialIndex) {
     // Recheck urgent need on apply (because worker data is 1-tick old)
     if (hasUrgentNeed(creature)) {
       herding.targetOffset = null;
+      clearSmoothedOffset(herding);
       continue;
     }
 
     const ox = slot.outOffsetX[i];
     const oy = slot.outOffsetY[i];
-    if (Math.abs(ox) > 0.001 || Math.abs(oy) > 0.001) {
-      herding.targetOffset = { x: ox, y: oy };
-    } else {
-      herding.targetOffset = null;
-    }
+    applySmoothedOffset(herding, ox, oy, offsetDeadzone, offsetSmoothing);
   }
 
   perf?.end('tick.herding.workerApply', tApply);
@@ -798,7 +864,7 @@ function applyWorkerResults(result, spatialIndex) {
 /**
  * Packs creature data into typed arrays for worker transfer.
  */
-function packCreatureSnapshot(creatures, slot, config) {
+function packCreatureSnapshot(creatures, slot) {
   const perf = getActivePerf();
   const tPack = perf?.start('tick.herding.workerPack');
 
@@ -850,6 +916,7 @@ function postWorkerJob(slot, count, config, tick) {
     threatStrength: resolveThreatStrength(config),
     minGroupSize: resolveHerdingMinGroupSize(config),
     separation: resolveHerdingSeparation(config),
+    separationMultiplier: resolveSeparationMultiplier(config),
     comfortMax: resolveComfortMax(config),
     idealDistance: resolveIdealDistance(config)
   };
@@ -941,7 +1008,7 @@ export function updateCreatureHerding({ creatures, config, spatialIndex }) {
 
   // Step 1: Apply results from previous tick if available
   if (workerState.latestResult && workerState.latestResult.tick > workerState.lastAppliedTick) {
-    applyWorkerResults(workerState.latestResult, spatialIndex);
+    applyWorkerResults(workerState.latestResult, spatialIndex, config);
     workerState.lastAppliedTick = workerState.latestResult.tick;
     workerState.latestResult = null;
   }
@@ -965,7 +1032,7 @@ export function updateCreatureHerding({ creatures, config, spatialIndex }) {
   const { slot } = slotInfo;
 
   // Pack creature data and post job
-  const count = packCreatureSnapshot(creatures, slot, config);
+  const count = packCreatureSnapshot(creatures, slot);
   if (count > 0) {
     postWorkerJob(slot, count, config, currentTick);
   }
