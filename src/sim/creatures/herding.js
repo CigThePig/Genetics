@@ -20,6 +20,7 @@
  */
 
 import { SPECIES } from '../species.js';
+import { resolveTicksPerSecond } from '../utils/resolvers.js';
 import { getActivePerf } from '../../metrics/perf-registry.js';
 
 /**
@@ -143,6 +144,46 @@ const resolveOffsetSmoothing = (config) =>
   Number.isFinite(config?.creatureHerdingOffsetSmoothing)
     ? Math.max(0, Math.min(1, config.creatureHerdingOffsetSmoothing))
     : 0.25;
+
+/**
+ * Resolves regroup assist enabled flag.
+ */
+const resolveRegroupEnabled = (config) => config?.creatureHerdingRegroupEnabled !== false;
+
+/**
+ * Resolves regroup minimum local herd size.
+ */
+const resolveRegroupMinLocalHerdSize = (config) =>
+  Number.isFinite(config?.creatureHerdingRegroupMinLocalHerdSize)
+    ? Math.max(1, Math.trunc(config.creatureHerdingRegroupMinLocalHerdSize))
+    : 3;
+
+/**
+ * Resolves regroup search range.
+ */
+const resolveRegroupRange = (config) =>
+  Number.isFinite(config?.creatureHerdingRegroupRange)
+    ? Math.max(0, config.creatureHerdingRegroupRange)
+    : 45;
+
+/**
+ * Resolves regroup strength multiplier (relative to base strength).
+ */
+const resolveRegroupStrength = (config) =>
+  Number.isFinite(config?.creatureHerdingRegroupStrength)
+    ? Math.max(0, Math.min(1, config.creatureHerdingRegroupStrength))
+    : 0.35;
+
+/**
+ * Resolves regroup interval in ticks.
+ */
+const resolveRegroupIntervalTicks = (config) => {
+  const ticksPerSecond = resolveTicksPerSecond(config);
+  const seconds = Number.isFinite(config?.creatureHerdingRegroupIntervalSeconds)
+    ? Math.max(0.05, config.creatureHerdingRegroupIntervalSeconds)
+    : 0.6;
+  return Math.max(1, Math.floor(seconds * ticksPerSecond));
+};
 
 /**
  * Checks if herding is enabled.
@@ -591,6 +632,87 @@ const calculateSeparation = (members, separationDist) => {
 };
 
 /**
+ * Computes a long-range regroup assist vector for scattered herbivores.
+ * Returns a normalized vector toward the nearest herd mate, scaled by distance.
+ */
+const computeRegroupAssist = (creature, creatures, spatialIndex, config) => {
+  if (!creature?.position) {
+    return null;
+  }
+  if (!resolveRegroupEnabled(config)) {
+    return null;
+  }
+  if (isPredator(creature.species)) {
+    return null;
+  }
+  if (hasUrgentNeed(creature)) {
+    return null;
+  }
+  if (creature.herding?.isThreatened) {
+    return null;
+  }
+
+  const minLocalHerdSize = resolveRegroupMinLocalHerdSize(config);
+  const herdSize = creature.herding?.herdSize ?? 1;
+  if (herdSize >= minLocalHerdSize) {
+    return null;
+  }
+
+  const intervalTicks = resolveRegroupIntervalTicks(config);
+  const ageTicks = Number.isFinite(creature.ageTicks) ? creature.ageTicks : 0;
+  const idOffset = Number.isFinite(creature.id) ? creature.id : 0;
+  if ((ageTicks + idOffset) % intervalTicks !== 0) {
+    return null;
+  }
+
+  const range = resolveRegroupRange(config);
+  if (range <= 0) {
+    return null;
+  }
+
+  let nearest = null;
+  let nearestDistSq = range * range;
+
+  if (spatialIndex) {
+    const nearby = spatialIndex.queryNearby(creature.position.x, creature.position.y, range, {
+      exclude: creature,
+      filter: (other) => other.species === creature.species && other.position
+    });
+
+    for (const { distanceSq, dx, dy } of nearby) {
+      if (distanceSq <= 0 || distanceSq > nearestDistSq) continue;
+      nearest = { dx, dy, distanceSq };
+      nearestDistSq = distanceSq;
+    }
+  } else if (Array.isArray(creatures)) {
+    for (const other of creatures) {
+      if (other === creature || !other?.position) continue;
+      if (other.species !== creature.species) continue;
+      const dx = other.position.x - creature.position.x;
+      const dy = other.position.y - creature.position.y;
+      const distanceSq = dx * dx + dy * dy;
+      if (distanceSq <= 0 || distanceSq > nearestDistSq) continue;
+      nearest = { dx, dy, distanceSq };
+      nearestDistSq = distanceSq;
+    }
+  }
+
+  if (!nearest) {
+    return null;
+  }
+
+  const distance = Math.sqrt(nearest.distanceSq);
+  if (distance <= 0.001) {
+    return null;
+  }
+  const strength = Math.min(1, Math.max(0.15, distance / range));
+  return {
+    x: (nearest.dx / distance) * strength,
+    y: (nearest.dy / distance) * strength
+  };
+};
+
+/**
  * Ensures herding state exists on creature.
  */
 const ensureHerdingState = (creature) => {
@@ -690,6 +812,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
   const idealDistance = resolveIdealDistance(config);
   const offsetDeadzone = resolveOffsetDeadzone(config);
   const offsetSmoothing = resolveOffsetSmoothing(config);
+  const regroupStrength = resolveRegroupStrength(config);
 
   for (const creature of creatures) {
     if (!creature?.position) {
@@ -772,6 +895,13 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
       }
     }
 
+    const regroup = computeRegroupAssist(creature, creatures, index, config);
+    if (regroup) {
+      offsetX += regroup.x * baseStrength * regroupStrength;
+      offsetY += regroup.y * baseStrength * regroupStrength;
+      hasOffset = true;
+    }
+
     // Store result
     if (hasOffset) {
       applySmoothedOffset(herding, offsetX, offsetY, offsetDeadzone, offsetSmoothing);
@@ -799,6 +929,8 @@ function applyWorkerResults(result, spatialIndex, config) {
   const { count, buffers } = result;
   const offsetDeadzone = resolveOffsetDeadzone(config);
   const offsetSmoothing = resolveOffsetSmoothing(config);
+  const baseStrength = resolveHerdingStrength(config);
+  const regroupStrength = resolveRegroupStrength(config);
 
   // Find the slot that has these buffers
   let slot = null;
@@ -853,8 +985,13 @@ function applyWorkerResults(result, spatialIndex, config) {
       continue;
     }
 
-    const ox = slot.outOffsetX[i];
-    const oy = slot.outOffsetY[i];
+    let ox = slot.outOffsetX[i];
+    let oy = slot.outOffsetY[i];
+    const regroup = computeRegroupAssist(creature, null, spatialIndex, config);
+    if (regroup) {
+      ox += regroup.x * baseStrength * regroupStrength;
+      oy += regroup.y * baseStrength * regroupStrength;
+    }
     applySmoothedOffset(herding, ox, oy, offsetDeadzone, offsetSmoothing);
   }
 

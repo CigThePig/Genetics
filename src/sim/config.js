@@ -81,6 +81,8 @@ export const simConfig = {
   creatureCount: 80,
   creaturePredatorCount: 8, // (was 5 - more predators for better ecosystem pressure)
   creatureSpawnClusterSpread: 12,
+  creatureSpawnSpeciesAnchorSpread: 18,
+  creatureSpawnPredatorAnchorDistance: 40,
   creatureSpawnClusterJitter: 4,
 
   // === CREATURES: MOVEMENT STYLE ===
@@ -98,6 +100,7 @@ export const simConfig = {
   creatureGrazeMoveSecondsMax: 3.0,
   creatureGrazeMinEnergyRatio: 0.75,
   creatureGrazeMinWaterRatio: 0.75,
+  creatureGrazeMinLocalHerdSize: 3,
 
   // Long-range need search (when no target is perceived or remembered)
   creatureSearchRadiusMin: 12, // tiles
@@ -123,6 +126,11 @@ export const simConfig = {
   creatureHerdingOffsetSmoothing: 0.25,
   creatureHerdingHeadingBlendMax: 0.25,
   creatureHerdingUseWorker: 0, // 0 = sync (default), 1 = offload to Web Worker
+  creatureHerdingRegroupEnabled: true,
+  creatureHerdingRegroupMinLocalHerdSize: 3,
+  creatureHerdingRegroupRange: 45,
+  creatureHerdingRegroupStrength: 0.35,
+  creatureHerdingRegroupIntervalSeconds: 0.6,
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
@@ -367,6 +375,20 @@ export const configMeta = {
     step: 1,
     category: 'creatures'
   },
+  creatureSpawnSpeciesAnchorSpread: {
+    label: 'Spawn Species Spread',
+    min: 0,
+    max: 60,
+    step: 1,
+    category: 'creatures'
+  },
+  creatureSpawnPredatorAnchorDistance: {
+    label: 'Predator Spawn Dist',
+    min: 0,
+    max: 200,
+    step: 2,
+    category: 'creatures'
+  },
   creatureBaseSpeed: { label: 'Base Speed', min: 1, max: 30, step: 1, category: 'creatures' },
   creatureBaseEnergy: { label: 'Base Energy', min: 0.1, max: 5, step: 0.1, category: 'creatures' },
   creatureBaseWater: { label: 'Base Water', min: 0.1, max: 5, step: 0.1, category: 'creatures' },
@@ -524,6 +546,41 @@ export const configMeta = {
     step: 1,
     category: 'herding'
   },
+  creatureHerdingRegroupEnabled: {
+    label: 'Regroup Assist',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingRegroupMinLocalHerdSize: {
+    label: 'Regroup Min Herd',
+    min: 1,
+    max: 10,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingRegroupRange: {
+    label: 'Regroup Range',
+    min: 5,
+    max: 120,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingRegroupStrength: {
+    label: 'Regroup Strength',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'herding'
+  },
+  creatureHerdingRegroupIntervalSeconds: {
+    label: 'Regroup Interval (s)',
+    min: 0.1,
+    max: 5,
+    step: 0.1,
+    category: 'herding'
+  },
 
   // Movement Style
   creatureMaxTurnRateRadPerSecond: {
@@ -608,6 +665,13 @@ export const configMeta = {
     min: 0,
     max: 1,
     step: 0.05,
+    category: 'movement'
+  },
+  creatureGrazeMinLocalHerdSize: {
+    label: 'Graze Min Herd',
+    min: 1,
+    max: 10,
+    step: 1,
     category: 'movement'
   },
 

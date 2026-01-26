@@ -116,6 +116,12 @@ export function createCreatures({ config, rng, world }) {
   const clusterSpread = Number.isFinite(config?.creatureSpawnClusterSpread)
     ? Math.max(0, config.creatureSpawnClusterSpread)
     : 12;
+  const speciesAnchorSpread = Number.isFinite(config?.creatureSpawnSpeciesAnchorSpread)
+    ? Math.max(0, config.creatureSpawnSpeciesAnchorSpread)
+    : clusterSpread;
+  const predatorAnchorDistance = Number.isFinite(config?.creatureSpawnPredatorAnchorDistance)
+    ? Math.max(0, config.creatureSpawnPredatorAnchorDistance)
+    : 40;
   const clusterJitter = Number.isFinite(config?.creatureSpawnClusterJitter)
     ? Math.max(0, config.creatureSpawnClusterJitter)
     : 4;
@@ -163,6 +169,32 @@ export function createCreatures({ config, rng, world }) {
     return findFallbackLandPosition();
   };
 
+  const findDistantLandPosition = (origin, minDistance, attempts = spawnRetries) => {
+    if (!origin || minDistance <= 0) {
+      return findRandomLandPosition(attempts);
+    }
+    const minDistanceSq = minDistance * minDistance;
+    let fallback = null;
+    let fallbackDistSq = -1;
+
+    for (let attempt = 0; attempt < attempts; attempt += 1) {
+      const position = randomPosition();
+      if (!resolveLandPosition(position)) continue;
+      const dx = position.x - origin.x;
+      const dy = position.y - origin.y;
+      const distSq = dx * dx + dy * dy;
+      if (distSq >= minDistanceSq) {
+        return position;
+      }
+      if (distSq > fallbackDistSq) {
+        fallback = position;
+        fallbackDistSq = distSq;
+      }
+    }
+
+    return fallback ?? findRandomLandPosition();
+  };
+
   const clampToWorld = (value, max) => Math.max(0, Math.min(max - 0.001, value));
 
   const findNearbyLandPosition = (origin, radius, attempts) => {
@@ -185,11 +217,33 @@ export function createCreatures({ config, rng, world }) {
   };
 
   const createAnchors = () => {
-    const baseAnchor = findRandomLandPosition(anchorRetries);
+    const herbivoreBaseAnchor = findRandomLandPosition(anchorRetries);
+    const predatorBaseAnchor = findDistantLandPosition(
+      herbivoreBaseAnchor,
+      predatorAnchorDistance,
+      anchorRetries
+    );
     const anchors = {};
-    for (const species of SPECIES_LIST) {
-      anchors[species] = findNearbyLandPosition(baseAnchor, clusterSpread, anchorRetries);
-    }
+    anchors[SPECIES.SQUARE] = findNearbyLandPosition(
+      herbivoreBaseAnchor,
+      speciesAnchorSpread,
+      anchorRetries
+    );
+    anchors[SPECIES.CIRCLE] = findNearbyLandPosition(
+      herbivoreBaseAnchor,
+      speciesAnchorSpread,
+      anchorRetries
+    );
+    anchors[SPECIES.TRIANGLE] = findNearbyLandPosition(
+      predatorBaseAnchor,
+      speciesAnchorSpread,
+      anchorRetries
+    );
+    anchors[SPECIES.OCTAGON] = findNearbyLandPosition(
+      predatorBaseAnchor,
+      speciesAnchorSpread,
+      anchorRetries
+    );
     return anchors;
   };
 

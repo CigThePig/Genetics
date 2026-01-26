@@ -61,3 +61,34 @@
 
 ### Stop point
 - Stop after completing Phase 2 tasks and verification for review.
+
+---
+
+## Phase 3 — Herd regroup + spawn separation
+
+### Tasks
+- [x] Add spawn anchor separation for predators vs herbivores; keep deterministic land validation.
+- [x] Add long-range regroup assist for scattered herbivores (main-thread compute; worker-safe apply).
+- [x] Gate grazing when herd size is too small or threatened.
+- [x] Expose new spawn/herding/graze config keys in configMeta + config UI.
+- [ ] Update /context/repo-map.md if any file roles change. (checkbox)
+
+### Files touched
+- src/sim/creatures/spawn.js
+- src/sim/creatures/herding.js
+- src/sim/creatures/intent.js
+- src/sim/creatures/movement.js
+- src/sim/config.js
+- context/active-track.md
+- context/history.md
+- tracks/2026-02-03-track-maintenance-world-scale-pack-relocation/plan.md
+
+### Verification
+- [ ] npm run verify (fails: prettier check reports existing formatting issues)
+- [ ] Manual sim: predators spawn away from herbivore clusters.
+- [ ] Manual sim: scattered herbivores regroup over time after predator disruption.
+- [ ] Manual sim: lone herbivores wander (no idle graze) until they rejoin.
+- [ ] Manual sim: worker mode on/off behaves similarly.
+
+### Stop point
+- Stop after completing Phase 3 tasks and verification for review.
