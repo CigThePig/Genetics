@@ -1,12 +1,10 @@
 export function createPerfSampler({ windowMs = 1000 } = {}) {
-  // Low-overhead named timers with a stable "last completed window" snapshot.
-  // UI should read snapshot() and get a mostly-stable view that doesn't flicker.
   let enabled = true;
   let windowStart = performance.now();
   const groups = { tick: true, render: true };
   const timers = new Map();
-
-  let lastSnapshot = null; // { windowMs, updatedAt, timers:[...] }
+  // Keep the last completed window so UI reads stable values (no flicker at rollover).
+  let lastSnapshot = null;
 
   const resetWindow = (now) => {
     timers.clear();
@@ -21,35 +19,21 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
     return false;
   };
 
-  const buildEntries = (map) => {
-    const entries = [];
-    for (const [name, data] of map.entries()) {
+  const buildEntries = () =>
+    Array.from(timers.entries()).map(([name, data]) => {
       const group = getGroup(name);
       const totalMs = data.totalMs;
       const calls = data.calls;
       const avgMs = calls ? totalMs / calls : 0;
-      entries.push({
+      return {
         name,
         totalMs,
         avgMs,
         maxMs: data.maxMs,
         calls,
-        group,
-      });
-    }
-    return entries;
-  };
-
-  const finalizeWindowIfNeeded = (now) => {
-    if (now - windowStart < windowMs) return;
-    // Capture a stable snapshot of the completed window, then reset.
-    lastSnapshot = {
-      windowMs: now - windowStart,
-      updatedAt: now,
-      timers: buildEntries(timers),
-    };
-    resetWindow(now);
-  };
+        group
+      };
+    });
 
   return {
     start(name) {
@@ -85,16 +69,23 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
       return { ...groups };
     },
     snapshot(now = performance.now()) {
-      finalizeWindowIfNeeded(now);
+      const elapsed = now - windowStart;
+      if (elapsed >= windowMs) {
+        lastSnapshot = {
+          windowMs,
+          updatedAt: now,
+          timers: buildEntries()
+        };
+        resetWindow(now);
+      }
 
-      // Prefer the last completed window snapshot for stability.
+      // Prefer the last completed window for stable reads.
       if (lastSnapshot) return lastSnapshot;
 
-      // Fallback: early in a run, return current window partial data.
       return {
-        windowMs: now - windowStart,
+        windowMs: elapsed,
         updatedAt: now,
-        timers: buildEntries(timers),
+        timers: buildEntries()
       };
     },
   };

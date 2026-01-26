@@ -708,10 +708,6 @@ body {
   width: var(--panel-max-width);
 }
 
-.performance-panel {
-  width: var(--panel-max-width);
-}
-
 .metrics-grid {
   display: flex;
   flex-direction: column;
@@ -817,6 +813,14 @@ body {
 /* ===========================================
    Performance Panel
    =========================================== */
+
+.performance-panel {
+  width: var(--panel-max-width);
+}
+
+.performance-panel .perf-timers-list {
+  grid-template-columns: 1fr;
+}
 
 .performance-panel .perf-controls {
   display: flex;
