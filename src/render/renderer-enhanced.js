@@ -510,132 +510,134 @@ export function createRenderer(container, { camera }) {
       perf?.end('render.terrain.pass5', tP5);
     }
 
-    // ─────────────────────────────────────────────────────────────────────────
-    // PASS 6: Bushes
-    // ─────────────────────────────────────────────────────────────────────────
+// ─────────────────────────────────────────────────────────────────────────
+// PASS 6: Bushes
+// ─────────────────────────────────────────────────────────────────────────
 
-    if (Array.isArray(world.bushes) && world.bushes.length > 0) {
-      const tP6 = perf?.start('render.terrain.pass6');
-      const bushRadiusBase = tileSize * 0.35;
-      const bushRadiusGrowth = tileSize * 0.2;
-      const berryRadiusBase = tileSize * 0.1;
-      const berryRadiusGrowth = tileSize * 0.08;
-      const maxBerryFallback = Number.isFinite(config?.bushBerryMax) ? config.bushBerryMax : 1;
+if (Array.isArray(world.bushes) && world.bushes.length > 0) {
+  const tP6 = perf?.start('render.terrain.pass6');
 
-      for (const bush of world.bushes) {
-        const bushX = Number.isFinite(bush.x) ? bush.x : null;
-        const bushY = Number.isFinite(bush.y) ? bush.y : null;
-        if (bushX === null || bushY === null) continue;
-        if (bushX < startCol - 1 || bushX >= endCol + 1 || bushY < startRow - 1 || bushY >= endRow + 1) continue;
+  const bushRadiusBase = tileSize * 0.35;
+  const bushRadiusGrowth = tileSize * 0.2;
+  const berryRadiusBase = tileSize * 0.1;
+  const berryRadiusGrowth = tileSize * 0.08;
+  const maxBerryFallback = Number.isFinite(config?.bushBerryMax) ? config.bushBerryMax : 1;
 
-        const health = Number.isFinite(bush.health) ? bush.health : 0;
-        const berries = Number.isFinite(bush.berries) ? bush.berries : 0;
-        const berryMax = Number.isFinite(bush.berryMax) ? bush.berryMax : maxBerryFallback;
-        const berryRatio = berryMax > 0 ? Math.min(1, Math.max(0, berries / berryMax)) : 0;
+  for (const bush of world.bushes) {
+    const bushX = Number.isFinite(bush.x) ? bush.x : null;
+    const bushY = Number.isFinite(bush.y) ? bush.y : null;
+    if (bushX === null || bushY === null) continue;
+    if (bushX < startCol - 1 || bushX >= endCol + 1 || bushY < startRow - 1 || bushY >= endRow + 1) continue;
 
-        const centerX = originX + (bushX + 0.5) * tileSize;
-        const centerY = originY + (bushY + 0.5) * tileSize;
-        const bushRadius = bushRadiusBase + bushRadiusGrowth * health;
+    const health = Number.isFinite(bush.health) ? bush.health : 0;
+    const berries = Number.isFinite(bush.berries) ? bush.berries : 0;
+    const berryMax = Number.isFinite(bush.berryMax) ? bush.berryMax : maxBerryFallback;
+    const berryRatio = berryMax > 0 ? Math.min(1, Math.max(0, berries / berryMax)) : 0;
 
-        // Shadow
+    const centerX = originX + (bushX + 0.5) * tileSize;
+    const centerY = originY + (bushY + 0.5) * tileSize;
+    const bushRadius = bushRadiusBase + bushRadiusGrowth * health;
+
+    // Shadow
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
+    ctx.ellipse(centerX + 2, centerY + 3, bushRadius * 0.85, bushRadius * 0.4, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Main bush with gradient
+    const bushGradient = ctx.createRadialGradient(
+      centerX - bushRadius * 0.3,
+      centerY - bushRadius * 0.3,
+      0,
+      centerX,
+      centerY,
+      bushRadius
+    );
+
+    const lightness = 28 + health * 18;
+    const saturation = 35 + health * 15;
+    bushGradient.addColorStop(0, `hsl(115, ${saturation}%, ${lightness + 12}%)`);
+    bushGradient.addColorStop(0.5, `hsl(110, ${saturation - 5}%, ${lightness}%)`);
+    bushGradient.addColorStop(1, `hsl(105, ${saturation - 10}%, ${lightness - 8}%)`);
+
+    ctx.beginPath();
+    ctx.fillStyle = bushGradient;
+    ctx.arc(centerX, centerY, bushRadius, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Subtle leaf texture
+    if (showFineDetail) {
+      for (let i = 0; i < 5; i += 1) {
+        const angle = (i / 5) * Math.PI * 2 + getTexture(bushX + i, bushY) * 0.5;
+        const dist = bushRadius * (0.4 + getTexture(bushX, bushY + i) * 0.3);
+        const lx = centerX + Math.cos(angle) * dist;
+        const ly = centerY + Math.sin(angle) * dist;
+
         ctx.beginPath();
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.25)';
-        ctx.ellipse(centerX + 2, centerY + 3, bushRadius * 0.85, bushRadius * 0.4, 0, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(80, 140, 60, ${0.2 + health * 0.2})`;
+        ctx.arc(lx, ly, bushRadius * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // Soft outline
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(30, 50, 30, 0.35)';
+    ctx.lineWidth = 1.5 / state.zoom;
+    ctx.arc(centerX, centerY, bushRadius, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Berries
+    if (berryRatio > 0) {
+      const berryRadius = berryRadiusBase + berryRadiusGrowth * berryRatio;
+      const berryOffsets = [
+        { x: 0.35, y: -0.2 },
+        { x: -0.25, y: 0.3 },
+        { x: 0.3, y: 0.25 },
+        { x: -0.35, y: -0.15 },
+        { x: 0.05, y: -0.35 }
+      ];
+
+      const numBerries = Math.ceil(berryRatio * berryOffsets.length);
+      for (let i = 0; i < numBerries; i += 1) {
+        const offset = berryOffsets[i];
+        const bx = centerX + bushRadius * offset.x;
+        const by = centerY + bushRadius * offset.y;
+
+        // Berry glow
+        ctx.beginPath();
+        ctx.fillStyle = `rgba(220, 80, 120, ${0.15 * berryRatio})`;
+        ctx.arc(bx, by, berryRadius * 2, 0, Math.PI * 2);
         ctx.fill();
 
-        // Main bush with gradient
-        const bushGradient = ctx.createRadialGradient(
-          centerX - bushRadius * 0.3,
-          centerY - bushRadius * 0.3,
+        // Berry body
+        const berryGradient = ctx.createRadialGradient(
+          bx - berryRadius * 0.3,
+          by - berryRadius * 0.3,
           0,
-          centerX,
-          centerY,
-          bushRadius
+          bx,
+          by,
+          berryRadius
         );
-
-        const lightness = 28 + health * 18;
-        const saturation = 35 + health * 15;
-        bushGradient.addColorStop(0, `hsl(115, ${saturation}%, ${lightness + 12}%)`);
-        bushGradient.addColorStop(0.5, `hsl(110, ${saturation - 5}%, ${lightness}%)`);
-        bushGradient.addColorStop(1, `hsl(105, ${saturation - 10}%, ${lightness - 8}%)`);
+        berryGradient.addColorStop(0, `hsl(340, 65%, ${55 + berryRatio * 15}%)`);
+        berryGradient.addColorStop(1, `hsl(335, 55%, ${40 + berryRatio * 10}%)`);
 
         ctx.beginPath();
-        ctx.fillStyle = bushGradient;
-        ctx.arc(centerX, centerY, bushRadius, 0, Math.PI * 2);
+        ctx.fillStyle = berryGradient;
+        ctx.arc(bx, by, berryRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Subtle leaf texture
-        if (showFineDetail) {
-          for (let i = 0; i < 5; i++) {
-            const angle = (i / 5) * Math.PI * 2 + getTexture(bushX + i, bushY) * 0.5;
-            const dist = bushRadius * (0.4 + getTexture(bushX, bushY + i) * 0.3);
-            const lx = centerX + Math.cos(angle) * dist;
-            const ly = centerY + Math.sin(angle) * dist;
-
-            ctx.beginPath();
-            ctx.fillStyle = `rgba(80, 140, 60, ${0.2 + health * 0.2})`;
-            ctx.arc(lx, ly, bushRadius * 0.25, 0, Math.PI * 2);
-        ctx.fill();
-      }
-      perf?.end('render.terrain.pass6', tP6);
-    }
-
-        // Soft outline
+        // Highlight
         ctx.beginPath();
-        ctx.strokeStyle = 'rgba(30, 50, 30, 0.35)';
-        ctx.lineWidth = 1.5 / state.zoom;
-        ctx.arc(centerX, centerY, bushRadius, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Berries
-        if (berryRatio > 0) {
-          const berryRadius = berryRadiusBase + berryRadiusGrowth * berryRatio;
-          const berryOffsets = [
-            { x: 0.35, y: -0.2 },
-            { x: -0.25, y: 0.3 },
-            { x: 0.3, y: 0.25 },
-            { x: -0.35, y: -0.15 },
-            { x: 0.05, y: -0.35 }
-          ];
-
-          const numBerries = Math.ceil(berryRatio * berryOffsets.length);
-          for (let i = 0; i < numBerries; i++) {
-            const offset = berryOffsets[i];
-            const bx = centerX + bushRadius * offset.x;
-            const by = centerY + bushRadius * offset.y;
-
-            // Berry glow
-            ctx.beginPath();
-            ctx.fillStyle = `rgba(220, 80, 120, ${0.15 * berryRatio})`;
-            ctx.arc(bx, by, berryRadius * 2, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Berry body
-            const berryGradient = ctx.createRadialGradient(
-              bx - berryRadius * 0.3,
-              by - berryRadius * 0.3,
-              0,
-              bx,
-              by,
-              berryRadius
-            );
-            berryGradient.addColorStop(0, `hsl(340, 65%, ${55 + berryRatio * 15}%)`);
-            berryGradient.addColorStop(1, `hsl(335, 55%, ${40 + berryRatio * 10}%)`);
-
-            ctx.beginPath();
-            ctx.fillStyle = berryGradient;
-            ctx.arc(bx, by, berryRadius, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Highlight
-            ctx.beginPath();
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-            ctx.arc(bx - berryRadius * 0.3, by - berryRadius * 0.3, berryRadius * 0.25, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+        ctx.arc(bx - berryRadius * 0.3, by - berryRadius * 0.3, berryRadius * 0.25, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
+  }
+
+  perf?.end('render.terrain.pass6', tP6);
+}
 
 
     // ─────────────────────────────────────────────────────────────────────────
