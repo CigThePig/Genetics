@@ -350,6 +350,8 @@ export function createUI({
   // Stable ordering prevents “popping” as top timers reorder.
   const FRAME_TIMER_ORDER = [
     'frame.total',
+    'frame.delta',
+    'frame.wait',
     'frame.cameraFollow',
     'frame.render',
     'frame.summary',

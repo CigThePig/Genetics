@@ -36,6 +36,7 @@ const seedGrassPatches = ({ world, config, rng }) => {
   const minRadius = resolveInt(config?.grassPatchMinRadius, 2, 1);
   const maxRadius = resolveInt(config?.grassPatchMaxRadius, Math.max(minRadius, 2), minRadius);
   const falloffPower = resolveNumber(config?.grassPatchFalloffPower, 1.6, 0.1);
+  let changed = false;
 
   for (let i = 0; i < grass.length; i += 1) {
     const x = i % width;
@@ -44,6 +45,9 @@ const seedGrassPatches = ({ world, config, rng }) => {
     const plantCap = resolveNumber(effects?.plantCap, 1, 0);
     const cellCap = cap * plantCap;
     const amount = cellCap > 0 ? Math.min(cellCap, baseAmount) : 0;
+    if (grass[i] !== amount) {
+      changed = true;
+    }
     grass[i] = amount;
     if (grassStress) {
       grassStress[i] = 0;
@@ -51,6 +55,9 @@ const seedGrassPatches = ({ world, config, rng }) => {
   }
 
   if (patchCount <= 0 || initialAmount <= 0 || cap <= 0) {
+    if (changed) {
+      world.grassDirtyCounter = (world.grassDirtyCounter ?? 0) + 1;
+    }
     return;
   }
 
@@ -84,9 +91,16 @@ const seedGrassPatches = ({ world, config, rng }) => {
         const index = y * width + x;
         const current = Number.isFinite(grass[index]) ? grass[index] : 0;
         const next = Math.min(cellCap, current + initialAmount * strength);
+        if (next !== current) {
+          changed = true;
+        }
         grass[index] = next;
       }
     }
+  }
+
+  if (changed) {
+    world.grassDirtyCounter = (world.grassDirtyCounter ?? 0) + 1;
   }
 };
 

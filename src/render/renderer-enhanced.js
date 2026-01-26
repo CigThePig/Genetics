@@ -243,11 +243,14 @@ export function createRenderer(container, { camera }) {
     return { canvas: layerCanvas, ctx: layerCtx };
   };
 
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
   const terrainCache = {
     base: null,
     detail: null,
     grass: null,
     lastGrassUpdateMs: 0,
+    lastGrassDirtyCounter: -1,
     tileSize: 0,
     pxW: 0,
     pxH: 0,
@@ -486,15 +489,20 @@ export function createRenderer(container, { camera }) {
 
     terrainCache.grass = createLayer(pxW, pxH, { alpha: true });
     terrainCache.lastGrassUpdateMs = 0;
+    terrainCache.lastGrassDirtyCounter = -1;
   };
 
   const maybeUpdateGrassCache = (cache, world, config, tileSize, perf, nowMs) => {
     if (!cache?.grass || !world) return;
-    if (cache.lastGrassUpdateMs && nowMs - cache.lastGrassUpdateMs < 100) return;
+    const intervalMs = 250;
+    const dirtyCounter = Number.isFinite(world?.grassDirtyCounter) ? world.grassDirtyCounter : 0;
+    if (dirtyCounter === cache.lastGrassDirtyCounter) return;
+    if (cache.lastGrassUpdateMs && nowMs - cache.lastGrassUpdateMs < intervalMs) return;
     const tGrass = perf?.start('render.terrain.cacheUpdate.grass');
     buildGrassLayer(cache.grass.ctx, world, config, tileSize);
     perf?.end('render.terrain.cacheUpdate.grass', tGrass);
     cache.lastGrassUpdateMs = nowMs;
+    cache.lastGrassDirtyCounter = dirtyCounter;
   };
 
   const drawTerrain = (state, world, config) => {
@@ -545,17 +553,42 @@ export function createRenderer(container, { camera }) {
     const showFineDetail = state.zoom > 0.6;
     // Reserved for future ultra-detailed rendering: const showUltraDetail = state.zoom > 1.0;
 
+    ensureTerrainCache(world, config, tileSize, perf);
+    const nowMs = performance.now();
+    maybeUpdateGrassCache(terrainCache, world, config, tileSize, perf, nowMs);
+
+    const padPx = tileSize * 2;
+    const mapLeft = originX;
+    const mapTop = originY;
+    const mapRight = originX + terrainCache.pxW;
+    const mapBottom = originY + terrainCache.pxH;
+    const visLeft = clamp(minWorldX - padPx, mapLeft, mapRight);
+    const visTop = clamp(minWorldY - padPx, mapTop, mapBottom);
+    const visRight = clamp(maxWorldX + padPx, mapLeft, mapRight);
+    const visBottom = clamp(maxWorldY + padPx, mapTop, mapBottom);
+
+    let sx = Math.floor(visLeft - originX);
+    let sy = Math.floor(visTop - originY);
+    let sRight = Math.ceil(visRight - originX);
+    let sBottom = Math.ceil(visBottom - originY);
+
+    sx = clamp(sx, 0, terrainCache.pxW);
+    sy = clamp(sy, 0, terrainCache.pxH);
+    sRight = clamp(sRight, 0, terrainCache.pxW);
+    sBottom = clamp(sBottom, 0, terrainCache.pxH);
+
+    const sw = Math.max(0, sRight - sx);
+    const sh = Math.max(0, sBottom - sy);
+    const dx = originX + sx;
+    const dy = originY + sy;
+
     // ─────────────────────────────────────────────────────────────────────────
     // PASS 1: Base terrain tiles
     // ─────────────────────────────────────────────────────────────────────────
 
     const tP1 = perf?.start('render.terrain.pass1');
-    ensureTerrainCache(world, config, tileSize, perf);
-    const nowMs = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
-    maybeUpdateGrassCache(terrainCache, world, config, tileSize, perf, nowMs);
-
-    if (terrainCache.base) {
-      ctx.drawImage(terrainCache.base.canvas, originX, originY);
+    if (terrainCache.base && sw > 0 && sh > 0) {
+      ctx.drawImage(terrainCache.base.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
     }
     perf?.end('render.terrain.pass1', tP1);
 
@@ -565,8 +598,8 @@ export function createRenderer(container, { camera }) {
 
     if (showDetail) {
       const tP2 = perf?.start('render.terrain.pass2');
-      if (terrainCache.detail) {
-        ctx.drawImage(terrainCache.detail.canvas, originX, originY);
+      if (terrainCache.detail && sw > 0 && sh > 0) {
+        ctx.drawImage(terrainCache.detail.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
       }
       perf?.end('render.terrain.pass2', tP2);
     }
@@ -586,7 +619,9 @@ export function createRenderer(container, { camera }) {
 
     if (terrainCache.grass) {
       const tP4 = perf?.start('render.terrain.pass4');
-      ctx.drawImage(terrainCache.grass.canvas, originX, originY);
+      if (sw > 0 && sh > 0) {
+        ctx.drawImage(terrainCache.grass.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
+      }
       perf?.end('render.terrain.pass4', tP4);
     }
 

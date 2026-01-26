@@ -58,6 +58,8 @@ let rafId = null;
 let tickTimerId = null;
 let lastTickTime = null;
 let accumulatorMs = 0;
+let lastFrameStartMs = null;
+let lastFrameTotalMs = 0;
 
 const tickLoopIntervalMs = 16;
 const maxTickDeltaMs = 250;
@@ -133,6 +135,19 @@ const updateCameraFollow = () => {
 
 const runFrame = (_time) => {
   const perf = getActivePerf();
+  const now = performance.now();
+
+  if (lastFrameStartMs !== null) {
+    const deltaMs = now - lastFrameStartMs;
+    if (perf) {
+      perf.end('frame.delta', now - deltaMs);
+    }
+
+    const waitMs = Math.max(0, deltaMs - lastFrameTotalMs);
+    if (perf) {
+      perf.end('frame.wait', now - waitMs);
+    }
+  }
 
   const tTotal = perf?.start('frame.total');
   try {
@@ -167,6 +182,9 @@ const runFrame = (_time) => {
     }
   } finally {
     perf?.end('frame.total', tTotal);
+    const endNow = performance.now();
+    lastFrameTotalMs = endNow - now;
+    lastFrameStartMs = now;
   }
 };
 
