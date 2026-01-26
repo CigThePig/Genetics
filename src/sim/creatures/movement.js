@@ -183,6 +183,11 @@ const resolveGrazeMoveRange = (config) => {
   return { min, max };
 };
 
+const resolveGrazeMinLocalHerdSize = (config) =>
+  Number.isFinite(config?.creatureGrazeMinLocalHerdSize)
+    ? Math.max(1, Math.trunc(config.creatureGrazeMinLocalHerdSize))
+    : 3;
+
 /**
  * Ensures wander state exists on creature motion.
  */
@@ -337,6 +342,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const grazeSpeedMultiplier = resolveGrazeSpeedMultiplier(config);
   const grazeIdleRange = resolveGrazeIdleRange(config);
   const grazeMoveRange = resolveGrazeMoveRange(config);
+  const grazeMinLocalHerdSize = resolveGrazeMinLocalHerdSize(config);
 
   // Small noise for targeted movement (much less than before)
   const targetHeadingNoise = 0.08;
@@ -381,8 +387,10 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     // Check if creature is being influenced by herding (and if threatened)
     const herdingOffset = getHerdingOffset(creature);
     const isThreatened = creature.herding?.isThreatened ?? false;
+    const localHerdSize = creature.herding?.herdSize ?? 1;
     const isWandering = intentType === 'wander' || intentType === 'graze';
-    const isGrazing = intentType === 'graze' && grazeEnabled;
+    const canGraze = localHerdSize >= grazeMinLocalHerdSize && !isThreatened;
+    const isGrazing = intentType === 'graze' && grazeEnabled && canGraze;
     const shouldApplyHerding = herdingOffset && isWandering;
 
     // Calculate boundary avoidance for wandering creatures
@@ -497,7 +505,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
 
     // Resolve grazing duty-cycle (idle vs move)
     let grazeMode = null;
-    if (isGrazing && !isThreatened && !target) {
+    if (isGrazing && !target) {
       const graze = ensureGrazeState(creature);
       if (graze.idleTicksRemaining > 0) {
         graze.idleTicksRemaining -= 1;

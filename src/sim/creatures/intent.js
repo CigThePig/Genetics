@@ -52,6 +52,11 @@ const resolveGrazeEnabled = (config) => config?.creatureGrazeEnabled !== false;
 const resolveGrazeMinRatio = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, Math.min(1, value)) : fallback;
 
+const resolveGrazeMinLocalHerdSize = (config) =>
+  Number.isFinite(config?.creatureGrazeMinLocalHerdSize)
+    ? Math.max(1, Math.trunc(config.creatureGrazeMinLocalHerdSize))
+    : 3;
+
 
 /**
  * Search / exploration helpers.
@@ -266,6 +271,7 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
   const grazeEnabled = resolveGrazeEnabled(config);
   const grazeMinEnergyRatio = resolveGrazeMinRatio(config?.creatureGrazeMinEnergyRatio, 0.75);
   const grazeMinWaterRatio = resolveGrazeMinRatio(config?.creatureGrazeMinWaterRatio, 0.75);
+  const grazeMinLocalHerdSize = resolveGrazeMinLocalHerdSize(config);
   const fallbackDrinkThreshold = resolveActionThreshold(config?.creatureDrinkThreshold, 0.8);
   const fallbackEatThreshold = resolveActionThreshold(config?.creatureEatThreshold, 0.8);
   const fallbackGrassEatMin = resolveActionAmount(config?.creatureGrassEatMin, 0.05);
@@ -629,7 +635,9 @@ export function updateCreatureIntent({ creatures, config, world, metrics, tick, 
     if (intent === 'wander' && !memoryEntry && grazeEnabled && !isPredator) {
       const hasGrazeMeters =
         energyRatio >= grazeMinEnergyRatio && waterRatio >= grazeMinWaterRatio;
-      if (hasGrazeMeters) {
+      const localHerdSize = creature.herding?.herdSize ?? 1;
+      const isThreatened = creature.herding?.isThreatened === true;
+      if (hasGrazeMeters && localHerdSize >= grazeMinLocalHerdSize && !isThreatened) {
         intent = 'graze';
         target = null;
       }
