@@ -959,6 +959,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
 /**
  * Applies worker results to creatures.
  * Uses creature IDs to handle array reordering/compaction.
+ * Always reads directly from result buffers for reliability.
  */
 function applyWorkerResults(result, spatialIndex, config) {
   const perf = getActivePerf();
@@ -970,33 +971,19 @@ function applyWorkerResults(result, spatialIndex, config) {
   const baseStrength = resolveHerdingStrength(config);
   const regroupStrength = resolveRegroupStrength(config);
 
-  // Find the slot that has these buffers
-  let slot = null;
-  for (const s of workerState.pool) {
-    if (s && !s.inUse) {
-      // This should be the slot that was just returned
-      // Check if buffers match
-      if (s.ids.buffer === buffers.ids) {
-        slot = s;
-        break;
-      }
-    }
-  }
-
-  // If we didn't find a matching slot, reconstruct from buffers
-  if (!slot) {
-    slot = {
-      ids: new Int32Array(buffers.ids),
-      outOffsetX: new Float32Array(buffers.outOffsetX),
-      outOffsetY: new Float32Array(buffers.outOffsetY),
-      outHerdSize: new Uint16Array(buffers.outHerdSize),
-      outThreatCount: new Uint16Array(buffers.outThreatCount),
-      outThreatened: new Uint8Array(buffers.outThreatened)
-    };
-  }
+  // Always create fresh TypedArray views from the result buffers.
+  // This avoids issues with buffer identity matching after transfers.
+  const ids = new Int32Array(buffers.ids);
+  const outOffsetX = new Float32Array(buffers.outOffsetX);
+  const outOffsetY = new Float32Array(buffers.outOffsetY);
+  const outHerdSize = new Uint16Array(buffers.outHerdSize);
+  const outThreatCount = new Uint16Array(buffers.outThreatCount);
+  const outThreatened = new Uint8Array(buffers.outThreatened);
 
   for (let i = 0; i < count; i++) {
-    const id = slot.ids[i];
+    const id = ids[i];
+    if (id < 0) continue; // Skip invalid entries
+
     const creature = spatialIndex?.getById?.(id);
     if (!creature || !creature.position) continue;
 
@@ -1012,9 +999,9 @@ function applyWorkerResults(result, spatialIndex, config) {
       continue;
     }
 
-    herding.herdSize = slot.outHerdSize[i] || 1;
-    herding.nearbyThreats = slot.outThreatCount[i];
-    herding.isThreatened = slot.outThreatened[i] === 1;
+    herding.herdSize = outHerdSize[i] || 1;
+    herding.nearbyThreats = outThreatCount[i];
+    herding.isThreatened = outThreatened[i] === 1;
 
     // Recheck urgent need on apply (because worker data is 1-tick old)
     if (hasUrgentNeed(creature)) {
@@ -1023,8 +1010,15 @@ function applyWorkerResults(result, spatialIndex, config) {
       continue;
     }
 
-    let ox = slot.outOffsetX[i];
-    let oy = slot.outOffsetY[i];
+    let ox = outOffsetX[i];
+    let oy = outOffsetY[i];
+
+    // Validate offset values - skip if NaN or Infinity
+    if (!Number.isFinite(ox) || !Number.isFinite(oy)) {
+      ox = 0;
+      oy = 0;
+    }
+
     const regroup = computeRegroupAssist(creature, null, spatialIndex, config);
     if (regroup) {
       ox += regroup.x * baseStrength * regroupStrength;
@@ -1182,10 +1176,52 @@ export function updateCreatureHerding({ creatures, config, spatialIndex }) {
   const currentTick = workerState.tickCounter;
 
   // Step 1: Apply results from previous tick if available
+  // Only apply if results are recent (within 5 ticks) to avoid stale data
+  const MAX_RESULT_AGE = 5;
+  let appliedResults = false;
+
   if (workerState.latestResult && workerState.latestResult.tick > workerState.lastAppliedTick) {
-    applyWorkerResults(workerState.latestResult, spatialIndex, config);
-    workerState.lastAppliedTick = workerState.latestResult.tick;
+    const resultAge = currentTick - workerState.latestResult.tick;
+    if (resultAge <= MAX_RESULT_AGE) {
+      applyWorkerResults(workerState.latestResult, spatialIndex, config);
+      workerState.lastAppliedTick = workerState.latestResult.tick;
+      appliedResults = true;
+    }
+    // Always clear latest result after checking to avoid re-checking stale data
     workerState.latestResult = null;
+  }
+
+  // If we didn't apply results and haven't applied any recently, ensure default herding state
+  // This prevents creatures from having stale herding data while waiting for worker
+  if (!appliedResults && currentTick - workerState.lastAppliedTick > MAX_RESULT_AGE) {
+    for (const creature of creatures) {
+      if (!creature?.position) continue;
+      const herding = ensureHerdingState(creature);
+      if (isPredator(creature.species)) {
+        herding.herdSize = 1;
+        herding.nearbyThreats = 0;
+        herding.isThreatened = false;
+        herding.targetOffset = null;
+        clearSmoothedOffset(herding);
+      } else {
+        // Keep existing herdSize/threats but decay smoothed offset toward zero
+        // to prevent stale movement data from persisting
+        if (herding.smoothedOffset) {
+          herding.smoothedOffset.x *= 0.9;
+          herding.smoothedOffset.y *= 0.9;
+          const mag = Math.hypot(herding.smoothedOffset.x, herding.smoothedOffset.y);
+          if (mag < 0.001) {
+            herding.targetOffset = null;
+            clearSmoothedOffset(herding);
+          } else {
+            herding.targetOffset = {
+              x: herding.smoothedOffset.x,
+              y: herding.smoothedOffset.y
+            };
+          }
+        }
+      }
+    }
   }
 
   // Step 2: Queue next job if not already in-flight

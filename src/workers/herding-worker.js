@@ -26,7 +26,7 @@ const wrapPi = (angle) => {
 
 /**
  * Lightweight spatial hash for neighbor queries within the worker.
- * Uses a Map with numeric keys for speed.
+ * Uses a Map with string keys for reliability (avoiding bitwise overflow).
  */
 class SpatialHash {
   constructor(cellSize) {
@@ -40,14 +40,12 @@ class SpatialHash {
   }
 
   /**
-   * Hash x,y to a numeric key. Assumes coordinates are non-negative
-   * or we offset them. We use a simple approach here.
+   * Hash x,y to a string key.
    */
   keyFor(x, y) {
-    // Offset coordinates to handle negatives (world is finite, say max 10000x10000)
-    const cx = ((x * this.invCellSize) | 0) + 50000;
-    const cy = ((y * this.invCellSize) | 0) + 50000;
-    return (cx << 16) | cy;
+    const cx = Math.floor(x * this.invCellSize);
+    const cy = Math.floor(y * this.invCellSize);
+    return `${cx},${cy}`;
   }
 
   insert(index, x, y) {
@@ -62,17 +60,17 @@ class SpatialHash {
 
   /**
    * Query neighbors within radius of (x, y).
-   * Calls callback(neighborIndex, dx, dy, distSq) for each.
+   * Calls callback(neighborIndex, radiusSq) for each potential neighbor.
    */
   queryNeighbors(x, y, radius, callback) {
     const r = Math.ceil(radius * this.invCellSize);
-    const cx0 = ((x * this.invCellSize) | 0) + 50000;
-    const cy0 = ((y * this.invCellSize) | 0) + 50000;
+    const cx0 = Math.floor(x * this.invCellSize);
+    const cy0 = Math.floor(y * this.invCellSize);
     const radiusSq = radius * radius;
 
     for (let dcx = -r; dcx <= r; dcx++) {
       for (let dcy = -r; dcy <= r; dcy++) {
-        const key = ((cx0 + dcx) << 16) | (cy0 + dcy);
+        const key = `${cx0 + dcx},${cy0 + dcy}`;
         const list = this.cells.get(key);
         if (!list) continue;
         for (let i = 0; i < list.length; i++) {
@@ -281,7 +279,7 @@ function computeHerding(data) {
       }
     }
 
-    // COHESION: Only if enough members and outside comfort band
+    // COHESION: Only if enough members - uses continuous strength curve
     if (membersCount >= minGroupSize - 1 && totalWeight >= 0.1) {
       const centerX = sumX / totalWeight;
       const centerY = sumY / totalWeight;
@@ -293,20 +291,38 @@ function computeHerding(data) {
         // When threatened, tighten up (reduce comfort band)
         const adjustedComfortMax = threatsCount > 0 ? comfortMax * 0.7 : comfortMax;
 
-        if (distCenter > adjustedComfortMax) {
-          // Strength increases as we get farther from comfort band
+        // Continuous strength curve (matches sync version):
+        // - Close: very gentle pull (0 to 0.15)
+        // - Medium: moderate pull (0.15 to 0.5)
+        // - Far: strong pull (0.5 to 1.0)
+        let cohesionStrength;
+        if (distCenter <= idealDistance) {
+          cohesionStrength = (distCenter / idealDistance) * 0.15;
+        } else if (distCenter <= adjustedComfortMax) {
+          const ratio = (distCenter - idealDistance) / (adjustedComfortMax - idealDistance);
+          cohesionStrength = 0.15 + ratio * 0.35;
+        } else {
           const excessDistance = distCenter - adjustedComfortMax;
-          const cohesionStrength = Math.min(1, excessDistance / idealDistance);
-          const cohesionX = (towardX / distCenter) * cohesionStrength;
-          const cohesionY = (towardY / distCenter) * cohesionStrength;
-          offsetX += cohesionX * baseStrength;
-          offsetY += cohesionY * baseStrength;
+          cohesionStrength = 0.5 + Math.min(0.5, excessDistance / idealDistance);
         }
+
+        const cohesionX = (towardX / distCenter) * cohesionStrength;
+        const cohesionY = (towardY / distCenter) * cohesionStrength;
+        offsetX += cohesionX * baseStrength;
+        offsetY += cohesionY * baseStrength;
       }
     }
 
-    outOffsetX[i] = offsetX;
-    outOffsetY[i] = offsetY;
+    // Validate and store final offsets
+    // Ensure outputs are finite numbers (protect against NaN/Infinity)
+    if (Number.isFinite(offsetX) && Number.isFinite(offsetY)) {
+      outOffsetX[i] = offsetX;
+      outOffsetY[i] = offsetY;
+    } else {
+      // Invalid computation, output zero
+      outOffsetX[i] = 0;
+      outOffsetY[i] = 0;
+    }
   }
 
   // Return result with all buffers transferred back
