@@ -251,6 +251,11 @@ export function createRenderer(container, { camera }) {
     grass: null,
     lastGrassUpdateMs: 0,
     lastGrassDirtyCounter: -1,
+    grassRebuildActive: false,
+    grassRebuildTargetDirtyCounter: 0,
+    grassRebuildNextRow: 0,
+    grassRebuildStartedMs: 0,
+    grassRebuildLastSliceMs: 0,
     tileSize: 0,
     pxW: 0,
     pxH: 0,
@@ -460,6 +465,43 @@ export function createRenderer(container, { camera }) {
     }
   };
 
+  const drawGrassRow = (layerCtx, world, config, tileSize, y) => {
+    const { cells } = world;
+    const grass = Array.isArray(world.grass) ? world.grass : null;
+    const grassCap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
+    const rowOffset = y * world.width;
+    const tileY = y * tileSize;
+
+    layerCtx.clearRect(0, tileY, layerCtx.canvas.width, tileSize);
+
+    if (!grass) return;
+
+    for (let x = 0; x < world.width; x++) {
+      const idx = rowOffset + x;
+      const terrain = cells[idx];
+      if (terrain === 'water') continue;
+
+      const grassValue = Number.isFinite(grass[idx]) ? grass[idx] : 0;
+      const grassRatio = grassCap > 0 ? Math.min(1, Math.max(0, grassValue / grassCap)) : 0;
+      if (grassRatio <= 0) continue;
+
+      const tileX = x * tileSize;
+      const grassHue = 95 + getTexture(x * 0.3, y * 0.3) * 20;
+      const grassSat = 45 + grassRatio * 25;
+      const grassLight = 35 + grassRatio * 15;
+      const grassAlpha = 0.25 + grassRatio * 0.35;
+
+      layerCtx.fillStyle = `hsla(${grassHue}, ${grassSat}%, ${grassLight}%, ${grassAlpha})`;
+      layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+
+      if (grassRatio > 0.6) {
+        const highlightAlpha = (grassRatio - 0.6) * 0.2;
+        layerCtx.fillStyle = `rgba(140, 200, 100, ${highlightAlpha})`;
+        layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+      }
+    }
+  };
+
   const ensureTerrainCache = (world, config, tileSize, perf) => {
     if (!world) return;
     const pxW = Math.max(1, Math.floor(world.width * tileSize));
@@ -490,19 +532,50 @@ export function createRenderer(container, { camera }) {
     terrainCache.grass = createLayer(pxW, pxH, { alpha: true });
     terrainCache.lastGrassUpdateMs = 0;
     terrainCache.lastGrassDirtyCounter = -1;
+    terrainCache.grassRebuildActive = false;
+    terrainCache.grassRebuildTargetDirtyCounter = 0;
+    terrainCache.grassRebuildNextRow = 0;
+    terrainCache.grassRebuildStartedMs = 0;
+    terrainCache.grassRebuildLastSliceMs = 0;
   };
 
   const maybeUpdateGrassCache = (cache, world, config, tileSize, perf, nowMs) => {
     if (!cache?.grass || !world) return;
     const intervalMs = 250;
     const dirtyCounter = Number.isFinite(world?.grassDirtyCounter) ? world.grassDirtyCounter : 0;
-    if (dirtyCounter === cache.lastGrassDirtyCounter) return;
-    if (cache.lastGrassUpdateMs && nowMs - cache.lastGrassUpdateMs < intervalMs) return;
+    if (!cache.grassRebuildActive) {
+      if (dirtyCounter === cache.lastGrassDirtyCounter) return;
+      if (cache.lastGrassUpdateMs && nowMs - cache.lastGrassUpdateMs < intervalMs) return;
+      cache.grassRebuildActive = true;
+      cache.grassRebuildTargetDirtyCounter = dirtyCounter;
+      cache.grassRebuildNextRow = 0;
+      cache.grassRebuildStartedMs = nowMs;
+      cache.grassRebuildLastSliceMs = 0;
+    }
+
+    if (!cache.grassRebuildActive) return;
+
     const tGrass = perf?.start('render.terrain.cacheUpdate.grass');
-    buildGrassLayer(cache.grass.ctx, world, config, tileSize);
+    const sliceStart = performance.now();
+    const sliceBudgetMs = 2;
+    const targetRows = world.height;
+    let y = cache.grassRebuildNextRow;
+
+    for (; y < targetRows; y++) {
+      drawGrassRow(cache.grass.ctx, world, config, tileSize, y);
+      cache.grassRebuildNextRow = y + 1;
+      if (performance.now() - sliceStart >= sliceBudgetMs) break;
+    }
+
+    cache.grassRebuildLastSliceMs = performance.now() - sliceStart;
     perf?.end('render.terrain.cacheUpdate.grass', tGrass);
-    cache.lastGrassUpdateMs = nowMs;
-    cache.lastGrassDirtyCounter = dirtyCounter;
+
+    if (cache.grassRebuildNextRow >= targetRows) {
+      cache.grassRebuildActive = false;
+      cache.lastGrassDirtyCounter = cache.grassRebuildTargetDirtyCounter;
+      cache.lastGrassUpdateMs = nowMs;
+      perf?.end('render.terrain.cacheUpdate.grassRebuildTotal', cache.grassRebuildStartedMs);
+    }
   };
 
   const drawTerrain = (state, world, config) => {

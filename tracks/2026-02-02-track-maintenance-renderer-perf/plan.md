@@ -58,6 +58,10 @@
 - Added viewport-cropped cache blits, grass dirty tracking, and frame-level perf timers to address new performance profiling requirements.
 - Scope expanded beyond Phase 2; see Phase 3 for implementation and verification.
 
+## Deviation Note (2026-02-03)
+
+- Grass cache rebuilds are now incremental slices to remove 30–50ms spikes while keeping visuals consistent.
+
 ## Phase 3 — Cropped terrain blits + grass dirty throttling + frame timers
 
 ### Tasks
@@ -86,3 +90,27 @@
 ### Stop point
 
 - Stop after Phase 3 verification and update active-track.md with current phase/task.
+
+## Phase 4 — Incremental grass cache rebuild slices
+
+### Tasks
+
+- [x] Add grass rebuild state to the terrain cache and reset on cache invalidation.
+- [x] Implement row-by-row grass rebuild slices with a per-frame time budget.
+- [x] Add a total grass rebuild perf timer and keep existing grass cache update timer for slices.
+- [x] Update render timer ordering to include the new grass rebuild total timer.
+- [ ] Reminder: update /context/repo-map.md if files/roles change.
+
+### Files touched
+
+- src/render/renderer-enhanced.js
+- src/ui/index.js
+
+### Verification checklist
+
+- [ ] Manual: run the sim with profiler on; confirm grass cache update timer no longer spikes and rebuild total timer appears.
+- [ ] Manual: verify grass visuals update over multiple frames without stalls.
+
+### Stop point
+
+- Stop after Phase 4 verification and update active-track.md with current phase/task.
