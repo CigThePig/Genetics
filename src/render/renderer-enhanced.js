@@ -208,6 +208,8 @@ export function createRenderer(container, { camera }) {
   const drawTerrain = (state, world, config) => {
     const tileSize = resolveTileSize(config);
     const { width, height } = canvas.getBoundingClientRect();
+    const perf = getActivePerf();
+    const tBg = perf?.start('render.terrain.bg');
 
     // Draw background with subtle vignette
     const bgGradient = ctx.createRadialGradient(
@@ -230,8 +232,10 @@ export function createRenderer(container, { camera }) {
 
     if (!world) {
       ctx.restore();
+      perf?.end('render.terrain.bg', tBg);
       return;
     }
+    perf?.end('render.terrain.bg', tBg);
 
     const originX = -(world.width * tileSize) / 2;
     const originY = -(world.height * tileSize) / 2;
@@ -267,6 +271,7 @@ export function createRenderer(container, { camera }) {
     // PASS 1: Base terrain tiles
     // ─────────────────────────────────────────────────────────────────────────
 
+    const tP1 = perf?.start('render.terrain.pass1');
     for (let y = startRow; y < endRow; y++) {
       const rowOffset = y * world.width;
       const tileY = originY + y * tileSize;
@@ -329,12 +334,14 @@ export function createRenderer(container, { camera }) {
         }
       }
     }
+    perf?.end('render.terrain.pass1', tP1);
 
     // ─────────────────────────────────────────────────────────────────────────
     // PASS 2: Terrain edge blending
     // ─────────────────────────────────────────────────────────────────────────
 
     if (showDetail) {
+      const tP2 = perf?.start('render.terrain.pass2');
       ctx.globalAlpha = 0.4;
 
       for (let y = startRow; y < endRow; y++) {
@@ -385,6 +392,7 @@ export function createRenderer(container, { camera }) {
       }
 
       ctx.globalAlpha = 1;
+      perf?.end('render.terrain.pass2', tP2);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -392,6 +400,7 @@ export function createRenderer(container, { camera }) {
     // ─────────────────────────────────────────────────────────────────────────
 
     if (showDetail) {
+      const tP3 = perf?.start('render.terrain.pass3');
       for (let y = startRow; y < endRow; y++) {
         const rowOffset = y * world.width;
         const tileY = originY + y * tileSize;
@@ -429,6 +438,7 @@ export function createRenderer(container, { camera }) {
           }
         }
       }
+      perf?.end('render.terrain.pass3', tP3);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -436,6 +446,7 @@ export function createRenderer(container, { camera }) {
     // ─────────────────────────────────────────────────────────────────────────
 
     if (grass) {
+      const tP4 = perf?.start('render.terrain.pass4');
       for (let y = startRow; y < endRow; y++) {
         const rowOffset = y * world.width;
         const tileY = originY + y * tileSize;
@@ -469,6 +480,7 @@ export function createRenderer(container, { camera }) {
           }
         }
       }
+      perf?.end('render.terrain.pass4', tP4);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -476,6 +488,7 @@ export function createRenderer(container, { camera }) {
     // ─────────────────────────────────────────────────────────────────────────
 
     if (grassStress) {
+      const tP5 = perf?.start('render.terrain.pass5');
       for (let y = startRow; y < endRow; y++) {
         const rowOffset = y * world.width;
         const tileY = originY + y * tileSize;
@@ -494,6 +507,7 @@ export function createRenderer(container, { camera }) {
           }
         }
       }
+      perf?.end('render.terrain.pass5', tP5);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
@@ -501,6 +515,7 @@ export function createRenderer(container, { camera }) {
     // ─────────────────────────────────────────────────────────────────────────
 
     if (Array.isArray(world.bushes) && world.bushes.length > 0) {
+      const tP6 = perf?.start('render.terrain.pass6');
       const bushRadiusBase = tileSize * 0.35;
       const bushRadiusGrowth = tileSize * 0.2;
       const berryRadiusBase = tileSize * 0.1;
@@ -560,9 +575,10 @@ export function createRenderer(container, { camera }) {
             ctx.beginPath();
             ctx.fillStyle = `rgba(80, 140, 60, ${0.2 + health * 0.2})`;
             ctx.arc(lx, ly, bushRadius * 0.25, 0, Math.PI * 2);
-            ctx.fill();
-          }
-        }
+        ctx.fill();
+      }
+      perf?.end('render.terrain.pass6', tP6);
+    }
 
         // Soft outline
         ctx.beginPath();
@@ -627,6 +643,7 @@ export function createRenderer(container, { camera }) {
     // ─────────────────────────────────────────────────────────────────────────
 
     if (Array.isArray(world.carcasses) && world.carcasses.length > 0) {
+      const tP6b = perf?.start('render.terrain.pass6b');
       const maxMeatPerCell = Number.isFinite(config?.carcassMaxMeatPerCell) ? config.carcassMaxMeatPerCell : 2;
       const baseRadius = tileSize * 0.18;
       const extraRadius = tileSize * 0.14;
@@ -695,12 +712,14 @@ export function createRenderer(container, { camera }) {
 
         ctx.restore();
       }
+      perf?.end('render.terrain.pass6b', tP6b);
     }
 
     // ─────────────────────────────────────────────────────────────────────────
     // PASS 7: Map border with glow
     // ─────────────────────────────────────────────────────────────────────────
 
+    const tP7 = perf?.start('render.terrain.pass7');
     // Outer glow
     ctx.shadowColor = 'rgba(100, 180, 140, 0.4)';
     ctx.shadowBlur = 15 / state.zoom;
@@ -713,8 +732,11 @@ export function createRenderer(container, { camera }) {
     ctx.strokeStyle = 'rgba(60, 120, 90, 0.8)';
     ctx.lineWidth = 1.5 / state.zoom;
     ctx.strokeRect(originX, originY, world.width * tileSize, world.height * tileSize);
+    perf?.end('render.terrain.pass7', tP7);
 
+    const tRestore = perf?.start('render.terrain.restore');
     ctx.restore();
+    perf?.end('render.terrain.restore', tRestore);
   };
 
   // ═══════════════════════════════════════════════════════════════════════════

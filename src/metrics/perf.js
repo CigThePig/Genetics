@@ -1,12 +1,20 @@
 export function createPerfSampler({ windowMs = 1000 } = {}) {
   let enabled = true;
   let windowStart = performance.now();
-  const groups = { tick: true, render: true };
+  const targetWindowMs = windowMs;
+  const groups = { tick: true, render: true, frame: true };
   const timers = new Map();
   // Keep the last completed window so UI reads stable values (no flicker at rollover).
   let lastSnapshot = null;
 
   const resetWindow = (now) => {
+    const entries = buildEntries();
+    lastSnapshot = {
+      targetWindowMs,
+      windowMs: now - windowStart,
+      updatedAt: now,
+      timers: entries
+    };
     timers.clear();
     windowStart = now;
   };
@@ -16,6 +24,7 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
   const isGroupEnabled = (group) => {
     if (group === 'tick') return groups.tick;
     if (group === 'render') return groups.render;
+    if (group === 'frame') return groups.frame;
     return false;
   };
 
@@ -61,7 +70,7 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
       return enabled;
     },
     setGroupEnabled(groupName, nextEnabled) {
-      if (groupName === 'tick' || groupName === 'render') {
+      if (groupName === 'tick' || groupName === 'render' || groupName === 'frame') {
         groups[groupName] = Boolean(nextEnabled);
       }
     },
@@ -70,12 +79,15 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
     },
     snapshot(now = performance.now()) {
       const elapsed = now - windowStart;
-      if (elapsed >= windowMs) {
-        lastSnapshot = {
-          windowMs,
+      if (!enabled) {
+        return {
+          targetWindowMs,
+          windowMs: elapsed,
           updatedAt: now,
-          timers: buildEntries()
+          timers: []
         };
+      }
+      if (elapsed >= targetWindowMs) {
         resetWindow(now);
       }
 
@@ -83,6 +95,7 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
       if (lastSnapshot) return lastSnapshot;
 
       return {
+        targetWindowMs,
         windowMs: elapsed,
         updatedAt: now,
         timers: buildEntries()
