@@ -392,6 +392,7 @@ export function createUI({
     'render.terrain.cacheBuild.base',
     'render.terrain.cacheBuild.detail',
     'render.terrain.cacheUpdate.grass',
+    'render.terrain.cacheUpdate.grassRebuildTotal',
     'render.terrain.pass1',
     'render.terrain.pass2',
     'render.terrain.pass3',
