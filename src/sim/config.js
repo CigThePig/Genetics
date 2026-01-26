@@ -125,6 +125,9 @@ export const simConfig = {
   creatureHerdingOffsetDeadzone: 0.04,
   creatureHerdingOffsetSmoothing: 0.25,
   creatureHerdingHeadingBlendMax: 0.25,
+  creatureHerdingTargetBlendEnabled: true,
+  creatureHerdingTargetBlendMax: 0.12,
+  creatureHerdingTargetBlendIsolationBoost: 0.25,
   creatureHerdingUseWorker: 0, // 0 = sync (default), 1 = offload to Web Worker
   creatureHerdingRegroupEnabled: true,
   creatureHerdingRegroupMinLocalHerdSize: 3,
@@ -537,6 +540,27 @@ export const configMeta = {
     min: 0,
     max: 0.5,
     step: 0.05,
+    category: 'herding'
+  },
+  creatureHerdingTargetBlendEnabled: {
+    label: 'Target Blend Enabled',
+    min: 0,
+    max: 1,
+    step: 1,
+    category: 'herding'
+  },
+  creatureHerdingTargetBlendMax: {
+    label: 'Target Blend Max',
+    min: 0,
+    max: 0.35,
+    step: 0.01,
+    category: 'herding'
+  },
+  creatureHerdingTargetBlendIsolationBoost: {
+    label: 'Isolation Boost',
+    min: 0,
+    max: 0.5,
+    step: 0.01,
     category: 'herding'
   },
   creatureHerdingUseWorker: {

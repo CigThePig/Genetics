@@ -770,13 +770,7 @@ const applySmoothedOffset = (herding, rawX, rawY, deadzone, smoothing) => {
 const hasUrgentNeed = (creature) => {
   const intent = creature.intent?.type;
   // These intents mean the creature needs something urgently
-  return (
-    intent === 'drink' ||
-    intent === 'eat' ||
-    intent === 'seek' ||
-    intent === 'hunt' ||
-    intent === 'mate'
-  );
+  return intent === 'drink' || intent === 'eat' || intent === 'hunt';
 };
 
 /**
