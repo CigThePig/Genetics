@@ -117,7 +117,7 @@ export function createMetrics({ container } = {}) {
       return perf.isEnabled();
     },
     setPerfGroupEnabled(group, nextEnabled) {
-      if (group !== 'tick' && group !== 'render') {
+      if (group !== 'tick' && group !== 'render' && group !== 'frame') {
         return;
       }
       perf.setGroupEnabled(group, Boolean(nextEnabled));

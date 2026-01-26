@@ -22,6 +22,7 @@ import { createGraphsPanel } from './ui/graphs-panel.js';
 import { createSettings } from './app/settings.js';
 import { simConfig } from './sim/config.js';
 import { cloneConfigValue } from './sim/utils/config.js';
+import { getActivePerf } from './metrics/perf-registry.js';
 
 const app = document.querySelector('#app');
 
@@ -131,15 +132,41 @@ const updateCameraFollow = () => {
 };
 
 const runFrame = (_time) => {
-  updateCameraFollow();
-  renderer.render(sim);
-  const summary = sim.getSummary();
-  ui.setMetrics?.(summary);
-  graphsPanel.recordMetrics(summary);
-  inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
-  
-  if (running) {
-    rafId = requestAnimationFrame(runFrame);
+  const perf = getActivePerf();
+
+  const tTotal = perf?.start('frame.total');
+  try {
+    const tFollow = perf?.start('frame.cameraFollow');
+    updateCameraFollow();
+    perf?.end('frame.cameraFollow', tFollow);
+
+    const tRender = perf?.start('frame.render');
+    renderer.render(sim);
+    perf?.end('frame.render', tRender);
+
+    const tSummary = perf?.start('frame.summary');
+    const summary = sim.getSummary();
+    perf?.end('frame.summary', tSummary);
+
+    const tSetMetrics = perf?.start('frame.ui.setMetrics');
+    ui.setMetrics?.(summary);
+    perf?.end('frame.ui.setMetrics', tSetMetrics);
+
+    const tGraphs = perf?.start('frame.ui.graphsRecord');
+    graphsPanel.recordMetrics(summary);
+    perf?.end('frame.ui.graphsRecord', tGraphs);
+
+    const tInspector = perf?.start('frame.ui.inspector');
+    inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
+    perf?.end('frame.ui.inspector', tInspector);
+
+    if (running) {
+      const tRaf = perf?.start('frame.rafSchedule');
+      rafId = requestAnimationFrame(runFrame);
+      perf?.end('frame.rafSchedule', tRaf);
+    }
+  } finally {
+    perf?.end('frame.total', tTotal);
   }
 };
 
