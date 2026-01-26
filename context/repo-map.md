@@ -107,6 +107,8 @@ Rules:
   - Contains: Maintenance spec/blueprint/plan (Renderer perf micro-optimizations)
 - tracks/2026-02-03-track-maintenance-world-scale-pack-relocation/
   - Contains: Maintenance spec/blueprint/plan (World scale + resource scarcity + pack relocation)
+- tracks/2026-02-04-track-maintenance-herd-anchor-stability/
+  - Contains: Maintenance spec/blueprint/plan (Herd anchor stability + wander cohesion)
 - tracks/2026-01-27-track-maintenance-touch-gesture-guardrails/
   - Contains: Maintenance spec/blueprint/plan (Touch gesture guardrails)
 - tracks/2026-01-28-track-maintenance-camera-change-callback/
