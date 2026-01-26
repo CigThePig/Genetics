@@ -26,7 +26,7 @@ const wrapPi = (angle) => {
 
 /**
  * Lightweight spatial hash for neighbor queries within the worker.
- * Uses a Map with numeric keys for speed.
+ * Uses a Map with string keys for reliability (avoiding bitwise overflow).
  */
 class SpatialHash {
   constructor(cellSize) {
@@ -40,14 +40,12 @@ class SpatialHash {
   }
 
   /**
-   * Hash x,y to a numeric key. Assumes coordinates are non-negative
-   * or we offset them. We use a simple approach here.
+   * Hash x,y to a string key.
    */
   keyFor(x, y) {
-    // Offset coordinates to handle negatives (world is finite, say max 10000x10000)
-    const cx = ((x * this.invCellSize) | 0) + 50000;
-    const cy = ((y * this.invCellSize) | 0) + 50000;
-    return (cx << 16) | cy;
+    const cx = Math.floor(x * this.invCellSize);
+    const cy = Math.floor(y * this.invCellSize);
+    return `${cx},${cy}`;
   }
 
   insert(index, x, y) {
@@ -62,17 +60,17 @@ class SpatialHash {
 
   /**
    * Query neighbors within radius of (x, y).
-   * Calls callback(neighborIndex, dx, dy, distSq) for each.
+   * Calls callback(neighborIndex, radiusSq) for each potential neighbor.
    */
   queryNeighbors(x, y, radius, callback) {
     const r = Math.ceil(radius * this.invCellSize);
-    const cx0 = ((x * this.invCellSize) | 0) + 50000;
-    const cy0 = ((y * this.invCellSize) | 0) + 50000;
+    const cx0 = Math.floor(x * this.invCellSize);
+    const cy0 = Math.floor(y * this.invCellSize);
     const radiusSq = radius * radius;
 
     for (let dcx = -r; dcx <= r; dcx++) {
       for (let dcy = -r; dcy <= r; dcy++) {
-        const key = ((cx0 + dcx) << 16) | (cy0 + dcy);
+        const key = `${cx0 + dcx},${cy0 + dcy}`;
         const list = this.cells.get(key);
         if (!list) continue;
         for (let i = 0; i < list.length; i++) {
@@ -95,7 +93,7 @@ function computeHerding(data) {
   }
 
   // Reconstruct typed arrays from transferred buffers
-  const _ids = new Int32Array(buffers.ids);
+  const ids = new Int32Array(buffers.ids);
   const x = new Float32Array(buffers.x);
   const y = new Float32Array(buffers.y);
   const heading = new Float32Array(buffers.heading);
@@ -117,7 +115,6 @@ function computeHerding(data) {
     threatStrength,
     minGroupSize,
     separation: separationDist,
-    separationMultiplier = 1.5,
     comfortMax,
     idealDistance
   } = params;
@@ -265,8 +262,8 @@ function computeHerding(data) {
     }
 
     // SEPARATION: Always apply (stronger than cohesion)
-    offsetX += sepX * baseStrength * separationMultiplier;
-    offsetY += sepY * baseStrength * separationMultiplier;
+    offsetX += sepX * baseStrength * 3;
+    offsetY += sepY * baseStrength * 3;
 
     // ALIGNMENT: Only if enough members
     if (membersCount >= minGroupSize - 1 && totalAlignWeight >= 0.5) {
@@ -305,8 +302,16 @@ function computeHerding(data) {
       }
     }
 
-    outOffsetX[i] = offsetX;
-    outOffsetY[i] = offsetY;
+    // Validate and store final offsets
+    // Ensure outputs are finite numbers (protect against NaN/Infinity)
+    if (Number.isFinite(offsetX) && Number.isFinite(offsetY)) {
+      outOffsetX[i] = offsetX;
+      outOffsetY[i] = offsetY;
+    } else {
+      // Invalid computation, output zero
+      outOffsetX[i] = 0;
+      outOffsetY[i] = 0;
+    }
   }
 
   // Return result with all buffers transferred back

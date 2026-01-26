@@ -20,7 +20,6 @@
  */
 
 import { SPECIES } from '../species.js';
-import { resolveTicksPerSecond } from '../utils/resolvers.js';
 import { getActivePerf } from '../../metrics/perf-registry.js';
 
 /**
@@ -98,14 +97,6 @@ const resolveHerdingSeparation = (config) =>
     : 2.5;
 
 /**
- * Resolves separation multiplier strength.
- */
-const resolveSeparationMultiplier = (config) =>
-  Number.isFinite(config?.creatureHerdingSeparationMultiplier)
-    ? Math.max(0, config.creatureHerdingSeparationMultiplier)
-    : 1.5;
-
-/**
  * Resolves comfort band min (same as separation, inside = no steering).
  */
 const resolveComfortMin = (config) =>
@@ -128,62 +119,6 @@ const resolveIdealDistance = (config) =>
   Number.isFinite(config?.creatureHerdingIdealDistance)
     ? Math.max(0, config.creatureHerdingIdealDistance)
     : 4;
-
-/**
- * Resolves deadzone below which offsets are ignored.
- */
-const resolveOffsetDeadzone = (config) =>
-  Number.isFinite(config?.creatureHerdingOffsetDeadzone)
-    ? Math.max(0, config.creatureHerdingOffsetDeadzone)
-    : 0.04;
-
-/**
- * Resolves smoothing alpha for herding offsets.
- */
-const resolveOffsetSmoothing = (config) =>
-  Number.isFinite(config?.creatureHerdingOffsetSmoothing)
-    ? Math.max(0, Math.min(1, config.creatureHerdingOffsetSmoothing))
-    : 0.25;
-
-/**
- * Resolves regroup assist enabled flag.
- */
-const resolveRegroupEnabled = (config) => config?.creatureHerdingRegroupEnabled !== false;
-
-/**
- * Resolves regroup minimum local herd size.
- */
-const resolveRegroupMinLocalHerdSize = (config) =>
-  Number.isFinite(config?.creatureHerdingRegroupMinLocalHerdSize)
-    ? Math.max(1, Math.trunc(config.creatureHerdingRegroupMinLocalHerdSize))
-    : 3;
-
-/**
- * Resolves regroup search range.
- */
-const resolveRegroupRange = (config) =>
-  Number.isFinite(config?.creatureHerdingRegroupRange)
-    ? Math.max(0, config.creatureHerdingRegroupRange)
-    : 45;
-
-/**
- * Resolves regroup strength multiplier (relative to base strength).
- */
-const resolveRegroupStrength = (config) =>
-  Number.isFinite(config?.creatureHerdingRegroupStrength)
-    ? Math.max(0, Math.min(1, config.creatureHerdingRegroupStrength))
-    : 0.35;
-
-/**
- * Resolves regroup interval in ticks.
- */
-const resolveRegroupIntervalTicks = (config) => {
-  const ticksPerSecond = resolveTicksPerSecond(config);
-  const seconds = Number.isFinite(config?.creatureHerdingRegroupIntervalSeconds)
-    ? Math.max(0.05, config.creatureHerdingRegroupIntervalSeconds)
-    : 0.6;
-  return Math.max(1, Math.floor(seconds * ticksPerSecond));
-};
 
 /**
  * Checks if herding is enabled.
@@ -558,8 +493,7 @@ const calculateAlignment = (creature, members) => {
 
 /**
  * Calculates gentle cohesion toward herd center.
- * Uses graduated strength - always pulls gently toward center, stronger when farther.
- * This eliminates the "dead zone" where no attractive force acted.
+ * Only pulls if creature is outside the comfort band.
  */
 const calculateCohesion = (creature, members, comfortMax, idealDistance) => {
   if (members.length === 0) {
@@ -590,31 +524,14 @@ const calculateCohesion = (creature, members, comfortMax, idealDistance) => {
     return null;
   }
 
-  // Graduated cohesion strength based on distance:
-  // - Very weak when close (inside idealDistance)
-  // - Stronger when far (outside idealDistance, approaching comfortMax)
-  // - Maximum strength when beyond comfortMax
-  //
-  // This creates continuous attraction that:
-  // - Doesn't fight separation when very close
-  // - Gently maintains herd cohesion at medium distances (the old "dead zone")
-  // - Strongly pulls back scattered members
-
-  let strength;
-  if (distance <= idealDistance) {
-    // Close: very gentle pull (0 to 0.15)
-    // This won't overpower separation but provides gentle drift toward center
-    strength = (distance / idealDistance) * 0.15;
-  } else if (distance <= comfortMax) {
-    // Medium (old dead zone): moderate pull (0.15 to 0.5)
-    // This is the key fix - now there's attraction in this range
-    const ratio = (distance - idealDistance) / (comfortMax - idealDistance);
-    strength = 0.15 + ratio * 0.35;
-  } else {
-    // Far: strong pull (0.5 to 1.0)
-    const excessDistance = distance - comfortMax;
-    strength = 0.5 + Math.min(0.5, excessDistance / idealDistance);
+  // Only apply cohesion if we're outside comfort band
+  if (distance <= comfortMax) {
+    return null; // Inside comfort band, no cohesion needed
   }
+
+  // Strength increases as we get farther from comfort band
+  const excessDistance = distance - comfortMax;
+  const strength = Math.min(1, excessDistance / idealDistance);
 
   return {
     x: (towardX / distance) * strength,
@@ -650,112 +567,6 @@ const calculateSeparation = (members, separationDist) => {
 };
 
 /**
- * Computes a long-range regroup assist vector for scattered herbivores.
- * Returns a normalized vector toward the nearest herd mate, scaled by distance.
- * 
- * PERSISTENCE FIX: Instead of returning null on non-compute ticks (which caused
- * the regroup effect to decay), we now cache the last computed vector and return
- * it until the next compute interval. This provides continuous regrouping pull
- * for isolated creatures.
- */
-const computeRegroupAssist = (creature, creatures, spatialIndex, config) => {
-  if (!creature?.position) {
-    return null;
-  }
-  if (!resolveRegroupEnabled(config)) {
-    return null;
-  }
-  if (isPredator(creature.species)) {
-    return null;
-  }
-  
-  const herding = creature.herding;
-  
-  // Clear cached regroup if urgent need or threatened (creature has other priorities)
-  if (hasUrgentNeed(creature)) {
-    if (herding) herding.lastRegroupVector = null;
-    return null;
-  }
-  if (herding?.isThreatened) {
-    if (herding) herding.lastRegroupVector = null;
-    return null;
-  }
-
-  const minLocalHerdSize = resolveRegroupMinLocalHerdSize(config);
-  const herdSize = herding?.herdSize ?? 1;
-  
-  // Clear cached regroup if creature now has enough herdmates
-  if (herdSize >= minLocalHerdSize) {
-    if (herding) herding.lastRegroupVector = null;
-    return null;
-  }
-
-  const intervalTicks = resolveRegroupIntervalTicks(config);
-  const ageTicks = Number.isFinite(creature.ageTicks) ? creature.ageTicks : 0;
-  const idOffset = Number.isFinite(creature.id) ? creature.id : 0;
-  
-  // On non-compute ticks, return the cached regroup vector (if any)
-  // This maintains continuous regroup pull instead of pulsing
-  if ((ageTicks + idOffset) % intervalTicks !== 0) {
-    return herding?.lastRegroupVector ?? null;
-  }
-
-  const range = resolveRegroupRange(config);
-  if (range <= 0) {
-    if (herding) herding.lastRegroupVector = null;
-    return null;
-  }
-
-  let nearest = null;
-  let nearestDistSq = range * range;
-
-  if (spatialIndex) {
-    const nearby = spatialIndex.queryNearby(creature.position.x, creature.position.y, range, {
-      exclude: creature,
-      filter: (other) => other.species === creature.species && other.position
-    });
-
-    for (const { distanceSq, dx, dy } of nearby) {
-      if (distanceSq <= 0 || distanceSq > nearestDistSq) continue;
-      nearest = { dx, dy, distanceSq };
-      nearestDistSq = distanceSq;
-    }
-  } else if (Array.isArray(creatures)) {
-    for (const other of creatures) {
-      if (other === creature || !other?.position) continue;
-      if (other.species !== creature.species) continue;
-      const dx = other.position.x - creature.position.x;
-      const dy = other.position.y - creature.position.y;
-      const distanceSq = dx * dx + dy * dy;
-      if (distanceSq <= 0 || distanceSq > nearestDistSq) continue;
-      nearest = { dx, dy, distanceSq };
-      nearestDistSq = distanceSq;
-    }
-  }
-
-  if (!nearest) {
-    if (herding) herding.lastRegroupVector = null;
-    return null;
-  }
-
-  const distance = Math.sqrt(nearest.distanceSq);
-  if (distance <= 0.001) {
-    if (herding) herding.lastRegroupVector = null;
-    return null;
-  }
-  const strength = Math.min(1, Math.max(0.15, distance / range));
-  const result = {
-    x: (nearest.dx / distance) * strength,
-    y: (nearest.dy / distance) * strength
-  };
-  
-  // Cache the computed vector for persistence
-  if (herding) herding.lastRegroupVector = result;
-  
-  return result;
-};
-
-/**
  * Ensures herding state exists on creature.
  */
 const ensureHerdingState = (creature) => {
@@ -764,47 +575,10 @@ const ensureHerdingState = (creature) => {
       herdSize: 0,
       nearbyThreats: 0,
       isThreatened: false,
-      targetOffset: null,
-      smoothedOffset: { x: 0, y: 0 },
-      lastRegroupVector: null // Cached regroup vector for persistence between compute intervals
+      targetOffset: null
     };
   }
   return creature.herding;
-};
-
-const clearSmoothedOffset = (herding) => {
-  if (!herding) {
-    return;
-  }
-  if (!herding.smoothedOffset) {
-    herding.smoothedOffset = { x: 0, y: 0 };
-  } else {
-    herding.smoothedOffset.x = 0;
-    herding.smoothedOffset.y = 0;
-  }
-};
-
-const applySmoothedOffset = (herding, rawX, rawY, deadzone, smoothing) => {
-  const magnitude = Math.hypot(rawX, rawY);
-  const useX = magnitude < deadzone ? 0 : rawX;
-  const useY = magnitude < deadzone ? 0 : rawY;
-  const alpha = smoothing;
-  if (!herding.smoothedOffset) {
-    herding.smoothedOffset = { x: 0, y: 0 };
-  }
-  herding.smoothedOffset.x = herding.smoothedOffset.x * (1 - alpha) + useX * alpha;
-  herding.smoothedOffset.y = herding.smoothedOffset.y * (1 - alpha) + useY * alpha;
-
-  const smoothMag = Math.hypot(herding.smoothedOffset.x, herding.smoothedOffset.y);
-  if (smoothMag > 0.001) {
-    herding.targetOffset = {
-      x: herding.smoothedOffset.x,
-      y: herding.smoothedOffset.y
-    };
-  } else {
-    herding.targetOffset = null;
-    clearSmoothedOffset(herding);
-  }
 };
 
 /**
@@ -814,7 +588,13 @@ const applySmoothedOffset = (herding, rawX, rawY, deadzone, smoothing) => {
 const hasUrgentNeed = (creature) => {
   const intent = creature.intent?.type;
   // These intents mean the creature needs something urgently
-  return intent === 'drink' || intent === 'eat' || intent === 'hunt';
+  return (
+    intent === 'drink' ||
+    intent === 'eat' ||
+    intent === 'seek' ||
+    intent === 'hunt' ||
+    intent === 'mate'
+  );
 };
 
 /**
@@ -844,13 +624,9 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
   const threatStrength = resolveThreatStrength(config);
   const minGroupSize = resolveHerdingMinGroupSize(config);
   const separation = resolveHerdingSeparation(config);
-  const separationMultiplier = resolveSeparationMultiplier(config);
   const _comfortMin = resolveComfortMin(config); // Reserved for future comfort band logic
   const comfortMax = resolveComfortMax(config);
   const idealDistance = resolveIdealDistance(config);
-  const offsetDeadzone = resolveOffsetDeadzone(config);
-  const offsetSmoothing = resolveOffsetSmoothing(config);
-  const regroupStrength = resolveRegroupStrength(config);
 
   for (const creature of creatures) {
     if (!creature?.position) {
@@ -865,7 +641,6 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
       herding.nearbyThreats = 0;
       herding.isThreatened = false;
       herding.targetOffset = null;
-      clearSmoothedOffset(herding);
       continue;
     }
 
@@ -882,7 +657,6 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
     // Let them go get food/water
     if (hasUrgentNeed(creature)) {
       herding.targetOffset = null;
-      clearSmoothedOffset(herding);
       continue;
     }
 
@@ -904,8 +678,8 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
     const sep = calculateSeparation(members, separation);
     if (sep) {
       // Separation is stronger than cohesion
-      offsetX += sep.x * baseStrength * separationMultiplier;
-      offsetY += sep.y * baseStrength * separationMultiplier;
+      offsetX += sep.x * baseStrength * 3;
+      offsetY += sep.y * baseStrength * 3;
       hasOffset = true;
     }
 
@@ -933,19 +707,11 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
       }
     }
 
-    const regroup = computeRegroupAssist(creature, creatures, index, config);
-    if (regroup) {
-      offsetX += regroup.x * baseStrength * regroupStrength;
-      offsetY += regroup.y * baseStrength * regroupStrength;
-      hasOffset = true;
-    }
-
     // Store result
-    if (hasOffset) {
-      applySmoothedOffset(herding, offsetX, offsetY, offsetDeadzone, offsetSmoothing);
+    if (hasOffset && (Math.abs(offsetX) > 0.001 || Math.abs(offsetY) > 0.001)) {
+      herding.targetOffset = { x: offsetX, y: offsetY };
     } else {
       herding.targetOffset = null;
-      clearSmoothedOffset(herding);
     }
   }
 
@@ -959,44 +725,27 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex }) {
 /**
  * Applies worker results to creatures.
  * Uses creature IDs to handle array reordering/compaction.
+ * Always reads directly from result buffers for reliability.
  */
-function applyWorkerResults(result, spatialIndex, config) {
+function applyWorkerResults(result, spatialIndex) {
   const perf = getActivePerf();
   const tApply = perf?.start('tick.herding.workerApply');
 
   const { count, buffers } = result;
-  const offsetDeadzone = resolveOffsetDeadzone(config);
-  const offsetSmoothing = resolveOffsetSmoothing(config);
-  const baseStrength = resolveHerdingStrength(config);
-  const regroupStrength = resolveRegroupStrength(config);
 
-  // Find the slot that has these buffers
-  let slot = null;
-  for (const s of workerState.pool) {
-    if (s && !s.inUse) {
-      // This should be the slot that was just returned
-      // Check if buffers match
-      if (s.ids.buffer === buffers.ids) {
-        slot = s;
-        break;
-      }
-    }
-  }
-
-  // If we didn't find a matching slot, reconstruct from buffers
-  if (!slot) {
-    slot = {
-      ids: new Int32Array(buffers.ids),
-      outOffsetX: new Float32Array(buffers.outOffsetX),
-      outOffsetY: new Float32Array(buffers.outOffsetY),
-      outHerdSize: new Uint16Array(buffers.outHerdSize),
-      outThreatCount: new Uint16Array(buffers.outThreatCount),
-      outThreatened: new Uint8Array(buffers.outThreatened)
-    };
-  }
+  // Always create fresh TypedArray views from the result buffers.
+  // This avoids issues with buffer identity matching after transfers.
+  const ids = new Int32Array(buffers.ids);
+  const outOffsetX = new Float32Array(buffers.outOffsetX);
+  const outOffsetY = new Float32Array(buffers.outOffsetY);
+  const outHerdSize = new Uint16Array(buffers.outHerdSize);
+  const outThreatCount = new Uint16Array(buffers.outThreatCount);
+  const outThreatened = new Uint8Array(buffers.outThreatened);
 
   for (let i = 0; i < count; i++) {
-    const id = slot.ids[i];
+    const id = ids[i];
+    if (id < 0) continue; // Skip invalid entries
+
     const creature = spatialIndex?.getById?.(id);
     if (!creature || !creature.position) continue;
 
@@ -1008,29 +757,34 @@ function applyWorkerResults(result, spatialIndex, config) {
       herding.nearbyThreats = 0;
       herding.isThreatened = false;
       herding.targetOffset = null;
-      clearSmoothedOffset(herding);
       continue;
     }
 
-    herding.herdSize = slot.outHerdSize[i] || 1;
-    herding.nearbyThreats = slot.outThreatCount[i];
-    herding.isThreatened = slot.outThreatened[i] === 1;
+    herding.herdSize = outHerdSize[i] || 1;
+    herding.nearbyThreats = outThreatCount[i];
+    herding.isThreatened = outThreatened[i] === 1;
 
     // Recheck urgent need on apply (because worker data is 1-tick old)
     if (hasUrgentNeed(creature)) {
       herding.targetOffset = null;
-      clearSmoothedOffset(herding);
       continue;
     }
 
-    let ox = slot.outOffsetX[i];
-    let oy = slot.outOffsetY[i];
-    const regroup = computeRegroupAssist(creature, null, spatialIndex, config);
-    if (regroup) {
-      ox += regroup.x * baseStrength * regroupStrength;
-      oy += regroup.y * baseStrength * regroupStrength;
+    const ox = outOffsetX[i];
+    const oy = outOffsetY[i];
+
+    // Validate offset values - skip if NaN or Infinity
+    if (!Number.isFinite(ox) || !Number.isFinite(oy)) {
+      herding.targetOffset = null;
+      continue;
     }
-    applySmoothedOffset(herding, ox, oy, offsetDeadzone, offsetSmoothing);
+
+    // Apply offset if significant
+    if (Math.abs(ox) > 0.001 || Math.abs(oy) > 0.001) {
+      herding.targetOffset = { x: ox, y: oy };
+    } else {
+      herding.targetOffset = null;
+    }
   }
 
   perf?.end('tick.herding.workerApply', tApply);
@@ -1039,7 +793,7 @@ function applyWorkerResults(result, spatialIndex, config) {
 /**
  * Packs creature data into typed arrays for worker transfer.
  */
-function packCreatureSnapshot(creatures, slot) {
+function packCreatureSnapshot(creatures, slot, config) {
   const perf = getActivePerf();
   const tPack = perf?.start('tick.herding.workerPack');
 
@@ -1091,7 +845,6 @@ function postWorkerJob(slot, count, config, tick) {
     threatStrength: resolveThreatStrength(config),
     minGroupSize: resolveHerdingMinGroupSize(config),
     separation: resolveHerdingSeparation(config),
-    separationMultiplier: resolveSeparationMultiplier(config),
     comfortMax: resolveComfortMax(config),
     idealDistance: resolveIdealDistance(config)
   };
@@ -1182,10 +935,40 @@ export function updateCreatureHerding({ creatures, config, spatialIndex }) {
   const currentTick = workerState.tickCounter;
 
   // Step 1: Apply results from previous tick if available
+  // Only apply if results are recent (within 5 ticks) to avoid stale data
+  const MAX_RESULT_AGE = 5;
+  let appliedResults = false;
+
   if (workerState.latestResult && workerState.latestResult.tick > workerState.lastAppliedTick) {
-    applyWorkerResults(workerState.latestResult, spatialIndex, config);
-    workerState.lastAppliedTick = workerState.latestResult.tick;
+    const resultAge = currentTick - workerState.latestResult.tick;
+    if (resultAge <= MAX_RESULT_AGE) {
+      applyWorkerResults(workerState.latestResult, spatialIndex);
+      workerState.lastAppliedTick = workerState.latestResult.tick;
+      appliedResults = true;
+    } else {
+      // Results too old, discard
+      console.warn(`[Herding] Discarding stale results (age: ${resultAge} ticks)`);
+    }
     workerState.latestResult = null;
+  }
+
+  // If we didn't apply results and haven't applied any recently, ensure default herding state
+  // This prevents creatures from having no herding data while waiting for worker
+  if (!appliedResults && currentTick - workerState.lastAppliedTick > MAX_RESULT_AGE) {
+    // Reset herding state to defaults for all creatures
+    for (const creature of creatures) {
+      if (!creature?.position) continue;
+      const herding = ensureHerdingState(creature);
+      if (isPredator(creature.species)) {
+        herding.herdSize = 1;
+        herding.nearbyThreats = 0;
+        herding.isThreatened = false;
+        herding.targetOffset = null;
+      } else {
+        // Keep existing herdSize/threats but clear targetOffset to prevent stale movement
+        herding.targetOffset = null;
+      }
+    }
   }
 
   // Step 2: Queue next job if not already in-flight
@@ -1207,7 +990,7 @@ export function updateCreatureHerding({ creatures, config, spatialIndex }) {
   const { slot } = slotInfo;
 
   // Pack creature data and post job
-  const count = packCreatureSnapshot(creatures, slot);
+  const count = packCreatureSnapshot(creatures, slot, config);
   if (count > 0) {
     postWorkerJob(slot, count, config, currentTick);
   }

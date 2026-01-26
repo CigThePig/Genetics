@@ -22,7 +22,7 @@ export const simConfig = {
   // === WORLD ===
   tileSize: 20,
   worldWidth: 120,
-  worldHeight: 160,
+  worldHeight: 80,
   defaultTerrain: 'plains',
   waterTerrain: 'water',
   shoreTerrain: 'shore',
@@ -30,8 +30,8 @@ export const simConfig = {
 
   // Enhanced terrain generation (noise-based)
   terrainNoiseScale: 0.035, // Controls terrain feature size (smaller = larger features)
-  terrainWaterLevel: -0.28, // Height threshold for water (-1 to 1)
-  terrainShoreLevel: -0.18, // Height threshold for shore
+  terrainWaterLevel: -0.18, // Height threshold for water (-1 to 1)
+  terrainShoreLevel: -0.08, // Height threshold for shore
   terrainRockThreshold: 0.72, // Roughness threshold for rock formation
   terrainForestMoisture: 0.58, // Moisture threshold for forest biome
   terrainSandMoisture: 0.32, // Moisture threshold below which sand appears
@@ -48,14 +48,14 @@ export const simConfig = {
 
   // === PLANTS: GRASS ===
   grassCap: 1,
-  grassRegrowthRate: 0.01, // per second (was 0.02 - slightly faster recovery)
+  grassRegrowthRate: 0.025, // per second (was 0.02 - slightly faster recovery)
   grassRegrowthDiminishPower: 1.5,
-  grassInitialAmount: 0.12, // (was 0.2 - more starting food)
+  grassInitialAmount: 0.25, // (was 0.2 - more starting food)
   grassPatchCount: 112,
   grassPatchMinRadius: 2,
   grassPatchMaxRadius: 7,
   grassPatchFalloffPower: 1.6,
-  grassPatchBaseRatio: 0.1,
+  grassPatchBaseRatio: 0.15,
   grassStressThreshold: 0.15,
   grassStressIncrease: 0.02,
   grassStressRecoveryRate: 0.018, // (was 0.015 - faster stress recovery)
@@ -68,9 +68,9 @@ export const simConfig = {
   bushCount: 96,
   bushInitialHealth: 0.85,
   bushBerryMax: 12,
-  bushInitialBerries: 4, // (was 6 - more starting berries)
-  bushRecoveryRate: 0.006, // (was 0.01 - slightly faster bush recovery)
-  bushBerryRegenRate: 0.1, // (was 0.25 - faster berry regen)
+  bushInitialBerries: 8, // (was 6 - more starting berries)
+  bushRecoveryRate: 0.012, // (was 0.01 - slightly faster bush recovery)
+  bushBerryRegenRate: 0.3, // (was 0.25 - faster berry regen)
 
   // === PLANTS: CARCASSES ===
   carcassBaseYield: 3.5, // (was 3.0 - more meat per kill keeps predators full longer)
@@ -81,26 +81,15 @@ export const simConfig = {
   creatureCount: 80,
   creaturePredatorCount: 8, // (was 5 - more predators for better ecosystem pressure)
   creatureSpawnClusterSpread: 12,
-  creatureSpawnSpeciesAnchorSpread: 18,
-  creatureSpawnPredatorAnchorDistance: 40,
   creatureSpawnClusterJitter: 4,
 
   // === CREATURES: MOVEMENT STYLE ===
   // Controls how creatures turn and commit to directions
-  creatureMaxTurnRateRadPerSecond: 1.8, // slower turns for calmer movement
-  creatureWanderRetargetTimeMin: 4.0, // seconds before picking new wander heading
-  creatureWanderRetargetTimeMax: 10.0, // seconds max before retarget
-  creatureWanderTurnJitter: 0.12, // radians - noise only on retarget, not every tick
+  creatureMaxTurnRateRadPerSecond: 3.5, // ~200°/sec - smooth but responsive
+  creatureWanderRetargetTimeMin: 0.8, // seconds before picking new wander heading
+  creatureWanderRetargetTimeMax: 2.5, // seconds max before retarget
+  creatureWanderTurnJitter: 0.4, // radians - noise only on retarget, not every tick
   creatureFleeMaxTurnMultiplier: 2.5, // faster turning when threatened
-  creatureGrazeEnabled: true,
-  creatureGrazeSpeedMultiplier: 0.35,
-  creatureGrazeIdleSecondsMin: 1.5,
-  creatureGrazeIdleSecondsMax: 4.0,
-  creatureGrazeMoveSecondsMin: 1.0,
-  creatureGrazeMoveSecondsMax: 3.0,
-  creatureGrazeMinEnergyRatio: 0.75,
-  creatureGrazeMinWaterRatio: 0.75,
-  creatureGrazeMinLocalHerdSize: 3,
 
   // Long-range need search (when no target is perceived or remembered)
   creatureSearchRadiusMin: 12, // tiles
@@ -113,27 +102,15 @@ export const simConfig = {
   creatureHerdingEnabled: true,
   creatureHerdingRange: 14, // (was 12 - wider herding awareness)
   creatureHerdingThreatRange: 10, // (was 8 - better predator detection)
-  creatureHerdingStrength: 0.18, // calmer cohesion
+  creatureHerdingStrength: 0.025, // (was 0.02 - slightly tighter groups)
   creatureHerdingThreatStrength: 0.25, // (was 0.2 - stronger flee response)
   creatureHerdingMinGroupSize: 2,
-  creatureHerdingSeparation: 2.6,
-  creatureHerdingIdealDistance: 5.0,
-  creatureHerdingAlignmentStrength: 0.7, // relative to base strength
+  creatureHerdingSeparation: 2.0,
+  creatureHerdingIdealDistance: 5,
+  creatureHerdingAlignmentStrength: 0.4, // relative to base strength
   creatureHerdingComfortMin: 2.0, // inside comfort band, minimal steering
-  creatureHerdingComfortMax: 6.5, // outside this, cohesion kicks in
-  creatureHerdingSeparationMultiplier: 1.5,
-  creatureHerdingOffsetDeadzone: 0.04,
-  creatureHerdingOffsetSmoothing: 0.25,
-  creatureHerdingHeadingBlendMax: 0.25,
-  creatureHerdingTargetBlendEnabled: true,
-  creatureHerdingTargetBlendMax: 0.12,
-  creatureHerdingTargetBlendIsolationBoost: 0.25,
+  creatureHerdingComfortMax: 4.5, // outside this, cohesion kicks in
   creatureHerdingUseWorker: 0, // 0 = sync (default), 1 = offload to Web Worker
-  creatureHerdingRegroupEnabled: true,
-  creatureHerdingRegroupMinLocalHerdSize: 3,
-  creatureHerdingRegroupRange: 45,
-  creatureHerdingRegroupStrength: 0.35,
-  creatureHerdingRegroupIntervalSeconds: 0.6,
 
   // === CREATURES: BASE STATS ===
   creatureBaseEnergy: 1,
@@ -176,13 +153,6 @@ export const simConfig = {
   creaturePredatorPatrolRadius: 25, // how far from home to patrol
   creaturePredatorPatrolRetargetTimeMin: 3, // seconds before new waypoint
   creaturePredatorPatrolRetargetTimeMax: 8, // seconds max before retarget
-  // Pack relocation (triangles/octagons)
-  creaturePackRelocationEnabled: true,
-  creaturePackRelocateAfterSeconds: 20, // how long “stale” before relocating
-  creaturePackRelocateMinDistance: 25, // new home must be meaningfully far
-  creaturePackRelocateSearchRadius: 80, // how far leader can look for new home
-  creaturePackRelocateSampleAttempts: 20, // random samples to find viable land tile
-  creaturePackRelocateAvoidWater: true,
 
   // === CREATURES: MEMORY ===
   creatureMemoryMaxEntries: 12,
@@ -378,20 +348,6 @@ export const configMeta = {
     step: 1,
     category: 'creatures'
   },
-  creatureSpawnSpeciesAnchorSpread: {
-    label: 'Spawn Species Spread',
-    min: 0,
-    max: 60,
-    step: 1,
-    category: 'creatures'
-  },
-  creatureSpawnPredatorAnchorDistance: {
-    label: 'Predator Spawn Dist',
-    min: 0,
-    max: 200,
-    step: 2,
-    category: 'creatures'
-  },
   creatureBaseSpeed: { label: 'Base Speed', min: 1, max: 30, step: 1, category: 'creatures' },
   creatureBaseEnergy: { label: 'Base Energy', min: 0.1, max: 5, step: 0.1, category: 'creatures' },
   creatureBaseWater: { label: 'Base Water', min: 0.1, max: 5, step: 0.1, category: 'creatures' },
@@ -493,116 +449,11 @@ export const configMeta = {
     step: 0.5,
     category: 'herding'
   },
-  creatureHerdingRange: {
-    label: 'Herd Range',
-    min: 4,
-    max: 30,
-    step: 1,
-    category: 'herding'
-  },
-  creatureHerdingSeparation: {
-    label: 'Herd Separation',
-    min: 1,
-    max: 6,
-    step: 0.2,
-    category: 'herding'
-  },
-  creatureHerdingComfortMax: {
-    label: 'Herd Comfort Max',
-    min: 2,
-    max: 12,
-    step: 0.5,
-    category: 'herding'
-  },
-  creatureHerdingSeparationMultiplier: {
-    label: 'Separation Multiplier',
-    min: 0.5,
-    max: 4,
-    step: 0.1,
-    category: 'herding'
-  },
-  creatureHerdingOffsetDeadzone: {
-    label: 'Offset Deadzone',
-    min: 0,
-    max: 0.2,
-    step: 0.01,
-    category: 'herding'
-  },
-  creatureHerdingOffsetSmoothing: {
-    label: 'Offset Smoothing',
-    min: 0,
-    max: 1,
-    step: 0.05,
-    category: 'herding'
-  },
-  creatureHerdingHeadingBlendMax: {
-    label: 'Herd Heading Blend',
-    min: 0,
-    max: 0.5,
-    step: 0.05,
-    category: 'herding'
-  },
-  creatureHerdingTargetBlendEnabled: {
-    label: 'Target Blend Enabled',
-    min: 0,
-    max: 1,
-    step: 1,
-    category: 'herding'
-  },
-  creatureHerdingTargetBlendMax: {
-    label: 'Target Blend Max',
-    min: 0,
-    max: 0.35,
-    step: 0.01,
-    category: 'herding'
-  },
-  creatureHerdingTargetBlendIsolationBoost: {
-    label: 'Isolation Boost',
-    min: 0,
-    max: 0.5,
-    step: 0.01,
-    category: 'herding'
-  },
   creatureHerdingUseWorker: {
     label: 'Herding Worker',
     min: 0,
     max: 1,
     step: 1,
-    category: 'herding'
-  },
-  creatureHerdingRegroupEnabled: {
-    label: 'Regroup Assist',
-    min: 0,
-    max: 1,
-    step: 1,
-    category: 'herding'
-  },
-  creatureHerdingRegroupMinLocalHerdSize: {
-    label: 'Regroup Min Herd',
-    min: 1,
-    max: 10,
-    step: 1,
-    category: 'herding'
-  },
-  creatureHerdingRegroupRange: {
-    label: 'Regroup Range',
-    min: 5,
-    max: 120,
-    step: 1,
-    category: 'herding'
-  },
-  creatureHerdingRegroupStrength: {
-    label: 'Regroup Strength',
-    min: 0,
-    max: 1,
-    step: 0.05,
-    category: 'herding'
-  },
-  creatureHerdingRegroupIntervalSeconds: {
-    label: 'Regroup Interval (s)',
-    min: 0.1,
-    max: 5,
-    step: 0.1,
     category: 'herding'
   },
 
@@ -617,85 +468,15 @@ export const configMeta = {
   creatureWanderRetargetTimeMin: {
     label: 'Wander Min (s)',
     min: 0.2,
-    max: 10,
+    max: 3,
     step: 0.1,
     category: 'movement'
   },
   creatureWanderRetargetTimeMax: {
     label: 'Wander Max (s)',
     min: 1,
-    max: 12,
+    max: 6,
     step: 0.5,
-    category: 'movement'
-  },
-  creatureGrazeEnabled: {
-    label: 'Graze Enabled',
-    min: 0,
-    max: 1,
-    step: 1,
-    category: 'movement'
-  },
-  creatureWanderTurnJitter: {
-    label: 'Wander Turn Jitter',
-    min: 0,
-    max: 1,
-    step: 0.02,
-    category: 'movement'
-  },
-  creatureGrazeSpeedMultiplier: {
-    label: 'Graze Speed Mult',
-    min: 0,
-    max: 1,
-    step: 0.05,
-    category: 'movement'
-  },
-  creatureGrazeIdleSecondsMin: {
-    label: 'Graze Idle Min (s)',
-    min: 0,
-    max: 10,
-    step: 0.5,
-    category: 'movement'
-  },
-  creatureGrazeIdleSecondsMax: {
-    label: 'Graze Idle Max (s)',
-    min: 0,
-    max: 12,
-    step: 0.5,
-    category: 'movement'
-  },
-  creatureGrazeMoveSecondsMin: {
-    label: 'Graze Move Min (s)',
-    min: 0,
-    max: 10,
-    step: 0.5,
-    category: 'movement'
-  },
-  creatureGrazeMoveSecondsMax: {
-    label: 'Graze Move Max (s)',
-    min: 0,
-    max: 12,
-    step: 0.5,
-    category: 'movement'
-  },
-  creatureGrazeMinEnergyRatio: {
-    label: 'Graze Min Energy',
-    min: 0,
-    max: 1,
-    step: 0.05,
-    category: 'movement'
-  },
-  creatureGrazeMinWaterRatio: {
-    label: 'Graze Min Water',
-    min: 0,
-    max: 1,
-    step: 0.05,
-    category: 'movement'
-  },
-  creatureGrazeMinLocalHerdSize: {
-    label: 'Graze Min Herd',
-    min: 1,
-    max: 10,
-    step: 1,
     category: 'movement'
   },
 

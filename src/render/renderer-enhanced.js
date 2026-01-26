@@ -271,7 +271,7 @@ export function createRenderer(container, { camera }) {
 
   const buildBaseTerrainLayer = (layerCtx, world, tileSize) => {
     layerCtx.clearRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
-    const { cells: _cells } = world;
+    const { cells } = world;
     const heightMap = world.heightMap;
     const moistureMap = world.moistureMap;
 
@@ -281,7 +281,7 @@ export function createRenderer(container, { camera }) {
 
       for (let x = 0; x < world.width; x++) {
         const idx = rowOffset + x;
-        const terrain = _cells[idx];
+        const terrain = cells[idx];
         const tileX = x * tileSize;
         const h = heightMap ? heightMap[idx] : 0;
         const m = moistureMap ? moistureMap[idx] : 0.5;
@@ -295,7 +295,7 @@ export function createRenderer(container, { camera }) {
   const buildDetailTerrainLayer = (layerCtx, world, config, tileSize) => {
     layerCtx.clearRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
 
-    const { cells: _cells } = world;
+    const { cells } = world;
     const heightMap = world.heightMap;
 
     // PASS 1 overlays: land texture + water highlights (static)
@@ -305,7 +305,7 @@ export function createRenderer(container, { camera }) {
 
       for (let x = 0; x < world.width; x++) {
         const idx = rowOffset + x;
-        const terrain = _cells[idx];
+        const terrain = cells[idx];
         const tileX = x * tileSize;
 
         if (terrain !== 'water') {
@@ -356,7 +356,7 @@ export function createRenderer(container, { camera }) {
       const tileY = y * tileSize;
 
       for (let x = 0; x < world.width; x++) {
-        const terrain = _cells[rowOffset + x];
+        const terrain = cells[rowOffset + x];
         if (terrain === 'water') continue;
         const tileX = x * tileSize;
 
@@ -365,7 +365,7 @@ export function createRenderer(container, { camera }) {
           const ny = y + dy;
           if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) continue;
 
-          const neighborTerrain = _cells[ny * world.width + nx];
+          const neighborTerrain = cells[ny * world.width + nx];
           if (neighborTerrain === terrain) continue;
           if (neighborTerrain === 'water' || terrain === 'shore') continue;
 
@@ -395,7 +395,7 @@ export function createRenderer(container, { camera }) {
       const tileY = y * tileSize;
 
       for (let x = 0; x < world.width; x++) {
-        const terrain = _cells[rowOffset + x];
+        const terrain = cells[rowOffset + x];
         if (terrain !== 'water') continue;
 
         const tileX = x * tileSize;
@@ -406,7 +406,7 @@ export function createRenderer(container, { camera }) {
             const ny = y + dy;
             if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) continue;
 
-            const neighborTerrain = _cells[ny * world.width + nx];
+            const neighborTerrain = cells[ny * world.width + nx];
             if (neighborTerrain === 'water') continue;
 
             const edgeX = tileX + (dx > 0 ? tileSize : dx < 0 ? 0 : tileSize / 2);
@@ -426,12 +426,12 @@ export function createRenderer(container, { camera }) {
     void config;
   };
 
-  const _buildGrassLayer = (layerCtx, world, config, tileSize) => {
+  const buildGrassLayer = (layerCtx, world, config, tileSize) => {
     layerCtx.clearRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
 
     const grass = Array.isArray(world.grass) ? world.grass : null;
     if (!grass) return;
-    const { cells: _cells } = world;
+    const { cells } = world;
     const grassCap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
 
     for (let y = 0; y < world.height; y++) {
@@ -440,7 +440,7 @@ export function createRenderer(container, { camera }) {
 
       for (let x = 0; x < world.width; x++) {
         const idx = rowOffset + x;
-        const terrain = _cells[idx];
+        const terrain = cells[idx];
         if (terrain === 'water') continue;
 
         const grassValue = Number.isFinite(grass[idx]) ? grass[idx] : 0;
@@ -466,7 +466,7 @@ export function createRenderer(container, { camera }) {
   };
 
   const drawGrassRow = (layerCtx, world, config, tileSize, y) => {
-    const { cells: _cells } = world;
+    const { cells } = world;
     const grass = Array.isArray(world.grass) ? world.grass : null;
     const grassCap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
     const rowOffset = y * world.width;
@@ -478,7 +478,7 @@ export function createRenderer(container, { camera }) {
 
     for (let x = 0; x < world.width; x++) {
       const idx = rowOffset + x;
-      const terrain = _cells[idx];
+      const terrain = cells[idx];
       if (terrain === 'water') continue;
 
       const grassValue = Number.isFinite(grass[idx]) ? grass[idx] : 0;
@@ -615,7 +615,7 @@ export function createRenderer(container, { camera }) {
     const startRow = Math.max(0, Math.floor((minWorldY - originY) / tileSize) - padding);
     const endRow = Math.min(world.height, Math.ceil((maxWorldY - originY) / tileSize) + padding);
 
-    const { cells: _cells } = world;
+    const { cells } = world;
     const grassStress = Array.isArray(world.grassStress) ? world.grassStress : null;
     const stressThreshold = Number.isFinite(config?.grassStressVisibleThreshold)
       ? config.grassStressVisibleThreshold
