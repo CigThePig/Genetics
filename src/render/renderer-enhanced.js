@@ -27,6 +27,12 @@ export function createRenderer(container, { camera }) {
   // Noise generator for texture effects
   const texNoise = createNoise(42);
 
+  let viewportWidth = 0;
+  let viewportHeight = 0;
+  let backgroundGradient = null;
+  let backgroundGradientWidth = 0;
+  let backgroundGradientHeight = 0;
+
   const resizeToContainer = () => {
     const width = window.innerWidth;
     const height = window.innerHeight;
@@ -36,6 +42,8 @@ export function createRenderer(container, { camera }) {
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
     ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
+    viewportWidth = width;
+    viewportHeight = height;
     
     // Update camera viewport for bounds clamping
     if (camera?.setViewport) {
@@ -205,14 +213,14 @@ export function createRenderer(container, { camera }) {
   // TERRAIN RENDERING
   // ═══════════════════════════════════════════════════════════════════════════
 
-  const drawTerrain = (state, world, config) => {
-    const tileSize = resolveTileSize(config);
-    const { width, height } = canvas.getBoundingClientRect();
-    const perf = getActivePerf();
-    const tBg = perf?.start('render.terrain.bg');
+  const getBackgroundGradient = (width, height) => {
+    if (backgroundGradient && backgroundGradientWidth === width && backgroundGradientHeight === height) {
+      return backgroundGradient;
+    }
 
-    // Draw background with subtle vignette
-    const bgGradient = ctx.createRadialGradient(
+    backgroundGradientWidth = width;
+    backgroundGradientHeight = height;
+    backgroundGradient = ctx.createRadialGradient(
       width / 2,
       height / 2,
       0,
@@ -220,10 +228,284 @@ export function createRenderer(container, { camera }) {
       height / 2,
       Math.max(width, height) * 0.8
     );
-    bgGradient.addColorStop(0, '#1a2530');
-    bgGradient.addColorStop(0.7, '#0f1820');
-    bgGradient.addColorStop(1, '#080c10');
-    ctx.fillStyle = bgGradient;
+    backgroundGradient.addColorStop(0, '#1a2530');
+    backgroundGradient.addColorStop(0.7, '#0f1820');
+    backgroundGradient.addColorStop(1, '#080c10');
+    return backgroundGradient;
+  };
+
+  const createLayer = (width, height, { alpha = true } = {}) => {
+    const layerCanvas = document.createElement('canvas');
+    layerCanvas.width = Math.max(1, Math.floor(width));
+    layerCanvas.height = Math.max(1, Math.floor(height));
+    const layerCtx = layerCanvas.getContext('2d', { alpha });
+    layerCtx.imageSmoothingEnabled = false;
+    return { canvas: layerCanvas, ctx: layerCtx };
+  };
+
+  const terrainCache = {
+    base: null,
+    detail: null,
+    grass: null,
+    lastGrassUpdateMs: 0,
+    tileSize: 0,
+    pxW: 0,
+    pxH: 0,
+    world: null
+  };
+
+  const EDGE_NEIGHBORS = [
+    { dx: 1, dy: 0, edge: 'right' },
+    { dx: 0, dy: 1, edge: 'bottom' },
+    { dx: -1, dy: 0, edge: 'left' },
+    { dx: 0, dy: -1, edge: 'top' }
+  ];
+
+  const buildBaseTerrainLayer = (layerCtx, world, tileSize) => {
+    layerCtx.clearRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
+    const { cells } = world;
+    const heightMap = world.heightMap;
+    const moistureMap = world.moistureMap;
+
+    for (let y = 0; y < world.height; y++) {
+      const rowOffset = y * world.width;
+      const tileY = y * tileSize;
+
+      for (let x = 0; x < world.width; x++) {
+        const idx = rowOffset + x;
+        const terrain = cells[idx];
+        const tileX = x * tileSize;
+        const h = heightMap ? heightMap[idx] : 0;
+        const m = moistureMap ? moistureMap[idx] : 0.5;
+        const baseColor = getTerrainColor(terrain, x, y, h, m);
+        layerCtx.fillStyle = baseColor;
+        layerCtx.fillRect(tileX, tileY, tileSize + 0.5, tileSize + 0.5);
+      }
+    }
+  };
+
+  const buildDetailTerrainLayer = (layerCtx, world, config, tileSize) => {
+    layerCtx.clearRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
+
+    const { cells } = world;
+    const heightMap = world.heightMap;
+
+    // PASS 1 overlays: land texture + water highlights (static)
+    for (let y = 0; y < world.height; y++) {
+      const rowOffset = y * world.width;
+      const tileY = y * tileSize;
+
+      for (let x = 0; x < world.width; x++) {
+        const idx = rowOffset + x;
+        const terrain = cells[idx];
+        const tileX = x * tileSize;
+
+        if (terrain !== 'water') {
+          const texVal = getTexture(x * 0.8, y * 0.8);
+          if (texVal > 0.65) {
+            layerCtx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+            layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+          } else if (texVal < 0.35) {
+            layerCtx.fillStyle = 'rgba(0, 0, 0, 0.06)';
+            layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+          }
+          continue;
+        }
+
+        const h = heightMap ? heightMap[idx] : 0;
+        const wave1 = getTexture(x * 0.2, y * 0.3);
+        const wave2 = getTexture(x * 0.4, y * 0.2);
+
+        if (wave1 > 0.6 && wave2 > 0.5) {
+          layerCtx.fillStyle = 'rgba(120, 180, 220, 0.12)';
+          layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+        }
+
+        if (h > -0.2) {
+          const caustic = getTexture(x * 0.6, y * 0.6);
+          if (caustic > 0.75) {
+            layerCtx.fillStyle = 'rgba(150, 200, 240, 0.1)';
+            const size = tileSize * 0.4;
+            layerCtx.beginPath();
+            layerCtx.arc(
+              tileX + tileSize * 0.3 + caustic * tileSize * 0.4,
+              tileY + tileSize * 0.3 + wave1 * tileSize * 0.4,
+              size,
+              0,
+              Math.PI * 2
+            );
+            layerCtx.fill();
+          }
+        }
+      }
+    }
+
+    // PASS 2: Terrain edge blending
+    layerCtx.globalAlpha = 0.4;
+
+    for (let y = 0; y < world.height; y++) {
+      const rowOffset = y * world.width;
+      const tileY = y * tileSize;
+
+      for (let x = 0; x < world.width; x++) {
+        const terrain = cells[rowOffset + x];
+        if (terrain === 'water') continue;
+        const tileX = x * tileSize;
+
+        for (const { dx, dy, edge } of EDGE_NEIGHBORS) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) continue;
+
+          const neighborTerrain = cells[ny * world.width + nx];
+          if (neighborTerrain === terrain) continue;
+          if (neighborTerrain === 'water' || terrain === 'shore') continue;
+
+          const neighborPalette = terrainPalette[neighborTerrain] ?? terrainPalette.unknown;
+          const transitionColor = neighborPalette.colors[0];
+
+          const gradient = layerCtx.createLinearGradient(
+            edge === 'left' ? tileX : edge === 'right' ? tileX + tileSize : tileX,
+            edge === 'top' ? tileY : edge === 'bottom' ? tileY + tileSize : tileY,
+            edge === 'left' ? tileX + tileSize * 0.3 : edge === 'right' ? tileX + tileSize * 0.7 : tileX,
+            edge === 'top' ? tileY + tileSize * 0.3 : edge === 'bottom' ? tileY + tileSize * 0.7 : tileY
+          );
+
+          gradient.addColorStop(0, transitionColor);
+          gradient.addColorStop(1, 'transparent');
+          layerCtx.fillStyle = gradient;
+          layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+        }
+      }
+    }
+
+    layerCtx.globalAlpha = 1;
+
+    // PASS 3: Water edge foam (static)
+    for (let y = 0; y < world.height; y++) {
+      const rowOffset = y * world.width;
+      const tileY = y * tileSize;
+
+      for (let x = 0; x < world.width; x++) {
+        const terrain = cells[rowOffset + x];
+        if (terrain !== 'water') continue;
+
+        const tileX = x * tileSize;
+        for (let dy = -1; dy <= 1; dy++) {
+          for (let dx = -1; dx <= 1; dx++) {
+            if (dx === 0 && dy === 0) continue;
+            const nx = x + dx;
+            const ny = y + dy;
+            if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) continue;
+
+            const neighborTerrain = cells[ny * world.width + nx];
+            if (neighborTerrain === 'water') continue;
+
+            const edgeX = tileX + (dx > 0 ? tileSize : dx < 0 ? 0 : tileSize / 2);
+            const edgeY = tileY + (dy > 0 ? tileSize : dy < 0 ? 0 : tileSize / 2);
+            const foamPhase = getTexture(x * 0.5, y * 0.5);
+            const foamAlpha = 0.15 + foamPhase * 0.15;
+
+            layerCtx.fillStyle = `rgba(200, 230, 255, ${foamAlpha})`;
+            layerCtx.beginPath();
+            layerCtx.arc(edgeX, edgeY, tileSize * 0.2, 0, Math.PI * 2);
+            layerCtx.fill();
+          }
+        }
+      }
+    }
+
+    void config;
+  };
+
+  const buildGrassLayer = (layerCtx, world, config, tileSize) => {
+    layerCtx.clearRect(0, 0, layerCtx.canvas.width, layerCtx.canvas.height);
+
+    const grass = Array.isArray(world.grass) ? world.grass : null;
+    if (!grass) return;
+    const { cells } = world;
+    const grassCap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
+
+    for (let y = 0; y < world.height; y++) {
+      const rowOffset = y * world.width;
+      const tileY = y * tileSize;
+
+      for (let x = 0; x < world.width; x++) {
+        const idx = rowOffset + x;
+        const terrain = cells[idx];
+        if (terrain === 'water') continue;
+
+        const grassValue = Number.isFinite(grass[idx]) ? grass[idx] : 0;
+        const grassRatio = grassCap > 0 ? Math.min(1, Math.max(0, grassValue / grassCap)) : 0;
+        if (grassRatio <= 0) continue;
+
+        const tileX = x * tileSize;
+        const grassHue = 95 + getTexture(x * 0.3, y * 0.3) * 20;
+        const grassSat = 45 + grassRatio * 25;
+        const grassLight = 35 + grassRatio * 15;
+        const grassAlpha = 0.25 + grassRatio * 0.35;
+
+        layerCtx.fillStyle = `hsla(${grassHue}, ${grassSat}%, ${grassLight}%, ${grassAlpha})`;
+        layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+
+        if (grassRatio > 0.6) {
+          const highlightAlpha = (grassRatio - 0.6) * 0.2;
+          layerCtx.fillStyle = `rgba(140, 200, 100, ${highlightAlpha})`;
+          layerCtx.fillRect(tileX, tileY, tileSize, tileSize);
+        }
+      }
+    }
+  };
+
+  const ensureTerrainCache = (world, config, tileSize, perf) => {
+    if (!world) return;
+    const pxW = Math.max(1, Math.floor(world.width * tileSize));
+    const pxH = Math.max(1, Math.floor(world.height * tileSize));
+    const needsRebuild =
+      terrainCache.world !== world ||
+      terrainCache.tileSize !== tileSize ||
+      terrainCache.pxW !== pxW ||
+      terrainCache.pxH !== pxH;
+
+    if (!needsRebuild) return;
+
+    terrainCache.world = world;
+    terrainCache.tileSize = tileSize;
+    terrainCache.pxW = pxW;
+    terrainCache.pxH = pxH;
+
+    terrainCache.base = createLayer(pxW, pxH, { alpha: false });
+    const tBase = perf?.start('render.terrain.cacheBuild.base');
+    buildBaseTerrainLayer(terrainCache.base.ctx, world, tileSize);
+    perf?.end('render.terrain.cacheBuild.base', tBase);
+
+    terrainCache.detail = createLayer(pxW, pxH, { alpha: true });
+    const tDetail = perf?.start('render.terrain.cacheBuild.detail');
+    buildDetailTerrainLayer(terrainCache.detail.ctx, world, config, tileSize);
+    perf?.end('render.terrain.cacheBuild.detail', tDetail);
+
+    terrainCache.grass = createLayer(pxW, pxH, { alpha: true });
+    terrainCache.lastGrassUpdateMs = 0;
+  };
+
+  const maybeUpdateGrassCache = (cache, world, config, tileSize, perf, nowMs) => {
+    if (!cache?.grass || !world) return;
+    if (cache.lastGrassUpdateMs && nowMs - cache.lastGrassUpdateMs < 100) return;
+    const tGrass = perf?.start('render.terrain.cacheUpdate.grass');
+    buildGrassLayer(cache.grass.ctx, world, config, tileSize);
+    perf?.end('render.terrain.cacheUpdate.grass', tGrass);
+    cache.lastGrassUpdateMs = nowMs;
+  };
+
+  const drawTerrain = (state, world, config) => {
+    const tileSize = resolveTileSize(config);
+    const width = viewportWidth;
+    const height = viewportHeight;
+    const perf = getActivePerf();
+    const tBg = perf?.start('render.terrain.bg');
+
+    // Draw background with subtle vignette
+    ctx.fillStyle = getBackgroundGradient(width, height);
     ctx.fillRect(0, 0, width, height);
 
     ctx.save();
@@ -253,11 +535,7 @@ export function createRenderer(container, { camera }) {
     const endRow = Math.min(world.height, Math.ceil((maxWorldY - originY) / tileSize) + padding);
 
     const { cells } = world;
-    const heightMap = world.heightMap;
-    const moistureMap = world.moistureMap;
-    const grass = Array.isArray(world.grass) ? world.grass : null;
     const grassStress = Array.isArray(world.grassStress) ? world.grassStress : null;
-    const grassCap = Number.isFinite(config?.grassCap) ? config.grassCap : 1;
     const stressThreshold = Number.isFinite(config?.grassStressVisibleThreshold)
       ? config.grassStressVisibleThreshold
       : 0.25;
@@ -272,67 +550,12 @@ export function createRenderer(container, { camera }) {
     // ─────────────────────────────────────────────────────────────────────────
 
     const tP1 = perf?.start('render.terrain.pass1');
-    for (let y = startRow; y < endRow; y++) {
-      const rowOffset = y * world.width;
-      const tileY = originY + y * tileSize;
+    ensureTerrainCache(world, config, tileSize, perf);
+    const nowMs = typeof performance !== 'undefined' && performance.now ? performance.now() : Date.now();
+    maybeUpdateGrassCache(terrainCache, world, config, tileSize, perf, nowMs);
 
-      for (let x = startCol; x < endCol; x++) {
-        const idx = rowOffset + x;
-        const terrain = cells[idx];
-        const tileX = originX + x * tileSize;
-
-        // Get height/moisture for shading
-        const h = heightMap ? heightMap[idx] : 0;
-        const m = moistureMap ? moistureMap[idx] : 0.5;
-
-        // Get base terrain color
-        const baseColor = getTerrainColor(terrain, x, y, h, m);
-        ctx.fillStyle = baseColor;
-        ctx.fillRect(tileX, tileY, tileSize + 0.5, tileSize + 0.5);
-
-        // Add texture detail for land tiles
-        if (showDetail && terrain !== 'water') {
-          // Subtle texture overlay
-          const texVal = getTexture(x * 0.8, y * 0.8);
-          if (texVal > 0.65) {
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
-            ctx.fillRect(tileX, tileY, tileSize, tileSize);
-          } else if (texVal < 0.35) {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.06)';
-            ctx.fillRect(tileX, tileY, tileSize, tileSize);
-          }
-        }
-
-        // Water effects
-        if (terrain === 'water' && showDetail) {
-          // Subtle wave pattern
-          const wave1 = getTexture(x * 0.2 + Date.now() * 0.0001, y * 0.3);
-          const wave2 = getTexture(x * 0.4, y * 0.2 + Date.now() * 0.00015);
-
-          if (wave1 > 0.6 && wave2 > 0.5) {
-            ctx.fillStyle = 'rgba(120, 180, 220, 0.12)';
-            ctx.fillRect(tileX, tileY, tileSize, tileSize);
-          }
-
-          // Caustic-like highlights for shallow water
-          if (h > -0.2 && showFineDetail) {
-            const caustic = getTexture(x * 0.6 + Date.now() * 0.00005, y * 0.6);
-            if (caustic > 0.75) {
-              ctx.fillStyle = 'rgba(150, 200, 240, 0.1)';
-              const size = tileSize * 0.4;
-              ctx.beginPath();
-              ctx.arc(
-                tileX + tileSize * 0.3 + caustic * tileSize * 0.4,
-                tileY + tileSize * 0.3 + wave1 * tileSize * 0.4,
-                size,
-                0,
-                Math.PI * 2
-              );
-              ctx.fill();
-            }
-          }
-        }
-      }
+    if (terrainCache.base) {
+      ctx.drawImage(terrainCache.base.canvas, originX, originY);
     }
     perf?.end('render.terrain.pass1', tP1);
 
@@ -342,56 +565,9 @@ export function createRenderer(container, { camera }) {
 
     if (showDetail) {
       const tP2 = perf?.start('render.terrain.pass2');
-      ctx.globalAlpha = 0.4;
-
-      for (let y = startRow; y < endRow; y++) {
-        const rowOffset = y * world.width;
-        const tileY = originY + y * tileSize;
-
-        for (let x = startCol; x < endCol; x++) {
-          const terrain = cells[rowOffset + x];
-          const tileX = originX + x * tileSize;
-
-          // Skip water (handled separately)
-          if (terrain === 'water') continue;
-
-          // Check adjacent tiles for transitions
-          const neighbors = [
-            { dx: 1, dy: 0, edge: 'right' },
-            { dx: 0, dy: 1, edge: 'bottom' },
-            { dx: -1, dy: 0, edge: 'left' },
-            { dx: 0, dy: -1, edge: 'top' }
-          ];
-
-          for (const { dx, dy, edge } of neighbors) {
-            const nx = x + dx;
-            const ny = y + dy;
-            if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) continue;
-
-            const neighborTerrain = cells[ny * world.width + nx];
-            if (neighborTerrain === terrain) continue;
-            if (neighborTerrain === 'water' || terrain === 'shore') continue;
-
-            // Draw soft edge transition
-            const neighborPalette = terrainPalette[neighborTerrain] ?? terrainPalette.unknown;
-            const transitionColor = neighborPalette.colors[0];
-
-            const gradient = ctx.createLinearGradient(
-              edge === 'left' ? tileX : edge === 'right' ? tileX + tileSize : tileX,
-              edge === 'top' ? tileY : edge === 'bottom' ? tileY + tileSize : tileY,
-              edge === 'left' ? tileX + tileSize * 0.3 : edge === 'right' ? tileX + tileSize * 0.7 : tileX,
-              edge === 'top' ? tileY + tileSize * 0.3 : edge === 'bottom' ? tileY + tileSize * 0.7 : tileY
-            );
-
-            gradient.addColorStop(0, transitionColor);
-            gradient.addColorStop(1, 'transparent');
-            ctx.fillStyle = gradient;
-            ctx.fillRect(tileX, tileY, tileSize, tileSize);
-          }
-        }
+      if (terrainCache.detail) {
+        ctx.drawImage(terrainCache.detail.canvas, originX, originY);
       }
-
-      ctx.globalAlpha = 1;
       perf?.end('render.terrain.pass2', tP2);
     }
 
@@ -401,43 +577,6 @@ export function createRenderer(container, { camera }) {
 
     if (showDetail) {
       const tP3 = perf?.start('render.terrain.pass3');
-      for (let y = startRow; y < endRow; y++) {
-        const rowOffset = y * world.width;
-        const tileY = originY + y * tileSize;
-
-        for (let x = startCol; x < endCol; x++) {
-          const terrain = cells[rowOffset + x];
-          if (terrain !== 'water') continue;
-
-          const tileX = originX + x * tileSize;
-
-          // Check for shore adjacency
-          for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-              if (dx === 0 && dy === 0) continue;
-              const nx = x + dx;
-              const ny = y + dy;
-              if (nx < 0 || nx >= world.width || ny < 0 || ny >= world.height) continue;
-
-              const neighborTerrain = cells[ny * world.width + nx];
-              if (neighborTerrain === 'water') continue;
-
-              // Draw foam/wave edge
-              const edgeX = tileX + (dx > 0 ? tileSize : dx < 0 ? 0 : tileSize / 2);
-              const edgeY = tileY + (dy > 0 ? tileSize : dy < 0 ? 0 : tileSize / 2);
-
-              // Animated foam
-              const foamPhase = getTexture(x * 0.5 + Date.now() * 0.0002, y * 0.5);
-              const foamAlpha = 0.15 + foamPhase * 0.15;
-
-              ctx.fillStyle = `rgba(200, 230, 255, ${foamAlpha})`;
-              ctx.beginPath();
-              ctx.arc(edgeX, edgeY, tileSize * 0.2, 0, Math.PI * 2);
-              ctx.fill();
-            }
-          }
-        }
-      }
       perf?.end('render.terrain.pass3', tP3);
     }
 
@@ -445,41 +584,9 @@ export function createRenderer(container, { camera }) {
     // PASS 4: Grass overlay
     // ─────────────────────────────────────────────────────────────────────────
 
-    if (grass) {
+    if (terrainCache.grass) {
       const tP4 = perf?.start('render.terrain.pass4');
-      for (let y = startRow; y < endRow; y++) {
-        const rowOffset = y * world.width;
-        const tileY = originY + y * tileSize;
-
-        for (let x = startCol; x < endCol; x++) {
-          const idx = rowOffset + x;
-          const terrain = cells[idx];
-          if (terrain === 'water') continue;
-
-          const grassValue = Number.isFinite(grass[idx]) ? grass[idx] : 0;
-          const grassRatio = grassCap > 0 ? Math.min(1, Math.max(0, grassValue / grassCap)) : 0;
-
-          if (grassRatio > 0) {
-            const tileX = originX + x * tileSize;
-
-            // Rich grass color with variation
-            const grassHue = 95 + getTexture(x * 0.3, y * 0.3) * 20;
-            const grassSat = 45 + grassRatio * 25;
-            const grassLight = 35 + grassRatio * 15;
-            const grassAlpha = 0.25 + grassRatio * 0.35;
-
-            ctx.fillStyle = `hsla(${grassHue}, ${grassSat}%, ${grassLight}%, ${grassAlpha})`;
-            ctx.fillRect(tileX, tileY, tileSize, tileSize);
-
-            // Lush grass highlights
-            if (grassRatio > 0.6 && showFineDetail) {
-              const highlightAlpha = (grassRatio - 0.6) * 0.3;
-              ctx.fillStyle = `rgba(140, 200, 100, ${highlightAlpha})`;
-              ctx.fillRect(tileX, tileY, tileSize, tileSize);
-            }
-          }
-        }
-      }
+      ctx.drawImage(terrainCache.grass.canvas, originX, originY);
       perf?.end('render.terrain.pass4', tP4);
     }
 
@@ -749,7 +856,8 @@ if (Array.isArray(world.bushes) && world.bushes.length > 0) {
     if (!world || !Array.isArray(creatures) || creatures.length === 0) return;
 
     const tileSize = resolveTileSize(config);
-    const { width, height } = canvas.getBoundingClientRect();
+    const width = viewportWidth;
+    const height = viewportHeight;
 
     ctx.save();
     ctx.translate(width / 2 + state.x, height / 2 + state.y);

@@ -103,6 +103,8 @@ Rules:
   - Contains: Track 10.6 spec/blueprint/plan (Gender + Pregnancy + Birth)
 - tracks/2026-02-01-track-maintenance-per-species-metrics/
   - Contains: Maintenance spec/blueprint/plan (Per-species metrics expansion)
+- tracks/2026-02-02-track-maintenance-renderer-perf/
+  - Contains: Maintenance spec/blueprint/plan (Renderer perf micro-optimizations)
 - tracks/2026-01-27-track-maintenance-touch-gesture-guardrails/
   - Contains: Maintenance spec/blueprint/plan (Touch gesture guardrails)
 - tracks/2026-01-28-track-maintenance-camera-change-callback/

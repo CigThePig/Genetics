@@ -1,6 +1,6 @@
-Active track: Maintenance — Performance Profiler Panel
-Path: tracks/2026-02-01-track-maintenance-per-species-metrics/
-Current phase: Phase 1 — Perf sampler, instrumentation, and Performance panel (verification pending)
-Next task: Resolve prettier warnings, rerun npm run verify, and complete manual perf panel checklist.
-Last updated: 2026-02-01
-Notes: Maintenance work requested to add performance profiler panel and fix FPS overlay duplication.
+Active track: Maintenance — Renderer Perf Micro-optimizations
+Path: tracks/2026-02-02-track-maintenance-renderer-perf/
+Current phase: Phase 2 — Terrain cache layers for PASS 1–4 (verification pending)
+Next task: Run manual verification (terrain visuals + grass refresh) and capture a screenshot.
+Last updated: 2026-02-02
+Notes: Terrain cache layers implemented; awaiting verification.
