@@ -57,6 +57,26 @@ const resolvePatrolRetargetTime = (config) => {
 };
 
 /**
+ * Resolves pack relocation config.
+ */
+const resolvePackRelocation = (config) => ({
+  enabled: config?.creaturePackRelocationEnabled !== false,
+  afterSeconds: Number.isFinite(config?.creaturePackRelocateAfterSeconds)
+    ? Math.max(1, config.creaturePackRelocateAfterSeconds)
+    : 20,
+  minDistance: Number.isFinite(config?.creaturePackRelocateMinDistance)
+    ? Math.max(0, config.creaturePackRelocateMinDistance)
+    : 25,
+  searchRadius: Number.isFinite(config?.creaturePackRelocateSearchRadius)
+    ? Math.max(5, config.creaturePackRelocateSearchRadius)
+    : 80,
+  sampleAttempts: Number.isFinite(config?.creaturePackRelocateSampleAttempts)
+    ? Math.max(1, Math.trunc(config.creaturePackRelocateSampleAttempts))
+    : 20,
+  avoidWater: config?.creaturePackRelocateAvoidWater !== false
+});
+
+/**
  * Resolves ticks per second from config.
  */
 const resolveTicksPerSecond = (config) =>
@@ -73,7 +93,9 @@ const ensurePackState = (creature) => {
       leaderId: null,
       waypoint: null,
       waypointTicksRemaining: 0,
-      home: null
+      home: null,
+      staleTicks: 0,
+      lastWaypoint: null
     };
   }
   return creature.pack;
@@ -153,6 +175,13 @@ const pickRetargetTicks = (rng, minSeconds, maxSeconds, ticksPerSecond) => {
   return Math.max(1, Math.trunc(seconds * ticksPerSecond));
 };
 
+const distanceSq = (a, b) => {
+  if (!a || !b) return Infinity;
+  const dx = a.x - b.x;
+  const dy = a.y - b.y;
+  return dx * dx + dy * dy;
+};
+
 /**
  * Calculates formation position for a pack member.
  * Members position themselves around the leader in a V or line formation.
@@ -196,6 +225,50 @@ const shouldUsePackBehavior = (creature) => {
 };
 
 /**
+ * Checks if leader is actively engaged in a chase.
+ */
+const isLeaderEngaged = (leader) => {
+  const status = leader?.chase?.status;
+  return status && status !== 'idle';
+};
+
+/**
+ * Samples a new pack home within a search radius.
+ */
+const pickRelocationHome = (leader, leaderHome, world, rng, config, relocation) => {
+  if (!leader?.position || !leaderHome) return null;
+  const waterTerrain = resolveWaterTerrain(config);
+  const minDistanceSq = relocation.minDistance * relocation.minDistance;
+  const maxDistanceSq = relocation.searchRadius * relocation.searchRadius;
+  let bestCandidate = null;
+  let bestDistanceSq = -1;
+
+  for (let i = 0; i < relocation.sampleAttempts; i++) {
+    const angle = rng.nextFloat() * Math.PI * 2;
+    const dist = Math.sqrt(rng.nextFloat() * maxDistanceSq);
+    const x = leader.position.x + Math.cos(angle) * dist;
+    const y = leader.position.y + Math.sin(angle) * dist;
+    const clampedX = Math.max(0, Math.min(world.width - 1, x));
+    const clampedY = Math.max(0, Math.min(world.height - 1, y));
+    const candidate = { x: clampedX, y: clampedY };
+    const candidateDistanceSq = distanceSq(candidate, leaderHome);
+    if (candidateDistanceSq < minDistanceSq) continue;
+    if (
+      relocation.avoidWater &&
+      isWaterTile(world, Math.floor(clampedX), Math.floor(clampedY), waterTerrain)
+    ) {
+      continue;
+    }
+    if (!bestCandidate || candidateDistanceSq > bestDistanceSq) {
+      bestCandidate = candidate;
+      bestDistanceSq = candidateDistanceSq;
+    }
+  }
+
+  return bestCandidate;
+};
+
+/**
  * Updates pack behavior for predator creatures.
  * - Assigns pack membership and roles
  * - Leaders select patrol waypoints
@@ -214,6 +287,7 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
   const patrolRadius = resolvePatrolRadius(config);
   const patrolRetarget = resolvePatrolRetargetTime(config);
   const packSpacing = resolvePackSpacing(config);
+  const relocation = resolvePackRelocation(config);
 
   // Group predators into packs by species
   const packs = groupIntoPacks(creatures);
@@ -230,6 +304,9 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
     leaderPack.id = species;
     leaderPack.role = 'leader';
     leaderPack.leaderId = leader.id;
+    if (!Number.isFinite(leaderPack.staleTicks)) {
+      leaderPack.staleTicks = 0;
+    }
 
     // Leader waypoint logic (only if wandering)
     if (shouldUsePackBehavior(leader)) {
@@ -251,6 +328,7 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
       }
 
       if (needNewWaypoint || !leaderPack.waypoint) {
+        leaderPack.lastWaypoint = leaderPack.waypoint;
         leaderPack.waypoint = pickPatrolWaypoint(leaderHome, patrolRadius, world, rng, config);
         leaderPack.waypointTicksRemaining = pickRetargetTicks(
           rng,
@@ -260,10 +338,48 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
         );
       }
 
+      if (relocation.enabled && leaderHome) {
+        const engaged = isLeaderEngaged(leader);
+        const staleRadius = Math.max(6, patrolRadius * 0.35);
+        const staleRadiusSq = staleRadius * staleRadius;
+        const waypointLocal = leaderPack.waypoint
+          ? distanceSq(leaderPack.waypoint, leaderHome) <= staleRadiusSq
+          : true;
+        const waypointRepeated =
+          leaderPack.waypoint &&
+          leaderPack.lastWaypoint &&
+          distanceSq(leaderPack.waypoint, leaderPack.lastWaypoint) <= staleRadiusSq;
+        if (!engaged && (waypointLocal || waypointRepeated || !leaderPack.waypoint)) {
+          leaderPack.staleTicks += 1;
+        } else {
+          leaderPack.staleTicks = Math.max(0, leaderPack.staleTicks - 2);
+        }
+        const staleThreshold = Math.trunc(relocation.afterSeconds * ticksPerSecond);
+        if (leaderPack.staleTicks >= staleThreshold) {
+          const newHome = pickRelocationHome(leader, leaderHome, world, rng, config, relocation);
+          if (newHome) {
+            leaderPack.home = newHome;
+            leaderPack.lastWaypoint = null;
+            leaderPack.waypoint = pickPatrolWaypoint(newHome, patrolRadius, world, rng, config);
+            leaderPack.waypointTicksRemaining = pickRetargetTicks(
+              rng,
+              patrolRetarget.min,
+              patrolRetarget.max,
+              ticksPerSecond
+            );
+          }
+          leaderPack.staleTicks = 0;
+        }
+      } else {
+        leaderPack.staleTicks = 0;
+      }
+
       // Set leader's intent target to waypoint
       if (leaderPack.waypoint && leader.intent) {
         leader.intent.target = { x: leaderPack.waypoint.x, y: leaderPack.waypoint.y };
       }
+    } else {
+      leaderPack.staleTicks = 0;
     }
 
     // Process followers
@@ -276,6 +392,7 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
       memberPack.role = 'member';
       memberPack.leaderId = leader.id;
       memberPack.waypoint = leaderPack.waypoint; // Share leader's waypoint for reference
+      memberPack.home = leaderPack.home;
 
       // Formation following (only if wandering)
       if (shouldUsePackBehavior(member)) {

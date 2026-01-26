@@ -22,7 +22,7 @@ export const simConfig = {
   // === WORLD ===
   tileSize: 20,
   worldWidth: 120,
-  worldHeight: 80,
+  worldHeight: 160,
   defaultTerrain: 'plains',
   waterTerrain: 'water',
   shoreTerrain: 'shore',
@@ -30,8 +30,8 @@ export const simConfig = {
 
   // Enhanced terrain generation (noise-based)
   terrainNoiseScale: 0.035, // Controls terrain feature size (smaller = larger features)
-  terrainWaterLevel: -0.18, // Height threshold for water (-1 to 1)
-  terrainShoreLevel: -0.08, // Height threshold for shore
+  terrainWaterLevel: -0.28, // Height threshold for water (-1 to 1)
+  terrainShoreLevel: -0.18, // Height threshold for shore
   terrainRockThreshold: 0.72, // Roughness threshold for rock formation
   terrainForestMoisture: 0.58, // Moisture threshold for forest biome
   terrainSandMoisture: 0.32, // Moisture threshold below which sand appears
@@ -48,14 +48,14 @@ export const simConfig = {
 
   // === PLANTS: GRASS ===
   grassCap: 1,
-  grassRegrowthRate: 0.025, // per second (was 0.02 - slightly faster recovery)
+  grassRegrowthRate: 0.01, // per second (was 0.02 - slightly faster recovery)
   grassRegrowthDiminishPower: 1.5,
-  grassInitialAmount: 0.25, // (was 0.2 - more starting food)
+  grassInitialAmount: 0.12, // (was 0.2 - more starting food)
   grassPatchCount: 112,
   grassPatchMinRadius: 2,
   grassPatchMaxRadius: 7,
   grassPatchFalloffPower: 1.6,
-  grassPatchBaseRatio: 0.15,
+  grassPatchBaseRatio: 0.1,
   grassStressThreshold: 0.15,
   grassStressIncrease: 0.02,
   grassStressRecoveryRate: 0.018, // (was 0.015 - faster stress recovery)
@@ -68,9 +68,9 @@ export const simConfig = {
   bushCount: 96,
   bushInitialHealth: 0.85,
   bushBerryMax: 12,
-  bushInitialBerries: 8, // (was 6 - more starting berries)
-  bushRecoveryRate: 0.012, // (was 0.01 - slightly faster bush recovery)
-  bushBerryRegenRate: 0.3, // (was 0.25 - faster berry regen)
+  bushInitialBerries: 4, // (was 6 - more starting berries)
+  bushRecoveryRate: 0.006, // (was 0.01 - slightly faster bush recovery)
+  bushBerryRegenRate: 0.1, // (was 0.25 - faster berry regen)
 
   // === PLANTS: CARCASSES ===
   carcassBaseYield: 3.5, // (was 3.0 - more meat per kill keeps predators full longer)
@@ -102,7 +102,7 @@ export const simConfig = {
   creatureHerdingEnabled: true,
   creatureHerdingRange: 14, // (was 12 - wider herding awareness)
   creatureHerdingThreatRange: 10, // (was 8 - better predator detection)
-  creatureHerdingStrength: 0.025, // (was 0.02 - slightly tighter groups)
+  creatureHerdingStrength: 0.4, // (was 0.02 - slightly tighter groups)
   creatureHerdingThreatStrength: 0.25, // (was 0.2 - stronger flee response)
   creatureHerdingMinGroupSize: 2,
   creatureHerdingSeparation: 2.0,
@@ -153,6 +153,13 @@ export const simConfig = {
   creaturePredatorPatrolRadius: 25, // how far from home to patrol
   creaturePredatorPatrolRetargetTimeMin: 3, // seconds before new waypoint
   creaturePredatorPatrolRetargetTimeMax: 8, // seconds max before retarget
+  // Pack relocation (triangles/octagons)
+  creaturePackRelocationEnabled: true,
+  creaturePackRelocateAfterSeconds: 20, // how long “stale” before relocating
+  creaturePackRelocateMinDistance: 25, // new home must be meaningfully far
+  creaturePackRelocateSearchRadius: 80, // how far leader can look for new home
+  creaturePackRelocateSampleAttempts: 20, // random samples to find viable land tile
+  creaturePackRelocateAvoidWater: true,
 
   // === CREATURES: MEMORY ===
   creatureMemoryMaxEntries: 12,
