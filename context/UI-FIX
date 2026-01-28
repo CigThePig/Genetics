@@ -1,0 +1,238 @@
+PHASE 1 (Codex Prompt) — Fix boolean trap + expose verified hidden knobs (no gameplay changes)
+
+You are working in the Genetics simulation repo.
+
+Primary goal:
+1) Fix the “boolean flag trap” in the config UI so Enabled flags actually disable when turned off.
+2) Expose the verified “❌ Hidden” knobs listed in context/verified-config-knobs-batches-1-27.md by adding them to configMeta, so the panel stops being a black box.
+
+Hard constraints:
+- DO NOT change simulation behavior/logic or defaults (simConfig). UI + configMeta only.
+- DO NOT add “legacy compatibility” work. Once this UI writes true/false for booleans, that’s enough.
+- Use the verified doc as the source of truth for labels/meaning. Don’t invent behavior text.
+- Avoid large refactors in Phase 1. Keep it surgical and safe.
+
+Files you will likely edit:
+- src/ui/config-panel.js
+- src/sim/config.js
+- src/main.js (only if necessary for new reset/import hooks; ideally avoid in Phase 1)
+- src/styles.css (only if needed for checkbox styling)
+
+Step A — Read the verified source of truth
+- Open and use: context/verified-config-knobs-batches-1-27.md
+- For each knob entry, it provides: Label, Key, UI status (✅ UI / ❌ Hidden / 🚫 Excluded), verified behavior, code locations.
+
+Step B — Fix the boolean flag trap (UI writes booleans)
+1) In src/sim/config.js (configMeta):
+   - For any config key that is a true/false feature flag (especially keys ending with Enabled) AND the sim gates it like “config.someFlag !== false” (or otherwise treats it as boolean), add:
+       type: 'boolean'
+     and REMOVE numeric min/max/step for those flags.
+   - IMPORTANT: Do NOT convert numeric mode toggles that are checked with “=== 1”.
+     Example: creatureHerdingUseWorker is numeric (0/1) and used as “=== 1”; keep it numeric.
+   - The verified doc explicitly calls out several affected flags; ensure those are typed boolean.
+
+2) In src/ui/config-panel.js:
+   - When rendering each configMeta item:
+     - If item.type === 'boolean':
+       - render as checkbox/toggle (input.type = 'checkbox')
+       - read/write using input.checked
+       - on change call onConfigChange(key, input.checked) which writes literal true/false into sim.config
+     - Else:
+       - keep numeric input behavior (parseFloat) as it is
+   - Update the panel’s update(newConfig) method:
+     - For boolean inputs, set input.checked based on newConfig[key] (treat undefined as “on” if the sim is default-on, but do not do any global normalization).
+
+Step C — Fix category omissions so “world/memory/etc” actually display
+- configMeta currently uses categories not present in config-panel.js categoryOrder/categoryInfo (e.g., world).
+- Update src/ui/config-panel.js:
+  - Add missing categories to categoryInfo and categoryOrder at minimum: world, memory, metrics, input, rendering (or whatever you introduce).
+  - Add a “fallback category” behavior:
+    - if configMeta includes a category not listed, append it at end alphabetically so nothing silently disappears.
+
+Step D — Expose verified hidden knobs (configMeta coverage pass)
+Goal: Add configMeta entries for knobs that are “❌ Hidden” in the verified doc so they become editable.
+Rules:
+- Only expose “primitive” knobs in Phase 1:
+  - numbers, booleans, and simple enums (strings with small known option sets)
+- DO NOT expose complex structured knobs yet (arrays/objects) such as terrainTypes, creatureLifeStages, genome defaults/ranges objects, targeting preference tables, etc. Those are Phase 3 “Edit…” modal work.
+- DO NOT expose “🚫 Excluded” knobs (e.g., ticksPerSecond if the verified doc recommends excluding it).
+- DO NOT expose knobs explicitly noted as unused/legacy-only.
+
+Implementation approach:
+- From context/verified-config-knobs-batches-1-27.md, locate every table row where UI is “❌ Hidden”.
+- For each eligible primitive key:
+  - Add to configMeta in src/sim/config.js with:
+    - label: use the verified Label column
+    - category: map from the doc section (e.g., World/Terrain → world; Plants → plants; Reproduction → reproduction; Genetics → genetics; etc.)
+    - min/max/step: choose sensible ranges without changing defaults:
+      - ratios (0..1): step 0.01
+      - small multipliers (0..3): step 0.05
+      - seconds: use ranges that cover likely tuning (e.g., 0..60) step 0.25 or 0.5
+      - counts: 0..(reasonable max) step 1 or 5/10 depending
+      - tiles: 0..max(worldWidth/worldHeight) step 1
+    - type: 'boolean' for boolean flags
+    - type: 'select' + options: [...] for small enums (if any verified rows clearly define enums)
+
+Step E — Quick verification checklist (manual)
+- Run the dev server and open the config panel.
+- Confirm:
+  - A boolean “Enabled” feature can be turned off and it actually turns off (writes false).
+  - No boolean control writes numeric 0/1 anymore.
+  - World category shows (at least terrainWaterCoverageMultiplier).
+  - Newly exposed hidden knobs show in the intended category.
+  - No structured knobs were exposed (arrays/objects remain hidden).
+
+Deliverables:
+- Commit-worthy changes in the above files.
+- No refactor beyond what’s necessary to implement boolean + categories + hidden primitive knobs.
+- Leave Phase 2/3 improvements for later.
+
+PHASE 2 (Codex Prompt) — UI reorg + real controls (sliders, toggles, selects) + descriptions
+
+Primary goal:
+Rework the config UI so it is tunable without code knowledge:
+- Collapsible sections (expanders)
+- Correct control types (toggle/slider/select)
+- Show units + short verified descriptions
+- Better mobile ergonomics
+No gameplay changes.
+
+Constraints:
+- Do not change sim behavior or defaults.
+- Use configMeta as the UI schema.
+- Any meaning/description text should come from context/verified-config-knobs-batches-1-27.md (paraphrase is OK, but must match verified behavior).
+
+Files likely:
+- src/ui/config-panel.js
+- src/styles.css
+- src/sim/config.js (to enrich configMeta with description/unit/ui hints)
+- src/main.js (only if you add richer reset hooks)
+
+Step A — Upgrade configMeta into a UI schema (lightweight)
+In src/sim/config.js, extend configMeta entries to include:
+- description: 1–2 lines based on the verified doc (no invention)
+- unit: one of ['tiles','seconds','ratio','mult','count','px','per_second', etc.] as appropriate
+- control: optional hint like ['slider','number','toggle','select']
+- advanced: boolean (true for noisy/rarely-used knobs)
+
+Do NOT attempt to encode every range perfectly, but ensure common knobs have min/max/step so sliders work.
+
+Step B — Replace “flat sections” with collapsible groups
+In src/ui/config-panel.js:
+- Render each category as a collapsible <details> block:
+  - <summary> shows icon + label
+  - body contains rows
+- Remember open/closed state per category during session (optional but helpful).
+
+Step C — Add real controls
+Render per item:
+- type 'boolean' → toggle (checkbox styled as toggle)
+- type 'select' → <select> with options from configMeta
+- numbers:
+  - if min/max present → slider + number input paired
+  - if min/max absent → number input only
+  - slider should update number live and call onConfigChange on input (not just change) for smooth tuning
+- Add a small “default” hint:
+  - import { simConfig } from '../sim/config.js'
+  - show default next to current (e.g., “default: 0.18”)
+  - visually mark changed values (e.g., a dot or subtle highlight)
+
+Step D — Tooltips / inline help
+- Under each label, render description text in a smaller muted font.
+- Include unit text near the control (e.g., “seconds”, “tiles”).
+
+Step E — Keep it mobile-friendly
+- Row layout should stack on narrow screens:
+  - label/description above
+  - controls below, full width
+- Sliders should be easy to drag; number inputs should still allow precise edits.
+
+Step F — Reset behaviors (still simple)
+- Keep existing “Reset to Defaults” global button.
+- Add per-knob reset (optional in Phase 2):
+  - A small reset icon/button per row that sets that key back to simConfig[key]
+  - This requires calling onConfigChange(key, cloneConfigValue(simConfig[key])).
+  - If you need cloneConfigValue, import from the same place main.js uses (or implement a tiny safe clone for primitives only).
+
+Verification checklist:
+- All boolean flags are toggles (not number inputs).
+- Sliders appear for most numeric knobs with defined ranges.
+- Descriptions match the verified doc sections.
+- No sim logic changes.
+
+Deliverables:
+- A much clearer UI layout with expanders + control types + descriptions/units.
+
+PHASE 3 (Codex Prompt) — “Power tuning” features + structured knob editors
+
+Primary goal:
+Add quality-of-life power features:
+- Search/filter knobs
+- Favorites/pinning
+- Preset export/import (JSON)
+- Safe editing for complex knobs (arrays/objects) via an “Edit…” modal with validation
+
+Constraints:
+- Do not change sim behavior or defaults.
+- Complex knobs editing must be safe: validate before applying.
+- Verified doc remains the source of truth for what knobs mean.
+
+Files likely:
+- src/ui/config-panel.js (may split into helper modules if needed)
+- src/styles.css
+- src/sim/config.js (add schema hints/examples for complex knobs)
+- src/main.js (optional: batch apply to reduce spammy status updates)
+
+Step A — Search/filter
+- Add a search input at top of the panel.
+- Filter by:
+  - label text
+  - key
+  - description
+- When filtering, show matching knobs across categories (either flatten results or keep categories but hide empty ones).
+
+Step B — Favorites (pinning)
+- Add a star icon per knob row.
+- Store favorites in localStorage (UI-only preference).
+- Render a “⭐ Favorites” section at the top containing pinned knobs (still bound to live config).
+
+Step C — Presets export/import
+- Export button: downloads/prints JSON of current sim.config (only include keys present in simConfig by default).
+- Import button:
+  - open a modal with textarea (paste JSON)
+  - validate JSON object
+  - apply only known keys
+  - apply primitives immediately; for complex keys apply after validation
+- Optional: If status spam is annoying, modify main.js to support a batch apply mode:
+  - e.g., onConfigChange('__batch__', {k:v,...}) and main.js loops without rendering status per key.
+  - Keep this optional; simplest is direct per-key apply.
+
+Step D — Complex knob editors (the ones Phase 1 skipped)
+For config keys that are arrays/objects (examples from verified doc sections: genome defaults/ranges, life stages arrays, targeting preferences tables, terrainTypes palette):
+- In configMeta, mark them:
+  - type: 'json'
+  - example: a small representative example object/array
+  - description: verified meaning
+- In UI, render them as:
+  - label + description
+  - “Edit…” button
+  - Modal/drawer:
+    - textarea with pretty-printed JSON
+    - “Validate” and “Apply” buttons
+    - show parse errors and do not apply if invalid
+    - on apply: call onConfigChange(key, parsedValue)
+
+Step E — Section-level reset
+- Add “Reset section” button in each category header (collapsible summary area).
+- It resets all keys in that category back to simConfig defaults.
+
+Verification checklist:
+- Search works instantly and doesn’t break layout.
+- Favorites persist across reloads.
+- Export/import works and refuses invalid JSON.
+- Complex knobs can be edited safely and apply correctly.
+- No behavior changes unless user changes knobs.
+
+Deliverables:
+- A config UI that feels like an actual tuning console:
+  searchable, pinnable, resettable, and safe for complex values.
