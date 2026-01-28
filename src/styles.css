@@ -855,36 +855,195 @@ body {
   width: var(--panel-max-width);
 }
 
+.config-controls {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.config-search {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.config-search-input {
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-default);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-size: 0.8125rem;
+}
+
+.config-toggle-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.config-toggle-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--bg-elevated);
+}
+
+.config-tools {
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: var(--space-xs);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.config-tools summary {
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.config-tool-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+  margin: var(--space-xs) 0;
+}
+
+.config-tool-status {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
 .config-section {
   margin-bottom: var(--space-lg);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  padding: var(--space-xs);
 }
 
 .config-section:last-child {
   margin-bottom: 0;
 }
 
+.config-section[open] {
+  border-color: var(--border-subtle);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.config-section--hidden {
+  display: none;
+}
+
 .config-section-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--accent-primary);
-  margin: 0 0 var(--space-sm);
-  padding-bottom: var(--space-xs);
-  border-bottom: 1px solid var(--border-subtle);
+  margin: 0;
+  padding: var(--space-xs);
+  cursor: pointer;
+  list-style: none;
+}
+
+.config-section-title::-webkit-details-marker {
+  display: none;
+}
+
+.config-section-reset {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  border-radius: var(--radius-sm);
+  padding: 0 var(--space-xs);
+  cursor: pointer;
 }
 
 .config-row {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-md);
   padding: var(--space-xs) 0;
 }
 
+.config-row--hidden {
+  display: none;
+}
+
+.config-row--changed {
+  background: rgba(88, 170, 255, 0.08);
+  border-radius: var(--radius-sm);
+  padding: var(--space-xs);
+}
+
+.config-row--favorite {
+  border: 1px solid rgba(255, 220, 100, 0.2);
+}
+
+.config-label-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
 .config-label {
   font-size: 0.8125rem;
   color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.config-description {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.config-meta {
+  font-size: 0.6875rem;
+  color: var(--text-muted);
+}
+
+.config-badge {
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  color: var(--text-secondary);
+  padding: 0 var(--space-xs);
+  border-radius: var(--radius-sm);
+}
+
+.config-favorite {
+  margin-left: auto;
+  background: transparent;
+  border: none;
+  color: #ffd166;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.config-control {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 
 .config-input {
@@ -902,6 +1061,66 @@ body {
 .config-input:focus {
   outline: none;
   border-color: var(--accent-primary);
+}
+
+.config-slider {
+  width: 140px;
+}
+
+.config-select {
+  width: 140px;
+  text-align: left;
+}
+
+.config-toggle {
+  width: 18px;
+  height: 18px;
+  padding: 0;
+  accent-color: var(--accent-primary);
+}
+
+.config-json {
+  width: 240px;
+  min-height: 120px;
+  resize: vertical;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+}
+
+.config-json-actions {
+  display: flex;
+  gap: var(--space-xs);
+}
+
+.config-json-error {
+  font-size: 0.6875rem;
+  color: #ffb4b4;
+}
+
+@media (max-width: 720px) {
+  .config-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .config-control {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .config-input,
+  .config-select,
+  .config-slider,
+  .config-json {
+    width: 100%;
+    text-align: left;
+  }
+
+  .config-json-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
 }
 
 /* ===========================================
