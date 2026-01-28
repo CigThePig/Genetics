@@ -96,6 +96,8 @@ export const simConfig = {
   creatureWanderInHerdJitterMultiplier: 0.35,
   creatureWanderInHerdHeadingBias: 0.65,
   creatureFleeMaxTurnMultiplier: 2.5, // faster turning when threatened
+  creatureBoundaryAvoidDistance: 8,
+  creatureBoundaryAvoidStrength: 0.6,
   creatureGrazeEnabled: true,
   creatureGrazeSpeedMultiplier: 0.35,
   creatureGrazeIdleSecondsMin: 1.5,
@@ -350,6 +352,8 @@ export const simConfig = {
     circle: {},
     octagon: {}
   },
+  creatureGenomeRanges: {},
+  creatureGestationMultiplier: 1,
   creatureGenomeJitter: 0.1, // (was 0.08 - more initial variation)
   creatureGenomeMutationRate: 0.2, // (was 0.18 - slightly more mutations)
   creatureGenomeMutationStrength: 0.12, // (was 0.1 - stronger mutations for faster evolution)
@@ -414,15 +418,15 @@ export const configMeta = {
     category: 'simulation',
     control: 'number'
   },
-  ticksPerSecond: {
-    label: 'Ticks/Second',
-    description: 'Simulation tick rate used for time conversions.',
+  hotspotSeed: {
+    label: 'Hotspot Seed',
+    description: 'Defined in simConfig but not referenced elsewhere in the current code.',
     min: 1,
-    max: 120,
+    max: 999999,
     step: 1,
-    unit: 'ticks/s',
     category: 'simulation',
-    control: 'slider'
+    control: 'number',
+    advanced: true
   },
 
   // World
@@ -810,6 +814,37 @@ export const configMeta = {
     category: 'metabolism',
     control: 'slider'
   },
+  creatureBasalStaminaDrain: {
+    label: 'Basal Stamina Drain/s',
+    description: 'Baseline stamina drain per second.',
+    min: 0,
+    max: 0.1,
+    step: 0.001,
+    unit: '/s',
+    category: 'metabolism',
+    control: 'slider',
+    advanced: true
+  },
+  creatureSprintStartThreshold: {
+    label: 'Sprint Start Threshold',
+    description: 'Starts sprinting when stamina ratio meets this threshold.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'metabolism',
+    control: 'slider',
+    advanced: true
+  },
+  creatureSprintStopThreshold: {
+    label: 'Sprint Stop Threshold',
+    description: 'Stops sprinting when stamina ratio drops below this threshold.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'metabolism',
+    control: 'slider',
+    advanced: true
+  },
   creatureSprintStaminaDrain: {
     label: 'Sprint Drain/s',
     description: 'Stamina drain while sprinting.',
@@ -936,17 +971,80 @@ export const configMeta = {
     category: 'predator',
     control: 'slider'
   },
+  creatureTargetingDistanceWeight: {
+    label: 'Targeting Distance Weight',
+    description: 'Score = speciesWeight − distance × weight.',
+    min: 0,
+    max: 0.5,
+    step: 0.01,
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
   creaturePredatorRestEnabled: {
     label: 'Predator Rest Enabled',
     description: 'Allow predators to rest when satiated.',
     type: 'boolean',
     category: 'predator'
   },
+  creaturePredatorPatrolSpeed: {
+    label: 'Predator Patrol Speed',
+    description: 'Defined in simConfig but not referenced elsewhere in the current code.',
+    min: 0,
+    max: 2,
+    step: 0.05,
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
   creaturePackRelocationEnabled: {
     label: 'Pack Relocation Enabled',
     description: 'Enable pack relocation behavior.',
     type: 'boolean',
     category: 'predator'
+  },
+  creaturePackRelocateAfterSeconds: {
+    label: 'Relocate After (s)',
+    description: 'Time of staleness before relocation triggers.',
+    min: 0,
+    max: 600,
+    step: 1,
+    unit: 's',
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
+  creaturePackRelocateMinDistance: {
+    label: 'Relocate Min Distance',
+    description: 'Candidate new homes must be at least this far from current home.',
+    min: 0,
+    max: 200,
+    step: 1,
+    unit: 'tiles',
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
+  creaturePackRelocateSearchRadius: {
+    label: 'Relocate Search Radius',
+    description: 'Radius within which relocation candidates are sampled.',
+    min: 0,
+    max: 240,
+    step: 1,
+    unit: 'tiles',
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
+  creaturePackRelocateSampleAttempts: {
+    label: 'Relocate Sample Attempts',
+    description: 'Number of random candidates evaluated for new homes.',
+    min: 1,
+    max: 80,
+    step: 1,
+    category: 'predator',
+    control: 'slider',
+    advanced: true
   },
   creaturePackRelocateAvoidWater: {
     label: 'Pack Relocate Avoid Water',
@@ -979,6 +1077,16 @@ export const configMeta = {
     step: 0.05,
     category: 'herding',
     control: 'slider'
+  },
+  creatureHerdingMinGroupSize: {
+    label: 'Min Group Size',
+    description: 'Minimum local herd size required for alignment/cohesion logic.',
+    min: 1,
+    max: 12,
+    step: 1,
+    category: 'herding',
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingThreatRange: {
     label: 'Threat Detect Range',
@@ -1034,6 +1142,17 @@ export const configMeta = {
     description: 'Comfort band max distance.',
     min: 2,
     max: 12,
+    step: 0.5,
+    unit: 'tiles',
+    category: 'herding',
+    control: 'slider',
+    advanced: true
+  },
+  creatureHerdingComfortMin: {
+    label: 'Comfort Min (Reserved)',
+    description: 'Resolved but currently unused in steering logic (reserved).',
+    min: 0,
+    max: 10,
     step: 0.5,
     unit: 'tiles',
     category: 'herding',
@@ -1537,6 +1656,40 @@ export const configMeta = {
     category: 'movement',
     control: 'slider'
   },
+  creatureBoundaryAvoidDistance: {
+    label: 'Boundary Avoid Distance',
+    description:
+      'Distance from edge where avoidance begins; avoidance strength grows with quadratic proximity.',
+    min: 0,
+    max: 60,
+    step: 1,
+    unit: 'tiles',
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBoundaryAvoidStrength: {
+    label: 'Boundary Avoid Strength',
+    description:
+      'Controls how strongly boundary avoidance affects wandering (clamped 0–1).',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureFleeMaxTurnMultiplier: {
+    label: 'Flee Max Turn Multiplier',
+    description:
+      'When threatened, multiplies max turn per tick to enable sharper evasive turns.',
+    min: 1,
+    max: 4,
+    step: 0.1,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
   creatureWanderRetargetTimeMin: {
     label: 'Wander Min (s)',
     description: 'Min seconds between wander retarget.',
@@ -1608,6 +1761,16 @@ export const configMeta = {
     description: 'Speed multiplier while grazing.',
     min: 0,
     max: 1,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureSprintSpeedMultiplier: {
+    label: 'Sprint Speed Multiplier',
+    description: 'When sprinting, multiplies movement distance.',
+    min: 0.5,
+    max: 3,
     step: 0.05,
     category: 'movement',
     control: 'slider',
@@ -1735,6 +1898,17 @@ export const configMeta = {
     type: 'boolean',
     category: 'predator'
   },
+  creaturePackSpacing: {
+    label: 'Pack Spacing',
+    description: 'Formation spacing for followers around the leader.',
+    min: 1,
+    max: 12,
+    step: 0.5,
+    unit: 'tiles',
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
   creaturePredatorPatrolRadius: {
     label: 'Patrol Radius',
     description: 'Radius for predator patrol.',
@@ -1744,6 +1918,28 @@ export const configMeta = {
     unit: 'tiles',
     category: 'predator',
     control: 'slider'
+  },
+  creaturePredatorPatrolRetargetTimeMin: {
+    label: 'Patrol Retarget Min (s)',
+    description: 'Min waypoint commit time before choosing a new patrol heading.',
+    min: 0.25,
+    max: 30,
+    step: 0.25,
+    unit: 's',
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
+  creaturePredatorPatrolRetargetTimeMax: {
+    label: 'Patrol Retarget Max (s)',
+    description: 'Max waypoint commit time before choosing a new patrol heading.',
+    min: 0.25,
+    max: 60,
+    step: 0.25,
+    unit: 's',
+    category: 'predator',
+    control: 'slider',
+    advanced: true
   },
 
   // Creatures: Reproduction
@@ -2101,6 +2297,28 @@ export const configMeta = {
     unit: 's',
     category: 'chase',
     control: 'slider'
+  },
+  creatureChaseLoseDistance: {
+    label: 'Lose Distance',
+    description: 'Distance within which prey counts as seen (updates last seen).',
+    min: 0,
+    max: 60,
+    step: 0.5,
+    unit: 'tiles',
+    category: 'chase',
+    control: 'slider',
+    advanced: true
+  },
+  creatureChaseCatchDistance: {
+    label: 'Catch Distance',
+    description: 'Distance at which chase concludes as caught.',
+    min: 0,
+    max: 10,
+    step: 0.1,
+    unit: 'tiles',
+    category: 'chase',
+    control: 'slider',
+    advanced: true
   },
 
   // Plants & Carcasses
@@ -2543,3 +2761,28 @@ export const configMeta = {
     advanced: true
   }
 };
+
+const warnConfigMetaMismatch = () => {
+  const configKeys = new Set(Object.keys(simConfig));
+  const metaKeys = new Set(Object.keys(configMeta));
+  const extraMetaKeys = [...metaKeys].filter((key) => !configKeys.has(key));
+  const missingMetaKeys = [...configKeys].filter((key) => !metaKeys.has(key));
+
+  if (extraMetaKeys.length > 0) {
+    console.warn(
+      `[config] configMeta contains keys not in simConfig: ${extraMetaKeys.join(', ')}`
+    );
+  }
+  if (missingMetaKeys.length > 0) {
+    console.warn(
+      `[config] simConfig contains keys missing configMeta: ${missingMetaKeys.join(', ')}`
+    );
+  }
+};
+
+const isDev =
+  typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.DEV;
+
+if (isDev) {
+  warnConfigMetaMismatch();
+}

@@ -13,9 +13,17 @@ import { configMeta, simConfig } from '../sim/config.js';
  * @param {HTMLElement} options.container - The overlay panel container (from UI)
  * @param {Object} options.config - Current simulation config object
  * @param {Function} options.onConfigChange - Callback when a config value changes
+ * @param {Function} options.onRebuildWorld - Callback to rebuild the world
+ * @param {Function} options.onApplyPreset - Callback after preset import
  * @returns {Object} Panel API with update methods
  */
-export function createConfigPanel({ container, config, onConfigChange }) {
+export function createConfigPanel({
+  container,
+  config,
+  onConfigChange,
+  onRebuildWorld,
+  onApplyPreset
+}) {
   const FAVORITES_KEY = 'configPanelFavorites';
   const FAVORITES_ONLY_KEY = 'configPanelFavoritesOnly';
   const SHOW_ADVANCED_KEY = 'configPanelShowAdvanced';
@@ -51,6 +59,20 @@ export function createConfigPanel({ container, config, onConfigChange }) {
   const favorites = loadStoredSet(FAVORITES_KEY);
   let favoritesOnly = loadStoredBool(FAVORITES_ONLY_KEY, false);
   let showAdvanced = loadStoredBool(SHOW_ADVANCED_KEY, true);
+  let worldDirty = false;
+
+  const rebuildKeys = new Set(['hotspotSeed']);
+  const defaultOnKeys = new Set([
+    'creatureGrazeEnabled',
+    'creatureHerdingEnabled',
+    'creatureHerdingRegroupEnabled',
+    'creatureHerdingTargetBlendEnabled',
+    'creaturePackEnabled',
+    'creaturePackRelocationEnabled',
+    'creaturePackRelocateAvoidWater',
+    'creaturePredatorRestEnabled',
+    'creatureWaterRendezvousEnabled'
+  ]);
   // Create header
   const header = document.createElement('div');
   header.className = 'panel-header';
@@ -136,8 +158,34 @@ export function createConfigPanel({ container, config, onConfigChange }) {
 
   presetPanel.append(presetActions, presetArea, presetStatus);
 
+  const rebuildBanner = document.createElement('div');
+  rebuildBanner.className = 'config-rebuild config-rebuild--hidden';
+
+  const rebuildHeader = document.createElement('div');
+  rebuildHeader.className = 'config-rebuild-header';
+  rebuildHeader.textContent = 'World changes pending';
+
+  const rebuildSubtext = document.createElement('div');
+  rebuildSubtext.className = 'config-rebuild-subtext';
+  rebuildSubtext.textContent =
+    'Applies world/seed changes by rebuilding terrain and respawning creatures.';
+
+  const rebuildButton = document.createElement('button');
+  rebuildButton.type = 'button';
+  rebuildButton.className = 'btn';
+  rebuildButton.textContent = 'Rebuild World';
+
+  rebuildButton.addEventListener('click', () => {
+    if (!worldDirty) return;
+    worldDirty = false;
+    rebuildBanner.classList.add('config-rebuild--hidden');
+    onRebuildWorld?.();
+  });
+
+  rebuildBanner.append(rebuildHeader, rebuildSubtext, rebuildButton);
+
   controls.append(searchWrap, toggleRow, presetPanel);
-  content.append(controls);
+  content.append(rebuildBanner, controls);
 
   // Group config meta by category
   const categories = {};
@@ -185,6 +233,39 @@ export function createConfigPanel({ container, config, onConfigChange }) {
 
   const getDefaultValue = (item) => simConfig?.[item.key];
 
+  const resolveBooleanValue = (key, rawValue) => {
+    if (typeof rawValue === 'boolean') return rawValue;
+    const defaultValue = simConfig?.[key];
+    if (typeof defaultValue === 'boolean') return defaultValue;
+    if (defaultOnKeys.has(key)) return true;
+    return false;
+  };
+
+  const getBooleanDefault = (key, fallback) => {
+    if (typeof fallback === 'boolean') return fallback;
+    if (defaultOnKeys.has(key)) return true;
+    return false;
+  };
+
+  const shouldMarkWorldDirty = (key) => {
+    if (key === 'seed') return false;
+    if (rebuildKeys.has(key)) return true;
+    return configMeta?.[key]?.category === 'world';
+  };
+
+  const setWorldDirty = (nextDirty) => {
+    worldDirty = nextDirty;
+    rebuildBanner.classList.toggle('config-rebuild--hidden', !worldDirty);
+  };
+
+  const isValueDifferent = (key, nextValue) => {
+    const currentValue = config?.[key];
+    if (typeof nextValue === 'object') {
+      return JSON.stringify(currentValue) !== JSON.stringify(nextValue);
+    }
+    return currentValue !== nextValue;
+  };
+
   const validateStructuredValue = (value, defaultValue) => {
     if (defaultValue === undefined) return { ok: false, message: 'No default value found.' };
     const defaultIsArray = Array.isArray(defaultValue);
@@ -210,9 +291,11 @@ export function createConfigPanel({ container, config, onConfigChange }) {
 
   const buildPresetPayload = (configState) => {
     const payload = {};
-    for (const key of Object.keys(configMeta)) {
-      if (key in configState) {
+    for (const key of Object.keys(simConfig)) {
+      if (configState && Object.prototype.hasOwnProperty.call(configState, key)) {
         payload[key] = configState[key];
+      } else {
+        payload[key] = simConfig[key];
       }
     }
     return payload;
@@ -221,7 +304,15 @@ export function createConfigPanel({ container, config, onConfigChange }) {
   const applyPresetPayload = (payload, updateEntry) => {
     const validKeys = new Set(Object.keys(simConfig));
     const rejected = [];
+    const ignored = [];
+    const changedKeys = [];
+    let seedValue;
+    let seedChanged = false;
     for (const [key, value] of Object.entries(payload)) {
+      if (key === 'ticksPerSecond') {
+        ignored.push(key);
+        continue;
+      }
       if (!validKeys.has(key)) {
         rejected.push(key);
         continue;
@@ -241,9 +332,23 @@ export function createConfigPanel({ container, config, onConfigChange }) {
         rejected.push(key);
         continue;
       }
-      updateEntry(key, value);
+      const hasChanged = isValueDifferent(key, value);
+      if (key === 'seed') {
+        seedValue = value;
+        seedChanged = hasChanged;
+      } else {
+        updateEntry(key, value);
+      }
+      if (hasChanged) changedKeys.push(key);
     }
-    return rejected;
+    return { rejected, ignored, changedKeys, seedValue, seedChanged };
+  };
+
+  const applyConfigChange = (key, value, { markDirty = true } = {}) => {
+    onConfigChange?.(key, value);
+    if (markDirty && shouldMarkWorldDirty(key)) {
+      setWorldDirty(true);
+    }
   };
 
   // Store input elements for updating
@@ -304,7 +409,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
         const entry = inputs.get(item.key);
         if (entry) {
           entry.update(defaultValue);
-          onConfigChange?.(item.key, defaultValue);
+          applyConfigChange(item.key, defaultValue);
         }
       }
     });
@@ -375,6 +480,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
       let sliderInput;
       let jsonError;
       let jsonActions;
+      let sliderFrame = null;
       const inputType = item.type || 'number';
       const control = item.control || (inputType === 'number' ? 'number' : inputType);
 
@@ -435,7 +541,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
         applyButton.addEventListener('click', () => {
           const result = validateJson();
           if (!result.ok) return;
-          onConfigChange?.(item.key, result.value);
+          applyConfigChange(item.key, result.value);
           setRowChanged(result.value);
         });
 
@@ -468,7 +574,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
 
       const currentValue = config?.[item.key];
       if (inputType === 'boolean') {
-        input.checked = Boolean(currentValue);
+        input.checked = resolveBooleanValue(item.key, currentValue);
       } else if (inputType === 'select') {
         input.value = currentValue ?? '';
       } else if (inputType === 'json') {
@@ -489,7 +595,8 @@ export function createConfigPanel({ container, config, onConfigChange }) {
         const nextValue = inputType === 'select' ? value : Number(value);
         const hasChanged =
           inputType === 'boolean'
-            ? Boolean(value) !== Boolean(defaultValue)
+            ? resolveBooleanValue(item.key, value) !==
+              getBooleanDefault(item.key, defaultValue)
             : inputType === 'select'
               ? value !== defaultValue
               : inputType === 'json'
@@ -501,22 +608,37 @@ export function createConfigPanel({ container, config, onConfigChange }) {
       setRowChanged(currentValue);
 
       if (sliderInput) {
+        const commitSliderValue = () => {
+          if (sliderFrame !== null) return;
+          sliderFrame = requestAnimationFrame(() => {
+            sliderFrame = null;
+            const value = parseFloat(sliderInput.value);
+            if (Number.isFinite(value)) {
+              input.value = sliderInput.value;
+              applyConfigChange(item.key, value);
+              setRowChanged(value);
+            }
+          });
+        };
+
         sliderInput.addEventListener('input', () => {
           input.value = sliderInput.value;
+          commitSliderValue();
         });
       }
 
       input.addEventListener('change', () => {
         if (inputType === 'boolean') {
-          onConfigChange?.(item.key, input.checked);
-          setRowChanged(input.checked);
+          const nextValue = input.checked;
+          applyConfigChange(item.key, nextValue);
+          setRowChanged(nextValue);
           return;
         }
 
         if (inputType === 'select') {
           const rawValue = input.value;
           const nextValue = item.optionType === 'number' ? Number(rawValue) : rawValue;
-          onConfigChange?.(item.key, nextValue);
+          applyConfigChange(item.key, nextValue);
           setRowChanged(nextValue);
           return;
         }
@@ -527,7 +649,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
 
         const value = parseFloat(input.value);
         if (Number.isFinite(value)) {
-          onConfigChange?.(item.key, value);
+          applyConfigChange(item.key, value);
           if (sliderInput) sliderInput.value = input.value;
           setRowChanged(value);
         }
@@ -538,7 +660,6 @@ export function createConfigPanel({ container, config, onConfigChange }) {
           const value = parseFloat(sliderInput.value);
           if (Number.isFinite(value)) {
             input.value = sliderInput.value;
-            onConfigChange?.(item.key, value);
             setRowChanged(value);
           }
         });
@@ -551,7 +672,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
 
       const updateEntry = (nextValue) => {
         if (inputType === 'boolean') {
-          input.checked = Boolean(nextValue);
+          input.checked = resolveBooleanValue(item.key, nextValue);
           setRowChanged(nextValue);
         } else if (inputType === 'select') {
           input.value = nextValue ?? '';
@@ -616,6 +737,7 @@ export function createConfigPanel({ container, config, onConfigChange }) {
 
   resetButton.addEventListener('click', () => {
     onConfigChange?.('__reset__', null);
+    setWorldDirty(true);
   });
 
   resetSection.append(resetButton);
@@ -671,17 +793,39 @@ export function createConfigPanel({ container, config, onConfigChange }) {
         presetStatus.textContent = 'Preset must be a JSON object.';
         return;
       }
-      const rejected = applyPresetPayload(payload, (key, value) => {
+      const result = applyPresetPayload(payload, (key, value) => {
         const entry = inputs.get(key);
         if (entry) {
           entry.update(value);
         }
-        onConfigChange?.(key, value);
+        applyConfigChange(key, value, { markDirty: false });
       });
+      if (result.seedValue !== undefined) {
+        const entry = inputs.get('seed');
+        if (entry) {
+          entry.update(result.seedValue);
+        }
+      }
+
+      const needsRebuild = result.changedKeys.some((key) => shouldMarkWorldDirty(key));
+
+      if (result.seedValue !== undefined && result.seedChanged) {
+        setWorldDirty(false);
+        onApplyPreset?.({ seed: result.seedValue, needsRebuild });
+      } else if (needsRebuild) {
+        setWorldDirty(true);
+      }
+
+      const warnings = [];
+      if (result.rejected.length > 0) {
+        warnings.push(`Unknown keys skipped: ${result.rejected.join(', ')}`);
+      }
+      if (result.ignored.length > 0) {
+        warnings.push(`Ignored keys: ${result.ignored.join(', ')}`);
+      }
+
       presetStatus.textContent =
-        rejected.length > 0
-          ? `Applied with unknown keys skipped: ${rejected.join(', ')}`
-          : 'Preset applied.';
+        warnings.length > 0 ? `Preset applied. ${warnings.join(' ')}` : 'Preset applied.';
     } catch (error) {
       presetStatus.textContent = 'Invalid JSON payload.';
     }
@@ -710,9 +854,12 @@ export function createConfigPanel({ container, config, onConfigChange }) {
       for (const [key, { input, sliderInput, type, row, defaultValue }] of inputs) {
         const value = newConfig?.[key];
         if (type === 'boolean') {
-          input.checked = Boolean(value);
+          input.checked = resolveBooleanValue(key, value);
           if (defaultValue !== undefined) {
-            row.classList.toggle('config-row--changed', Boolean(value) !== Boolean(defaultValue));
+            row.classList.toggle(
+              'config-row--changed',
+              resolveBooleanValue(key, value) !== getBooleanDefault(key, defaultValue)
+            );
           }
         } else if (type === 'select') {
           input.value = value ?? '';
@@ -738,6 +885,13 @@ export function createConfigPanel({ container, config, onConfigChange }) {
           }
         }
       }
+    },
+    /**
+     * Manually set the rebuild banner state.
+     * @param {boolean} nextDirty
+     */
+    setWorldDirty(nextDirty) {
+      setWorldDirty(Boolean(nextDirty));
     }
   };
 }

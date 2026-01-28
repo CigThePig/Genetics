@@ -862,6 +862,34 @@ body {
   margin-bottom: var(--space-md);
 }
 
+.config-rebuild {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-sm);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(255, 202, 90, 0.4);
+  background: rgba(255, 202, 90, 0.1);
+  margin-bottom: var(--space-sm);
+}
+
+.config-rebuild--hidden {
+  display: none;
+}
+
+.config-rebuild-header {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #ffd166;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.config-rebuild-subtext {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
 .config-search {
   display: flex;
   flex-direction: column;
