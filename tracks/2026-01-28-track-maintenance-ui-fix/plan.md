@@ -24,11 +24,11 @@
 ## Phase 1 — Boolean trap + hidden knob exposure
 
 ### Tasks
-- [ ] Audit `configMeta` for boolean feature flags and set `type: 'boolean'` while removing numeric min/max/step.
-- [ ] Update config panel rendering to use checkboxes/toggles for boolean type and write true/false.
-- [ ] Ensure panel update path sets `checked` from config for boolean inputs.
-- [ ] Add missing categories to the config panel and add fallback category handling.
-- [ ] Add configMeta entries for verified hidden primitive knobs (numbers/booleans/selects only).
+- [x] Audit `configMeta` for boolean feature flags and set `type: 'boolean'` while removing numeric min/max/step.
+- [x] Update config panel rendering to use checkboxes/toggles for boolean type and write true/false.
+- [x] Ensure panel update path sets `checked` from config for boolean inputs.
+- [x] Add missing categories to the config panel and add fallback category handling.
+- [x] Add configMeta entries for verified hidden primitive knobs (numbers/booleans/selects only).
 - [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
@@ -52,11 +52,11 @@
 ## Phase 2 — UI reorg + real controls + descriptions
 
 ### Tasks
-- [ ] Extend configMeta with `description`, `unit`, `control`, and `advanced` hints from verified doc.
-- [ ] Render categories as collapsible sections with readable headers.
-- [ ] Render boolean toggles, selects, sliders + number inputs based on configMeta hints.
-- [ ] Show default values and highlight changed values.
-- [ ] Improve mobile layout (stacked rows, larger controls).
+- [x] Extend configMeta with `description`, `unit`, `control`, and `advanced` hints from verified doc.
+- [x] Render categories as collapsible sections with readable headers.
+- [x] Render boolean toggles, selects, sliders + number inputs based on configMeta hints.
+- [x] Show default values and highlight changed values.
+- [x] Improve mobile layout (stacked rows, larger controls).
 - [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
@@ -79,11 +79,11 @@
 ## Phase 3 — Power tuning + structured knob editors
 
 ### Tasks
-- [ ] Add search/filter over label/key/description.
-- [ ] Add favorites/pinning with localStorage persistence.
-- [ ] Implement preset export/import with validation.
-- [ ] Add JSON editor for structured knobs with validate/apply flow.
-- [ ] Add section-level reset per category.
+- [x] Add search/filter over label/key/description.
+- [x] Add favorites/pinning with localStorage persistence.
+- [x] Implement preset export/import with validation.
+- [x] Add JSON editor for structured knobs with validate/apply flow.
+- [x] Add section-level reset per category.
 - [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
