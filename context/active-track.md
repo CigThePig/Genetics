@@ -1,6 +1,6 @@
-Active track: Maintenance — Herd Anchor Stability + Wander Cohesion
-Path: tracks/2026-02-04-track-maintenance-herd-anchor-stability/
-Current phase: Phase 2 — Herd water rendezvous + thirst hysteresis + mating mingle
-Next task: Run manual sim checks (predators off/low) and decide on format check handling.
-Last updated: 2026-02-06
-Notes: Phase 2 implemented; npm run verify fails due to existing format:check warnings.
+Active track: Maintenance — UI Config Panel Fixes
+Path: tracks/2026-01-28-track-maintenance-ui-fix/
+Current phase: Phase 0 — Planning complete (awaiting Phase 1)
+Next task: Phase 1 — Fix boolean trap + expose verified hidden knobs (no gameplay changes).
+Last updated: 2026-01-28
+Notes: Track created from context/UI-FIX; Phase 1 intentionally not started yet.

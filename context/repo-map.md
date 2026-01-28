@@ -67,6 +67,8 @@ Rules:
   - Role: pointer to current track folder + current phase/task
 - context/history.md
   - Role: append-only track summaries + verification notes
+- context/UI-FIX
+  - Role: phased UI config panel fix prompts and constraints
 
 ## Tracks
 
@@ -117,6 +119,8 @@ Rules:
   - Contains: Maintenance spec/blueprint/plan (Creature render pass)
 - tracks/2026-01-23-track-maintenance-metrics-population/
   - Contains: Maintenance spec/blueprint/plan (Metrics population display)
+- tracks/2026-01-28-track-maintenance-ui-fix/
+  - Contains: Maintenance spec/blueprint/plan (UI config panel fixes)
 - tracks/.gitkeep
   - Role: placeholder to keep the tracks directory in git
 
