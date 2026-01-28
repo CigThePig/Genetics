@@ -276,6 +276,19 @@ const recenter = () => {
   if (!running) renderer.render(sim);
 };
 
+const rebuildWorld = (nextSeed) => {
+  pause();
+  const seedValue = Number.isFinite(nextSeed) ? Math.trunc(nextSeed) : sim.getSeed();
+  sim.setSeed(seedValue);
+  ui.setSeed(sim.getSeed());
+  updateCameraBounds();
+  renderer.render(sim);
+  graphsPanel.reset();
+  settings.save({ seed: sim.getSeed() });
+  ui.setStatus(`Seed: ${sim.getSeed()}`);
+  resetTickTimebase();
+};
+
 // ═══════════════════════════════════════════════════════════════════════════
 // UI SETUP
 // ═══════════════════════════════════════════════════════════════════════════
@@ -296,14 +309,7 @@ const ui = createUI({
     resetTickTimebase();
   },
   onSeedChange: (nextSeed) => {
-    pause();
-    sim.setSeed(nextSeed);
-    ui.setSeed(sim.getSeed());
-    updateCameraBounds();
-    renderer.render(sim);
-    graphsPanel.reset();
-    settings.save({ seed: sim.getSeed() });
-    ui.setStatus(`Seed: ${sim.getSeed()}`);
+    rebuildWorld(nextSeed);
   },
   onFpsToggle: (visible) => {
     settings.save({ fpsVisible: visible });
@@ -330,6 +336,11 @@ const configPanel = createConfigPanel({
       }
       configPanel.update(sim.config);
       ui.setStatus('Config reset');
+      configPanel.setWorldDirty(true);
+    } else if (key === 'seed') {
+      rebuildWorld(value);
+      configPanel.update(sim.config);
+      configPanel.setWorldDirty(false);
     } else {
       sim.config[key] = value;
       ui.setStatus(`${key} = ${value}`);
@@ -343,6 +354,18 @@ const configPanel = createConfigPanel({
     if (!running) {
       renderer.render(sim);
       ui.setMetrics?.(sim.getSummary());
+    }
+  },
+  onRebuildWorld: () => {
+    rebuildWorld(sim.getSeed());
+    configPanel.setWorldDirty(false);
+    configPanel.update(sim.config);
+  },
+  onApplyPreset: ({ seed }) => {
+    if (Number.isFinite(seed)) {
+      rebuildWorld(seed);
+      configPanel.setWorldDirty(false);
+      configPanel.update(sim.config);
     }
   }
 });
