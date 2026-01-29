@@ -40,8 +40,35 @@ export {
 // Re-export movement system
 export { updateCreatureMovement } from './movement.js';
 
-// Re-export herding system
+// Re-export herding systems
 export { updateCreatureHerding, getHerdingOffset, getHerdSize, isThreatened } from './herding.js';
+export {
+  updateCreatureHerdingSimple,
+  getHerdingOffsetSimple,
+  getHerdHeading,
+  isThreatenedSimple,
+  getHerdSizeSimple,
+  getLocalLeaderId,
+  shouldStartMoving,
+  getLeadershipScore
+} from './herding-simple.js';
+
+// Re-export behavior state system
+export {
+  updateCreatureBehaviorState,
+  getBehaviorState,
+  getBehaviorPhase,
+  isPaused,
+  isOnAlert,
+  getAlertDirection,
+  getHuntPhase,
+  startHunting,
+  startFeeding,
+  startFleeing,
+  BEHAVIOR_STATES,
+  RELAXED_PHASES,
+  HUNTING_PHASES
+} from './behavior-state.js';
 
 // Re-export pack system (predator patrol behavior)
 export { updateCreaturePack, getPackInfo, isPackLeader } from './pack.js';

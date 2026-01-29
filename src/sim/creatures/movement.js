@@ -4,8 +4,11 @@
  * Handles creature movement, heading, terrain collision, and water avoidance.
  *
  * Key improvements:
+ * - Velocity-based movement with acceleration/deceleration (creatures have mass)
+ * - Turn momentum / rotational inertia (turning feels weighted)
  * - Persistent wander headings (creatures commit to a direction for a period)
  * - Maximum turn rate (smooth inertial turning, not instant snapping)
+ * - Speed varies by intent (wander slow, seek faster, flee at full speed)
  * - Herding applies to both 'wander' and 'graze' intents
  * - Reduced per-tick noise (jitter only on retarget, not every tick)
  * - Faster reactive turning when fleeing from threats
@@ -27,6 +30,86 @@ const isPredator = (species) => PREDATOR_SPECIES.has(species);
  */
 const resolveMovementSpeed = (config) =>
   Number.isFinite(config?.creatureBaseSpeed) ? Math.max(0, config.creatureBaseSpeed) : 0;
+
+// ============================================================================
+// VELOCITY-BASED MOVEMENT CONFIG RESOLVERS
+// ============================================================================
+
+/**
+ * Resolves creature acceleration (how fast creatures reach top speed).
+ */
+const resolveAcceleration = (config) =>
+  Number.isFinite(config?.creatureAcceleration)
+    ? Math.max(0.01, Math.min(1, config.creatureAcceleration))
+    : 0.15;
+
+/**
+ * Resolves creature deceleration (how fast creatures slow down when stopping).
+ */
+const resolveDeceleration = (config) =>
+  Number.isFinite(config?.creatureDeceleration)
+    ? Math.max(0.01, Math.min(1, config.creatureDeceleration))
+    : 0.12;
+
+/**
+ * Resolves friction drag (passive slowdown each tick).
+ */
+const resolveFrictionDrag = (config) =>
+  Number.isFinite(config?.creatureFrictionDrag)
+    ? Math.max(0, Math.min(0.2, config.creatureFrictionDrag))
+    : 0.02;
+
+// ============================================================================
+// TURN MOMENTUM (ROTATIONAL INERTIA) CONFIG RESOLVERS
+// ============================================================================
+
+/**
+ * Resolves angular acceleration (how fast turn rate changes).
+ */
+const resolveAngularAcceleration = (config) =>
+  Number.isFinite(config?.creatureAngularAcceleration)
+    ? Math.max(0.01, Math.min(1, config.creatureAngularAcceleration))
+    : 0.08;
+
+/**
+ * Resolves speed turn penalty (higher speed = slower max turn).
+ */
+const resolveSpeedTurnPenalty = (config) =>
+  Number.isFinite(config?.creatureSpeedTurnPenalty)
+    ? Math.max(0, Math.min(1, config.creatureSpeedTurnPenalty))
+    : 0.6;
+
+// ============================================================================
+// INTENT-BASED SPEED MULTIPLIERS
+// ============================================================================
+
+/**
+ * Resolves intent speed multipliers from config.
+ */
+const resolveIntentSpeedMultipliers = (config) => ({
+  wander: Number.isFinite(config?.creatureIntentSpeedWander)
+    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedWander))
+    : 0.4,
+  graze: Number.isFinite(config?.creatureIntentSpeedGraze)
+    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedGraze))
+    : 0.25,
+  seek: Number.isFinite(config?.creatureIntentSpeedSeek)
+    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedSeek))
+    : 0.7,
+  mate: Number.isFinite(config?.creatureIntentSpeedMate)
+    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedMate))
+    : 0.6,
+  drink: 0,
+  eat: 0,
+  rest: 0,
+  hunt: Number.isFinite(config?.creatureIntentSpeedHunt)
+    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedHunt))
+    : 0.85,
+  huntChase: Number.isFinite(config?.creatureIntentSpeedHuntChase)
+    ? Math.max(0, Math.min(2, config.creatureIntentSpeedHuntChase))
+    : 1.0,
+  flee: 1.0 // Always full speed when fleeing
+});
 
 /**
  * Resolves pregnancy movement speed multiplier.
@@ -255,6 +338,26 @@ const resolveHerdingRegroupMinLocalHerdSize = (config) =>
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 /**
+ * Ensures velocity state exists on creature motion.
+ * Velocity-based movement gives creatures mass/inertia.
+ */
+const ensureVelocityState = (creature) => {
+  if (!creature.motion) {
+    creature.motion = {};
+  }
+  if (!creature.motion.velocity) {
+    creature.motion.velocity = { x: 0, y: 0 };
+  }
+  if (!Number.isFinite(creature.motion.angularVelocity)) {
+    creature.motion.angularVelocity = 0;
+  }
+  if (!Number.isFinite(creature.motion.currentSpeed)) {
+    creature.motion.currentSpeed = 0;
+  }
+  return creature.motion;
+};
+
+/**
  * Ensures wander state exists on creature motion.
  */
 const ensureWanderState = (creature) => {
@@ -377,11 +480,14 @@ const pickGrazeTicks = (rng, minSeconds, maxSeconds, ticksPerSecond) => {
 
 /**
  * Updates creature positions based on intent, terrain, and speed.
+ * Uses velocity-based movement with acceleration and deceleration.
  * Avoids water tiles by trying alternate headings.
  *
  * Key behaviors:
+ * - Velocity-based movement: creatures have mass, accelerate and decelerate
+ * - Turn momentum: angular velocity with smooth acceleration
+ * - Intent-based speed: different activities have different target speeds
  * - Persistent wander: creatures commit to a heading for a period
- * - Max turn rate: smooth turning instead of instant snapping
  * - Herding applies to both wander and graze
  * - Faster turning when fleeing threats
  * - Boundary avoidance: creatures steer away from map edges
@@ -414,11 +520,22 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   const maxPostDrinkTicks = resolvePostDrinkRegroupMaxTicks(config);
   const herdingMinGroupSize = resolveHerdingMinGroupSize(config);
   const grazeEnabled = resolveGrazeEnabled(config);
-  const grazeSpeedMultiplier = resolveGrazeSpeedMultiplier(config);
   const grazeIdleRange = resolveGrazeIdleRange(config);
   const grazeMoveRange = resolveGrazeMoveRange(config);
   const grazeMinLocalHerdSize = resolveGrazeMinLocalHerdSize(config);
   const herdingRegroupMinLocalHerdSize = resolveHerdingRegroupMinLocalHerdSize(config);
+
+  // Velocity-based movement parameters
+  const acceleration = resolveAcceleration(config);
+  const deceleration = resolveDeceleration(config);
+  const frictionDrag = resolveFrictionDrag(config);
+
+  // Turn momentum parameters
+  const angularAcceleration = resolveAngularAcceleration(config);
+  const speedTurnPenalty = resolveSpeedTurnPenalty(config);
+
+  // Intent-based speed multipliers
+  const intentSpeedMultipliers = resolveIntentSpeedMultipliers(config);
 
   // Small noise for targeted movement (much less than before)
   const targetHeadingNoise = 0.08;
@@ -436,15 +553,32 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     if (!creature?.position) {
       continue;
     }
+
+    // Ensure velocity state exists
+    const motion = ensureVelocityState(creature);
+
     const intentType = creature.intent?.type;
-    // Resting, drinking, or eating creatures don't move
-    if (intentType === 'drink' || intentType === 'eat' || intentType === 'rest') {
-      continue;
-    }
     const baseSpeed = resolveCreatureSpeed(creature, config);
-    if (baseSpeed === 0) {
-      continue;
+
+    // Get intent-based speed multiplier
+    let intentSpeedMult = 1.0;
+    if (intentType && intentSpeedMultipliers[intentType] !== undefined) {
+      intentSpeedMult = intentSpeedMultipliers[intentType];
     }
+
+    // Check if creature is in active chase (hunt with chase status)
+    const isActivelyChasing = intentType === 'hunt' &&
+      creature.chase?.status === 'pursuing';
+    if (isActivelyChasing) {
+      intentSpeedMult = intentSpeedMultipliers.huntChase;
+    }
+
+    // Stationary intents: let creature decelerate to stop naturally
+    const isStationary = intentType === 'drink' || intentType === 'eat' || intentType === 'rest';
+    if (isStationary) {
+      intentSpeedMult = 0;
+    }
+
     const scale = Number.isFinite(creature.lifeStage?.movementScale)
       ? creature.lifeStage.movementScale
       : 1;
@@ -476,8 +610,24 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
         ? calculateBoundaryAvoidance(x, y, maxX, maxY, boundaryAvoidDistance)
         : null;
 
-    // Determine effective max turn rate (faster when fleeing)
-    const effectiveMaxTurn = isThreatened ? maxTurnPerTick * fleeTurnMultiplier : maxTurnPerTick;
+    // Get current speed for turn penalty calculation
+    const currentSpeed = motion.currentSpeed ?? 0;
+    const maxSpeed = baseSpeed * scale * sprintMultiplier * pregnancyMultiplier;
+    const speedRatio = maxSpeed > 0 ? Math.min(1, currentSpeed / maxSpeed) : 0;
+
+    // Determine effective max turn rate (faster when fleeing, slower when moving fast)
+    let effectiveMaxTurn = maxTurnPerTick;
+    if (isThreatened) {
+      effectiveMaxTurn *= fleeTurnMultiplier;
+    }
+    // Apply speed-based turn penalty (moving fast = wider turns)
+    effectiveMaxTurn *= (1 - speedRatio * speedTurnPenalty);
+    // Minimum turn rate so creature can always turn somewhat
+    effectiveMaxTurn = Math.max(effectiveMaxTurn, maxTurnPerTick * 0.2);
+    // Stationary/very slow creatures can turn nearly instantly
+    if (speedRatio < 0.1) {
+      effectiveMaxTurn = maxTurnPerTick * fleeTurnMultiplier;
+    }
 
     let desiredHeading = heading;
 
@@ -667,24 +817,88 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       clearGrazeState(creature);
     }
 
-    // Apply max turn rate (smooth turning)
-    const nextHeading = turnToward(heading, desiredHeading, effectiveMaxTurn);
+    // =========================================================================
+    // TURN MOMENTUM: Apply angular velocity with smooth acceleration
+    // =========================================================================
 
-    if (grazeMode === 'idle') {
-      creature.motion.heading = nextHeading;
+    // Calculate desired angular velocity
+    const headingDelta = wrapPi(desiredHeading - heading);
+    const desiredAngularVel = Math.max(-effectiveMaxTurn, Math.min(effectiveMaxTurn, headingDelta));
+
+    // Blend current angular velocity toward desired (angular acceleration)
+    let angularVel = motion.angularVelocity ?? 0;
+    const angularBlend = isThreatened ? angularAcceleration * fleeTurnMultiplier : angularAcceleration;
+    angularVel = angularVel + (desiredAngularVel - angularVel) * Math.min(1, angularBlend);
+    motion.angularVelocity = angularVel;
+
+    // Apply angular velocity to heading
+    const nextHeading = heading + angularVel;
+    motion.heading = nextHeading;
+
+    // =========================================================================
+    // VELOCITY-BASED MOVEMENT: Apply acceleration, deceleration, and friction
+    // =========================================================================
+
+    // Calculate target speed based on intent and modifiers
+    const { friction: terrainFriction } = getTerrainEffectsAt(world, Math.floor(x), Math.floor(y));
+    const effectiveFriction = Number.isFinite(terrainFriction) && terrainFriction > 0 ? terrainFriction : 1;
+
+    // Grazing idle mode means target speed is 0
+    const grazeSpeedMult = grazeMode === 'idle' ? 0 : (grazeMode === 'move' ? intentSpeedMultipliers.graze : 1);
+    const effectiveIntentMult = grazeMode ? grazeSpeedMult : intentSpeedMult;
+
+    const targetSpeed = (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * effectiveIntentMult) / effectiveFriction;
+
+    // Get current velocity
+    let vx = motion.velocity?.x ?? 0;
+    let vy = motion.velocity?.y ?? 0;
+    let speed = Math.sqrt(vx * vx + vy * vy);
+
+    // Calculate desired velocity from heading and target speed
+    const desiredVx = Math.cos(nextHeading) * targetSpeed;
+    const desiredVy = Math.sin(nextHeading) * targetSpeed;
+
+    // Determine whether to accelerate or decelerate
+    const isAccelerating = targetSpeed > speed;
+    const blendRate = isAccelerating
+      ? acceleration / effectiveFriction  // Terrain friction affects acceleration
+      : deceleration;
+
+    // Blend current velocity toward desired velocity
+    vx = vx + (desiredVx - vx) * Math.min(1, blendRate);
+    vy = vy + (desiredVy - vy) * Math.min(1, blendRate);
+
+    // Apply friction drag (passive slowdown each tick)
+    if (frictionDrag > 0 && (vx !== 0 || vy !== 0)) {
+      const dragFactor = 1 - frictionDrag;
+      vx *= dragFactor;
+      vy *= dragFactor;
+    }
+
+    // Update speed tracking
+    speed = Math.sqrt(vx * vx + vy * vy);
+    motion.currentSpeed = speed;
+
+    // Very low speed threshold - stop completely to prevent drifting forever
+    if (speed < 0.01) {
+      vx = 0;
+      vy = 0;
+      motion.currentSpeed = 0;
+    }
+
+    motion.velocity = { x: vx, y: vy };
+
+    // If effectively stopped, just update heading and continue
+    if (speed < 0.01) {
       continue;
     }
 
-    // Calculate movement
-    const { friction } = getTerrainEffectsAt(world, Math.floor(x), Math.floor(y));
-    const terrainFriction = Number.isFinite(friction) && friction > 0 ? friction : 1;
-    const grazeMultiplier = grazeMode === 'move' ? grazeSpeedMultiplier : 1;
-    const distance =
-      (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * grazeMultiplier * tickScale) /
-      terrainFriction;
-    let nextX = clampPosition(x + Math.cos(nextHeading) * distance, 0, maxX);
-    let nextY = clampPosition(y + Math.sin(nextHeading) * distance, 0, maxY);
+    // Calculate new position from velocity
+    const distance = speed * tickScale;
+    let nextX = clampPosition(x + vx * tickScale, 0, maxX);
+    let nextY = clampPosition(y + vy * tickScale, 0, maxY);
 
+    // Water avoidance
     let chosenHeading = nextHeading;
     if (isWaterTile(world, Math.floor(nextX), Math.floor(nextY), waterTerrain)) {
       let found = false;
@@ -696,17 +910,24 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
           nextX = candidateX;
           nextY = candidateY;
           chosenHeading = candidateHeading;
+          // Also update velocity direction to match new heading
+          motion.velocity = {
+            x: Math.cos(candidateHeading) * speed,
+            y: Math.sin(candidateHeading) * speed
+          };
           found = true;
           break;
         }
       }
       if (!found) {
-        creature.motion.heading = nextHeading;
+        // Stuck - stop movement but maintain heading
+        motion.velocity = { x: 0, y: 0 };
+        motion.currentSpeed = 0;
         continue;
       }
     }
 
-    creature.motion.heading = chosenHeading;
+    motion.heading = chosenHeading;
     creature.position.x = nextX;
     creature.position.y = nextY;
   }
