@@ -38,6 +38,10 @@ export function createUI({
 
   const formatMetricValue = (key, value) => {
     if (!Number.isFinite(value)) return '--';
+    if (key.startsWith('avgGenome')) {
+      const sign = value > 0 ? '+' : '';
+      return `${sign}${value.toFixed(0)}%`;
+    }
     if (key.includes('mutationStrength') || key.includes('pleiotropyStrength')) {
       return value.toFixed(3);
     }
@@ -944,8 +948,66 @@ export function createUI({
       label: 'Pleiotropy drift total',
       section: 'genetics',
       group: 'Octagons'
-    }
-  ];
+    },
+
+    // Genetics averages (per-species genome deviation)
+    { key: 'avgGenomeSpeedSquares', label: 'Speed', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeSpeedTriangles', label: 'Speed', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeSpeedCircles', label: 'Speed', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeSpeedOctagons', label: 'Speed', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomePerceptionRangeSquares', label: 'Perception', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomePerceptionRangeTriangles', label: 'Perception', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomePerceptionRangeCircles', label: 'Perception', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomePerceptionRangeOctagons', label: 'Perception', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeAlertnessSquares', label: 'Alertness', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeAlertnessTriangles', label: 'Alertness', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeAlertnessCircles', label: 'Alertness', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeAlertnessOctagons', label: 'Alertness', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeReactionDelaySquares', label: 'Reaction delay', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeReactionDelayTriangles', label: 'Reaction delay', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeReactionDelayCircles', label: 'Reaction delay', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeReactionDelayOctagons', label: 'Reaction delay', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeBasalEnergyDrainSquares', label: 'Energy drain', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeBasalEnergyDrainTriangles', label: 'Energy drain', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeBasalEnergyDrainCircles', label: 'Energy drain', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeBasalEnergyDrainOctagons', label: 'Energy drain', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeBasalWaterDrainSquares', label: 'Water drain', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeBasalWaterDrainTriangles', label: 'Water drain', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeBasalWaterDrainCircles', label: 'Water drain', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeBasalWaterDrainOctagons', label: 'Water drain', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeBasalStaminaDrainSquares', label: 'Stamina drain', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeBasalStaminaDrainTriangles', label: 'Stamina drain', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeBasalStaminaDrainCircles', label: 'Stamina drain', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeBasalStaminaDrainOctagons', label: 'Stamina drain', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeSprintStartThresholdSquares', label: 'Sprint start', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeSprintStartThresholdTriangles', label: 'Sprint start', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeSprintStartThresholdCircles', label: 'Sprint start', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeSprintStartThresholdOctagons', label: 'Sprint start', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeSprintStopThresholdSquares', label: 'Sprint stop', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeSprintStopThresholdTriangles', label: 'Sprint stop', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeSprintStopThresholdCircles', label: 'Sprint stop', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeSprintStopThresholdOctagons', label: 'Sprint stop', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeSprintSpeedMultiplierSquares', label: 'Sprint speed', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeSprintSpeedMultiplierTriangles', label: 'Sprint speed', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeSprintSpeedMultiplierCircles', label: 'Sprint speed', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeSprintSpeedMultiplierOctagons', label: 'Sprint speed', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeSprintStaminaDrainSquares', label: 'Sprint drain', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeSprintStaminaDrainTriangles', label: 'Sprint drain', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeSprintStaminaDrainCircles', label: 'Sprint drain', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeSprintStaminaDrainOctagons', label: 'Sprint drain', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeStaminaRegenSquares', label: 'Stamina regen', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeStaminaRegenTriangles', label: 'Stamina regen', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeStaminaRegenCircles', label: 'Stamina regen', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeStaminaRegenOctagons', label: 'Stamina regen', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeDrinkThresholdSquares', label: 'Drink threshold', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeDrinkThresholdTriangles', label: 'Drink threshold', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeDrinkThresholdCircles', label: 'Drink threshold', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeDrinkThresholdOctagons', label: 'Drink threshold', section: 'genetics', group: 'Octagons' },
+    { key: 'avgGenomeDrinkAmountSquares', label: 'Drink amount', section: 'genetics', group: 'Squares' },
+    { key: 'avgGenomeDrinkAmountTriangles', label: 'Drink amount', section: 'genetics', group: 'Triangles' },
+    { key: 'avgGenomeDrinkAmountCircles', label: 'Drink amount', section: 'genetics', group: 'Circles' },
+    { key: 'avgGenomeDrinkAmountOctagons', label: 'Drink amount', section: 'genetics', group: 'Octagons' },
+];
 
   // Store references to value elements for updating (plain object)
   const metricNodes = {};

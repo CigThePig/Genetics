@@ -51,7 +51,59 @@ export function createSim(config = simConfig) {
     }
     return counts;
   };
-  const buildWorld = () => {
+  
+  const TRACKED_GENOME_KEYS = ['speed', 'perceptionRange', 'alertness', 'reactionDelay', 'basalEnergyDrain', 'basalWaterDrain', 'basalStaminaDrain', 'sprintStartThreshold', 'sprintStopThreshold', 'sprintSpeedMultiplier', 'sprintStaminaDrain', 'staminaRegen', 'drinkThreshold', 'drinkAmount'];
+
+  const computeGenomeDeviationAverages = (creatures) => {
+    const sums = {};
+    const counts = {
+      [SPECIES.SQUARE]: 0,
+      [SPECIES.TRIANGLE]: 0,
+      [SPECIES.CIRCLE]: 0,
+      [SPECIES.OCTAGON]: 0
+    };
+
+    for (const species of Object.values(SPECIES)) {
+      sums[species] = {};
+      for (const key of TRACKED_GENOME_KEYS) {
+        sums[species][key] = 0;
+      }
+    }
+
+    if (!Array.isArray(creatures) || creatures.length === 0) {
+      return { counts, averages: {} };
+    }
+
+    for (const creature of creatures) {
+      const species = creature?.species;
+      if (counts[species] === undefined) continue;
+      counts[species] += 1;
+      const genome = creature?.genome ?? {};
+      for (const key of TRACKED_GENOME_KEYS) {
+        const value = genome[key];
+        // If gene missing, treat as neutral 0.5 so averages stay comparable.
+        const gene = Number.isFinite(value) ? value : 0.5;
+        sums[species][key] += gene;
+      }
+    }
+
+    const averages = {};
+    for (const [species, count] of Object.entries(counts)) {
+      averages[species] = {};
+      for (const key of TRACKED_GENOME_KEYS) {
+        if (count > 0) {
+          const avg = sums[species][key] / count; // [0..1]
+          // Store as deviation percent like the inspector: (gene - 0.5) * 200 => [-100..+100]
+          averages[species][key] = (avg - 0.5) * 200;
+        } else {
+          averages[species][key] = null;
+        }
+      }
+    }
+
+    return { counts, averages };
+  };
+const buildWorld = () => {
     const world = createWorldGrid({
       width: resolvedConfig.worldWidth,
       height: resolvedConfig.worldHeight,
@@ -263,6 +315,8 @@ export function createSim(config = simConfig) {
     },
     getSummary() {
       const speciesCounts = countSpecies(state.creatures);
+      const genomeStats = computeGenomeDeviationAverages(state.creatures);
+
       const getSpeciesMetric = (collection, species) => collection?.[species] ?? 0;
       const getSpeciesDeathCause = (species, cause) =>
         state.metrics.deathsByCauseBySpecies?.[species]?.[cause] ?? 0;
@@ -574,8 +628,65 @@ export function createSim(config = simConfig) {
         squaresCount: speciesCounts[SPECIES.SQUARE],
         trianglesCount: speciesCounts[SPECIES.TRIANGLE],
         circlesCount: speciesCounts[SPECIES.CIRCLE],
-        octagonsCount: speciesCounts[SPECIES.OCTAGON]
-      };
+        octagonsCount: speciesCounts[SPECIES.OCTAGON],
+        // Genetics (average genome deviation per species; percent points from neutral 0)
+        avgGenomeSpeedSquares: genomeStats.averages?.[SPECIES.SQUARE]?.speed ?? null,
+        avgGenomeSpeedTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.speed ?? null,
+        avgGenomeSpeedCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.speed ?? null,
+        avgGenomeSpeedOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.speed ?? null,
+        avgGenomePerceptionRangeSquares: genomeStats.averages?.[SPECIES.SQUARE]?.perceptionRange ?? null,
+        avgGenomePerceptionRangeTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.perceptionRange ?? null,
+        avgGenomePerceptionRangeCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.perceptionRange ?? null,
+        avgGenomePerceptionRangeOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.perceptionRange ?? null,
+        avgGenomeAlertnessSquares: genomeStats.averages?.[SPECIES.SQUARE]?.alertness ?? null,
+        avgGenomeAlertnessTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.alertness ?? null,
+        avgGenomeAlertnessCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.alertness ?? null,
+        avgGenomeAlertnessOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.alertness ?? null,
+        avgGenomeReactionDelaySquares: genomeStats.averages?.[SPECIES.SQUARE]?.reactionDelay ?? null,
+        avgGenomeReactionDelayTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.reactionDelay ?? null,
+        avgGenomeReactionDelayCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.reactionDelay ?? null,
+        avgGenomeReactionDelayOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.reactionDelay ?? null,
+        avgGenomeBasalEnergyDrainSquares: genomeStats.averages?.[SPECIES.SQUARE]?.basalEnergyDrain ?? null,
+        avgGenomeBasalEnergyDrainTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.basalEnergyDrain ?? null,
+        avgGenomeBasalEnergyDrainCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.basalEnergyDrain ?? null,
+        avgGenomeBasalEnergyDrainOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.basalEnergyDrain ?? null,
+        avgGenomeBasalWaterDrainSquares: genomeStats.averages?.[SPECIES.SQUARE]?.basalWaterDrain ?? null,
+        avgGenomeBasalWaterDrainTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.basalWaterDrain ?? null,
+        avgGenomeBasalWaterDrainCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.basalWaterDrain ?? null,
+        avgGenomeBasalWaterDrainOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.basalWaterDrain ?? null,
+        avgGenomeBasalStaminaDrainSquares: genomeStats.averages?.[SPECIES.SQUARE]?.basalStaminaDrain ?? null,
+        avgGenomeBasalStaminaDrainTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.basalStaminaDrain ?? null,
+        avgGenomeBasalStaminaDrainCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.basalStaminaDrain ?? null,
+        avgGenomeBasalStaminaDrainOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.basalStaminaDrain ?? null,
+        avgGenomeSprintStartThresholdSquares: genomeStats.averages?.[SPECIES.SQUARE]?.sprintStartThreshold ?? null,
+        avgGenomeSprintStartThresholdTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.sprintStartThreshold ?? null,
+        avgGenomeSprintStartThresholdCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.sprintStartThreshold ?? null,
+        avgGenomeSprintStartThresholdOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.sprintStartThreshold ?? null,
+        avgGenomeSprintStopThresholdSquares: genomeStats.averages?.[SPECIES.SQUARE]?.sprintStopThreshold ?? null,
+        avgGenomeSprintStopThresholdTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.sprintStopThreshold ?? null,
+        avgGenomeSprintStopThresholdCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.sprintStopThreshold ?? null,
+        avgGenomeSprintStopThresholdOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.sprintStopThreshold ?? null,
+        avgGenomeSprintSpeedMultiplierSquares: genomeStats.averages?.[SPECIES.SQUARE]?.sprintSpeedMultiplier ?? null,
+        avgGenomeSprintSpeedMultiplierTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.sprintSpeedMultiplier ?? null,
+        avgGenomeSprintSpeedMultiplierCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.sprintSpeedMultiplier ?? null,
+        avgGenomeSprintSpeedMultiplierOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.sprintSpeedMultiplier ?? null,
+        avgGenomeSprintStaminaDrainSquares: genomeStats.averages?.[SPECIES.SQUARE]?.sprintStaminaDrain ?? null,
+        avgGenomeSprintStaminaDrainTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.sprintStaminaDrain ?? null,
+        avgGenomeSprintStaminaDrainCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.sprintStaminaDrain ?? null,
+        avgGenomeSprintStaminaDrainOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.sprintStaminaDrain ?? null,
+        avgGenomeStaminaRegenSquares: genomeStats.averages?.[SPECIES.SQUARE]?.staminaRegen ?? null,
+        avgGenomeStaminaRegenTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.staminaRegen ?? null,
+        avgGenomeStaminaRegenCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.staminaRegen ?? null,
+        avgGenomeStaminaRegenOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.staminaRegen ?? null,
+        avgGenomeDrinkThresholdSquares: genomeStats.averages?.[SPECIES.SQUARE]?.drinkThreshold ?? null,
+        avgGenomeDrinkThresholdTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.drinkThreshold ?? null,
+        avgGenomeDrinkThresholdCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.drinkThreshold ?? null,
+        avgGenomeDrinkThresholdOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.drinkThreshold ?? null,
+        avgGenomeDrinkAmountSquares: genomeStats.averages?.[SPECIES.SQUARE]?.drinkAmount ?? null,
+        avgGenomeDrinkAmountTriangles: genomeStats.averages?.[SPECIES.TRIANGLE]?.drinkAmount ?? null,
+        avgGenomeDrinkAmountCircles: genomeStats.averages?.[SPECIES.CIRCLE]?.drinkAmount ?? null,
+        avgGenomeDrinkAmountOctagons: genomeStats.averages?.[SPECIES.OCTAGON]?.drinkAmount ?? null,
+};
     }
   };
 }
