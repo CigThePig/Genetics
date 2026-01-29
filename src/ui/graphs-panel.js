@@ -44,6 +44,7 @@ export function createGraphsPanel({ container }) {
   let visible = false;
   let timeWindow = HISTORY_SIZE;
   let lastRecordedTick = -1;
+  let onVisibilityChange = null;
   
   // Tracked metrics: Map of metricKey -> { label, color }
   const trackedMetrics = new Map();
@@ -64,6 +65,14 @@ export function createGraphsPanel({ container }) {
   // Main panel (bottom sheet style)
   const panel = document.createElement('div');
   panel.className = 'graphs-panel';
+
+  // Handle area for drag
+  const handleArea = document.createElement('div');
+  handleArea.className = 'graphs-handle-area';
+
+  const grabber = document.createElement('div');
+  grabber.className = 'graphs-grabber';
+  handleArea.append(grabber);
   
   // Header
   const header = document.createElement('div');
@@ -146,11 +155,15 @@ export function createGraphsPanel({ container }) {
   statsRow.className = 'graphs-stats';
   
   // Assemble panel
-  panel.append(header, trackedChips, graphArea, controls, statsRow);
+  panel.append(handleArea, header, trackedChips, graphArea, controls, statsRow);
   container.append(panel);
   
   // Callback for when tracked metrics change (UI will update highlights)
   let onMetricsChanged = null;
+
+  const notifyVisibility = () => {
+    onVisibilityChange?.(visible);
+  };
   
   // ═══════════════════════════════════════════════════════════════════════════
   // TRACKED CHIPS
@@ -378,10 +391,13 @@ export function createGraphsPanel({ container }) {
     renderGraph();
   };
   
-  const toggle = (forceState) => {
-    visible = forceState !== undefined ? forceState : !visible;
+  const setVisible = (nextVisible) => {
+    const nextState = Boolean(nextVisible);
+    if (visible === nextState) return;
+    visible = nextState;
     panel.classList.toggle('visible', visible);
-    
+    notifyVisibility();
+
     if (visible) {
       // Resize and render when becoming visible
       setTimeout(() => {
@@ -390,6 +406,86 @@ export function createGraphsPanel({ container }) {
       }, 50);
     }
   };
+
+  const toggle = (forceState) => {
+    const nextState = forceState !== undefined ? forceState : !visible;
+    setVisible(nextState);
+  };
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // DRAG HANDLING
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  let dragState = null;
+
+  const getClosedTranslate = () => {
+    const rect = panel.getBoundingClientRect();
+    const peekValue = parseFloat(
+      getComputedStyle(panel).getPropertyValue('--graphs-peek')
+    );
+    const peek = Number.isFinite(peekValue) ? peekValue : 26;
+    return Math.max(0, rect.height - peek);
+  };
+
+  const startDrag = (event) => {
+    if (dragState) return;
+    const startY = event.clientY ?? event.touches?.[0]?.clientY;
+    if (!Number.isFinite(startY)) return;
+    const startTranslate = visible ? 0 : getClosedTranslate();
+    dragState = {
+      startY,
+      startTranslate,
+      currentTranslate: startTranslate,
+      moved: false
+    };
+    panel.classList.add('dragging');
+    panel.style.transform = `translateY(${startTranslate}px)`;
+  };
+
+  const updateDrag = (event) => {
+    if (!dragState) return;
+    const clientY = event.clientY ?? event.touches?.[0]?.clientY;
+    if (!Number.isFinite(clientY)) return;
+    const delta = clientY - dragState.startY;
+    const closedTranslate = getClosedTranslate();
+    const nextTranslate = Math.min(
+      Math.max(dragState.startTranslate + delta, 0),
+      closedTranslate
+    );
+    dragState.currentTranslate = nextTranslate;
+    dragState.moved = dragState.moved || Math.abs(delta) > 3;
+    panel.style.transform = `translateY(${nextTranslate}px)`;
+  };
+
+  const endDrag = () => {
+    if (!dragState) return;
+    const closedTranslate = getClosedTranslate();
+    const { currentTranslate, moved } = dragState;
+    dragState = null;
+    panel.classList.remove('dragging');
+    panel.style.transform = '';
+
+    if (!moved) {
+      toggle();
+      return;
+    }
+
+    const shouldOpen = currentTranslate < closedTranslate * 0.5;
+    setVisible(shouldOpen);
+  };
+
+  handleArea.addEventListener('pointerdown', (event) => {
+    handleArea.setPointerCapture(event.pointerId);
+    startDrag(event);
+  });
+
+  handleArea.addEventListener('pointermove', (event) => {
+    if (!dragState) return;
+    updateDrag(event);
+  });
+
+  handleArea.addEventListener('pointerup', endDrag);
+  handleArea.addEventListener('pointercancel', endDrag);
   
   // ═══════════════════════════════════════════════════════════════════════════
   // METRIC TRACKING
@@ -517,6 +613,11 @@ export function createGraphsPanel({ container }) {
     // Callback setter
     setOnMetricsChanged(callback) {
       onMetricsChanged = callback;
+    },
+
+    setOnVisibilityChange(callback) {
+      onVisibilityChange = callback;
+      notifyVisibility();
     }
   };
 }

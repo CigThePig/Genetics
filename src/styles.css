@@ -670,6 +670,26 @@ body {
   border-color: var(--accent-primary);
 }
 
+.inspector-clear-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-tertiary);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--transition-fast);
+}
+
+.inspector-clear-btn:hover {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-default);
+}
+
 /* Meter bars */
 .meter-container {
   margin-bottom: var(--space-sm);
@@ -985,6 +1005,24 @@ body {
   list-style: none;
 }
 
+.config-section-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.config-section-chevron {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  transition: transform var(--transition-fast), color var(--transition-fast);
+  user-select: none;
+}
+
+.config-section[open] .config-section-chevron {
+  transform: rotate(180deg);
+  color: var(--accent-primary);
+}
+
 .config-section-title::-webkit-details-marker {
   display: none;
 }
@@ -1006,7 +1044,11 @@ body {
   align-items: flex-start;
   justify-content: space-between;
   gap: var(--space-md);
-  padding: var(--space-xs) 0;
+  padding: var(--space-sm) 0;
+}
+
+.config-section .config-row + .config-row {
+  border-top: 1px solid var(--border-subtle);
 }
 
 .config-row--hidden {
@@ -1074,6 +1116,14 @@ body {
   gap: var(--space-sm);
 }
 
+.config-row--toggle {
+  align-items: center;
+}
+
+.config-control--toggle {
+  justify-content: flex-end;
+}
+
 .config-input {
   width: 72px;
   padding: var(--space-xs) var(--space-sm);
@@ -1101,10 +1151,44 @@ body {
 }
 
 .config-toggle {
-  width: 18px;
-  height: 18px;
-  padding: 0;
-  accent-color: var(--accent-primary);
+  appearance: none;
+  -webkit-appearance: none;
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-elevated);
+  position: relative;
+  cursor: pointer;
+  flex: 0 0 auto;
+  transition: background var(--transition-fast), border-color var(--transition-fast);
+}
+
+.config-toggle::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.55);
+  transition: transform var(--transition-fast), background var(--transition-fast);
+}
+
+.config-toggle:checked {
+  background: rgba(80, 200, 160, 0.22);
+  border-color: rgba(80, 200, 160, 0.35);
+}
+
+.config-toggle:checked::after {
+  transform: translateX(18px);
+  background: var(--accent-primary);
+}
+
+.config-toggle:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.25);
+  outline-offset: 2px;
 }
 
 .config-json {
@@ -1131,10 +1215,22 @@ body {
     align-items: stretch;
   }
 
+  .config-row--toggle {
+    flex-direction: row;
+    align-items: center;
+  }
+
   .config-control {
     width: 100%;
     flex-direction: column;
     align-items: stretch;
+  }
+
+  .config-row--toggle .config-control {
+    width: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   .config-input,
@@ -1482,7 +1578,8 @@ body {
   background: var(--bg-secondary);
   border-radius: var(--radius-xl) var(--radius-xl) 0 0;
   box-shadow: 0 -4px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-default);
-  transform: translateY(100%);
+  --graphs-peek: 26px;
+  transform: translateY(calc(100% - var(--graphs-peek)));
   transition: transform var(--transition-slow);
   display: flex;
   flex-direction: column;
@@ -1493,6 +1590,26 @@ body {
 
 .graphs-panel.visible {
   transform: translateY(0);
+}
+
+.graphs-panel.dragging {
+  transition: none;
+}
+
+.graphs-handle-area {
+  height: var(--graphs-peek);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  touch-action: none;
+  cursor: grab;
+}
+
+.graphs-grabber {
+  width: 46px;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.25);
 }
 
 /* Header */

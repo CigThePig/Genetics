@@ -1081,7 +1081,7 @@ export function createUI({
 
   // Metrics FAB
   const metricsFab = document.createElement('button');
-  metricsFab.className = 'fab';
+  metricsFab.className = 'fab fab-metrics';
   metricsFab.innerHTML = '📊';
   metricsFab.title = 'Metrics';
 
@@ -1098,6 +1098,21 @@ export function createUI({
   metricsFab.addEventListener('click', toggleMetrics);
   metricsPanelClose.addEventListener('click', toggleMetrics);
 
+  // Graphs FAB
+  const graphsFab = document.createElement('button');
+  graphsFab.className = 'fab fab-graphs';
+  graphsFab.innerHTML = '📉';
+  graphsFab.title = 'Graphs';
+
+  const setGraphsFabActive = (nextVisible) => {
+    graphsFab.classList.toggle('active', Boolean(nextVisible));
+  };
+
+  graphsFab.addEventListener('click', () => {
+    if (!graphsPanel) return;
+    graphsPanel.toggle?.();
+  });
+
   // ═══════════════════════════════════════════════════════════════════════════
   // CONFIG PANEL & FAB
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1108,7 +1123,7 @@ export function createUI({
   container.append(configPanel);
 
   const configFab = document.createElement('button');
-  configFab.className = 'fab';
+  configFab.className = 'fab fab-config';
   configFab.innerHTML = '⚙️';
   configFab.title = 'Config';
 
@@ -1125,7 +1140,7 @@ export function createUI({
   configFab.addEventListener('click', toggleConfig);
 
   // Assemble right FABs (FPS moved to top bar)
-  fabContainerRight.append(metricsFab, configFab);
+  fabContainerRight.append(metricsFab, graphsFab, configFab);
   container.append(fabContainerRight);
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -1210,6 +1225,10 @@ export function createUI({
     // Set graphs panel reference for metric click handling
     setGraphsPanel(panel) {
       graphsPanel = panel;
+      graphsPanel?.setOnVisibilityChange?.((isVisible) => {
+        setGraphsFabActive(isVisible);
+      });
+      setGraphsFabActive(graphsPanel?.isVisible?.() ?? false);
     },
     
     // Update metric tracking highlights (called when graphs panel changes)
