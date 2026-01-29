@@ -485,7 +485,9 @@ export function createConfigPanel({
         applyFilter();
       });
 
-      labelWrap.append(favoriteButton);
+      // Keep the favorite star aligned on the same line as the label text.
+      // (Putting it inside the label lets flex layout place it at the far right.)
+      label.append(favoriteButton);
 
       if (item.description) {
         const description = document.createElement('div');
@@ -518,7 +520,9 @@ export function createConfigPanel({
         controlWrap.classList.add('config-control--toggle');
         input = document.createElement('input');
         input.type = 'checkbox';
-        input.className = 'config-input config-toggle';
+        // Use a dedicated switch style. Do not inherit .config-input sizing/padding.
+        input.className = 'config-switch';
+        input.setAttribute('role', 'switch');
       } else if (inputType === 'select') {
         input = document.createElement('select');
         input.className = 'config-input config-select';
