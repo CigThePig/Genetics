@@ -108,6 +108,25 @@ export const simConfig = {
   creatureGrazeMinWaterRatio: 0.75,
   creatureGrazeMinLocalHerdSize: 3,
 
+  // === CREATURES: MOVEMENT PHYSICS ===
+  // Velocity-based movement gives creatures mass and inertia
+  creatureAcceleration: 0.15, // how fast creatures reach top speed (0-1)
+  creatureDeceleration: 0.12, // how fast creatures slow down when stopping (0-1)
+  creatureFrictionDrag: 0.02, // passive slowdown each tick (0-0.2)
+
+  // Turn momentum (rotational inertia)
+  creatureAngularAcceleration: 0.08, // how fast turn rate changes (0-1)
+  creatureSpeedTurnPenalty: 0.6, // higher speed = slower max turn (0-1)
+
+  // === CREATURES: INTENT SPEED MULTIPLIERS ===
+  // Different intents produce visibly different movement speeds
+  creatureIntentSpeedWander: 0.4, // slow amble
+  creatureIntentSpeedGraze: 0.25, // very slow, meandering
+  creatureIntentSpeedSeek: 0.7, // purposeful but not rushed
+  creatureIntentSpeedMate: 0.6, // moderate
+  creatureIntentSpeedHunt: 0.85, // stalking phase
+  creatureIntentSpeedHuntChase: 1.0, // active chase
+
   // Long-range need search (when no target is perceived or remembered)
   creatureSearchRadiusMin: 12, // tiles
   creatureSearchRadiusMax: 90, // tiles
@@ -117,6 +136,32 @@ export const simConfig = {
   // === CREATURES: HERDING ===
   // Only herbivores (squares, circles) herd - predators hunt independently
   creatureHerdingEnabled: true,
+  creatureHerdingSimpleMode: true, // true = use simple 3-rule boid system, false = complex system
+
+  // === CREATURES: SIMPLE HERDING (3-rule boid system) ===
+  creatureSimpleHerdingSeparationRadius: 2.5, // tiles - push away from neighbors
+  creatureSimpleHerdingAlignmentRadius: 7, // tiles - match neighbor headings
+  creatureSimpleHerdingCohesionRadius: 11, // tiles - pull toward herd center
+  creatureSimpleHerdingSeparationStrength: 1.2,
+  creatureSimpleHerdingAlignmentStrength: 0.8,
+  creatureSimpleHerdingCohesionStrength: 0.5,
+  creatureSimpleHerdingThreatRange: 12, // tiles - predator detection range
+  creatureSimpleHerdingThreatStrength: 1.5,
+  creatureSimpleHerdingSmoothing: 0.3, // offset smoothing (prevents jitter)
+  creatureHerdingHeadingBlend: 0.5, // how much herd heading influences creature heading
+
+  // Threat propagation - alerts spread through herd
+  creatureThreatPropagationRadius: 9, // tiles - how far threat alerts spread
+  creatureThreatPropagationHops: 2, // max propagation depth
+  creatureThreatDecaySeconds: 2.0, // how long creatures stay threatened after losing sight
+
+  // Herd movement waves - creates emergent leadership and wave effects
+  creatureHerdMovementContagionRadius: 6, // tiles - how far movement spreads
+  creatureHerdMovementContagionDelay: 0.3, // seconds before contagion takes effect
+  creatureHerdMovementContagionChance: 0.4, // base chance to start moving when neighbors move
+  creatureHerdLeadershipDecay: 0.02, // how fast leadership score decays
+
+  // === CREATURES: COMPLEX HERDING (legacy) ===
   creatureHerdingRange: 14, // (was 12 - wider herding awareness)
   creatureHerdingThreatRange: 10, // (was 8 - better predator detection)
   creatureHerdingStrength: 0.18, // calmer cohesion
@@ -214,6 +259,14 @@ export const simConfig = {
   creaturePredatorPatrolRadius: 25, // how far from home to patrol
   creaturePredatorPatrolRetargetTimeMin: 3, // seconds before new waypoint
   creaturePredatorPatrolRetargetTimeMax: 8, // seconds max before retarget
+
+  // Patrol waypoint intelligence
+  creaturePredatorPatrolMemoryDecay: 0.015, // memory decay rate per second
+  creaturePredatorPatrolMemoryMax: 8, // max prey sighting memories
+  creaturePredatorPatrolPreySightingWeight: 0.6, // chance to patrol toward prey sighting
+  creaturePredatorPatrolGrassWeight: 0.3, // chance to patrol toward grass
+  creaturePredatorPatrolPauseDuration: 1.5, // seconds to pause at waypoint
+
   // Pack relocation (triangles/octagons)
   creaturePackRelocationEnabled: true,
   creaturePackRelocateAfterSeconds: 20, // how long “stale” before relocating
@@ -221,6 +274,54 @@ export const simConfig = {
   creaturePackRelocateSearchRadius: 80, // how far leader can look for new home
   creaturePackRelocateSampleAttempts: 20, // random samples to find viable land tile
   creaturePackRelocateAvoidWater: true,
+
+  // === CREATURES: BEHAVIOR STATE MACHINE ===
+  // State machine prevents rapid intent flickering
+  creatureBehaviorStateEnabled: true,
+
+  // RELAXED state - natural pauses while wandering/grazing
+  creatureBehaviorRelaxedMinSeconds: 1.0,
+  creatureBehaviorRelaxedPauseMinSeconds: 1.0,
+  creatureBehaviorRelaxedPauseMaxSeconds: 4.0,
+  creatureBehaviorRelaxedMoveMinSeconds: 3.0,
+  creatureBehaviorRelaxedMoveMaxSeconds: 8.0,
+  creatureBehaviorRelaxedPauseProbability: 0.4,
+  creatureBehaviorRelaxedGrazePauseRatio: 0.65, // grazing creatures pause more
+
+  // ALERT state - freeze and look at threat
+  creatureBehaviorAlertMinSeconds: 0.5,
+  creatureBehaviorAlertMaxSeconds: 1.5,
+  creatureBehaviorAlertToFleeThreshold: 8, // tiles - flee if predator closer than this
+
+  // TRAVELING state
+  creatureBehaviorTravelingMinSeconds: 2.0,
+
+  // FORAGING state
+  creatureBehaviorForagingMinSeconds: 1.0,
+
+  // FLEEING state
+  creatureBehaviorFleeingMinSeconds: 0.5,
+
+  // HUNTING state (predators)
+  creatureBehaviorHuntSpottingSeconds: 0.7,
+  creatureBehaviorHuntStalkingMinSeconds: 2.0,
+  creatureBehaviorHuntStalkingMaxSeconds: 5.0,
+  creatureBehaviorHuntCooldownSeconds: 1.5,
+  creatureBehaviorHuntPounceRange: 3.5, // tiles - distance to trigger charge
+  creatureBehaviorHuntStalkSpeed: 0.35, // speed multiplier when stalking
+
+  // RESTING state
+  creatureBehaviorRestingMinSeconds: 2.0,
+
+  // FEEDING state (predators)
+  creatureBehaviorFeedingMinSeconds: 3.0,
+  creatureBehaviorFeedingMaxSeconds: 8.0,
+  creatureBehaviorSatiationThreshold: 0.8, // energy ratio for "full"
+
+  // Environment awareness pauses
+  creatureBehaviorEnvironmentPauseEnabled: true,
+  creatureBehaviorEnvironmentPauseSeconds: 0.5,
+  creatureBehaviorEnvironmentPauseProbability: 0.3,
 
   // === CREATURES: MEMORY ===
   creatureMemoryMaxEntries: 12,
@@ -737,6 +838,116 @@ export const configMeta = {
     category: 'creatures',
     control: 'slider'
   },
+
+  // Movement Physics
+  creatureAcceleration: {
+    label: 'Acceleration',
+    description: 'How fast creatures reach top speed. Higher = snappier movement.',
+    min: 0.01,
+    max: 1,
+    step: 0.01,
+    category: 'physics',
+    control: 'slider'
+  },
+  creatureDeceleration: {
+    label: 'Deceleration',
+    description: 'How fast creatures slow down when stopping. Higher = quicker stops.',
+    min: 0.01,
+    max: 1,
+    step: 0.01,
+    category: 'physics',
+    control: 'slider'
+  },
+  creatureFrictionDrag: {
+    label: 'Friction Drag',
+    description: 'Passive slowdown each tick. Creates natural coasting.',
+    min: 0,
+    max: 0.2,
+    step: 0.005,
+    category: 'physics',
+    control: 'slider'
+  },
+  creatureAngularAcceleration: {
+    label: 'Angular Acceleration',
+    description: 'How fast turn rate changes. Lower = smoother, more momentum.',
+    min: 0.01,
+    max: 1,
+    step: 0.01,
+    category: 'physics',
+    control: 'slider'
+  },
+  creatureSpeedTurnPenalty: {
+    label: 'Speed Turn Penalty',
+    description: 'How much speed reduces turn rate. Higher = wider turns when fast.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'physics',
+    control: 'slider'
+  },
+
+  // Intent Speed Multipliers
+  creatureIntentSpeedWander: {
+    label: 'Wander Speed',
+    description: 'Speed multiplier when wandering aimlessly.',
+    min: 0.1,
+    max: 1.5,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureIntentSpeedGraze: {
+    label: 'Graze Speed',
+    description: 'Speed multiplier when grazing (very slow).',
+    min: 0.1,
+    max: 1,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureIntentSpeedSeek: {
+    label: 'Seek Speed',
+    description: 'Speed multiplier when seeking food or water.',
+    min: 0.1,
+    max: 1.5,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureIntentSpeedMate: {
+    label: 'Mate Seek Speed',
+    description: 'Speed multiplier when seeking a mate.',
+    min: 0.1,
+    max: 1.5,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureIntentSpeedHunt: {
+    label: 'Hunt Stalk Speed',
+    description: 'Speed multiplier during stalking phase of hunt.',
+    min: 0.1,
+    max: 1.5,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+  creatureIntentSpeedHuntChase: {
+    label: 'Hunt Chase Speed',
+    description: 'Speed multiplier during active chase.',
+    min: 0.5,
+    max: 2,
+    step: 0.05,
+    category: 'movement',
+    control: 'slider',
+    advanced: true
+  },
+
   creatureBaseEnergy: {
     label: 'Base Energy',
     description: 'Starting energy baseline.',
@@ -1069,6 +1280,183 @@ export const configMeta = {
     type: 'boolean',
     category: 'herding'
   },
+  creatureHerdingSimpleMode: {
+    label: 'Simple Herding Mode',
+    description: 'Use simple 3-rule boid system instead of complex herding.',
+    type: 'boolean',
+    category: 'herding'
+  },
+
+  // Simple Herding
+  creatureSimpleHerdingSeparationRadius: {
+    label: 'Separation Radius',
+    description: 'Distance at which creatures push away from each other.',
+    min: 0.5,
+    max: 8,
+    step: 0.5,
+    unit: 'tiles',
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingAlignmentRadius: {
+    label: 'Alignment Radius',
+    description: 'Distance at which creatures match neighbor headings.',
+    min: 1,
+    max: 20,
+    step: 1,
+    unit: 'tiles',
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingCohesionRadius: {
+    label: 'Cohesion Radius',
+    description: 'Distance at which creatures pull toward herd center.',
+    min: 1,
+    max: 30,
+    step: 1,
+    unit: 'tiles',
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingSeparationStrength: {
+    label: 'Separation Strength',
+    description: 'Force of pushing away from too-close neighbors.',
+    min: 0,
+    max: 2,
+    step: 0.1,
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingAlignmentStrength: {
+    label: 'Alignment Strength',
+    description: 'Force of matching neighbor headings.',
+    min: 0,
+    max: 2,
+    step: 0.1,
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingCohesionStrength: {
+    label: 'Cohesion Strength',
+    description: 'Force of pulling toward herd center.',
+    min: 0,
+    max: 2,
+    step: 0.1,
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingThreatRange: {
+    label: 'Threat Detection Range',
+    description: 'Distance at which predators are detected.',
+    min: 1,
+    max: 25,
+    step: 1,
+    unit: 'tiles',
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingThreatStrength: {
+    label: 'Flee Strength',
+    description: 'Force of fleeing from predators.',
+    min: 0,
+    max: 3,
+    step: 0.1,
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureSimpleHerdingSmoothing: {
+    label: 'Herding Smoothing',
+    description: 'How smoothly herding forces are applied (prevents jitter).',
+    min: 0.1,
+    max: 1,
+    step: 0.05,
+    category: 'herding',
+    control: 'slider',
+    advanced: true
+  },
+  creatureHerdingHeadingBlend: {
+    label: 'Heading Blend',
+    description: 'How much herd heading influences creature heading.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureThreatPropagationRadius: {
+    label: 'Threat Propagation Radius',
+    description: 'How far threat alerts spread through the herd.',
+    min: 1,
+    max: 20,
+    step: 1,
+    unit: 'tiles',
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureThreatPropagationHops: {
+    label: 'Threat Propagation Hops',
+    description: 'Maximum propagation depth for threat alerts.',
+    min: 0,
+    max: 5,
+    step: 1,
+    category: 'herding',
+    control: 'slider'
+  },
+  creatureThreatDecaySeconds: {
+    label: 'Threat Memory',
+    description: 'How long creatures stay threatened after losing sight of predator.',
+    min: 0.5,
+    max: 10,
+    step: 0.5,
+    unit: 'seconds',
+    category: 'herding',
+    control: 'slider'
+  },
+
+  // Herd Movement Waves
+  creatureHerdMovementContagionRadius: {
+    label: 'Movement Contagion Radius',
+    description: 'Distance at which movement spreads through the herd.',
+    min: 1,
+    max: 15,
+    step: 1,
+    unit: 'tiles',
+    category: 'herding',
+    control: 'slider',
+    advanced: true
+  },
+  creatureHerdMovementContagionDelay: {
+    label: 'Movement Contagion Delay',
+    description: 'Delay before movement spreads to nearby creatures.',
+    min: 0.1,
+    max: 2,
+    step: 0.1,
+    unit: 's',
+    category: 'herding',
+    control: 'slider',
+    advanced: true
+  },
+  creatureHerdMovementContagionChance: {
+    label: 'Movement Contagion Chance',
+    description: 'Probability to start moving when neighbors are moving.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'herding',
+    control: 'slider',
+    advanced: true
+  },
+  creatureHerdLeadershipDecay: {
+    label: 'Leadership Decay',
+    description: 'How fast leadership score decays when not moving.',
+    min: 0.001,
+    max: 0.1,
+    step: 0.005,
+    category: 'herding',
+    control: 'slider',
+    advanced: true
+  },
+
   creatureHerdingAlignmentStrength: {
     label: 'Herd Alignment',
     description: 'Alignment weight for herd headings.',
@@ -1941,6 +2329,254 @@ export const configMeta = {
     control: 'slider',
     advanced: true
   },
+  creaturePredatorPatrolPreySightingWeight: {
+    label: 'Prey Sighting Priority',
+    description: 'Chance to patrol toward remembered prey locations.',
+    min: 0,
+    max: 1,
+    step: 0.1,
+    category: 'predator',
+    control: 'slider'
+  },
+  creaturePredatorPatrolGrassWeight: {
+    label: 'Grass Area Priority',
+    description: 'Chance to patrol toward high-grass areas.',
+    min: 0,
+    max: 1,
+    step: 0.1,
+    category: 'predator',
+    control: 'slider'
+  },
+  creaturePredatorPatrolPauseDuration: {
+    label: 'Patrol Pause Duration',
+    description: 'Seconds predator pauses at waypoint to scan.',
+    min: 0,
+    max: 5,
+    step: 0.5,
+    unit: 's',
+    category: 'predator',
+    control: 'slider'
+  },
+  creaturePredatorPatrolMemoryDecay: {
+    label: 'Patrol Memory Decay',
+    description: 'How fast prey sighting memories fade.',
+    min: 0.001,
+    max: 0.1,
+    step: 0.005,
+    unit: '/s',
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
+  creaturePredatorPatrolMemoryMax: {
+    label: 'Patrol Memory Max',
+    description: 'Maximum prey sighting memories to retain.',
+    min: 1,
+    max: 20,
+    step: 1,
+    category: 'predator',
+    control: 'slider',
+    advanced: true
+  },
+
+  // Creatures: Behavior State Machine
+  creatureBehaviorStateEnabled: {
+    label: 'Behavior States Enabled',
+    description: 'Enable behavior state machine (prevents rapid intent flickering).',
+    type: 'boolean',
+    category: 'behavior'
+  },
+  creatureBehaviorRelaxedPauseProbability: {
+    label: 'Pause Probability',
+    description: 'Chance to pause while in relaxed state.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorRelaxedGrazePauseRatio: {
+    label: 'Graze Pause Ratio',
+    description: 'How often grazing creatures pause (higher = more pauses).',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorRelaxedPauseMinSeconds: {
+    label: 'Pause Duration Min',
+    description: 'Minimum pause duration in relaxed state.',
+    min: 0.5,
+    max: 10,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorRelaxedPauseMaxSeconds: {
+    label: 'Pause Duration Max',
+    description: 'Maximum pause duration in relaxed state.',
+    min: 0.5,
+    max: 15,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorRelaxedMoveMinSeconds: {
+    label: 'Move Duration Min',
+    description: 'Minimum move duration before possible pause.',
+    min: 1,
+    max: 20,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorRelaxedMoveMaxSeconds: {
+    label: 'Move Duration Max',
+    description: 'Maximum move duration before possible pause.',
+    min: 1,
+    max: 30,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorAlertMinSeconds: {
+    label: 'Alert Duration Min',
+    description: 'Minimum time frozen in alert state.',
+    min: 0.1,
+    max: 5,
+    step: 0.1,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorAlertMaxSeconds: {
+    label: 'Alert Duration Max',
+    description: 'Maximum time frozen in alert state.',
+    min: 0.5,
+    max: 10,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorAlertToFleeThreshold: {
+    label: 'Alert Flee Threshold',
+    description: 'Distance at which alert transitions to fleeing.',
+    min: 1,
+    max: 20,
+    step: 1,
+    unit: 'tiles',
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorHuntSpottingSeconds: {
+    label: 'Hunt Spotting Duration',
+    description: 'Time predator pauses when spotting prey.',
+    min: 0.1,
+    max: 3,
+    step: 0.1,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorHuntStalkingMinSeconds: {
+    label: 'Stalk Duration Min',
+    description: 'Minimum stalking time before charging.',
+    min: 0.5,
+    max: 10,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorHuntStalkingMaxSeconds: {
+    label: 'Stalk Duration Max',
+    description: 'Maximum stalking time before charging.',
+    min: 1,
+    max: 15,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorHuntPounceRange: {
+    label: 'Pounce Range',
+    description: 'Distance at which stalking predator charges.',
+    min: 1,
+    max: 10,
+    step: 0.5,
+    unit: 'tiles',
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorHuntStalkSpeed: {
+    label: 'Stalk Speed',
+    description: 'Speed multiplier during stalking phase.',
+    min: 0.1,
+    max: 0.8,
+    step: 0.05,
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorFeedingMinSeconds: {
+    label: 'Feeding Duration Min',
+    description: 'Minimum time predator stays at kill.',
+    min: 1,
+    max: 15,
+    step: 0.5,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorFeedingMaxSeconds: {
+    label: 'Feeding Duration Max',
+    description: 'Maximum time predator stays at kill.',
+    min: 2,
+    max: 30,
+    step: 1,
+    unit: 's',
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
+  creatureBehaviorSatiationThreshold: {
+    label: 'Satiation Threshold',
+    description: 'Energy ratio at which predators become "full".',
+    min: 0.5,
+    max: 1,
+    step: 0.05,
+    category: 'behavior',
+    control: 'slider'
+  },
+  creatureBehaviorEnvironmentPauseEnabled: {
+    label: 'Environment Pauses',
+    description: 'Enable brief pauses when entering new terrain.',
+    type: 'boolean',
+    category: 'behavior'
+  },
+  creatureBehaviorEnvironmentPauseProbability: {
+    label: 'Env Pause Probability',
+    description: 'Chance to pause when entering new terrain type.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'behavior',
+    control: 'slider',
+    advanced: true
+  },
 
   // Creatures: Reproduction
   creatureReproductionMinAge: {
@@ -2761,6 +3397,248 @@ export const configMeta = {
     advanced: true
   }
 };
+
+// ============================================================================
+// CONFIG PRESETS
+// ============================================================================
+
+/**
+ * Preset configurations for different behavior styles.
+ * Each preset overrides specific config values to create a distinct experience.
+ */
+export const CONFIG_PRESETS = {
+  /**
+   * Natural - Default, balanced for realistic behavior.
+   * Moderate speeds, natural pauses, balanced herding.
+   */
+  natural: {
+    name: 'Natural',
+    description: 'Default balanced settings for realistic creature behavior.',
+    values: {
+      // Movement physics
+      creatureAcceleration: 0.15,
+      creatureDeceleration: 0.12,
+      creatureFrictionDrag: 0.02,
+      creatureAngularAcceleration: 0.08,
+      creatureSpeedTurnPenalty: 0.6,
+
+      // Intent speeds
+      creatureIntentSpeedWander: 0.4,
+      creatureIntentSpeedGraze: 0.25,
+      creatureIntentSpeedSeek: 0.7,
+      creatureIntentSpeedMate: 0.6,
+      creatureIntentSpeedHunt: 0.85,
+      creatureIntentSpeedHuntChase: 1.0,
+
+      // Simple herding
+      creatureHerdingSimpleMode: true,
+      creatureSimpleHerdingSeparationRadius: 2.5,
+      creatureSimpleHerdingAlignmentRadius: 7,
+      creatureSimpleHerdingCohesionRadius: 11,
+      creatureSimpleHerdingSeparationStrength: 1.2,
+      creatureSimpleHerdingAlignmentStrength: 0.8,
+      creatureSimpleHerdingCohesionStrength: 0.5,
+
+      // Behavior states
+      creatureBehaviorStateEnabled: true,
+      creatureBehaviorRelaxedPauseProbability: 0.4,
+      creatureBehaviorRelaxedGrazePauseRatio: 0.65,
+      creatureBehaviorAlertMinSeconds: 0.5,
+      creatureBehaviorAlertMaxSeconds: 1.5,
+
+      // Hunting
+      creatureBehaviorHuntStalkSpeed: 0.35,
+      creatureBehaviorHuntPounceRange: 3.5
+    }
+  },
+
+  /**
+   * Calm - Slower speeds, longer pauses, relaxed herds.
+   * More contemplative, peaceful atmosphere.
+   */
+  calm: {
+    name: 'Calm',
+    description: 'Slower, more peaceful behavior with longer pauses and relaxed herds.',
+    values: {
+      // Movement physics - slower and smoother
+      creatureAcceleration: 0.10,
+      creatureDeceleration: 0.08,
+      creatureFrictionDrag: 0.03,
+      creatureAngularAcceleration: 0.06,
+      creatureSpeedTurnPenalty: 0.7,
+
+      // Intent speeds - all reduced
+      creatureIntentSpeedWander: 0.3,
+      creatureIntentSpeedGraze: 0.2,
+      creatureIntentSpeedSeek: 0.55,
+      creatureIntentSpeedMate: 0.45,
+      creatureIntentSpeedHunt: 0.65,
+      creatureIntentSpeedHuntChase: 0.85,
+
+      // Simple herding - looser, more spread out
+      creatureHerdingSimpleMode: true,
+      creatureSimpleHerdingSeparationRadius: 3.5,
+      creatureSimpleHerdingAlignmentRadius: 9,
+      creatureSimpleHerdingCohesionRadius: 14,
+      creatureSimpleHerdingSeparationStrength: 1.0,
+      creatureSimpleHerdingAlignmentStrength: 0.6,
+      creatureSimpleHerdingCohesionStrength: 0.35,
+
+      // Behavior states - longer pauses
+      creatureBehaviorStateEnabled: true,
+      creatureBehaviorRelaxedPauseProbability: 0.55,
+      creatureBehaviorRelaxedGrazePauseRatio: 0.75,
+      creatureBehaviorRelaxedPauseMinSeconds: 2.0,
+      creatureBehaviorRelaxedPauseMaxSeconds: 6.0,
+      creatureBehaviorRelaxedMoveMinSeconds: 4.0,
+      creatureBehaviorRelaxedMoveMaxSeconds: 12.0,
+      creatureBehaviorAlertMinSeconds: 0.8,
+      creatureBehaviorAlertMaxSeconds: 2.0,
+
+      // Hunting - slower stalking
+      creatureBehaviorHuntStalkSpeed: 0.25,
+      creatureBehaviorHuntPounceRange: 3.0,
+      creatureBehaviorHuntStalkingMinSeconds: 3.0,
+      creatureBehaviorHuntStalkingMaxSeconds: 7.0
+    }
+  },
+
+  /**
+   * Intense - Faster action, aggressive predators, tighter herds.
+   * More dynamic and exciting action.
+   */
+  intense: {
+    name: 'Intense',
+    description: 'Faster action with aggressive predators and tight, reactive herds.',
+    values: {
+      // Movement physics - snappier
+      creatureAcceleration: 0.22,
+      creatureDeceleration: 0.18,
+      creatureFrictionDrag: 0.015,
+      creatureAngularAcceleration: 0.12,
+      creatureSpeedTurnPenalty: 0.45,
+
+      // Intent speeds - faster
+      creatureIntentSpeedWander: 0.55,
+      creatureIntentSpeedGraze: 0.35,
+      creatureIntentSpeedSeek: 0.85,
+      creatureIntentSpeedMate: 0.75,
+      creatureIntentSpeedHunt: 1.0,
+      creatureIntentSpeedHuntChase: 1.2,
+
+      // Simple herding - tighter groups
+      creatureHerdingSimpleMode: true,
+      creatureSimpleHerdingSeparationRadius: 2.0,
+      creatureSimpleHerdingAlignmentRadius: 5,
+      creatureSimpleHerdingCohesionRadius: 8,
+      creatureSimpleHerdingSeparationStrength: 1.5,
+      creatureSimpleHerdingAlignmentStrength: 1.0,
+      creatureSimpleHerdingCohesionStrength: 0.7,
+
+      // Threat response - stronger
+      creatureSimpleHerdingThreatRange: 15,
+      creatureSimpleHerdingThreatStrength: 2.0,
+      creatureThreatPropagationRadius: 12,
+
+      // Behavior states - shorter pauses
+      creatureBehaviorStateEnabled: true,
+      creatureBehaviorRelaxedPauseProbability: 0.25,
+      creatureBehaviorRelaxedGrazePauseRatio: 0.45,
+      creatureBehaviorRelaxedPauseMinSeconds: 0.5,
+      creatureBehaviorRelaxedPauseMaxSeconds: 2.0,
+      creatureBehaviorRelaxedMoveMinSeconds: 2.0,
+      creatureBehaviorRelaxedMoveMaxSeconds: 5.0,
+      creatureBehaviorAlertMinSeconds: 0.3,
+      creatureBehaviorAlertMaxSeconds: 0.8,
+
+      // Hunting - aggressive
+      creatureBehaviorHuntStalkSpeed: 0.5,
+      creatureBehaviorHuntPounceRange: 4.5,
+      creatureBehaviorHuntStalkingMinSeconds: 1.0,
+      creatureBehaviorHuntStalkingMaxSeconds: 3.0,
+      creatureBehaviorHuntSpottingSeconds: 0.4
+    }
+  },
+
+  /**
+   * Classic - Disables new systems, approximates original behavior.
+   * For users who prefer the pre-overhaul feel.
+   */
+  classic: {
+    name: 'Classic',
+    description: 'Disables new behavior systems for a simpler, original-style experience.',
+    values: {
+      // Movement physics - more instant
+      creatureAcceleration: 0.5,
+      creatureDeceleration: 0.5,
+      creatureFrictionDrag: 0.005,
+      creatureAngularAcceleration: 0.3,
+      creatureSpeedTurnPenalty: 0.3,
+
+      // Intent speeds - uniform
+      creatureIntentSpeedWander: 0.6,
+      creatureIntentSpeedGraze: 0.35,
+      creatureIntentSpeedSeek: 0.8,
+      creatureIntentSpeedMate: 0.7,
+      creatureIntentSpeedHunt: 0.9,
+      creatureIntentSpeedHuntChase: 1.0,
+
+      // Use complex herding (original)
+      creatureHerdingSimpleMode: false,
+
+      // Behavior states - disabled/minimal
+      creatureBehaviorStateEnabled: false,
+      creatureBehaviorRelaxedPauseProbability: 0,
+      creatureBehaviorEnvironmentPauseEnabled: false
+    }
+  }
+};
+
+/**
+ * Applies a preset configuration to the given config object.
+ * @param {object} config - The config object to modify
+ * @param {string} presetName - Name of the preset to apply
+ * @returns {object} The modified config object
+ */
+export function applyPreset(config, presetName) {
+  const preset = CONFIG_PRESETS[presetName];
+  if (!preset) {
+    console.warn(`[config] Unknown preset: ${presetName}`);
+    return config;
+  }
+
+  const newConfig = { ...config };
+  for (const [key, value] of Object.entries(preset.values)) {
+    if (key in simConfig) {
+      newConfig[key] = value;
+    }
+  }
+
+  return newConfig;
+}
+
+/**
+ * Gets the list of available preset names.
+ */
+export function getPresetNames() {
+  return Object.keys(CONFIG_PRESETS);
+}
+
+/**
+ * Gets preset information.
+ */
+export function getPresetInfo(presetName) {
+  const preset = CONFIG_PRESETS[presetName];
+  if (!preset) return null;
+  return {
+    name: preset.name,
+    description: preset.description
+  };
+}
+
+// ============================================================================
+// CONFIG VALIDATION
+// ============================================================================
 
 const warnConfigMetaMismatch = () => {
   const configKeys = new Set(Object.keys(simConfig));

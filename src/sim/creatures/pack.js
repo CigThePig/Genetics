@@ -138,32 +138,223 @@ const groupIntoPacks = (creatures) => {
   return packs;
 };
 
-/**
- * Picks a random patrol waypoint within radius of home.
- * Avoids water tiles.
- */
-const pickPatrolWaypoint = (home, radius, world, rng, config) => {
-  const waterTerrain = resolveWaterTerrain(config);
-  const maxAttempts = 10;
+// ============================================================================
+// PREY SIGHTING MEMORY
+// ============================================================================
 
+/**
+ * Resolves patrol memory config values.
+ */
+const resolvePatrolMemory = (config) => ({
+  decayRate: Number.isFinite(config?.creaturePredatorPatrolMemoryDecay)
+    ? Math.max(0.001, config.creaturePredatorPatrolMemoryDecay)
+    : 0.015,
+  maxEntries: Number.isFinite(config?.creaturePredatorPatrolMemoryMax)
+    ? Math.max(1, Math.trunc(config.creaturePredatorPatrolMemoryMax))
+    : 8,
+  preySightingWeight: Number.isFinite(config?.creaturePredatorPatrolPreySightingWeight)
+    ? Math.max(0, Math.min(1, config.creaturePredatorPatrolPreySightingWeight))
+    : 0.6,
+  grassAreaWeight: Number.isFinite(config?.creaturePredatorPatrolGrassWeight)
+    ? Math.max(0, Math.min(1, config.creaturePredatorPatrolGrassWeight))
+    : 0.3,
+  pauseDuration: Number.isFinite(config?.creaturePredatorPatrolPauseDuration)
+    ? Math.max(0, config.creaturePredatorPatrolPauseDuration)
+    : 1.5
+});
+
+/**
+ * Ensures patrol memory exists on creature.
+ */
+const ensurePatrolMemory = (creature) => {
+  if (!creature.pack) {
+    creature.pack = {};
+  }
+  if (!creature.pack.preySightings) {
+    creature.pack.preySightings = [];
+  }
+  return creature.pack.preySightings;
+};
+
+/**
+ * Records a prey sighting location.
+ */
+const recordPreySighting = (creature, position, config) => {
+  if (!position) return;
+
+  const sightings = ensurePatrolMemory(creature);
+  const memConfig = resolvePatrolMemory(config);
+
+  // Check if we already have a sighting near this location
+  const mergeDistance = 5;
+  const mergeDistSq = mergeDistance * mergeDistance;
+
+  for (const sighting of sightings) {
+    const dx = sighting.x - position.x;
+    const dy = sighting.y - position.y;
+    if (dx * dx + dy * dy < mergeDistSq) {
+      // Merge: refresh strength and update position slightly
+      sighting.strength = Math.min(1, sighting.strength + 0.3);
+      sighting.x = (sighting.x + position.x) / 2;
+      sighting.y = (sighting.y + position.y) / 2;
+      return;
+    }
+  }
+
+  // Add new sighting
+  sightings.push({
+    x: position.x,
+    y: position.y,
+    strength: 1
+  });
+
+  // Trim to max entries
+  while (sightings.length > memConfig.maxEntries) {
+    // Remove weakest
+    let weakest = 0;
+    for (let i = 1; i < sightings.length; i++) {
+      if (sightings[i].strength < sightings[weakest].strength) {
+        weakest = i;
+      }
+    }
+    sightings.splice(weakest, 1);
+  }
+};
+
+/**
+ * Decays prey sighting memory over time.
+ */
+const decayPatrolMemory = (creature, config) => {
+  const sightings = creature.pack?.preySightings;
+  if (!sightings?.length) return;
+
+  const memConfig = resolvePatrolMemory(config);
+  const tickScale = 1 / resolveTicksPerSecond(config);
+  const decay = memConfig.decayRate * tickScale;
+
+  for (let i = sightings.length - 1; i >= 0; i--) {
+    sightings[i].strength -= decay;
+    if (sightings[i].strength <= 0) {
+      sightings.splice(i, 1);
+    }
+  }
+};
+
+/**
+ * Finds high grass areas within search radius.
+ */
+const findGrassArea = (position, radius, world, rng) => {
+  if (!world?.tiles) return null;
+
+  const sampleCount = 12;
+  let bestX = null;
+  let bestY = null;
+  let bestGrass = 0;
+
+  for (let i = 0; i < sampleCount; i++) {
+    const angle = rng.nextFloat() * Math.PI * 2;
+    const dist = rng.nextFloat() * radius;
+    const x = Math.floor(position.x + Math.cos(angle) * dist);
+    const y = Math.floor(position.y + Math.sin(angle) * dist);
+
+    if (x < 0 || x >= world.width || y < 0 || y >= world.height) continue;
+
+    const tile = world.tiles[y]?.[x];
+    if (!tile || tile.terrain === 'water') continue;
+
+    const grass = tile.grass ?? 0;
+    if (grass > bestGrass) {
+      bestGrass = grass;
+      bestX = x + 0.5;
+      bestY = y + 0.5;
+    }
+  }
+
+  if (bestX !== null && bestGrass > 0.3) {
+    return { x: bestX, y: bestY };
+  }
+
+  return null;
+};
+
+/**
+ * Picks a patrol waypoint with purposeful targeting.
+ * - 60% chance: toward remembered prey sighting
+ * - 30% chance: toward high grass area
+ * - 10% chance: random exploration
+ */
+const pickPatrolWaypoint = (home, radius, world, rng, config, creature) => {
+  const waterTerrain = resolveWaterTerrain(config);
+  const memConfig = resolvePatrolMemory(config);
+  const roll = rng.nextFloat();
+
+  let target = null;
+
+  // Try prey sighting (60% chance)
+  if (roll < memConfig.preySightingWeight && creature) {
+    const sightings = creature.pack?.preySightings;
+    if (sightings?.length > 0) {
+      // Weight by strength and distance
+      let totalWeight = 0;
+      for (const s of sightings) {
+        const dx = s.x - home.x;
+        const dy = s.y - home.y;
+        const distSq = dx * dx + dy * dy;
+        const distFactor = Math.max(0.1, 1 - Math.sqrt(distSq) / (radius * 2));
+        s._weight = s.strength * distFactor;
+        totalWeight += s._weight;
+      }
+
+      if (totalWeight > 0) {
+        let pick = rng.nextFloat() * totalWeight;
+        for (const s of sightings) {
+          pick -= s._weight;
+          if (pick <= 0) {
+            target = { x: s.x, y: s.y };
+            break;
+          }
+        }
+      }
+    }
+  }
+  // Try grass area (30% chance, or fallback)
+  else if (roll < memConfig.preySightingWeight + memConfig.grassAreaWeight) {
+    const grassArea = findGrassArea(home, radius, world, rng);
+    if (grassArea) {
+      target = grassArea;
+    }
+  }
+
+  // Validate target or fallback to random
+  if (target) {
+    const tileX = Math.floor(target.x);
+    const tileY = Math.floor(target.y);
+    if (!isWaterTile(world, tileX, tileY, waterTerrain)) {
+      // Add some jitter to avoid exact same spots
+      target.x += (rng.nextFloat() - 0.5) * 3;
+      target.y += (rng.nextFloat() - 0.5) * 3;
+      target.x = Math.max(0, Math.min(world.width - 1, target.x));
+      target.y = Math.max(0, Math.min(world.height - 1, target.y));
+      return target;
+    }
+  }
+
+  // Random exploration fallback
+  const maxAttempts = 10;
   for (let i = 0; i < maxAttempts; i++) {
-    // Random angle and distance
     const angle = rng.nextFloat() * Math.PI * 2;
     const dist = rng.nextFloat() * radius;
     const x = home.x + Math.cos(angle) * dist;
     const y = home.y + Math.sin(angle) * dist;
 
-    // Clamp to world bounds
     const clampedX = Math.max(0, Math.min(world.width - 1, x));
     const clampedY = Math.max(0, Math.min(world.height - 1, y));
 
-    // Check if it's water
     if (!isWaterTile(world, Math.floor(clampedX), Math.floor(clampedY), waterTerrain)) {
       return { x: clampedX, y: clampedY };
     }
   }
 
-  // Fallback to home if all attempts hit water
   return { x: home.x, y: home.y };
 };
 
@@ -289,6 +480,18 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
   const packSpacing = resolvePackSpacing(config);
   const relocation = resolvePackRelocation(config);
 
+  // Decay prey sighting memory for all predators
+  for (const creature of creatures) {
+    if (isPackSpecies(creature.species)) {
+      decayPatrolMemory(creature, config);
+
+      // Record prey sighting if currently chasing/seeing prey
+      if (creature.chase?.lastKnownPosition) {
+        recordPreySighting(creature, creature.chase.lastKnownPosition, config);
+      }
+    }
+  }
+
   // Group predators into packs by species
   const packs = groupIntoPacks(creatures);
 
@@ -329,13 +532,15 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
 
       if (needNewWaypoint || !leaderPack.waypoint) {
         leaderPack.lastWaypoint = leaderPack.waypoint;
-        leaderPack.waypoint = pickPatrolWaypoint(leaderHome, patrolRadius, world, rng, config);
+        leaderPack.waypoint = pickPatrolWaypoint(leaderHome, patrolRadius, world, rng, config, leader);
         leaderPack.waypointTicksRemaining = pickRetargetTicks(
           rng,
           patrolRetarget.min,
           patrolRetarget.max,
           ticksPerSecond
         );
+        // Reset patrol pause flag for new waypoint
+        leaderPack.pausedAtWaypoint = false;
       }
 
       if (relocation.enabled && leaderHome) {
@@ -360,13 +565,14 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
           if (newHome) {
             leaderPack.home = newHome;
             leaderPack.lastWaypoint = null;
-            leaderPack.waypoint = pickPatrolWaypoint(newHome, patrolRadius, world, rng, config);
+            leaderPack.waypoint = pickPatrolWaypoint(newHome, patrolRadius, world, rng, config, leader);
             leaderPack.waypointTicksRemaining = pickRetargetTicks(
               rng,
               patrolRetarget.min,
               patrolRetarget.max,
               ticksPerSecond
             );
+            leaderPack.pausedAtWaypoint = false;
           }
           leaderPack.staleTicks = 0;
         }
@@ -374,8 +580,24 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
         leaderPack.staleTicks = 0;
       }
 
-      // Set leader's intent target to waypoint
-      if (leaderPack.waypoint && leader.intent) {
+      // Patrol pause: pause briefly when reaching waypoint
+      const memConfig = resolvePatrolMemory(config);
+      if (leaderPack.waypoint && leader.position && !leaderPack.pausedAtWaypoint) {
+        const dx = leaderPack.waypoint.x - leader.position.x;
+        const dy = leaderPack.waypoint.y - leader.position.y;
+        const distSq = dx * dx + dy * dy;
+        if (distSq < 4) {
+          // At waypoint - pause for scanning
+          leaderPack.pausedAtWaypoint = true;
+          leaderPack.patrolPauseTicks = Math.floor(memConfig.pauseDuration * ticksPerSecond);
+        }
+      }
+
+      // Handle patrol pause countdown
+      if (leaderPack.patrolPauseTicks > 0) {
+        leaderPack.patrolPauseTicks--;
+        // Don't set intent target while paused
+      } else if (leaderPack.waypoint && leader.intent) {
         leader.intent.target = { x: leaderPack.waypoint.x, y: leaderPack.waypoint.y };
       }
     } else {
@@ -419,4 +641,21 @@ export function getPackInfo(creature) {
  */
 export function isPackLeader(creature) {
   return creature?.pack?.role === 'leader';
+}
+
+/**
+ * Records a prey sighting for a predator's patrol memory.
+ * Can be called externally when predator spots prey.
+ */
+export function recordPredatorPreySighting(creature, position, config) {
+  if (!creature || !position) return;
+  if (!isPackSpecies(creature.species)) return;
+  recordPreySighting(creature, position, config);
+}
+
+/**
+ * Checks if predator is paused at waypoint for scanning.
+ */
+export function isPatrolPaused(creature) {
+  return (creature?.pack?.patrolPauseTicks ?? 0) > 0;
 }
