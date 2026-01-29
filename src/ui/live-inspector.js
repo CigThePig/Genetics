@@ -57,13 +57,19 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
   followBtn.innerHTML = '📍 Follow';
   followBtn.style.display = 'none';
 
+  const clearBtn = document.createElement('button');
+  clearBtn.className = 'inspector-clear-btn';
+  clearBtn.innerHTML = '🧹';
+  clearBtn.title = 'Clear selection';
+  clearBtn.style.display = 'none';
+
   titleContainer.append(title);
 
   const closeBtn = document.createElement('button');
   closeBtn.className = 'panel-close';
   closeBtn.innerHTML = '×';
 
-  header.append(titleContainer, followBtn, closeBtn);
+  header.append(titleContainer, followBtn, clearBtn, closeBtn);
 
   // Content area
   const content = document.createElement('div');
@@ -99,6 +105,21 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       onFollowToggle?.(trackedCreatureId, isFollowing);
     }
   });
+
+  const clearTracking = () => {
+    trackedCreatureId = null;
+    isFollowing = false;
+    followBtn.classList.remove('active');
+    followBtn.innerHTML = '📍 Follow';
+    followBtn.style.display = 'none';
+    clearBtn.style.display = 'none';
+    title.textContent = '🔍 Inspector';
+    content.innerHTML = '';
+    content.append(placeholder.cloneNode(true));
+    onFollowToggle?.(null, false);
+  };
+
+  clearBtn.addEventListener('click', clearTracking);
 
   // ═══════════════════════════════════════════════════════════════════════════
   // HELPER FUNCTIONS
@@ -232,10 +253,12 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       lost.innerHTML = `<strong style="color: var(--accent-red);">Creature lost!</strong><br>May have died or moved out of range.`;
       content.append(lost);
       followBtn.style.display = 'none';
+      clearBtn.style.display = 'none';
       return;
     }
 
     followBtn.style.display = 'block';
+    clearBtn.style.display = 'block';
 
     // STATUS SECTION
     const { section: statusSection, body: statusBody } = createSection('status', 'Status', '📋', true);
@@ -439,6 +462,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
         followBtn.classList.remove('active');
         followBtn.innerHTML = '📍 Follow';
         followBtn.style.display = 'none';
+        clearBtn.style.display = 'none';
         title.textContent = '🔍 Inspector';
         content.innerHTML = '';
 
@@ -500,15 +524,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
      * Clear tracking.
      */
     clear() {
-      trackedCreatureId = null;
-      isFollowing = false;
-      followBtn.classList.remove('active');
-      followBtn.innerHTML = '📍 Follow';
-      followBtn.style.display = 'none';
-      title.textContent = '🔍 Inspector';
-      content.innerHTML = '';
-      content.append(placeholder.cloneNode(true));
-      onFollowToggle?.(null, false);
+      clearTracking();
     }
   };
 }

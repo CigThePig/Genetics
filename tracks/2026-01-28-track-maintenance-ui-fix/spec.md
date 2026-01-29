@@ -19,6 +19,10 @@ Deliver a safer, clearer config panel by fixing boolean flag handling, exposing 
 3. **Phase 3 — Power tuning + structured editors**
    - Search/filter, favorites, preset import/export.
    - Safe JSON editor for complex knobs with validation.
+4. **Phase 4 — UI polish + panels usability**
+   - Persisted config section collapse, toggle row alignment.
+   - Graphs panel handle with drag + Graphs FAB.
+   - Inspector clear-selection control.
 
 ## Acceptance
 - Boolean flags toggle off correctly (config writes true/false).
@@ -26,6 +30,7 @@ Deliver a safer, clearer config panel by fixing boolean flag handling, exposing 
 - Categories never silently disappear due to missing metadata.
 - UI becomes clearer and mobile-friendly with labels/units/descriptions.
 - Advanced power features (search/favorites/presets/JSON editor) are available without altering sim defaults.
+- Graphs panel and inspector controls are more discoverable and touch-friendly.
 
 ## Risks
 - Accidentally changing sim behavior via config defaults.

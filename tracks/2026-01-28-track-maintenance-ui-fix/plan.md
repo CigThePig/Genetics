@@ -21,6 +21,11 @@
 
 ---
 
+## Deviation Note (2026-02-04)
+- Added Phase 4 to capture requested UI polish (graphs bottom sheet handle/FAB, config section persistence, inspector clear button) that extends beyond `context/UI-FIX` while remaining UI-only and determinism-safe.
+
+---
+
 ## Phase 1 — Boolean trap + hidden knob exposure
 
 ### Tasks
@@ -101,3 +106,31 @@
 
 ### Stop point
 - Pause after manual UI checks; no further phases until review.
+
+---
+
+## Phase 4 — UI polish + panel usability
+
+### Tasks
+- [x] Persist config section collapse state and update toggle row layout hooks.
+- [x] Add graphs bottom-sheet handle with drag open/close and a visibility callback.
+- [x] Add Graphs FAB and sync its active state with panel visibility.
+- [x] Add inspector clear-selection button with styling.
+- [x] Update config/graphs/inspector styling for spacing, separators, toggles, and handle peek.
+- [x] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
+
+### Files touched
+- `src/ui/config-panel.js`
+- `src/ui/graphs-panel.js`
+- `src/ui/index.js`
+- `src/ui/live-inspector.js`
+- `src/styles.css`
+
+### Verification checklist
+- [ ] Config sections remember collapsed/open state after refresh.
+- [ ] Graphs panel can be dragged open/closed and the Graphs FAB reflects visibility.
+- [ ] Inspector clear button resets tracking and follow state.
+- [ ] Toggle rows stay aligned on mobile widths.
+
+### Stop point
+- Pause after manual UI checks; confirm in review before additional scope.

@@ -27,6 +27,7 @@ export function createConfigPanel({
   const FAVORITES_KEY = 'configPanelFavorites';
   const FAVORITES_ONLY_KEY = 'configPanelFavoritesOnly';
   const SHOW_ADVANCED_KEY = 'configPanelShowAdvanced';
+  const SECTION_STATE_KEY = 'configPanelSectionState';
 
   const loadStoredSet = (key) => {
     try {
@@ -56,10 +57,25 @@ export function createConfigPanel({
     localStorage.setItem(key, value ? 'true' : 'false');
   };
 
+  const loadSectionState = (key) => {
+    try {
+      const raw = localStorage.getItem(key);
+      const parsed = raw ? JSON.parse(raw) : {};
+      return parsed && typeof parsed === 'object' ? parsed : {};
+    } catch (error) {
+      return {};
+    }
+  };
+
+  const saveSectionState = (key, state) => {
+    localStorage.setItem(key, JSON.stringify(state));
+  };
+
   const favorites = loadStoredSet(FAVORITES_KEY);
   let favoritesOnly = loadStoredBool(FAVORITES_ONLY_KEY, false);
   let showAdvanced = loadStoredBool(SHOW_ADVANCED_KEY, true);
   let worldDirty = false;
+  const sectionState = loadSectionState(SECTION_STATE_KEY);
 
   const rebuildKeys = new Set(['hotspotSeed']);
   const defaultOnKeys = new Set([
@@ -386,7 +402,7 @@ export function createConfigPanel({
 
     const section = document.createElement('details');
     section.className = 'config-section';
-    section.open = true;
+    section.open = typeof sectionState[category] === 'boolean' ? sectionState[category] : true;
 
     const info = categoryInfo[category] || { label: category, icon: '📦' };
     
@@ -395,6 +411,9 @@ export function createConfigPanel({
 
     const sectionTitleText = document.createElement('span');
     sectionTitleText.textContent = `${info.icon} ${info.label}`;
+
+    const sectionActions = document.createElement('span');
+    sectionActions.className = 'config-section-actions';
 
     const sectionReset = document.createElement('button');
     sectionReset.type = 'button';
@@ -414,9 +433,19 @@ export function createConfigPanel({
       }
     });
 
-    sectionTitle.append(sectionTitleText, sectionReset);
+    const sectionChevron = document.createElement('span');
+    sectionChevron.className = 'config-section-chevron';
+    sectionChevron.textContent = '▾';
+
+    sectionActions.append(sectionReset, sectionChevron);
+    sectionTitle.append(sectionTitleText, sectionActions);
 
     section.append(sectionTitle);
+
+    section.addEventListener('toggle', () => {
+      sectionState[category] = section.open;
+      saveSectionState(SECTION_STATE_KEY, sectionState);
+    });
 
     for (const item of items) {
       const row = document.createElement('div');
@@ -485,6 +514,8 @@ export function createConfigPanel({
       const control = item.control || (inputType === 'number' ? 'number' : inputType);
 
       if (inputType === 'boolean') {
+        row.classList.add('config-row--toggle');
+        controlWrap.classList.add('config-control--toggle');
         input = document.createElement('input');
         input.type = 'checkbox';
         input.className = 'config-input config-toggle';
@@ -841,7 +872,7 @@ export function createConfigPanel({
   closeBtn.addEventListener('click', () => {
     container.classList.remove('visible');
     // Find the config FAB and remove active class
-    const configFab = document.querySelector('.fab-container-right .fab:nth-child(2)');
+    const configFab = document.querySelector('.fab-config');
     if (configFab) configFab.classList.remove('active');
   });
 
