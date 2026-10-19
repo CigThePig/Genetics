@@ -24,7 +24,8 @@ import {
 import { createCreatureTraits } from '../src/sim/creatures/traits.js';
 import { createWorldGrid } from '../src/sim/world-grid.js';
 import { createRng } from '../src/sim/rng.js';
-import { simConfig } from '../src/sim/config.js';
+import { simConfig, configMeta } from '../src/sim/config.js';
+import { updateCreatureIntent } from '../src/sim/creatures/intent.js';
 import { createSim } from '../src/sim/sim.js';
 import { createSpatialIndex } from '../src/sim/spatial-index.js';
 import { canSeeCreature, visibilityRange, camouflageAt } from '../src/sim/creatures/visibility.js';
@@ -381,6 +382,72 @@ describe('soft mate choice and lifecycle consistency', () => {
     b.traits.bodySaturation = 0;
     expect(matePreferenceMismatch(a, b)).toBe(0.5);
   });
+  it.each([false, true])(
+    'retains a camouflaged mate commitment until sight returns or it expires (index %s)',
+    (indexed) => {
+      const source = animal(2),
+        mate = animal(3, 'circle', 17),
+        substitute = animal(5, 'circle', 11),
+        creatures = [source, mate, substitute],
+        world = worldOf('forest');
+      const config = {
+        ...simConfig,
+        creatureReproductionMinAge: 0,
+        creatureReproductionMinEnergyRatio: 0,
+        creatureReproductionMinWaterRatio: 0,
+        creatureMateSeekRange: 12,
+        creatureWaterRendezvousEnabled: false
+      };
+      const index = createSpatialIndex();
+      const lastSeen = { x: 17, y: 10 };
+      source.intent = { type: 'mate', target: lastSeen };
+      source.reproduction.mate = {
+        targetId: mate.id,
+        commitTicksRemaining: 4,
+        lastSeenPosition: lastSeen
+      };
+      mate.position.x = 17.5; // The observer must not follow this unseen movement.
+      index.rebuild(creatures);
+      const opts = {
+        creatures,
+        world,
+        config,
+        rng: createRng(10),
+        spatialIndex: indexed ? index : null
+      };
+      expect(canSeeCreature(source, mate, world, config, 12, true)).toBe(false);
+      expect(canSeeCreature(source, substitute, world, config, 12)).toBe(true);
+      updateCreatureIntent({ ...opts, tick: 10 });
+      expect(source.reproduction.mate.targetId).toBe(mate.id);
+      expect(source.reproduction.mate.commitTicksRemaining).toBe(3);
+      expect(source.intent).toMatchObject({ type: 'mate', target: lastSeen });
+      expect(
+        findMate({
+          ...selectionOptions(source, creatures),
+          maxDistanceSq: 9,
+          spatialIndex: indexed ? index : null,
+          config,
+          world
+        })
+      ).toBeNull();
+
+      world.cells.fill('sand');
+      world.terrainDirtyCounter++;
+      expect(canSeeCreature(source, mate, world, config, 12, true)).toBe(true);
+      updateCreatureIntent({ ...opts, tick: 11 });
+      expect(source.reproduction.mate.targetId).toBe(mate.id);
+      expect(source.intent.target).toEqual(mate.position);
+      expect(source.reproduction.mate.commitTicksRemaining).toBe(2);
+
+      world.cells.fill('forest');
+      world.terrainDirtyCounter++;
+      updateCreatureIntent({ ...opts, tick: 12 });
+      expect(source.reproduction.mate.targetId).toBe(mate.id);
+      updateCreatureIntent({ ...opts, tick: 13 });
+      expect(source.reproduction.mate.targetId).toBe(substitute.id);
+      expect(source.intent.target).toEqual(substitute.position);
+    }
+  );
   it('honors a pursued mate over a nearer substitute and waits for distant commitments', () => {
     const source = animal(2),
       mate = animal(3, 'circle', 12),
@@ -529,6 +596,7 @@ describe('replay, ecology and bounded observation', () => {
     }
   });
   it('validates controls and colour loci through the existing config schema', () => {
+    expect(configMeta.terrainBiomeWeights.type).toBe('json');
     expect(validateConfigValue('terrainBiomeWeights', { forest: -1 }).ok).toBe(false);
     expect(validateConfigValue('terrainBiomeWeights', { forest: 1, plains: 2 }).ok).toBe(true);
     expect(
