@@ -1,3 +1,4 @@
+import { createColourEvolution } from './colour-evolution.js';
 /**
  * Graphs Panel - Integrated with Metrics Panel
  *
@@ -156,6 +157,7 @@ export function createGraphsPanel({ container }) {
 
   // Assemble panel
   panel.append(handleArea, header, trackedChips, graphArea, controls, statsRow);
+  const colourEvolution = createColourEvolution(panel);
   container.append(panel);
 
   // Callback for when tracked metrics change (UI will update highlights)
@@ -529,6 +531,7 @@ export function createGraphsPanel({ container }) {
 
   const recordMetrics = (summary) => {
     if (!summary) return;
+    colourEvolution.update(summary);
 
     const tick = summary.tick ?? 0;
 
@@ -561,6 +564,7 @@ export function createGraphsPanel({ container }) {
   };
 
   const reset = () => {
+    colourEvolution.reset();
     history.head = 0;
     history.count = 0;
     lastRecordedTick = -1;

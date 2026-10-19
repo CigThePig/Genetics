@@ -31,7 +31,12 @@ export function createAppLoop({
     const summary = sim.getSummary();
     getUI().setMetrics?.(summary);
     getGraphsPanel().recordMetrics(summary);
-    getInspector().update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
+    getInspector().update({
+      creatures: sim.state?.creatures,
+      tick: sim.state?.tick,
+      world: sim.state?.world,
+      config: sim.config
+    });
     metrics.update({ ticks: 1 });
   };
 
@@ -79,7 +84,12 @@ export function createAppLoop({
       perf?.end('frame.ui.graphsRecord', tGraphs);
 
       const tInspector = perf?.start('frame.ui.inspector');
-      getInspector().update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
+      getInspector().update({
+        creatures: sim.state?.creatures,
+        tick: sim.state?.tick,
+        world: sim.state?.world,
+        config: sim.config
+      });
       perf?.end('frame.ui.inspector', tInspector);
 
       if (running) {

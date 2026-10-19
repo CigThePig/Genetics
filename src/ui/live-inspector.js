@@ -1,3 +1,5 @@
+import { camouflageAt } from '../sim/creatures/visibility.js';
+import { matePreferenceMismatch } from '../sim/creatures/mate-preference.js';
 /**
  * Live Inspector Module - Mobile-First Floating Panel
  *
@@ -19,6 +21,9 @@ import { FOOD_LABELS } from '../sim/creatures/food.js';
 export function createLiveInspector({ container, ticksPerSecond = 60, onFollowToggle }) {
   // State
   let trackedCreatureId = null;
+  let currentWorld = null,
+    currentConfig = {},
+    currentCreatures = [];
   let isFollowing = false;
   let currentTicksPerSecond = ticksPerSecond;
   const sectionStates = { status: true, vitals: true };
@@ -261,6 +266,59 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     followBtn.style.display = 'block';
     clearBtn.style.display = 'block';
 
+    const traitsColour = creature.traits ?? {};
+    const { section: colourSection, body: colourBody } = createSection(
+      'colour',
+      'Colour & habitat',
+      '🎨',
+      true
+    );
+    const swatchRow = (name, css, value) => {
+      const r = row(name, value),
+        swatch = document.createElement('span');
+      swatch.className = 'colour-swatch';
+      swatch.style.background = css ?? '#888';
+      r.lastElementChild.prepend(swatch);
+      return r;
+    };
+    const camo = camouflageAt(creature, currentWorld, currentConfig);
+    const habitat =
+      currentWorld?.getTerrainAt(
+        Math.floor(creature.position.x),
+        Math.floor(creature.position.y)
+      ) ?? 'unknown';
+    const mate = currentCreatures.find((c) => c.id === creature.reproduction?.mate?.targetId);
+    colourBody.append(
+      swatchRow(
+        'Body',
+        traitsColour.bodyCss,
+        `${Math.round((traitsColour.bodyHue ?? 0) * 360)}° · S ${pct(traitsColour.bodySaturation)} · L ${pct(traitsColour.bodyLightness)}`
+      ),
+      swatchRow(
+        'Preferred hue',
+        traitsColour.preferredMateCss,
+        `${Math.round((traitsColour.matePreferenceHue ?? 0) * 360)}°`
+      ),
+      row('Choosiness', pct(traitsColour.mateChoosiness)),
+      row('Discrimination', pct(traitsColour.colourDiscrimination)),
+      row('Habitat', habitat),
+      row('Background contrast', pct(camo.contrast)),
+      row(
+        'Colour exposure',
+        currentConfig.colourCamouflageEnabled === false ? 'Disabled' : pct(camo.exposure)
+      ),
+      row('Generation', String(creature.generation ?? 0)),
+      row(
+        'Mate target',
+        mate ? `#${mate.id} · mismatch ${pct(matePreferenceMismatch(creature, mate))}` : 'None'
+      )
+    );
+    const explanation = document.createElement('small');
+    explanation.textContent =
+      'Exposure estimates colour concealment; actual detection also depends on observer senses, range and movement. Species is identified by shape.';
+    colourBody.append(explanation);
+    content.append(colourSection);
+
     // STATUS SECTION
     const { section: statusSection, body: statusBody } = createSection(
       'status',
@@ -345,6 +403,8 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       seek_food: '🔍 Searching for food',
       seek_water: '🔍 Searching for water',
       seek_mate: '💕 Seeking a mate',
+      mate: '💕 Seeking a mate',
+      hunt: '🎯 Hunting prey',
       flee: '🏃 Fleeing!',
       chase: '🎯 Chasing prey',
       idle: '😴 Idle'
@@ -435,7 +495,18 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
 
     const genome = creature.genome || {};
     const genomeKeys = Object.keys(genome)
-      .filter((key) => Number.isFinite(genome[key]))
+      .filter(
+        (key) =>
+          Number.isFinite(genome[key]) &&
+          ![
+            'bodyHue',
+            'bodySaturation',
+            'bodyLightness',
+            'matePreferenceHue',
+            'mateChoosiness',
+            'colourDiscrimination'
+          ].includes(key)
+      )
       .sort();
 
     // Helper to convert camelCase to readable labels
@@ -514,7 +585,10 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     /**
      * Called every tick/frame to update the display.
      */
-    update({ creatures, tick }) {
+    update({ creatures, tick, world, config }) {
+      currentWorld = world ?? currentWorld;
+      currentConfig = config ?? currentConfig;
+      currentCreatures = creatures ?? [];
       if (trackedCreatureId === null) return;
 
       const creature = creatures?.find((c) => c?.id === trackedCreatureId);

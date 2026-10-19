@@ -1941,3 +1941,85 @@ body {
   width: 100%;
   box-sizing: border-box;
 }
+
+/* Colour histories stay compact and touch-readable inside the graph sheet. */
+.colour-evolution {
+  padding: 10px 16px 16px;
+  border-top: 1px solid var(--border-subtle, #334155);
+}
+.colour-evolution h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+}
+.colour-evolution select {
+  min-height: 36px;
+  color: #eee;
+  background: #1e293b;
+  border: 1px solid #475569;
+  border-radius: 6px;
+}
+.colour-evolution p {
+  font-size: 12px;
+  margin: 6px 0;
+}
+.colour-evolution input {
+  width: 100%;
+  min-height: 32px;
+}
+.colour-evolution small {
+  font-size: 11px;
+  color: #aebccd;
+}
+.colour-histogram {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 3px;
+  height: 42px;
+  margin: 4px 0 8px;
+  border-bottom: 1px solid #64748b;
+}
+.colour-bin {
+  position: relative;
+  height: 100%;
+}
+.colour-bin i,
+.colour-bin b {
+  position: absolute;
+  bottom: 0;
+  box-sizing: border-box;
+  min-height: 0;
+}
+.colour-bin i {
+  width: 90%;
+  left: 0;
+  border: 1px solid;
+}
+.colour-bin b {
+  width: 50%;
+  left: 20%;
+}
+.colour-swatch {
+  display: inline-block;
+  width: 24px;
+  height: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  vertical-align: middle;
+  margin-right: 6px;
+}
+.graphs-panel {
+  overflow-y: auto;
+}
+.graphs-panel.visible {
+  z-index: 450;
+}
+.graphs-header {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+}
+.colour-evolution {
+  flex-shrink: 0;
+}
