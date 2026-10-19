@@ -30,3 +30,10 @@ Reviewed source and tooling by subsystem. Repaired deterministic isolation, perc
 - Details and scoped limitations: context/phase-completion-2026-10-19.md. Future Tracks 11–13 remain unplanned roadmap work.
 
 - Completion PR: https://github.com/CigThePig/Genetics/pull/136 (open for review; not merged).
+
+## 2026-10-19 — PR #135/#136 review follow-up
+
+- Verified all five Codex findings from merged PR #135 and both initial findings from PR #136. The active-track closeout was already fixed; repaired the remaining six issues on #136.
+- Split app loop/config wiring and hunting transitions into focused modules. Gated catches on charging, normalized behavior meters, aligned partial-config prey defaults, honored direct-threat distance, and invalidated stale regroup caches.
+- 116 tests, lint, formatting and build pass. Desktop/mobile browser controls and config rebuild/rate-reset lifecycle checks pass. Final three-seed 3,600-tick smoke passes bounds/finite-state/ID/accounting checks with no deaths.
+- Per-finding links, dispositions and validation limits: context/pr-review-followup-2026-10-19.md. No merge/deployment.

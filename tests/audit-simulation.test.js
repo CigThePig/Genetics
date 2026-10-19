@@ -355,7 +355,12 @@ describe('repository audit: behavior transitions', () => {
     const { updateCreatureBehaviorState } = await import('../src/sim/creatures/behavior-state.js');
     const c = {
       ...animal(1),
-      herding: { isThreatened: true, nearbyThreats: 1, threatDirection: { x: 1, y: 0 } }
+      herding: {
+        isThreatened: true,
+        nearbyThreats: 1,
+        nearestThreatDistance: 1,
+        threatDirection: { x: 1, y: 0 }
+      }
     };
     const config = {
       ticksPerSecond: 1,

@@ -1,3 +1,4 @@
+import { canCatchPrey } from './behavior-helpers.js';
 import { resolveCarcassYield, spawnCarcass } from '../plants/carcasses.js';
 
 const resolveLifeStageScale = (creature) => {
@@ -15,6 +16,7 @@ export function applyCreatureCombat({ creatures, world, config, metrics, tick })
   for (const creature of creatures) {
     if (creature?.meters?.hp <= 0) continue;
     const chase = creature?.chase;
+    if (!canCatchPrey(creature, config)) continue;
     if (!chase || chase.lastOutcome !== 'caught') {
       continue;
     }

@@ -1,4 +1,6 @@
+import { updateHuntingState } from './behavior-hunting.js';
 import {
+  behaviorMeterRatio,
   BEHAVIOR_STATES,
   RELAXED_PHASES,
   HUNTING_PHASES,
@@ -113,7 +115,13 @@ const updateAlertState = (creature, config, rng, tick, durations) => {
   const threats = creature.herding?.nearbyThreats ?? 0;
   const isThreatened = creature.herding?.isThreatened ?? false;
 
-  if (isThreatened && threats > 0) {
+  const distance = creature.herding?.nearestThreatDistance;
+  if (
+    isThreatened &&
+    threats > 0 &&
+    Number.isFinite(distance) &&
+    distance <= durations.alertToFleeThreshold
+  ) {
     // Threat is close - transition to FLEEING
     transitionTo(
       creature,
@@ -122,7 +130,7 @@ const updateAlertState = (creature, config, rng, tick, durations) => {
       secondsToTicks(durations.fleeingMinSeconds, durations.tps)
     );
   } else {
-    // No immediate threat - return to RELAXED
+    // No close threat: finish the assessment rather than remaining paused indefinitely.
     transitionTo(
       creature,
       BEHAVIOR_STATES.RELAXED,
@@ -130,113 +138,6 @@ const updateAlertState = (creature, config, rng, tick, durations) => {
       secondsToTicks(durations.relaxedMinSeconds, durations.tps),
       RELAXED_PHASES.MOVING
     );
-  }
-};
-
-const updateHuntingState = (creature, config, rng, tick, durations) => {
-  const bs = creature.behaviorState;
-
-  bs.ticksInPhase++;
-
-  const chase = creature.chase;
-  const hasTarget = chase?.targetId != null;
-  const targetDistance = chase?.distance ?? Infinity;
-
-  if (!canTransitionPhase(creature, tick)) {
-    return;
-  }
-
-  const currentPhase = bs.phase;
-
-  switch (currentPhase) {
-    case HUNTING_PHASES.SPOTTING: {
-      if (!hasTarget) {
-        // Lost target during spotting - cooldown
-        transitionPhase(
-          creature,
-          HUNTING_PHASES.COOLDOWN,
-          tick,
-          secondsToTicks(durations.huntCooldownSeconds, durations.tps)
-        );
-      } else {
-        // Transition to stalking
-        transitionPhase(
-          creature,
-          HUNTING_PHASES.STALKING,
-          tick,
-          secondsToTicks(durations.huntStalkingMinSeconds, durations.tps)
-        );
-      }
-      break;
-    }
-
-    case HUNTING_PHASES.STALKING: {
-      if (!hasTarget) {
-        // Lost target - cooldown
-        transitionPhase(
-          creature,
-          HUNTING_PHASES.COOLDOWN,
-          tick,
-          secondsToTicks(durations.huntCooldownSeconds, durations.tps)
-        );
-      } else if (targetDistance <= durations.huntPounceRange) {
-        // Close enough to pounce - charge!
-        transitionPhase(
-          creature,
-          HUNTING_PHASES.CHARGING,
-          tick,
-          secondsToTicks(0.1, durations.tps)
-        ); // Minimal lock for charging
-      } else if (
-        bs.ticksInPhase >= secondsToTicks(durations.huntStalkingMaxSeconds, durations.tps)
-      ) {
-        // Been stalking too long - charge anyway
-        transitionPhase(
-          creature,
-          HUNTING_PHASES.CHARGING,
-          tick,
-          secondsToTicks(0.1, durations.tps)
-        );
-      }
-      break;
-    }
-
-    case HUNTING_PHASES.CHARGING: {
-      // Charging continues until chase resolves
-      const chaseStatus = chase?.status;
-      if (!hasTarget || chaseStatus === 'resting' || chaseStatus === 'idle') {
-        // Chase ended
-        transitionPhase(
-          creature,
-          HUNTING_PHASES.COOLDOWN,
-          tick,
-          secondsToTicks(durations.huntCooldownSeconds, durations.tps)
-        );
-      }
-      break;
-    }
-
-    case HUNTING_PHASES.COOLDOWN: {
-      // Return to relaxed/resting after cooldown
-      const energyRatio = creature.meters?.energy ?? 1;
-      if (energyRatio >= durations.satiationThreshold) {
-        transitionTo(
-          creature,
-          BEHAVIOR_STATES.RESTING,
-          tick,
-          secondsToTicks(durations.restingMinSeconds, durations.tps)
-        );
-      } else {
-        transitionTo(
-          creature,
-          BEHAVIOR_STATES.RELAXED,
-          tick,
-          secondsToTicks(durations.relaxedMinSeconds, durations.tps),
-          RELAXED_PHASES.MOVING
-        );
-      }
-      break;
-    }
   }
 };
 
@@ -347,8 +248,8 @@ export function updateCreatureBehaviorState({ creatures, config, rng, world, tic
       case BEHAVIOR_STATES.RESTING:
         if (canTransition(creature, tick)) {
           // Check if needs require action
-          const energy = creature.meters?.energy ?? 1;
-          const water = creature.meters?.water ?? 1;
+          const energy = behaviorMeterRatio(creature, config, 'energy');
+          const water = behaviorMeterRatio(creature, config, 'water');
           if (energy < 0.5 || water < 0.5) {
             transitionTo(
               creature,
@@ -375,7 +276,7 @@ export function updateCreatureBehaviorState({ creatures, config, rng, world, tic
 
       case BEHAVIOR_STATES.FEEDING:
         if (canTransition(creature, tick)) {
-          const energy = creature.meters?.energy ?? 1;
+          const energy = behaviorMeterRatio(creature, config, 'energy');
           if (energy >= durations.satiationThreshold) {
             transitionTo(
               creature,
@@ -464,7 +365,7 @@ export function startFeeding(creature, tick, config) {
   const durations = resolveStateDurations(config);
   ensureBehaviorState(creature);
 
-  const hungerRatio = 1 - (creature.meters?.energy ?? 1);
+  const hungerRatio = 1 - behaviorMeterRatio(creature, config, 'energy');
   const feedDuration =
     durations.feedingMinSeconds +
     hungerRatio * (durations.feedingMaxSeconds - durations.feedingMinSeconds);

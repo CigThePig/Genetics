@@ -1,5 +1,7 @@
 # Existing phase completion — 2026-10-19
 
+Historical verification snapshot at PR #136 commit `7b35fd4`. Subsequent review fixes and their current results are recorded in `context/pr-review-followup-2026-10-19.md`; the hashes and population counts below apply to the earlier implementation.
+
 Base: `65969b4312628b69285a2eb215806ddf18cd60d9` (merged audit PR #135).
 
 Reviewed all 24 pre-existing track plans, the maintenance roadmap, UI-FIX instructions and current implementation. Seven historical track plans retained open checkboxes. Most were verification debt; this pass also found unfinished behavior and UI features. The user authorized completing all existing phases in one run, with sequential verification checkpoints instead of intermediate approval stops.

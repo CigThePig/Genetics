@@ -70,6 +70,7 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
     if (isPredator(creature.species)) {
       herding.herdSize = 1;
       herding.nearbyThreats = 0;
+      herding.nearestThreatDistance = null;
       herding.isThreatened = false;
       herding.targetOffset = null;
       herding.threatDirection = null;
@@ -80,6 +81,9 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
     // Find direct threats
     const threats = findThreats(creature, creatures, threatRange, spatialIndex);
     herding.nearbyThreats = threats.length;
+    herding.nearestThreatDistance = threats.length
+      ? Math.min(...threats.map((threat) => threat.distance))
+      : null;
 
     // Decay threat state
     if (herding.threatDecayTicks > 0) {
@@ -143,6 +147,7 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
     const intent = creature.intent?.type;
     herding.herdHeading = null;
     if (!herding.isThreatened && (intent === 'drink' || intent === 'eat' || intent === 'hunt')) {
+      herding.lastRegroupVector = null;
       herding.targetOffset = null;
       continue;
     }

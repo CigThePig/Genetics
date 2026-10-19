@@ -94,6 +94,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex, world }) {
     if (isPredator(creature.species)) {
       herding.herdSize = 1;
       herding.nearbyThreats = 0;
+      herding.nearestThreatDistance = null;
       herding.isThreatened = false;
       herding.targetOffset = null;
       clearSmoothedOffset(herding);
@@ -107,6 +108,9 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex, world }) {
 
     herding.herdSize = members.length + 1;
     herding.nearbyThreats = threats.length;
+    herding.nearestThreatDistance = threats.length
+      ? Math.min(...threats.map((threat) => threat.distance))
+      : null;
     herding.isThreatened = threats.length > 0;
 
     const postDrinkMax = herding.postDrinkRegroupMaxTicks ?? maxPostDrinkTicks;
@@ -118,6 +122,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex, world }) {
     // If creature has urgent survival needs, don't apply herding
     // Let them go get food/water
     if (hasUrgentNeed(creature) && !herding.isThreatened) {
+      herding.lastRegroupVector = null;
       herding.targetOffset = null;
       clearSmoothedOffset(herding);
       continue;
@@ -131,6 +136,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex, world }) {
     if (threats.length > 0) {
       const fleeVector = calculateFleeVector(threats, threatRange);
       if (fleeVector) {
+        herding.lastRegroupVector = null;
         // Safety steering must not be reversed by a stale smoothed heading
         // or by separation/cohesion toward nearby herd members.
         applySmoothedOffset(
@@ -228,6 +234,8 @@ export function updateCreatureHerding({ creatures, config, spatialIndex, world, 
       creature.herding.smoothedOffset = { x: 0, y: 0 };
       creature.herding.isThreatened = false;
       creature.herding.nearbyThreats = 0;
+      creature.herding.nearestThreatDistance = null;
+      creature.herding.lastRegroupVector = null;
       creature.herding.herdSize = 1;
       creature.herding.threatDirection = null;
       creature.herding.herdHeading = null;

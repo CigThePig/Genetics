@@ -1,17 +1,9 @@
-import { SPECIES } from '../species.js';
-
-const DEFAULT_TARGET_WEIGHTS = Object.freeze({
-  [SPECIES.TRIANGLE]: {
-    [SPECIES.CIRCLE]: 1,
-    [SPECIES.OCTAGON]: 0.8
-  },
-  [SPECIES.OCTAGON]: {
-    [SPECIES.SQUARE]: 1
-  }
-});
+import { simConfig } from '../config-defaults.js';
 
 const resolveTargetingWeights = (species, config) =>
-  config?.creatureTargetingPreferences?.[species] ?? DEFAULT_TARGET_WEIGHTS[species] ?? null;
+  config?.creatureTargetingPreferences?.[species] ??
+  simConfig.creatureTargetingPreferences[species] ??
+  null;
 
 const resolveTargetingRange = (config) => {
   if (Number.isFinite(config?.creatureTargetingRange)) {

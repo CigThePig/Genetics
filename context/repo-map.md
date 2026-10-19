@@ -291,3 +291,18 @@ Rules:
   - Unsafe config/import regressions; timebase, pregnancy, pack, grazing, rendezvous and regroup scenarios.
 - scripts/verify-simulation.mjs
   - Adds first-minute mortality and median death timing to existing seeded soak evidence.
+
+## Review follow-up for PRs #135 / #136
+
+- src/app/loop.js
+  - Owns timer/RAF lifecycle, fixed-step clock integration and per-frame view updates.
+- src/app/config-controller.js
+  - Connects config panel callbacks to world rebuilds, inspector rate and loop clock updates.
+- src/app/bootstrap.js
+  - Initializes modules and wires camera/input/view dependencies; loop and config ownership are delegated.
+- src/sim/creatures/behavior-hunting.js
+  - Hunting phase transitions extracted from behavior-state; common state helpers remain shared.
+- tests/review-followup.test.js
+  - Charging-only catches, scaled meter decisions, fallback prey parity, threat-distance threshold and regroup invalidation regressions.
+- tracks/2026-10-19-pr-review-followup/, context/pr-review-followup-2026-10-19.md
+  - Authorized review fixes, per-comment dispositions and updated verification evidence.
