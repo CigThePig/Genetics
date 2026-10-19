@@ -128,36 +128,6 @@ export function createRenderer(container, { camera }) {
     const minTileY = (minWorldY - originY) / tileSize;
     const maxTileY = (maxWorldY - originY) / tileSize;
 
-    // Enhanced creature colors with gradients
-    const speciesColors = {
-      [SPECIES.SQUARE]: {
-        main: '#f8e878',
-        light: '#fff8a8',
-        dark: '#d8c858',
-        glow: 'rgba(248, 232, 120, 0.3)'
-      },
-      [SPECIES.CIRCLE]: {
-        main: '#80d7ff',
-        light: '#a8e8ff',
-        dark: '#58b8e0',
-        glow: 'rgba(128, 215, 255, 0.3)'
-      },
-      [SPECIES.TRIANGLE]: {
-        main: '#ff8888',
-        light: '#ffb0b0',
-        dark: '#e06060',
-        glow: 'rgba(255, 140, 140, 0.3)'
-      },
-      [SPECIES.OCTAGON]: {
-        main: '#be96ff',
-        light: '#d8b8ff',
-        dark: '#9878e0',
-        glow: 'rgba(190, 150, 255, 0.3)'
-      }
-    };
-
-    const defaultColors = speciesColors[SPECIES.SQUARE];
-
     const drawCreatureShape = (species, x, y, radius, colors) => {
       // Shadow
       ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
@@ -178,26 +148,8 @@ export function createRenderer(container, { camera }) {
       }
       ctx.fill();
 
-      // Glow
-      ctx.fillStyle = colors.glow;
-      ctx.beginPath();
-      ctx.arc(x, y, radius * 1.4, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Main shape with gradient
-      const gradient = ctx.createRadialGradient(
-        x - radius * 0.3,
-        y - radius * 0.3,
-        0,
-        x,
-        y,
-        radius
-      );
-      gradient.addColorStop(0, colors.light);
-      gradient.addColorStop(0.6, colors.main);
-      gradient.addColorStop(1, colors.dark);
-
-      ctx.fillStyle = gradient;
+      // Body is the inherited phenotype; shape/outline remain the species cue.
+      ctx.fillStyle = colors;
       ctx.beginPath();
 
       switch (species) {
@@ -264,7 +216,7 @@ export function createRenderer(container, { camera }) {
 
       const centerX = originX + x * tileSize;
       const centerY = originY + y * tileSize;
-      const colors = speciesColors[creature.species] ?? defaultColors;
+      const colors = creature.traits?.bodyCss ?? '#86a66b';
 
       drawCreatureShape(creature.species, centerX, centerY, markerRadius, colors);
     }

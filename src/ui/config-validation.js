@@ -58,6 +58,10 @@ function lifeStages(value, path) {
 export function validateConfigValue(key, value) {
   if (!own(simConfig, key)) return fail(key, 'unknown config key');
   switch (key) {
+    case 'terrainBiomeWeights':
+      return record(value, key, ['forest', 'plains', 'sand', 'rock'], (n, at) =>
+        numeric(n, at, 0, 10)
+      );
     case 'terrainTypes':
       return Array.isArray(value) &&
         value.length > 0 &&

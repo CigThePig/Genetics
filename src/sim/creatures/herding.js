@@ -104,7 +104,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex, world }) {
     // Find nearby herd members and threats using spatial index if available
     const index = useSpatialIndex ? spatialIndex : null;
     const members = findNearbyHerdMembers(creature, creatures, index, herdRange);
-    const threats = findNearbyThreats(creature, creatures, index, threatRange);
+    const threats = findNearbyThreats(creature, creatures, index, threatRange, world, config);
 
     herding.herdSize = members.length + 1;
     herding.nearbyThreats = threats.length;
@@ -249,7 +249,7 @@ export function updateCreatureHerding({ creatures, config, spatialIndex, world, 
   // Keep the worker implementation isolated; authoritative decisions run synchronously.
 
   if (config?.creatureHerdingSimpleMode === true) {
-    updateCreatureHerdingSimple({ creatures, config, spatialIndex, rng });
+    updateCreatureHerdingSimple({ creatures, config, spatialIndex, rng, world });
   } else {
     updateCreatureHerdingSync({ creatures, config, spatialIndex, world });
   }

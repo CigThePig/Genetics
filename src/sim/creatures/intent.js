@@ -1,3 +1,4 @@
+import { canSeeCreature } from './visibility.js';
 import { resolveTicksPerSecond } from './life-stages.js';
 import {
   resolveRatio,
@@ -248,7 +249,8 @@ export function updateCreatureIntent({
           (!sexEnabled || (existing.sex && creature.sex && existing.sex !== creature.sex)) &&
           existingCooldown <= 0 &&
           !existingPregnant &&
-          existingReady
+          existingReady &&
+          canSeeCreature(creature, existing, world, config, mateSeekRange, true)
         ) {
           candidate = existing;
         }
@@ -273,7 +275,9 @@ export function updateCreatureIntent({
           minAgeTicks,
           sexEnabled,
           pregnancyEnabled,
-          spatialIndex
+          spatialIndex,
+          config,
+          world
         });
         if (found) {
           mateState.targetId = found.id ?? null;
@@ -405,7 +409,8 @@ export function updateCreatureIntent({
             predator: creature,
             creatures,
             config,
-            spatialIndex
+            spatialIndex,
+            world
           });
           if (predatorTarget) {
             const started = startCreatureChase({
@@ -446,7 +451,8 @@ export function updateCreatureIntent({
               predator: creature,
               creatures,
               config,
-              spatialIndex
+              spatialIndex,
+              world
             });
             if (predatorTarget) {
               const started = startCreatureChase({

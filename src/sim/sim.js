@@ -1,3 +1,4 @@
+import { recordColourHistory } from './colour-metrics.js';
 import { updateBehaviorIntegration } from './creatures/behavior-integration.js';
 import { simConfig } from './config.js';
 import { createRng } from './rng.js';
@@ -61,6 +62,7 @@ export function createSim(config = simConfig) {
   state.creatures = spawnCreatures(state.world);
   state.world.nextCreatureId = state.creatures.length;
   initializePlants({ state, config: resolvedConfig, rng });
+  recordColourHistory(state, resolvedConfig);
 
   return {
     config: resolvedConfig,
@@ -77,8 +79,11 @@ export function createSim(config = simConfig) {
       state.world = buildWorld();
       state.creatures = spawnCreatures(state.world);
       state.metrics = createDefaultMetrics();
+      state.colourBaseline = null;
+      state.colourHistory = [];
       state.world.nextCreatureId = state.creatures.length;
       initializePlants({ state, config: resolvedConfig, rng });
+      recordColourHistory(state, resolvedConfig);
       spatialIndex.clear();
     },
     tick() {
@@ -124,6 +129,7 @@ export function createSim(config = simConfig) {
 
         const tChase = perf?.start('tick.chase');
         updateCreatureChase({
+          world: state.world,
           creatures: state.creatures,
           config: resolvedConfig,
           metrics: state.metrics,
@@ -256,6 +262,7 @@ export function createSim(config = simConfig) {
         updatePlants({ state, config: resolvedConfig, rng });
         perf?.end('tick.plants', tPlants);
 
+        recordColourHistory(state, resolvedConfig);
         return state.lastRoll;
       } finally {
         perf?.end('tick.total', tTotal);

@@ -1,4 +1,7 @@
 export const simConfig = {
+  colourCamouflageEnabled: true,
+  colourMatePreferenceEnabled: true,
+  colourInitialVariation: 0.28,
   // === SIMULATION ===
   seed: 1,
   hotspotSeed: 1337,
@@ -13,7 +16,13 @@ export const simConfig = {
   shoreTerrain: 'shore',
   terrainTypes: ['plains', 'forest', 'rock', 'sand', 'shore', 'water'],
 
-  // Enhanced terrain generation (noise-based)
+  // Regional geography (fractions of world width; primary biome cores are preserved).
+  terrainRegionScale: 0.32,
+  terrainFragmentation: 0.18,
+  terrainBiomeWeights: { forest: 1, plains: 1.4, sand: 0.8, rock: 0.6 },
+  biomeDebugView: false,
+
+  // Legacy noise generator controls (retained for imported presets)
   terrainNoiseScale: 0.035, // Controls terrain feature size (smaller = larger features)
   terrainWaterLevel: -0.28, // Height threshold for water (-1 to 1)
   terrainShoreLevel: -0.18, // Height threshold for shore
@@ -412,6 +421,12 @@ export const simConfig = {
   // === GENETICS: GENOME DEFAULTS ===
   creatureGenomeDefaults: {
     default: {
+      bodyHue: 0.25,
+      bodySaturation: 0.45,
+      bodyLightness: 0.45,
+      matePreferenceHue: 0.25,
+      mateChoosiness: 0.4,
+      colourDiscrimination: 0.5,
       speed: 0.5,
       perceptionRange: 0.5,
       alertness: 0.5,
@@ -435,10 +450,10 @@ export const simConfig = {
       growthRate: 0.5,
       longevity: 0.5
     },
-    square: {},
-    triangle: {},
-    circle: {},
-    octagon: {}
+    square: { bodyHue: 0.15, matePreferenceHue: 0.15, colourDiscrimination: 0.65 },
+    triangle: { bodyHue: 0.98, matePreferenceHue: 0.98, colourDiscrimination: 0.7 },
+    circle: { bodyHue: 0.52, matePreferenceHue: 0.52, colourDiscrimination: 0.5 },
+    octagon: { bodyHue: 0.77, matePreferenceHue: 0.77, colourDiscrimination: 0.6 }
   },
   creatureGenomeRanges: {},
   creatureGestationMultiplier: 1,

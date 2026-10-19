@@ -1,3 +1,4 @@
+import { canSeeCreature } from './visibility.js';
 import { canCatchPrey } from './behavior-helpers.js';
 import { resolveTicksPerSecond } from '../utils/resolvers.js';
 
@@ -133,7 +134,7 @@ const concludeChase = ({ chase, config, metrics, tick, outcome, target, chaserSp
   }
 };
 
-export function updateCreatureChase({ creatures, config, metrics, tick, spatialIndex }) {
+export function updateCreatureChase({ creatures, config, metrics, tick, spatialIndex, world }) {
   if (!Array.isArray(creatures)) {
     return;
   }
@@ -219,7 +220,10 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
       continue;
     }
 
-    if (distance <= loseDistance) {
+    if (
+      distance <= loseDistance &&
+      canSeeCreature(creature, target, world, config, loseDistance, true)
+    ) {
       chase.status = 'pursuing';
       chase.lastSeenTick = tick;
       chase.lastKnownPosition = {

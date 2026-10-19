@@ -1,3 +1,4 @@
+import { canSeeCreature } from './visibility.js';
 import { SPECIES } from '../species.js';
 
 const PREDATOR_SPECIES = new Set([SPECIES.TRIANGLE, SPECIES.OCTAGON]);
@@ -240,7 +241,7 @@ export const findNeighbors = (creature, creatures, maxRange, spatialIndex) => {
   return neighbors;
 };
 
-export const findThreats = (creature, creatures, threatRange, spatialIndex) => {
+export const findThreats = (creature, creatures, threatRange, spatialIndex, world, config) => {
   const threats = [];
   const x = creature.position.x;
   const y = creature.position.y;
@@ -253,7 +254,11 @@ export const findThreats = (creature, creatures, threatRange, spatialIndex) => {
     });
 
     for (const { creature: other, distanceSq, dx, dy } of nearby) {
-      if (distanceSq <= 0) continue;
+      if (
+        distanceSq < 0 ||
+        !canSeeCreature(creature, other, world, config, threatRange, creature.herding?.isThreatened)
+      )
+        continue;
       threats.push({
         creature: other,
         dx,
@@ -264,13 +269,16 @@ export const findThreats = (creature, creatures, threatRange, spatialIndex) => {
   } else {
     for (const other of creatures) {
       if (other === creature || !other?.position) continue;
-      if (!isPredator(other.species)) continue;
+      if (!isPredator(other.species) || other.meters?.hp <= 0) continue;
 
       const dx = other.position.x - x;
       const dy = other.position.y - y;
       const distSq = dx * dx + dy * dy;
 
-      if (distSq <= rangeSq && distSq > 0) {
+      if (
+        distSq <= rangeSq &&
+        canSeeCreature(creature, other, world, config, threatRange, creature.herding?.isThreatened)
+      ) {
         threats.push({
           creature: other,
           dx,

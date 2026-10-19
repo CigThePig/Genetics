@@ -1,3 +1,4 @@
+import { wrapHue, clamp01, hslToRgb, hslCss } from '../colour.js';
 import { mapGenomeToTraitMultipliers } from './genetics.js';
 
 const resolveMultiplier = (value) => (Number.isFinite(value) ? value : 1);
@@ -90,7 +91,20 @@ export const createCreatureTraits = ({ config, species, genome } = {}) => {
     ? config.creatureGestationMultiplier
     : 1;
 
+  const bodyHue = wrapHue(genome?.bodyHue ?? 0.25);
+  const bodySaturation = clamp01(genome?.bodySaturation ?? 0.45);
+  const bodyLightness = clamp01(genome?.bodyLightness ?? 0.45);
+  const matePreferenceHue = wrapHue(genome?.matePreferenceHue ?? 0.25);
   const baseTraits = {
+    bodyHue,
+    bodySaturation,
+    bodyLightness,
+    matePreferenceHue,
+    mateChoosiness: clamp01(genome?.mateChoosiness ?? 0.4),
+    colourDiscrimination: clamp01(genome?.colourDiscrimination ?? 0.5),
+    bodyRgb: hslToRgb(bodyHue, bodySaturation, bodyLightness),
+    bodyCss: hslCss(bodyHue, bodySaturation, bodyLightness),
+    preferredMateCss: hslCss(matePreferenceHue, 0.6, 0.5),
     speed: applyMultipliers(config?.creatureBaseSpeed, multipliers.speed, genomeMultipliers.speed),
     perceptionRange: applyMultipliers(
       config?.creaturePerceptionRange,
