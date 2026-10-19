@@ -306,7 +306,7 @@ function generateRivers(world, heightMap, noise, rng, config) {
       } else {
         // Add subtle meandering
         angle = Math.atan2(bestDy, bestDx);
-        angle += (noise.simplex2(step * 0.2, r) * 0.5) * meander;
+        angle += noise.simplex2(step * 0.2, r) * 0.5 * meander;
         x += Math.cos(angle) * 0.8 + bestDx * 0.2;
         y += Math.sin(angle) * 0.8 + bestDy * 0.2;
       }
@@ -451,7 +451,11 @@ export function generateTerrainLegacy({ world, rng, config }) {
       const radius = rng.nextInt(minRadius, maxRadius);
       const radiusSquared = radius * radius;
 
-      for (let y = Math.max(0, centerY - radius); y <= Math.min(height - 1, centerY + radius); y++) {
+      for (
+        let y = Math.max(0, centerY - radius);
+        y <= Math.min(height - 1, centerY + radius);
+        y++
+      ) {
         const dy = y - centerY;
         for (
           let x = Math.max(0, centerX - radius);
@@ -493,7 +497,8 @@ export function generateTerrainLegacy({ world, rng, config }) {
       if (rng.nextFloat() < turnChance) {
         const turnRight = rng.nextInt(0, 1) === 1;
         const currentIndex = DIRECTIONS.indexOf(direction);
-        const nextIndex = (currentIndex + (turnRight ? 1 : -1) + DIRECTIONS.length) % DIRECTIONS.length;
+        const nextIndex =
+          (currentIndex + (turnRight ? 1 : -1) + DIRECTIONS.length) % DIRECTIONS.length;
         direction = DIRECTIONS[nextIndex];
       }
 

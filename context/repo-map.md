@@ -241,3 +241,34 @@ Rules:
   - Role: validates carcass spawning, consumption, and decay
 - tests/hunting.test.js
   - Role: validates combat mechanics and carcass spawning on kill
+
+## Repository audit maintenance (2026-10-19)
+
+- context/repository-audit-2026-10-19.md
+  - Section-by-section findings, repairs, validation evidence and product limitations.
+- tracks/2026-10-19-maintenance-repository-audit/
+  - Single authorized maintenance phase: spec, blueprint and verified plan.
+- src/app/bootstrap.js
+  - Application initialization, UI wiring and lifecycle; imported by the small main entrypoint.
+- src/sim/config-defaults.js, src/sim/config-meta/\*.js
+  - Default values and category-based editor metadata; config.js preserves public exports and presets.
+- src/sim/summary.js
+  - Read-only population/genome and UI metric summary construction.
+- src/sim/creatures/behavior-helpers.js, behavior-integration.js
+  - State definitions/transitions and intent-to-state/movement integration.
+- src/sim/creatures/herding-config.js, herding-forces.js, herding-anchors.js
+  - Complex-herding settings/forces and world-owned anchor decisions.
+- src/sim/creatures/herding-simple-helpers.js
+  - Simple-herd neighbor/force calculations and state defaults.
+- src/sim/creatures/intent-helpers.js, water-rendezvous.js
+  - Shared intent/search helpers and world-owned drinking rendezvous planning.
+- src/sim/creatures/movement-helpers.js, pack-helpers.js, reproduction-helpers.js
+  - Cohesive resolvers, state helpers and selection functions extracted from each subsystem.
+- src/render/terrain-cache.js, terrain-view.js
+  - Renderer-owned terrain/grass caching and read-only world-layer drawing.
+- src/ui/config-storage.js, config-values.js, config-sections.js
+  - Best-effort preferences, preset/value helpers and configuration controls.
+- tests/audit-simulation.test.js, audit-app.test.js, audit-rendering.test.js
+  - Lifecycle, determinism, behavior, app-boundary and render-cache regression scenarios.
+- scripts/verify-simulation.mjs
+  - Reusable three-seed finite-state, bounds, ID and population-accounting soak; npm run test:soak.

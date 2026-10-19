@@ -78,7 +78,8 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
   // Placeholder
   const placeholder = document.createElement('p');
   placeholder.className = 'inspector-empty';
-  placeholder.innerHTML = 'Tap a creature on the map to inspect it.<br><br>📍 Tap "Follow" to track its movement.';
+  placeholder.innerHTML =
+    'Tap a creature on the map to inspect it.<br><br>📍 Tap "Follow" to track its movement.';
 
   content.append(placeholder);
   panel.append(header, content);
@@ -261,15 +262,21 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     clearBtn.style.display = 'block';
 
     // STATUS SECTION
-    const { section: statusSection, body: statusBody } = createSection('status', 'Status', '📋', true);
+    const { section: statusSection, body: statusBody } = createSection(
+      'status',
+      'Status',
+      '📋',
+      true
+    );
 
     const species = getSpeciesLabel(creature.species) || 'Unknown';
-    const speciesEmoji = {
-      Squares: '🟨',
-      Triangles: '🔺',
-      Circles: '🔵',
-      Octagons: '🟣'
-    }[species] || '❓';
+    const speciesEmoji =
+      {
+        Squares: '🟨',
+        Triangles: '🔺',
+        Circles: '🔵',
+        Octagons: '🟣'
+      }[species] || '❓';
 
     statusBody.append(
       row('Species', `${speciesEmoji} ${species}`),
@@ -289,16 +296,18 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       const remaining = pregnancy.gestationTicksRemaining ?? 0;
       const total = pregnancy.gestationTicksTotal ?? 1;
       const progress = Math.round(((total - remaining) / Math.max(1, total)) * 100);
-      statusBody.append(
-        row('Pregnant', `🤰 ${progress}%`),
-        row('Due in', ticksToTime(remaining))
-      );
+      statusBody.append(row('Pregnant', `🤰 ${progress}%`), row('Due in', ticksToTime(remaining)));
     }
 
     content.append(statusSection);
 
     // VITALS SECTION
-    const { section: vitalsSection, body: vitalsBody } = createSection('vitals', 'Vitals', '❤️', true);
+    const { section: vitalsSection, body: vitalsBody } = createSection(
+      'vitals',
+      'Vitals',
+      '❤️',
+      true
+    );
 
     const meters = creature.meters || {};
     vitalsBody.append(
@@ -311,11 +320,16 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     content.append(vitalsSection);
 
     // BEHAVIOR SECTION
-    const { section: behaviorSection, body: behaviorBody } = createSection('behavior', 'Behavior', '🧠', false);
+    const { section: behaviorSection, body: behaviorBody } = createSection(
+      'behavior',
+      'Behavior',
+      '🧠',
+      false
+    );
 
     const priority = creature.priority ?? 'unknown';
     const intentType = creature.intent?.type ?? 'unknown';
-    
+
     const priorityLabels = {
       hunger: '🍽️ Looking for food',
       thirst: '💧 Looking for water',
@@ -323,7 +337,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       mate: '💕 Looking for a mate',
       rest: '😴 Resting'
     };
-    
+
     const intentLabels = {
       eat: '🍽️ Eating',
       drink: '💧 Drinking',
@@ -336,7 +350,8 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       idle: '😴 Idle'
     };
 
-    const currentActivity = intentLabels[intentType] || priorityLabels[priority] || `${priority} / ${intentType}`;
+    const currentActivity =
+      intentLabels[intentType] || priorityLabels[priority] || `${priority} / ${intentType}`;
 
     behaviorBody.append(
       row('Activity', currentActivity),
@@ -346,7 +361,9 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     );
 
     if (creature.intent?.foodType) {
-      behaviorBody.append(row('Seeking', FOOD_LABELS[creature.intent.foodType] || creature.intent.foodType));
+      behaviorBody.append(
+        row('Seeking', FOOD_LABELS[creature.intent.foodType] || creature.intent.foodType)
+      );
     }
 
     if (creature.targeting?.targetId) {
@@ -356,7 +373,12 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     content.append(behaviorSection);
 
     // TRAITS SECTION
-    const { section: traitsSection, body: traitsBody } = createSection('traits', 'Traits', '🦵', false);
+    const { section: traitsSection, body: traitsBody } = createSection(
+      'traits',
+      'Traits',
+      '🦵',
+      false
+    );
 
     const traits = creature.traits || {};
     traitsBody.append(
@@ -372,7 +394,12 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     // HUNTING SECTION (predators only)
     const chase = creature.chase;
     if (chase?.status && chase.status !== 'idle') {
-      const { section: huntSection, body: huntBody } = createSection('hunting', 'Hunting', '🎯', false);
+      const { section: huntSection, body: huntBody } = createSection(
+        'hunting',
+        'Hunting',
+        '🎯',
+        false
+      );
 
       const chaseLabels = {
         pursuing: '🏃 Pursuing',
@@ -399,10 +426,17 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     }
 
     // GENETICS SECTION
-    const { section: geneSection, body: geneBody } = createSection('genetics', 'Genetics', '🧬', false);
+    const { section: geneSection, body: geneBody } = createSection(
+      'genetics',
+      'Genetics',
+      '🧬',
+      false
+    );
 
     const genome = creature.genome || {};
-    const genomeKeys = Object.keys(genome).filter(key => Number.isFinite(genome[key])).sort();
+    const genomeKeys = Object.keys(genome)
+      .filter((key) => Number.isFinite(genome[key]))
+      .sort();
 
     // Helper to convert camelCase to readable labels
     const camelToLabel = (str) => {
@@ -425,6 +459,10 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     }
 
     content.append(geneSection);
+
+    const behavior = document.createElement('p');
+    behavior.textContent = `Behavior: ${creature.behaviorState?.state ?? 'relaxed'} / ${creature.behaviorState?.phase ?? 'none'}`;
+    content.append(behavior);
 
     // Tick footer
     const tickDiv = document.createElement('div');
@@ -451,7 +489,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
         followBtn.classList.remove('active');
         followBtn.innerHTML = '📍 Follow';
         title.textContent = `🔍 #${creature.id}`;
-        
+
         // Auto-open panel when selecting a creature
         if (!panelVisible) {
           togglePanel();
@@ -479,7 +517,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     update({ creatures, tick }) {
       if (trackedCreatureId === null) return;
 
-      const creature = creatures?.find(c => c?.id === trackedCreatureId);
+      const creature = creatures?.find((c) => c?.id === trackedCreatureId);
       buildCreatureDisplay(creature, tick);
 
       if (!creature) {

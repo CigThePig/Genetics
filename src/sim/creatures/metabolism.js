@@ -1,3 +1,4 @@
+import { behaviorSpeedMultiplier } from './behavior-integration.js';
 /**
  * Metabolism Module
  *
@@ -103,7 +104,15 @@ export function updateCreatureSprintDecision({ creatures, config }) {
       creature.motion = {};
     }
     const intentType = creature.intent?.type;
-    if (intentType === 'drink' || intentType === 'eat') {
+    if (
+      intentType === 'drink' ||
+      intentType === 'eat' ||
+      intentType === 'rest' ||
+      behaviorSpeedMultiplier(creature, config) === 0 ||
+      (config?.creatureBehaviorStateEnabled !== false &&
+        creature.behaviorState?.state === 'hunting' &&
+        creature.behaviorState?.phase !== 'charging')
+    ) {
       creature.motion.isSprinting = false;
       continue;
     }

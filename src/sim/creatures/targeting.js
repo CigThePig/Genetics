@@ -1,14 +1,12 @@
 import { SPECIES } from '../species.js';
-import { getSpatialIndex } from '../spatial-index.js';
 
 const DEFAULT_TARGET_WEIGHTS = Object.freeze({
   [SPECIES.TRIANGLE]: {
     [SPECIES.CIRCLE]: 1,
-    [SPECIES.SQUARE]: 0.8
+    [SPECIES.OCTAGON]: 0.8
   },
   [SPECIES.OCTAGON]: {
-    [SPECIES.SQUARE]: 1,
-    [SPECIES.CIRCLE]: 0.8
+    [SPECIES.SQUARE]: 1
   }
 });
 
@@ -46,25 +44,21 @@ export const selectPredatorTarget = ({ predator, creatures, config, spatialIndex
   const rangeSq = range * range;
 
   // Try spatial index first if available
-  const index = spatialIndex || getSpatialIndex();
+  const index = spatialIndex;
   const useSpatialIndex = index && index.creatureCount > 0;
 
   let best = null;
 
   if (useSpatialIndex) {
     // Use spatial index for efficient neighbor query
-    const nearby = index.queryNearby(
-      predator.position.x,
-      predator.position.y,
-      range,
-      {
-        exclude: predator,
-        filter: (candidate) => {
-          const weight = weights[candidate.species];
-          return Number.isFinite(weight) && weight > 0;
-        }
+    const nearby = index.queryNearby(predator.position.x, predator.position.y, range, {
+      exclude: predator,
+      filter: (candidate) => {
+        if (candidate.meters?.hp <= 0) return false;
+        const weight = weights[candidate.species];
+        return Number.isFinite(weight) && weight > 0;
       }
-    );
+    });
 
     for (const { creature: candidate, distanceSq } of nearby) {
       const weight = weights[candidate.species];
@@ -96,7 +90,12 @@ export const selectPredatorTarget = ({ predator, creatures, config, spatialIndex
   } else {
     // Fall back to linear scan
     for (const candidate of creatures) {
-      if (!candidate || candidate === predator || !candidate.position) {
+      if (
+        !candidate ||
+        candidate === predator ||
+        !candidate.position ||
+        candidate.meters?.hp <= 0
+      ) {
         continue;
       }
       const weight = weights[candidate.species];

@@ -31,7 +31,7 @@ export const resolveCreatureMaturityScale = ({ genome, config }) => {
  */
 export const resolveCreatureMaxAgeTicks = ({ genome, config }) => {
   const ticksPerSecond = resolveTicksPerSecond(config);
-  
+
   // Get base max age from config (in seconds), convert to ticks
   const maxAgeSeconds = config?.creatureMaxAge;
   if (!Number.isFinite(maxAgeSeconds) || maxAgeSeconds <= 0) {
@@ -48,13 +48,13 @@ export const resolveCreatureMaxAgeTicks = ({ genome, config }) => {
   const coupling = Number.isFinite(config?.creatureGrowthLongevityCoupling)
     ? config.creatureGrowthLongevityCoupling
     : 1;
-  
+
   // coupledLongevity = longevityMult * (1/growthMult)^coupling
   // If growthMult > 1 (fast grower), this reduces lifespan
   // If growthMult < 1 (slow grower), this increases lifespan
   const coupledLongevity = longevityMult * Math.pow(1 / growthMult, coupling);
-  
+
   const maxAgeTicks = baseMaxAgeTicks * coupledLongevity;
-  
+
   return Math.max(1, Math.trunc(maxAgeTicks));
 };

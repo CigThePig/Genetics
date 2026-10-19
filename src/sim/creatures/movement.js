@@ -1,497 +1,56 @@
-/**
- * Movement Module
- *
- * Handles creature movement, heading, terrain collision, and water avoidance.
- *
- * Key improvements:
- * - Velocity-based movement with acceleration/deceleration (creatures have mass)
- * - Turn momentum / rotational inertia (turning feels weighted)
- * - Persistent wander headings (creatures commit to a direction for a period)
- * - Maximum turn rate (smooth inertial turning, not instant snapping)
- * - Speed varies by intent (wander slow, seek faster, flee at full speed)
- * - Herding applies to both 'wander' and 'graze' intents
- * - Reduced per-tick noise (jitter only on retarget, not every tick)
- * - Faster reactive turning when fleeing from threats
- * - Boundary avoidance: creatures steer away from map edges
- */
-
 import { getTerrainEffectsAt } from '../terrain-effects.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 import { resolveTickScale, resolveSprintMultiplier } from './metabolism.js';
 import { getHerdingOffset } from './herding.js';
-import { SPECIES } from '../species.js';
+import { behaviorSpeedMultiplier } from './behavior-integration.js';
+import { isPatrolPaused } from './pack.js';
+import {
+  isPredator,
+  resolveAcceleration,
+  resolveDeceleration,
+  resolveFrictionDrag,
+  resolveAngularAcceleration,
+  resolveSpeedTurnPenalty,
+  resolveIntentSpeedMultipliers,
+  resolvePregnancyMoveMultiplier,
+  resolveCreatureSpeed,
+  clampPosition,
+  resolveHeading,
+  wrapPi,
+  blendAngles,
+  resolveMaxTurnRate,
+  resolveWanderRetargetTime,
+  resolveWanderJitter,
+  resolveWanderInHerdRetargetMultiplier,
+  resolveWanderInHerdJitterMultiplier,
+  resolveWanderInHerdHeadingBias,
+  resolveFleeTurnMultiplier,
+  resolveHerdingHeadingBlendMax,
+  resolveHerdingTargetBlendEnabled,
+  resolveHerdingTargetBlendMax,
+  resolveHerdingTargetBlendIsolationBoost,
+  resolvePostDrinkRegroupTargetBlendBoost,
+  resolveHerdingMinGroupSize,
+  resolveTicksPerSecond,
+  resolvePostDrinkRegroupMaxTicks,
+  resolveBoundaryAvoidDistance,
+  resolveBoundaryAvoidStrength,
+  resolveGrazeEnabled,
+  resolveGrazeIdleRange,
+  resolveGrazeMoveRange,
+  resolveGrazeMinLocalHerdSize,
+  resolveHerdingRegroupMinLocalHerdSize,
+  clamp01,
+  ensureVelocityState,
+  ensureWanderState,
+  ensureGrazeState,
+  clearGrazeState,
+  calculateBoundaryAvoidance,
+  pickNewWanderHeading,
+  pickRetargetTicks,
+  pickGrazeTicks
+} from './movement-helpers.js';
 
-const PREDATOR_SPECIES = new Set([SPECIES.TRIANGLE, SPECIES.OCTAGON]);
-
-const isPredator = (species) => PREDATOR_SPECIES.has(species);
-
-/**
- * Resolves base movement speed from config.
- */
-const resolveMovementSpeed = (config) =>
-  Number.isFinite(config?.creatureBaseSpeed) ? Math.max(0, config.creatureBaseSpeed) : 0;
-
-// ============================================================================
-// VELOCITY-BASED MOVEMENT CONFIG RESOLVERS
-// ============================================================================
-
-/**
- * Resolves creature acceleration (how fast creatures reach top speed).
- */
-const resolveAcceleration = (config) =>
-  Number.isFinite(config?.creatureAcceleration)
-    ? Math.max(0.01, Math.min(1, config.creatureAcceleration))
-    : 0.15;
-
-/**
- * Resolves creature deceleration (how fast creatures slow down when stopping).
- */
-const resolveDeceleration = (config) =>
-  Number.isFinite(config?.creatureDeceleration)
-    ? Math.max(0.01, Math.min(1, config.creatureDeceleration))
-    : 0.12;
-
-/**
- * Resolves friction drag (passive slowdown each tick).
- */
-const resolveFrictionDrag = (config) =>
-  Number.isFinite(config?.creatureFrictionDrag)
-    ? Math.max(0, Math.min(0.2, config.creatureFrictionDrag))
-    : 0.02;
-
-// ============================================================================
-// TURN MOMENTUM (ROTATIONAL INERTIA) CONFIG RESOLVERS
-// ============================================================================
-
-/**
- * Resolves angular acceleration (how fast turn rate changes).
- */
-const resolveAngularAcceleration = (config) =>
-  Number.isFinite(config?.creatureAngularAcceleration)
-    ? Math.max(0.01, Math.min(1, config.creatureAngularAcceleration))
-    : 0.08;
-
-/**
- * Resolves speed turn penalty (higher speed = slower max turn).
- */
-const resolveSpeedTurnPenalty = (config) =>
-  Number.isFinite(config?.creatureSpeedTurnPenalty)
-    ? Math.max(0, Math.min(1, config.creatureSpeedTurnPenalty))
-    : 0.6;
-
-// ============================================================================
-// INTENT-BASED SPEED MULTIPLIERS
-// ============================================================================
-
-/**
- * Resolves intent speed multipliers from config.
- */
-const resolveIntentSpeedMultipliers = (config) => ({
-  wander: Number.isFinite(config?.creatureIntentSpeedWander)
-    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedWander))
-    : 0.4,
-  graze: Number.isFinite(config?.creatureIntentSpeedGraze)
-    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedGraze))
-    : 0.25,
-  seek: Number.isFinite(config?.creatureIntentSpeedSeek)
-    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedSeek))
-    : 0.7,
-  mate: Number.isFinite(config?.creatureIntentSpeedMate)
-    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedMate))
-    : 0.6,
-  drink: 0,
-  eat: 0,
-  rest: 0,
-  hunt: Number.isFinite(config?.creatureIntentSpeedHunt)
-    ? Math.max(0, Math.min(1.5, config.creatureIntentSpeedHunt))
-    : 0.85,
-  huntChase: Number.isFinite(config?.creatureIntentSpeedHuntChase)
-    ? Math.max(0, Math.min(2, config.creatureIntentSpeedHuntChase))
-    : 1.0,
-  flee: 1.0 // Always full speed when fleeing
-});
-
-/**
- * Resolves pregnancy movement speed multiplier.
- */
-const resolvePregnancyMoveMultiplier = (creature, config) => {
-  if (config?.creaturePregnancyEnabled === false) {
-    return 1;
-  }
-  if (creature?.sex !== 'female') {
-    return 1;
-  }
-  if (!creature?.reproduction?.pregnancy?.isPregnant) {
-    return 1;
-  }
-  if (!Number.isFinite(config?.creaturePregnancyMoveSpeedMultiplier)) {
-    return 1;
-  }
-  return Math.max(0, config.creaturePregnancyMoveSpeedMultiplier);
-};
-
-/**
- * Resolves a creature's movement speed from traits or config fallback.
- */
-const resolveCreatureSpeed = (creature, config) =>
-  Number.isFinite(creature?.traits?.speed)
-    ? Math.max(0, creature.traits.speed)
-    : resolveMovementSpeed(config);
-
-/**
- * Clamps a position value between min and max.
- */
-const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
-
-/**
- * Resolves or initializes a creature's heading.
- */
-const resolveHeading = (creature, rng) => {
-  if (!creature.motion) {
-    creature.motion = {};
-  }
-  if (!Number.isFinite(creature.motion.heading)) {
-    creature.motion.heading = rng.nextFloat() * Math.PI * 2;
-  }
-  return creature.motion.heading;
-};
-
-/**
- * Wraps an angle to the range [-PI, PI].
- */
-const wrapPi = (angle) => {
-  let a = angle % (2 * Math.PI);
-  if (a > Math.PI) a -= 2 * Math.PI;
-  if (a < -Math.PI) a += 2 * Math.PI;
-  return a;
-};
-
-const blendAngles = (from, to, weight) => {
-  const delta = wrapPi(to - from);
-  return from + delta * clamp01(weight);
-};
-
-/**
- * Turns current heading toward desired heading by at most maxDelta radians.
- */
-const turnToward = (current, desired, maxDelta) => {
-  const delta = wrapPi(desired - current);
-  const clamped = Math.max(-maxDelta, Math.min(maxDelta, delta));
-  return current + clamped;
-};
-
-/**
- * Resolves max turn rate from config (radians per second).
- */
-const resolveMaxTurnRate = (config) =>
-  Number.isFinite(config?.creatureMaxTurnRateRadPerSecond)
-    ? Math.max(0.5, config.creatureMaxTurnRateRadPerSecond)
-    : 3.5;
-
-/**
- * Resolves wander retarget time range from config.
- */
-const resolveWanderRetargetTime = (config) => {
-  const min = Number.isFinite(config?.creatureWanderRetargetTimeMin)
-    ? Math.max(0.2, config.creatureWanderRetargetTimeMin)
-    : 0.8;
-  const max = Number.isFinite(config?.creatureWanderRetargetTimeMax)
-    ? Math.max(min, config.creatureWanderRetargetTimeMax)
-    : 2.5;
-  return { min, max };
-};
-
-/**
- * Resolves wander turn jitter from config (radians).
- */
-const resolveWanderJitter = (config) =>
-  Number.isFinite(config?.creatureWanderTurnJitter)
-    ? Math.max(0, config.creatureWanderTurnJitter)
-    : 0.4;
-
-const resolveWanderInHerdRetargetMultiplier = (config) =>
-  Number.isFinite(config?.creatureWanderInHerdRetargetMultiplier)
-    ? Math.max(0.1, Math.min(3, config.creatureWanderInHerdRetargetMultiplier))
-    : 1.6;
-
-const resolveWanderInHerdJitterMultiplier = (config) =>
-  Number.isFinite(config?.creatureWanderInHerdJitterMultiplier)
-    ? Math.max(0, Math.min(1, config.creatureWanderInHerdJitterMultiplier))
-    : 0.35;
-
-const resolveWanderInHerdHeadingBias = (config) =>
-  Number.isFinite(config?.creatureWanderInHerdHeadingBias)
-    ? Math.max(0, Math.min(1, config.creatureWanderInHerdHeadingBias))
-    : 0.65;
-
-/**
- * Resolves flee turn multiplier from config.
- */
-const resolveFleeTurnMultiplier = (config) =>
-  Number.isFinite(config?.creatureFleeMaxTurnMultiplier)
-    ? Math.max(1, config.creatureFleeMaxTurnMultiplier)
-    : 2.5;
-
-/**
- * Resolves herding heading blend max from config.
- */
-const resolveHerdingHeadingBlendMax = (config) =>
-  Number.isFinite(config?.creatureHerdingHeadingBlendMax)
-    ? Math.max(0, Math.min(1, config.creatureHerdingHeadingBlendMax))
-    : 0.25;
-
-const resolveHerdingTargetBlendEnabled = (config) =>
-  config?.creatureHerdingTargetBlendEnabled !== false;
-
-const resolveHerdingTargetBlendMax = (config) =>
-  Number.isFinite(config?.creatureHerdingTargetBlendMax)
-    ? Math.max(0, Math.min(0.35, config.creatureHerdingTargetBlendMax))
-    : 0.12;
-
-const resolveHerdingTargetBlendIsolationBoost = (config) =>
-  Number.isFinite(config?.creatureHerdingTargetBlendIsolationBoost)
-    ? Math.max(0, Math.min(0.5, config.creatureHerdingTargetBlendIsolationBoost))
-    : 0.25;
-
-const resolvePostDrinkRegroupSeconds = (config) =>
-  Number.isFinite(config?.creaturePostDrinkRegroupSeconds)
-    ? Math.max(0, config.creaturePostDrinkRegroupSeconds)
-    : 4.0;
-
-const resolvePostDrinkRegroupTargetBlendBoost = (config) =>
-  Number.isFinite(config?.creaturePostDrinkRegroupTargetBlendBoost)
-    ? Math.max(0, Math.min(1, config.creaturePostDrinkRegroupTargetBlendBoost))
-    : 0.22;
-
-const resolveHerdingMinGroupSize = (config) =>
-  Number.isFinite(config?.creatureHerdingMinGroupSize)
-    ? Math.max(1, Math.trunc(config.creatureHerdingMinGroupSize))
-    : 2;
-
-/**
- * Resolves ticks per second from config.
- */
-const resolveTicksPerSecond = (config) =>
-  Number.isFinite(config?.ticksPerSecond) ? Math.max(1, config.ticksPerSecond) : 60;
-
-const resolvePostDrinkRegroupMaxTicks = (config) => {
-  const ticksPerSecond = resolveTicksPerSecond(config);
-  const seconds = resolvePostDrinkRegroupSeconds(config);
-  return Math.max(0, Math.floor(seconds * ticksPerSecond));
-};
-
-/**
- * Resolves boundary avoidance distance from config.
- * This is how far from edges creatures start steering away.
- */
-const resolveBoundaryAvoidDistance = (config) =>
-  Number.isFinite(config?.creatureBoundaryAvoidDistance)
-    ? Math.max(1, config.creatureBoundaryAvoidDistance)
-    : 8;
-
-/**
- * Resolves boundary avoidance strength from config.
- * Higher values create stronger steering away from edges.
- */
-const resolveBoundaryAvoidStrength = (config) =>
-  Number.isFinite(config?.creatureBoundaryAvoidStrength)
-    ? Math.max(0, Math.min(1, config.creatureBoundaryAvoidStrength))
-    : 0.6;
-
-const resolveGrazeEnabled = (config) => config?.creatureGrazeEnabled !== false;
-
-const resolveGrazeSpeedMultiplier = (config) =>
-  Number.isFinite(config?.creatureGrazeSpeedMultiplier)
-    ? Math.max(0, Math.min(1, config.creatureGrazeSpeedMultiplier))
-    : 0.35;
-
-const resolveGrazeIdleRange = (config) => {
-  const min = Number.isFinite(config?.creatureGrazeIdleSecondsMin)
-    ? Math.max(0, config.creatureGrazeIdleSecondsMin)
-    : 1.5;
-  const max = Number.isFinite(config?.creatureGrazeIdleSecondsMax)
-    ? Math.max(min, config.creatureGrazeIdleSecondsMax)
-    : 4.0;
-  return { min, max };
-};
-
-const resolveGrazeMoveRange = (config) => {
-  const min = Number.isFinite(config?.creatureGrazeMoveSecondsMin)
-    ? Math.max(0, config.creatureGrazeMoveSecondsMin)
-    : 1.0;
-  const max = Number.isFinite(config?.creatureGrazeMoveSecondsMax)
-    ? Math.max(min, config.creatureGrazeMoveSecondsMax)
-    : 3.0;
-  return { min, max };
-};
-
-const resolveGrazeMinLocalHerdSize = (config) =>
-  Number.isFinite(config?.creatureGrazeMinLocalHerdSize)
-    ? Math.max(1, Math.trunc(config.creatureGrazeMinLocalHerdSize))
-    : 3;
-
-const resolveHerdingRegroupMinLocalHerdSize = (config) =>
-  Number.isFinite(config?.creatureHerdingRegroupMinLocalHerdSize)
-    ? Math.max(1, Math.trunc(config.creatureHerdingRegroupMinLocalHerdSize))
-    : 3;
-
-const clamp01 = (value) => Math.min(1, Math.max(0, value));
-
-/**
- * Ensures velocity state exists on creature motion.
- * Velocity-based movement gives creatures mass/inertia.
- */
-const ensureVelocityState = (creature) => {
-  if (!creature.motion) {
-    creature.motion = {};
-  }
-  if (!creature.motion.velocity) {
-    creature.motion.velocity = { x: 0, y: 0 };
-  }
-  if (!Number.isFinite(creature.motion.angularVelocity)) {
-    creature.motion.angularVelocity = 0;
-  }
-  if (!Number.isFinite(creature.motion.currentSpeed)) {
-    creature.motion.currentSpeed = 0;
-  }
-  return creature.motion;
-};
-
-/**
- * Ensures wander state exists on creature motion.
- */
-const ensureWanderState = (creature) => {
-  if (!creature.motion) {
-    creature.motion = {};
-  }
-  if (!creature.motion.wander) {
-    creature.motion.wander = {
-      targetHeading: null,
-      ticksRemaining: 0
-    };
-  }
-  return creature.motion.wander;
-};
-
-const ensureGrazeState = (creature) => {
-  if (!creature.motion) {
-    creature.motion = {};
-  }
-  if (!creature.motion.graze) {
-    creature.motion.graze = {
-      idleTicksRemaining: 0,
-      moveTicksRemaining: 0
-    };
-  }
-  return creature.motion.graze;
-};
-
-const clearGrazeState = (creature) => {
-  if (!creature?.motion?.graze) {
-    return;
-  }
-  creature.motion.graze.idleTicksRemaining = 0;
-  creature.motion.graze.moveTicksRemaining = 0;
-};
-
-/**
- * Calculates boundary avoidance vector.
- * Returns a steering vector pointing away from nearby boundaries,
- * with strength proportional to proximity.
- */
-const calculateBoundaryAvoidance = (x, y, maxX, maxY, avoidDistance) => {
-  let avoidX = 0;
-  let avoidY = 0;
-
-  // Left boundary
-  if (x < avoidDistance) {
-    const proximity = 1 - x / avoidDistance;
-    avoidX += proximity * proximity; // Quadratic falloff - stronger near edge
-  }
-  // Right boundary
-  if (x > maxX - avoidDistance) {
-    const proximity = 1 - (maxX - x) / avoidDistance;
-    avoidX -= proximity * proximity;
-  }
-  // Top boundary (y = 0)
-  if (y < avoidDistance) {
-    const proximity = 1 - y / avoidDistance;
-    avoidY += proximity * proximity;
-  }
-  // Bottom boundary
-  if (y > maxY - avoidDistance) {
-    const proximity = 1 - (maxY - y) / avoidDistance;
-    avoidY -= proximity * proximity;
-  }
-
-  const magnitude = Math.sqrt(avoidX * avoidX + avoidY * avoidY);
-  if (magnitude < 0.001) {
-    return null;
-  }
-
-  return {
-    x: avoidX / magnitude,
-    y: avoidY / magnitude,
-    magnitude: Math.min(1, magnitude) // Cap at 1 for blending
-  };
-};
-
-/**
- * Picks a new wander heading with boundary awareness.
- * Biases the heading away from nearby edges.
- */
-const pickNewWanderHeading = (currentHeading, rng, jitter, boundaryAvoid, avoidStrength) => {
-  // Start with random jitter from current heading
-  const turn = (rng.nextFloat() * 2 - 1) * jitter;
-  let newHeading = currentHeading + turn;
-
-  // If near boundary, blend toward avoidance direction
-  if (boundaryAvoid && avoidStrength > 0) {
-    const avoidHeading = Math.atan2(boundaryAvoid.y, boundaryAvoid.x);
-    const blendWeight = avoidStrength * boundaryAvoid.magnitude;
-
-    // Blend the new heading toward the avoidance heading
-    const currentDirX = Math.cos(newHeading);
-    const currentDirY = Math.sin(newHeading);
-    const avoidDirX = Math.cos(avoidHeading);
-    const avoidDirY = Math.sin(avoidHeading);
-
-    const blendedX = currentDirX * (1 - blendWeight) + avoidDirX * blendWeight;
-    const blendedY = currentDirY * (1 - blendWeight) + avoidDirY * blendWeight;
-
-    newHeading = Math.atan2(blendedY, blendedX);
-  }
-
-  return newHeading;
-};
-
-/**
- * Picks a random retarget time in ticks.
- */
-const pickRetargetTicks = (rng, minSeconds, maxSeconds, ticksPerSecond) => {
-  const seconds = minSeconds + rng.nextFloat() * (maxSeconds - minSeconds);
-  return Math.max(1, Math.trunc(seconds * ticksPerSecond));
-};
-
-const pickGrazeTicks = (rng, minSeconds, maxSeconds, ticksPerSecond) => {
-  const seconds = minSeconds + rng.nextFloat() * (maxSeconds - minSeconds);
-  return Math.max(0, Math.trunc(seconds * ticksPerSecond));
-};
-
-/**
- * Updates creature positions based on intent, terrain, and speed.
- * Uses velocity-based movement with acceleration and deceleration.
- * Avoids water tiles by trying alternate headings.
- *
- * Key behaviors:
- * - Velocity-based movement: creatures have mass, accelerate and decelerate
- * - Turn momentum: angular velocity with smooth acceleration
- * - Intent-based speed: different activities have different target speeds
- * - Persistent wander: creatures commit to a heading for a period
- * - Herding applies to both wander and graze
- * - Faster turning when fleeing threats
- * - Boundary avoidance: creatures steer away from map edges
- */
 export function updateCreatureMovement({ creatures, config, rng, world }) {
   if (!Array.isArray(creatures) || !rng || !world) {
     return;
@@ -550,7 +109,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
   ];
 
   for (const creature of creatures) {
-    if (!creature?.position) {
+    if (!creature?.position || creature.meters?.hp <= 0) {
       continue;
     }
 
@@ -567,8 +126,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     }
 
     // Check if creature is in active chase (hunt with chase status)
-    const isActivelyChasing = intentType === 'hunt' &&
-      creature.chase?.status === 'pursuing';
+    const isActivelyChasing = intentType === 'hunt' && creature.chase?.status === 'pursuing';
     if (isActivelyChasing) {
       intentSpeedMult = intentSpeedMultipliers.huntChase;
     }
@@ -597,6 +155,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     // Check if creature is being influenced by herding (and if threatened)
     const herdingOffset = getHerdingOffset(creature);
     const isThreatened = creature.herding?.isThreatened ?? false;
+    if (isThreatened && herdingOffset) intentSpeedMult = intentSpeedMultipliers.flee;
+    else if (isPatrolPaused(creature) && intentType === 'wander') intentSpeedMult = 0;
     const localHerdSize = creature.herding?.herdSize ?? 1;
     const isPredatorSpecies = isPredator(creature.species);
     const isWandering = intentType === 'wander' || intentType === 'graze';
@@ -621,7 +181,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       effectiveMaxTurn *= fleeTurnMultiplier;
     }
     // Apply speed-based turn penalty (moving fast = wider turns)
-    effectiveMaxTurn *= (1 - speedRatio * speedTurnPenalty);
+    effectiveMaxTurn *= 1 - speedRatio * speedTurnPenalty;
     // Minimum turn rate so creature can always turn somewhat
     effectiveMaxTurn = Math.max(effectiveMaxTurn, maxTurnPerTick * 0.2);
     // Stationary/very slow creatures can turn nearly instantly
@@ -742,11 +302,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
       // Pick new heading when timer expires, no heading set, or forced by boundary
       if (wander.ticksRemaining <= 0 || wander.targetHeading === null || forceRetarget) {
         const herdMag =
-          shouldApplyHerding && herdingOffset
-            ? Math.hypot(herdingOffset.x, herdingOffset.y)
-            : 0;
-        const inHerd =
-          shouldApplyHerding && localHerdSize >= herdingMinGroupSize && herdMag > 0.01;
+          shouldApplyHerding && herdingOffset ? Math.hypot(herdingOffset.x, herdingOffset.y) : 0;
+        const inHerd = shouldApplyHerding && localHerdSize >= herdingMinGroupSize && herdMag > 0.01;
         const herdHeading = inHerd ? Math.atan2(herdingOffset.y, herdingOffset.x) : heading;
         const baseHeading = inHerd
           ? blendAngles(heading, herdHeading, wanderInHerdHeadingBias)
@@ -827,7 +384,9 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
 
     // Blend current angular velocity toward desired (angular acceleration)
     let angularVel = motion.angularVelocity ?? 0;
-    const angularBlend = isThreatened ? angularAcceleration * fleeTurnMultiplier : angularAcceleration;
+    const angularBlend = isThreatened
+      ? angularAcceleration * fleeTurnMultiplier
+      : angularAcceleration;
     angularVel = angularVel + (desiredAngularVel - angularVel) * Math.min(1, angularBlend);
     motion.angularVelocity = angularVel;
 
@@ -841,13 +400,18 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
 
     // Calculate target speed based on intent and modifiers
     const { friction: terrainFriction } = getTerrainEffectsAt(world, Math.floor(x), Math.floor(y));
-    const effectiveFriction = Number.isFinite(terrainFriction) && terrainFriction > 0 ? terrainFriction : 1;
+    const effectiveFriction =
+      Number.isFinite(terrainFriction) && terrainFriction > 0 ? terrainFriction : 1;
 
     // Grazing idle mode means target speed is 0
-    const grazeSpeedMult = grazeMode === 'idle' ? 0 : (grazeMode === 'move' ? intentSpeedMultipliers.graze : 1);
-    const effectiveIntentMult = grazeMode ? grazeSpeedMult : intentSpeedMult;
+    const grazeSpeedMult =
+      grazeMode === 'idle' ? 0 : grazeMode === 'move' ? intentSpeedMultipliers.graze : 1;
+    const effectiveIntentMult =
+      (grazeMode ? grazeSpeedMult : intentSpeedMult) * behaviorSpeedMultiplier(creature, config);
 
-    const targetSpeed = (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * effectiveIntentMult) / effectiveFriction;
+    const targetSpeed =
+      (baseSpeed * scale * sprintMultiplier * pregnancyMultiplier * effectiveIntentMult) /
+      effectiveFriction;
 
     // Get current velocity
     let vx = motion.velocity?.x ?? 0;
@@ -861,7 +425,7 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     // Determine whether to accelerate or decelerate
     const isAccelerating = targetSpeed > speed;
     const blendRate = isAccelerating
-      ? acceleration / effectiveFriction  // Terrain friction affects acceleration
+      ? acceleration / effectiveFriction // Terrain friction affects acceleration
       : deceleration;
 
     // Blend current velocity toward desired velocity

@@ -1,6 +1,6 @@
 /**
  * Mobile-First UI System
- * 
+ *
  * Features:
  * - Full-screen immersive canvas
  * - Floating action buttons (FABs)
@@ -24,7 +24,7 @@ export function createUI({
   initialFpsVisible = true
 }) {
   const container = document.querySelector('#app') || document.body;
-  
+
   // Remove the old status node and title if they exist
   if (statusNode?.parentElement) {
     statusNode.remove();
@@ -121,7 +121,7 @@ export function createUI({
     { label: '1×', value: '1' },
     { label: '2×', value: '2' },
     { label: '4×', value: '4' }
-  ].forEach(opt => {
+  ].forEach((opt) => {
     const option = document.createElement('option');
     option.value = opt.value;
     option.textContent = opt.label;
@@ -181,7 +181,8 @@ export function createUI({
 
   const trackingIndicator = document.createElement('div');
   trackingIndicator.className = 'tracking-indicator';
-  trackingIndicator.innerHTML = '<span class="pulse"></span><span class="tracking-text">Following #--</span>';
+  trackingIndicator.innerHTML =
+    '<span class="pulse"></span><span class="tracking-text">Following #--</span>';
   container.append(trackingIndicator);
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -349,7 +350,7 @@ export function createUI({
     return `${value.toFixed(2)} ms`;
   };
 
-  const findTimer = (timers, name) => timers.find(timer => timer.name === name);
+  const findTimer = (timers, name) => timers.find((timer) => timer.name === name);
 
   // Stable ordering prevents “popping” as top timers reorder.
   const FRAME_TIMER_ORDER = [
@@ -524,7 +525,7 @@ export function createUI({
     const snap = metrics?.snapshot?.();
     const perfSnap = metrics?.getPerfSnapshot?.();
     const timers = Array.isArray(perfSnap?.timers) ? perfSnap.timers : [];
-    const timersByName = new Map(timers.map(t => [t.name, t]));
+    const timersByName = new Map(timers.map((t) => [t.name, t]));
 
     summaryNodes.fps.valueEl.textContent = formatNumber(snap?.fps);
     summaryNodes.tps.valueEl.textContent = formatNumber(snap?.tps);
@@ -674,20 +675,65 @@ export function createUI({
     { key: 'creatureCount', label: 'Creatures', section: 'population', group: 'All' },
     { key: 'birthsLastTick', label: 'Births (tick)', section: 'population', group: 'All' },
     { key: 'birthsTotal', label: 'Births total', section: 'population', group: 'All' },
-    { key: 'pregnanciesLastTick', label: 'Pregnancies (tick)', section: 'population', group: 'All' },
+    {
+      key: 'pregnanciesLastTick',
+      label: 'Pregnancies (tick)',
+      section: 'population',
+      group: 'All'
+    },
     { key: 'pregnanciesTotal', label: 'Pregnancies total', section: 'population', group: 'All' },
-    { key: 'miscarriagesLastTick', label: 'Miscarriages (tick)', section: 'population', group: 'All' },
+    {
+      key: 'miscarriagesLastTick',
+      label: 'Miscarriages (tick)',
+      section: 'population',
+      group: 'All'
+    },
     { key: 'miscarriagesTotal', label: 'Miscarriages total', section: 'population', group: 'All' },
     { key: 'squaresCount', label: 'Population', section: 'population', group: 'Squares' },
-    { key: 'birthsSquaresLastTick', label: 'Births (tick)', section: 'population', group: 'Squares' },
+    {
+      key: 'birthsSquaresLastTick',
+      label: 'Births (tick)',
+      section: 'population',
+      group: 'Squares'
+    },
     { key: 'birthsSquaresTotal', label: 'Births total', section: 'population', group: 'Squares' },
-    { key: 'pregnanciesSquaresLastTick', label: 'Pregnancies (tick)', section: 'population', group: 'Squares' },
-    { key: 'pregnanciesSquaresTotal', label: 'Pregnancies total', section: 'population', group: 'Squares' },
-    { key: 'miscarriagesSquaresLastTick', label: 'Miscarriages (tick)', section: 'population', group: 'Squares' },
-    { key: 'miscarriagesSquaresTotal', label: 'Miscarriages total', section: 'population', group: 'Squares' },
+    {
+      key: 'pregnanciesSquaresLastTick',
+      label: 'Pregnancies (tick)',
+      section: 'population',
+      group: 'Squares'
+    },
+    {
+      key: 'pregnanciesSquaresTotal',
+      label: 'Pregnancies total',
+      section: 'population',
+      group: 'Squares'
+    },
+    {
+      key: 'miscarriagesSquaresLastTick',
+      label: 'Miscarriages (tick)',
+      section: 'population',
+      group: 'Squares'
+    },
+    {
+      key: 'miscarriagesSquaresTotal',
+      label: 'Miscarriages total',
+      section: 'population',
+      group: 'Squares'
+    },
     { key: 'trianglesCount', label: 'Population', section: 'population', group: 'Triangles' },
-    { key: 'birthsTrianglesLastTick', label: 'Births (tick)', section: 'population', group: 'Triangles' },
-    { key: 'birthsTrianglesTotal', label: 'Births total', section: 'population', group: 'Triangles' },
+    {
+      key: 'birthsTrianglesLastTick',
+      label: 'Births (tick)',
+      section: 'population',
+      group: 'Triangles'
+    },
+    {
+      key: 'birthsTrianglesTotal',
+      label: 'Births total',
+      section: 'population',
+      group: 'Triangles'
+    },
     {
       key: 'pregnanciesTrianglesLastTick',
       label: 'Pregnancies (tick)',
@@ -713,7 +759,12 @@ export function createUI({
       group: 'Triangles'
     },
     { key: 'circlesCount', label: 'Population', section: 'population', group: 'Circles' },
-    { key: 'birthsCirclesLastTick', label: 'Births (tick)', section: 'population', group: 'Circles' },
+    {
+      key: 'birthsCirclesLastTick',
+      label: 'Births (tick)',
+      section: 'population',
+      group: 'Circles'
+    },
     { key: 'birthsCirclesTotal', label: 'Births total', section: 'population', group: 'Circles' },
     {
       key: 'pregnanciesCirclesLastTick',
@@ -796,8 +847,18 @@ export function createUI({
       section: 'deaths',
       group: 'Triangles'
     },
-    { key: 'deathsTrianglesThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Triangles' },
-    { key: 'deathsTrianglesInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Triangles' },
+    {
+      key: 'deathsTrianglesThirst',
+      label: 'Deaths (thirst)',
+      section: 'deaths',
+      group: 'Triangles'
+    },
+    {
+      key: 'deathsTrianglesInjury',
+      label: 'Deaths (injury)',
+      section: 'deaths',
+      group: 'Triangles'
+    },
     { key: 'deathsTrianglesOther', label: 'Deaths (other)', section: 'deaths', group: 'Triangles' },
     { key: 'deathsCirclesTotal', label: 'Deaths total', section: 'deaths', group: 'Circles' },
     { key: 'deathsCirclesAge', label: 'Deaths (age)', section: 'deaths', group: 'Circles' },
@@ -853,26 +914,91 @@ export function createUI({
     { key: 'killsTotal', label: 'Kills total', section: 'hunting', group: 'All' },
     { key: 'carcassCount', label: 'Carcasses', section: 'hunting', group: 'All' },
     { key: 'carcassMeatTotal', label: 'Carcass meat', section: 'hunting', group: 'All' },
-    { key: 'killsPredatorSquares', label: 'Kills as predator', section: 'hunting', group: 'Squares' },
+    {
+      key: 'killsPredatorSquares',
+      label: 'Kills as predator',
+      section: 'hunting',
+      group: 'Squares'
+    },
     { key: 'killsPreySquares', label: 'Killed as prey', section: 'hunting', group: 'Squares' },
-    { key: 'killsPredatorTriangles', label: 'Kills as predator', section: 'hunting', group: 'Triangles' },
+    {
+      key: 'killsPredatorTriangles',
+      label: 'Kills as predator',
+      section: 'hunting',
+      group: 'Triangles'
+    },
     { key: 'killsPreyTriangles', label: 'Killed as prey', section: 'hunting', group: 'Triangles' },
-    { key: 'killsPredatorCircles', label: 'Kills as predator', section: 'hunting', group: 'Circles' },
+    {
+      key: 'killsPredatorCircles',
+      label: 'Kills as predator',
+      section: 'hunting',
+      group: 'Circles'
+    },
     { key: 'killsPreyCircles', label: 'Killed as prey', section: 'hunting', group: 'Circles' },
-    { key: 'killsPredatorOctagons', label: 'Kills as predator', section: 'hunting', group: 'Octagons' },
+    {
+      key: 'killsPredatorOctagons',
+      label: 'Kills as predator',
+      section: 'hunting',
+      group: 'Octagons'
+    },
     { key: 'killsPreyOctagons', label: 'Killed as prey', section: 'hunting', group: 'Octagons' },
     { key: 'mutationsLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'All' },
     { key: 'mutationStrengthLastTick', label: 'Mutation drift', section: 'genetics', group: 'All' },
-    { key: 'pleiotropyStrengthLastTick', label: 'Pleiotropy drift', section: 'genetics', group: 'All' },
+    {
+      key: 'pleiotropyStrengthLastTick',
+      label: 'Pleiotropy drift',
+      section: 'genetics',
+      group: 'All'
+    },
     { key: 'mutationTotal', label: 'Mutations total', section: 'genetics', group: 'All' },
-    { key: 'mutationsSquaresLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Squares' },
-    { key: 'mutationsSquaresTotal', label: 'Mutations total', section: 'genetics', group: 'Squares' },
-    { key: 'mutationStrengthSquaresLastTick', label: 'Mutation drift', section: 'genetics', group: 'Squares' },
-    { key: 'mutationStrengthSquaresTotal', label: 'Mutation drift total', section: 'genetics', group: 'Squares' },
-    { key: 'pleiotropyStrengthSquaresLastTick', label: 'Pleiotropy drift', section: 'genetics', group: 'Squares' },
-    { key: 'pleiotropyStrengthSquaresTotal', label: 'Pleiotropy drift total', section: 'genetics', group: 'Squares' },
-    { key: 'mutationsTrianglesLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Triangles' },
-    { key: 'mutationsTrianglesTotal', label: 'Mutations total', section: 'genetics', group: 'Triangles' },
+    {
+      key: 'mutationsSquaresLastTick',
+      label: 'Mutations (tick)',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'mutationsSquaresTotal',
+      label: 'Mutations total',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'mutationStrengthSquaresLastTick',
+      label: 'Mutation drift',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'mutationStrengthSquaresTotal',
+      label: 'Mutation drift total',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'pleiotropyStrengthSquaresLastTick',
+      label: 'Pleiotropy drift',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'pleiotropyStrengthSquaresTotal',
+      label: 'Pleiotropy drift total',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'mutationsTrianglesLastTick',
+      label: 'Mutations (tick)',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'mutationsTrianglesTotal',
+      label: 'Mutations total',
+      section: 'genetics',
+      group: 'Triangles'
+    },
     {
       key: 'mutationStrengthTrianglesLastTick',
       label: 'Mutation drift',
@@ -897,8 +1023,18 @@ export function createUI({
       section: 'genetics',
       group: 'Triangles'
     },
-    { key: 'mutationsCirclesLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Circles' },
-    { key: 'mutationsCirclesTotal', label: 'Mutations total', section: 'genetics', group: 'Circles' },
+    {
+      key: 'mutationsCirclesLastTick',
+      label: 'Mutations (tick)',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'mutationsCirclesTotal',
+      label: 'Mutations total',
+      section: 'genetics',
+      group: 'Circles'
+    },
     {
       key: 'mutationStrengthCirclesLastTick',
       label: 'Mutation drift',
@@ -923,8 +1059,18 @@ export function createUI({
       section: 'genetics',
       group: 'Circles'
     },
-    { key: 'mutationsOctagonsLastTick', label: 'Mutations (tick)', section: 'genetics', group: 'Octagons' },
-    { key: 'mutationsOctagonsTotal', label: 'Mutations total', section: 'genetics', group: 'Octagons' },
+    {
+      key: 'mutationsOctagonsLastTick',
+      label: 'Mutations (tick)',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'mutationsOctagonsTotal',
+      label: 'Mutations total',
+      section: 'genetics',
+      group: 'Octagons'
+    },
     {
       key: 'mutationStrengthOctagonsLastTick',
       label: 'Mutation drift',
@@ -955,66 +1101,316 @@ export function createUI({
     { key: 'avgGenomeSpeedTriangles', label: 'Speed', section: 'genetics', group: 'Triangles' },
     { key: 'avgGenomeSpeedCircles', label: 'Speed', section: 'genetics', group: 'Circles' },
     { key: 'avgGenomeSpeedOctagons', label: 'Speed', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomePerceptionRangeSquares', label: 'Perception', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomePerceptionRangeTriangles', label: 'Perception', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomePerceptionRangeCircles', label: 'Perception', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomePerceptionRangeOctagons', label: 'Perception', section: 'genetics', group: 'Octagons' },
+    {
+      key: 'avgGenomePerceptionRangeSquares',
+      label: 'Perception',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomePerceptionRangeTriangles',
+      label: 'Perception',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomePerceptionRangeCircles',
+      label: 'Perception',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomePerceptionRangeOctagons',
+      label: 'Perception',
+      section: 'genetics',
+      group: 'Octagons'
+    },
     { key: 'avgGenomeAlertnessSquares', label: 'Alertness', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeAlertnessTriangles', label: 'Alertness', section: 'genetics', group: 'Triangles' },
+    {
+      key: 'avgGenomeAlertnessTriangles',
+      label: 'Alertness',
+      section: 'genetics',
+      group: 'Triangles'
+    },
     { key: 'avgGenomeAlertnessCircles', label: 'Alertness', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeAlertnessOctagons', label: 'Alertness', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeReactionDelaySquares', label: 'Reaction delay', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeReactionDelayTriangles', label: 'Reaction delay', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeReactionDelayCircles', label: 'Reaction delay', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeReactionDelayOctagons', label: 'Reaction delay', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeBasalEnergyDrainSquares', label: 'Energy drain', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeBasalEnergyDrainTriangles', label: 'Energy drain', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeBasalEnergyDrainCircles', label: 'Energy drain', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeBasalEnergyDrainOctagons', label: 'Energy drain', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeBasalWaterDrainSquares', label: 'Water drain', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeBasalWaterDrainTriangles', label: 'Water drain', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeBasalWaterDrainCircles', label: 'Water drain', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeBasalWaterDrainOctagons', label: 'Water drain', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeBasalStaminaDrainSquares', label: 'Stamina drain', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeBasalStaminaDrainTriangles', label: 'Stamina drain', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeBasalStaminaDrainCircles', label: 'Stamina drain', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeBasalStaminaDrainOctagons', label: 'Stamina drain', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeSprintStartThresholdSquares', label: 'Sprint start', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeSprintStartThresholdTriangles', label: 'Sprint start', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeSprintStartThresholdCircles', label: 'Sprint start', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeSprintStartThresholdOctagons', label: 'Sprint start', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeSprintStopThresholdSquares', label: 'Sprint stop', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeSprintStopThresholdTriangles', label: 'Sprint stop', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeSprintStopThresholdCircles', label: 'Sprint stop', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeSprintStopThresholdOctagons', label: 'Sprint stop', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeSprintSpeedMultiplierSquares', label: 'Sprint speed', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeSprintSpeedMultiplierTriangles', label: 'Sprint speed', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeSprintSpeedMultiplierCircles', label: 'Sprint speed', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeSprintSpeedMultiplierOctagons', label: 'Sprint speed', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeSprintStaminaDrainSquares', label: 'Sprint drain', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeSprintStaminaDrainTriangles', label: 'Sprint drain', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeSprintStaminaDrainCircles', label: 'Sprint drain', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeSprintStaminaDrainOctagons', label: 'Sprint drain', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeStaminaRegenSquares', label: 'Stamina regen', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeStaminaRegenTriangles', label: 'Stamina regen', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeStaminaRegenCircles', label: 'Stamina regen', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeStaminaRegenOctagons', label: 'Stamina regen', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeDrinkThresholdSquares', label: 'Drink threshold', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeDrinkThresholdTriangles', label: 'Drink threshold', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeDrinkThresholdCircles', label: 'Drink threshold', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeDrinkThresholdOctagons', label: 'Drink threshold', section: 'genetics', group: 'Octagons' },
-    { key: 'avgGenomeDrinkAmountSquares', label: 'Drink amount', section: 'genetics', group: 'Squares' },
-    { key: 'avgGenomeDrinkAmountTriangles', label: 'Drink amount', section: 'genetics', group: 'Triangles' },
-    { key: 'avgGenomeDrinkAmountCircles', label: 'Drink amount', section: 'genetics', group: 'Circles' },
-    { key: 'avgGenomeDrinkAmountOctagons', label: 'Drink amount', section: 'genetics', group: 'Octagons' },
-];
+    {
+      key: 'avgGenomeAlertnessOctagons',
+      label: 'Alertness',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeReactionDelaySquares',
+      label: 'Reaction delay',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeReactionDelayTriangles',
+      label: 'Reaction delay',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeReactionDelayCircles',
+      label: 'Reaction delay',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeReactionDelayOctagons',
+      label: 'Reaction delay',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeBasalEnergyDrainSquares',
+      label: 'Energy drain',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeBasalEnergyDrainTriangles',
+      label: 'Energy drain',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeBasalEnergyDrainCircles',
+      label: 'Energy drain',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeBasalEnergyDrainOctagons',
+      label: 'Energy drain',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeBasalWaterDrainSquares',
+      label: 'Water drain',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeBasalWaterDrainTriangles',
+      label: 'Water drain',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeBasalWaterDrainCircles',
+      label: 'Water drain',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeBasalWaterDrainOctagons',
+      label: 'Water drain',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeBasalStaminaDrainSquares',
+      label: 'Stamina drain',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeBasalStaminaDrainTriangles',
+      label: 'Stamina drain',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeBasalStaminaDrainCircles',
+      label: 'Stamina drain',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeBasalStaminaDrainOctagons',
+      label: 'Stamina drain',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeSprintStartThresholdSquares',
+      label: 'Sprint start',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeSprintStartThresholdTriangles',
+      label: 'Sprint start',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeSprintStartThresholdCircles',
+      label: 'Sprint start',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeSprintStartThresholdOctagons',
+      label: 'Sprint start',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeSprintStopThresholdSquares',
+      label: 'Sprint stop',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeSprintStopThresholdTriangles',
+      label: 'Sprint stop',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeSprintStopThresholdCircles',
+      label: 'Sprint stop',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeSprintStopThresholdOctagons',
+      label: 'Sprint stop',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeSprintSpeedMultiplierSquares',
+      label: 'Sprint speed',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeSprintSpeedMultiplierTriangles',
+      label: 'Sprint speed',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeSprintSpeedMultiplierCircles',
+      label: 'Sprint speed',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeSprintSpeedMultiplierOctagons',
+      label: 'Sprint speed',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeSprintStaminaDrainSquares',
+      label: 'Sprint drain',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeSprintStaminaDrainTriangles',
+      label: 'Sprint drain',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeSprintStaminaDrainCircles',
+      label: 'Sprint drain',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeSprintStaminaDrainOctagons',
+      label: 'Sprint drain',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeStaminaRegenSquares',
+      label: 'Stamina regen',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeStaminaRegenTriangles',
+      label: 'Stamina regen',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeStaminaRegenCircles',
+      label: 'Stamina regen',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeStaminaRegenOctagons',
+      label: 'Stamina regen',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeDrinkThresholdSquares',
+      label: 'Drink threshold',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeDrinkThresholdTriangles',
+      label: 'Drink threshold',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeDrinkThresholdCircles',
+      label: 'Drink threshold',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeDrinkThresholdOctagons',
+      label: 'Drink threshold',
+      section: 'genetics',
+      group: 'Octagons'
+    },
+    {
+      key: 'avgGenomeDrinkAmountSquares',
+      label: 'Drink amount',
+      section: 'genetics',
+      group: 'Squares'
+    },
+    {
+      key: 'avgGenomeDrinkAmountTriangles',
+      label: 'Drink amount',
+      section: 'genetics',
+      group: 'Triangles'
+    },
+    {
+      key: 'avgGenomeDrinkAmountCircles',
+      label: 'Drink amount',
+      section: 'genetics',
+      group: 'Circles'
+    },
+    {
+      key: 'avgGenomeDrinkAmountOctagons',
+      label: 'Drink amount',
+      section: 'genetics',
+      group: 'Octagons'
+    }
+  ];
 
   // Store references to value elements for updating (plain object)
   const metricNodes = {};
-  
+
   // Store references to metric items for tracking indicators
   const metricItems = {};
-  
+
   // Reference to graphs panel (set later via setGraphsPanel)
   let graphsPanel = null;
 
@@ -1041,11 +1437,11 @@ export function createUI({
       const item = document.createElement('li');
       item.className = 'metrics-item metrics-item-clickable';
       item.dataset.metricKey = metric.key;
-      
+
       // Tracking indicator dot (hidden by default)
       const trackingDot = document.createElement('span');
       trackingDot.className = 'metrics-tracking-dot';
-      
+
       const labelSpan = document.createElement('span');
       labelSpan.className = 'metrics-item-label';
       labelSpan.textContent = metric.label;
@@ -1053,16 +1449,15 @@ export function createUI({
       const valueSpan = document.createElement('span');
       valueSpan.className = 'metrics-item-value';
       valueSpan.textContent = '--';
-      
+
       // Build display label for graphs (include group context)
-      const displayLabel = metric.group && metric.group !== 'All' 
-        ? `${metric.group} ${metric.label}` 
-        : metric.label;
+      const displayLabel =
+        metric.group && metric.group !== 'All' ? `${metric.group} ${metric.label}` : metric.label;
 
       // Click handler to toggle graph tracking
       item.addEventListener('click', () => {
         if (!graphsPanel) return;
-        
+
         if (graphsPanel.isTracked(metric.key)) {
           graphsPanel.removeMetric(metric.key);
         } else {
@@ -1073,7 +1468,7 @@ export function createUI({
 
       item.append(trackingDot, labelSpan, valueSpan);
       list.append(item);
-      
+
       // Store references
       metricNodes[metric.key] = valueSpan;
       metricItems[metric.key] = { item, trackingDot };
@@ -1082,15 +1477,15 @@ export function createUI({
     section.append(titleEl, list);
     return section;
   };
-  
+
   // Update tracking indicators on all metrics
   const updateMetricHighlights = () => {
     if (!graphsPanel) return;
-    
+
     for (const [key, refs] of Object.entries(metricItems)) {
       const isTracked = graphsPanel.isTracked(key);
       const color = graphsPanel.getTrackedColor(key);
-      
+
       refs.item.classList.toggle('tracking', isTracked);
       refs.trackingDot.classList.toggle('visible', isTracked);
       if (color) {
@@ -1109,7 +1504,7 @@ export function createUI({
   ];
 
   for (const { key, title: sectionTitle } of sections) {
-    const defs = metricDefinitions.filter(m => m.section === key);
+    const defs = metricDefinitions.filter((m) => m.section === key);
     if (defs.length) {
       metricsBody.append(createMetricSection(sectionTitle, defs));
     }
@@ -1208,7 +1603,7 @@ export function createUI({
   // ═══════════════════════════════════════════════════════════════════════════
   // PUBLIC API
   // ═══════════════════════════════════════════════════════════════════════════
-  
+
   // Track current speed for state indicator
   let currentSpeed = 1;
 
@@ -1221,11 +1616,11 @@ export function createUI({
       playBtn.disabled = isRunning;
       pauseBtn.disabled = !isRunning;
       stepBtn.disabled = isRunning;
-      
+
       // Update play button style
       playBtn.classList.toggle('active', isRunning);
       pauseBtn.classList.toggle('active', !isRunning);
-      
+
       // Update state indicator in collapsed header
       updateStateIndicator(isRunning, currentSpeed);
     },
@@ -1249,7 +1644,7 @@ export function createUI({
 
     setMetrics(summary) {
       if (!summary) return;
-      
+
       for (const key in metricNodes) {
         const node = metricNodes[key];
         const value = summary[key];
@@ -1283,7 +1678,7 @@ export function createUI({
       if (panelName === 'metrics') toggleMetrics();
       if (panelName === 'config') toggleConfig();
     },
-    
+
     // Set graphs panel reference for metric click handling
     setGraphsPanel(panel) {
       graphsPanel = panel;
@@ -1292,7 +1687,7 @@ export function createUI({
       });
       setGraphsFabActive(graphsPanel?.isVisible?.() ?? false);
     },
-    
+
     // Update metric tracking highlights (called when graphs panel changes)
     updateMetricHighlights() {
       updateMetricHighlights();

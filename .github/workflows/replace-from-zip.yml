@@ -4,21 +4,21 @@ on:
   workflow_dispatch:
     inputs:
       zip_file:
-        description: "ZIP file name located at repo root"
+        description: 'ZIP file name located at repo root'
         required: true
-        default: "Genetics-main-solid-fixed.zip"
+        default: 'Genetics-main-solid-fixed.zip'
       run_verify:
-        description: "Run npm ci + npm run verify before committing"
+        description: 'Run npm ci + npm run verify before committing'
         required: true
-        default: "true"
+        default: 'true'
         type: choice
         options:
-          - "true"
-          - "false"
+          - 'true'
+          - 'false'
       commit_message:
-        description: "Commit message"
+        description: 'Commit message'
         required: false
-        default: "Replace repo contents from ZIP (flattened)"
+        default: 'Replace repo contents from ZIP (flattened)'
 
 permissions:
   contents: write
@@ -47,6 +47,7 @@ jobs:
           ZIP_FILE: ${{ inputs.zip_file }}
         run: |
           set -euo pipefail
+          [[ "$ZIP_FILE" =~ ^[a-zA-Z0-9_.-]+\.zip$ ]] || { echo "::error::Use a ZIP filename at the repository root"; exit 1; }
           test -f "$ZIP_FILE" || (echo "::error::$ZIP_FILE not found at repo root" && ls -la && exit 1)
 
           EXTRACT_DIR="${RUNNER_TEMP}/zip_extract"
@@ -104,7 +105,7 @@ jobs:
         env:
           CI: true
           NODE_ENV: development
-          NPM_CONFIG_PRODUCTION: "false"
+          NPM_CONFIG_PRODUCTION: 'false'
         run: |
           set -euo pipefail
           npm ci --include=dev
@@ -127,95 +128,5 @@ jobs:
           git commit -m "$COMMIT_MESSAGE"
 
           # In case main moved since checkout
-          git pull --rebase
-          git push
-          fetch-depth: 0
-
-      - name: Install unzip + rsync
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y unzip rsync
-
-      - name: Unzip into runner temp (NOT inside repo)
-        env:
-          ZIP_FILE: ${{ inputs.zip_file }}
-        run: |
-          set -euo pipefail
-          test -f "$ZIP_FILE" || (echo "::error::$ZIP_FILE not found at repo root" && ls -la && exit 1)
-
-          EXTRACT_DIR="${RUNNER_TEMP}/zip_extract"
-          rm -rf "$EXTRACT_DIR"
-          mkdir -p "$EXTRACT_DIR"
-
-          unzip -q "$ZIP_FILE" -d "$EXTRACT_DIR"
-
-          echo "ZIP_FILE=$ZIP_FILE" >> "$GITHUB_ENV"
-          echo "EXTRACT_DIR=$EXTRACT_DIR" >> "$GITHUB_ENV"
-
-      - name: Determine source folder (flattens nested folders repeatedly)
-        run: |
-          set -euo pipefail
-          SRC="$EXTRACT_DIR"
-
-          # Descend while the current folder contains exactly one folder and no files.
-          for i in 1 2 3 4 5; do
-            TOP_DIRS=$(find "$SRC" -mindepth 1 -maxdepth 1 -type d | wc -l | tr -d ' ')
-            TOP_FILES=$(find "$SRC" -mindepth 1 -maxdepth 1 -type f | wc -l | tr -d ' ')
-
-            if [ "$TOP_DIRS" -eq 1 ] && [ "$TOP_FILES" -eq 0 ]; then
-              SRC="$(find "$SRC" -mindepth 1 -maxdepth 1 -type d | head -n 1)"
-            else
-              break
-            fi
-          done
-
-          echo "SRC_DIR=$SRC" >> "$GITHUB_ENV"
-          echo "Using SRC_DIR=$SRC"
-
-      - name: Replace repo contents (preserve this workflow file)
-        run: |
-          set -euo pipefail
-          rsync -a --delete \
-            --exclude=".git/" \
-            --exclude=".github/workflows/replace-from-zip.yml" \
-            --exclude=".github/workflows/replace-from-zip.yaml" \
-            "$SRC_DIR"/ "$GITHUB_WORKSPACE"/
-
-      - name: Delete the ZIP from the repo after
-        run: |
-          set -euo pipefail
-          rm -f "$GITHUB_WORKSPACE/$ZIP_FILE"
-
-      - name: Setup Node (for verify)
-        if: ${{ inputs.run_verify == 'true' }}
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-
-      - name: Verify (tests + lint + format check + build)
-        if: ${{ inputs.run_verify == 'true' }}
-        run: |
-          set -euo pipefail
-          npm ci
-          npm run verify
-
-      - name: Commit & push
-        env:
-          COMMIT_MESSAGE: ${{ inputs.commit_message }}
-        run: |
-          set -euo pipefail
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          if [ -z "$(git status --porcelain)" ]; then
-            echo "No changes to commit."
-            exit 0
-          fi
-
-          git add -A
-          git commit -m "$COMMIT_MESSAGE"
-
-          # In case main moved since checkout (rare, but happens)
           git pull --rebase
           git push

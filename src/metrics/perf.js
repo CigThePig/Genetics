@@ -52,7 +52,7 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
       return performance.now();
     },
     end(name, startTime) {
-      if (!enabled || startTime == null) return;
+      if (!enabled || startTime == null || !isGroupEnabled(getGroup(name))) return;
       const duration = performance.now() - startTime;
       const entry = timers.get(name);
       if (entry) {
@@ -65,6 +65,9 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
     },
     setEnabled(nextEnabled) {
       enabled = Boolean(nextEnabled);
+      timers.clear();
+      lastSnapshot = null;
+      windowStart = performance.now();
     },
     isEnabled() {
       return enabled;
@@ -100,6 +103,6 @@ export function createPerfSampler({ windowMs = 1000 } = {}) {
         updatedAt: now,
         timers: buildEntries()
       };
-    },
+    }
   };
 }

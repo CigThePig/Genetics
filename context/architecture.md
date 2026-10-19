@@ -119,3 +119,11 @@ Allowed pattern (performance-friendly):
 RNG:
 
 - All randomness must come from the central RNG (passed as rng, or available via an explicit simContext argument).
+
+## Audited runtime notes (2026-10-19)
+
+- Spatial indexes are owned by each simulation; anchor and water-rendezvous state by each world. Legacy global spatial helpers are compatibility APIs and are not used by the authoritative tick.
+- Authoritative herding is synchronous. The simple-mode switch selects the simple implementation; asynchronous worker completion cannot drive seeded decisions.
+- The behavior state machine is integrated after intent/herd/pack decisions and before movement. It supplies pauses and hunt pacing, while survival intent remains authoritative.
+- Births preserve paternal genotype at conception and spawn beside the mother. Creature IDs increase monotonically within a world.
+- The runtime food preferences are currently broader than the original locked canon above; see the audit report before implementing future food-web tracks. Existing fallback feeding tests and explicit config tables are preserved by this maintenance PR.

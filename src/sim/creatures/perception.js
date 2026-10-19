@@ -8,8 +8,8 @@ const resolveRangeMax = (value) => (Number.isFinite(value) ? Math.max(0, value) 
 const resolveMinimum = (value, fallback) =>
   Number.isFinite(value) ? Math.max(0, value) : fallback;
 
-const buildSignature = ({ waterDistance, foodType, foodDistance }) =>
-  `${waterDistance ?? 'none'}:${foodType ?? 'none'}:${foodDistance ?? 'none'}`;
+const buildSignature = ({ waterDistance, waterCell, foodType, foodDistance, foodCell }) =>
+  `${waterCell?.x},${waterCell?.y}:${waterDistance}:${foodType}:${foodCell?.x},${foodCell?.y}:${foodDistance}`;
 
 /**
  * Generates cells to scan in spiral order from center outward.
@@ -18,7 +18,7 @@ const buildSignature = ({ waterDistance, foodType, foodDistance }) =>
 function* spiralCells(radius) {
   // Center first
   yield { dx: 0, dy: 0, distSq: 0 };
-  
+
   // Then expanding rings
   for (let r = 1; r <= radius; r++) {
     const rSq = r * r;
@@ -41,7 +41,10 @@ function* spiralCells(radius) {
 const spiralCache = new Map();
 function getSpiralPattern(radius) {
   if (!spiralCache.has(radius)) {
-    spiralCache.set(radius, [...spiralCells(radius)]);
+    spiralCache.set(
+      radius,
+      [...spiralCells(radius)].sort((a, b) => a.distSq - b.distSq)
+    );
   }
   return spiralCache.get(radius);
 }
@@ -69,18 +72,6 @@ export function updateCreaturePerception({ creatures, config, world }) {
 
     const cellX = Math.floor(creature.position.x);
     const cellY = Math.floor(creature.position.y);
-    
-    // OPTIMIZATION: Skip full rescan if creature is in same cell as last tick
-    // and world tick hasn't advanced much (food/water changes slowly)
-    const lastCell = creature._perceptionCache;
-    if (lastCell && lastCell.x === cellX && lastCell.y === cellY && creature.perception) {
-      // Still update the changed flag based on signature
-      creature.perception.changed = false;
-      continue;
-    }
-    
-    // Cache current cell for next tick
-    creature._perceptionCache = { x: cellX, y: cellY };
 
     const creatureRange = resolveRange(creature?.traits?.perceptionRange, baseRange);
     const terrainEffects = getTerrainEffectsAt(world, cellX, cellY);
@@ -109,17 +100,17 @@ export function updateCreaturePerception({ creatures, config, world }) {
 
       // Use spiral pattern for outward search (enables early exit)
       const pattern = getSpiralPattern(radius);
-      
+
       for (const { dx, dy, distSq } of pattern) {
         // Early exit: found both water and food close enough
         if (foundCloseWater && foundCloseFood) {
           break;
         }
-        
+
         if (distSq > rangeSq) {
           continue;
         }
-        
+
         const x = cellX + dx;
         const y = cellY + dy;
         if (typeof world.isInBounds === 'function' && !world.isInBounds(x, y)) {
@@ -167,7 +158,13 @@ export function updateCreaturePerception({ creatures, config, world }) {
       }
     }
 
-    const signature = buildSignature({ waterDistance, foodType, foodDistance });
+    const signature = buildSignature({
+      waterDistance,
+      waterCell,
+      foodType,
+      foodDistance,
+      foodCell
+    });
     const previousSignature = creature.perception?.signature;
     const changed = signature !== previousSignature;
 

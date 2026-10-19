@@ -37,10 +37,18 @@ const canUseStorage = (storage) => {
   }
 };
 
+const getDefaultStorage = () => {
+  try {
+    return typeof window !== 'undefined' ? window.localStorage : null;
+  } catch {
+    return null;
+  }
+};
+
 export function createSettings({
   storageKey = SETTINGS_STORAGE_KEY,
   defaults = DEFAULT_SETTINGS,
-  storage = typeof window !== 'undefined' ? window.localStorage : null
+  storage = getDefaultStorage()
 } = {}) {
   const storageEnabled = canUseStorage(storage);
   let current = normalizeSettings({}, defaults);

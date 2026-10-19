@@ -107,13 +107,25 @@ export const selectFoodChoice = ({ species, availability, minimums }) => {
   const mins = minimums ?? {};
 
   for (const foodType of prefs) {
-    if (foodType === FOOD_TYPES.GRASS && availability.grass >= (mins.grass ?? 0)) {
+    if (
+      foodType === FOOD_TYPES.GRASS &&
+      availability.grass > 0 &&
+      availability.grass >= (mins.grass ?? 0)
+    ) {
       return { type: FOOD_TYPES.GRASS };
     }
-    if (foodType === FOOD_TYPES.BERRIES && availability.berries >= (mins.berries ?? 0)) {
+    if (
+      foodType === FOOD_TYPES.BERRIES &&
+      availability.berries > 0 &&
+      availability.berries >= (mins.berries ?? 0)
+    ) {
       return { type: FOOD_TYPES.BERRIES };
     }
-    if (foodType === FOOD_TYPES.MEAT && availability.meat >= (mins.meat ?? 0)) {
+    if (
+      foodType === FOOD_TYPES.MEAT &&
+      availability.meat > 0 &&
+      availability.meat >= (mins.meat ?? 0)
+    ) {
       return { type: FOOD_TYPES.MEAT };
     }
   }

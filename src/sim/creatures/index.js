@@ -94,12 +94,12 @@ export function updateCreatureLifeStages({ creatures, config }) {
   for (const creature of creatures) {
     const ageTicks = Number.isFinite(creature.ageTicks) ? creature.ageTicks + 1 : 1;
     creature.ageTicks = ageTicks;
-    
+
     // Calculate effective age based on maturity scale (fast growers age faster through stages)
     const maturityScale = Number.isFinite(creature.maturityScale) ? creature.maturityScale : 1;
     const effectiveAgeTicks = ageTicks * maturityScale;
     creature.effectiveAgeTicks = effectiveAgeTicks;
-    
+
     creature.lifeStage = createLifeStageState(effectiveAgeTicks, config);
   }
 }

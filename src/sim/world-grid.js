@@ -38,6 +38,7 @@ export function createWorldGrid({
     if (index === -1) {
       return false;
     }
+    if (cells[index] !== terrainType) world.terrainDirtyCounter += 1;
     cells[index] = terrainType;
     return true;
   };
@@ -52,6 +53,7 @@ export function createWorldGrid({
     if (index === -1) {
       return false;
     }
+    if (grass[index] !== amount) world.grassDirtyCounter += 1;
     grass[index] = amount;
     return true;
   };
@@ -70,13 +72,14 @@ export function createWorldGrid({
     return true;
   };
 
-  return {
+  const world = {
     width: resolvedWidth,
     height: resolvedHeight,
     cells,
     grass,
     grassStress,
     grassDirtyCounter: 0,
+    terrainDirtyCounter: 0,
     isInBounds,
     getIndex,
     getTerrainAt,
@@ -88,4 +91,5 @@ export function createWorldGrid({
     getGrassStressAt,
     setGrassStressAt
   };
+  return world;
 }

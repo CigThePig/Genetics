@@ -1,3 +1,13 @@
+import { buildConfigSections } from './config-sections.js';
+import { createConfigValues } from './config-values.js';
+import {
+  loadStoredSet,
+  loadStoredBool,
+  saveStoredSet,
+  saveStoredBool,
+  loadSectionState,
+  saveSectionState
+} from './config-storage.js';
 /**
  * Config Panel Module - Floating Overlay Version
  *
@@ -5,7 +15,7 @@
  * Designed to work within the floating overlay panel system.
  */
 
-import { configMeta, simConfig } from '../sim/config.js';
+import { configMeta } from '../sim/config.js';
 
 /**
  * Creates config panel content within an existing panel container.
@@ -22,54 +32,13 @@ export function createConfigPanel({
   config,
   onConfigChange,
   onRebuildWorld,
-  onApplyPreset
+  onApplyPreset,
+  onClose
 }) {
   const FAVORITES_KEY = 'configPanelFavorites';
   const FAVORITES_ONLY_KEY = 'configPanelFavoritesOnly';
   const SHOW_ADVANCED_KEY = 'configPanelShowAdvanced';
   const SECTION_STATE_KEY = 'configPanelSectionState';
-
-  const loadStoredSet = (key) => {
-    try {
-      const raw = localStorage.getItem(key);
-      const parsed = raw ? JSON.parse(raw) : [];
-      return new Set(Array.isArray(parsed) ? parsed : []);
-    } catch (error) {
-      return new Set();
-    }
-  };
-
-  const loadStoredBool = (key, fallback = false) => {
-    try {
-      const raw = localStorage.getItem(key);
-      if (raw === null) return fallback;
-      return raw === 'true';
-    } catch (error) {
-      return fallback;
-    }
-  };
-
-  const saveStoredSet = (key, values) => {
-    localStorage.setItem(key, JSON.stringify(Array.from(values)));
-  };
-
-  const saveStoredBool = (key, value) => {
-    localStorage.setItem(key, value ? 'true' : 'false');
-  };
-
-  const loadSectionState = (key) => {
-    try {
-      const raw = localStorage.getItem(key);
-      const parsed = raw ? JSON.parse(raw) : {};
-      return parsed && typeof parsed === 'object' ? parsed : {};
-    } catch (error) {
-      return {};
-    }
-  };
-
-  const saveSectionState = (key, state) => {
-    localStorage.setItem(key, JSON.stringify(state));
-  };
 
   const favorites = loadStoredSet(FAVORITES_KEY);
   let favoritesOnly = loadStoredBool(FAVORITES_ONLY_KEY, false);
@@ -234,130 +203,9 @@ export function createConfigPanel({
     other: { label: 'Other', icon: '📦' }
   };
 
-  const formatValue = (value, item) => {
-    if (value === undefined || value === null || Number.isNaN(value)) return '—';
-    if (item.type === 'boolean') return value ? 'On' : 'Off';
-    if (item.type === 'select') {
-      const option = (item.options || []).find((entry) => entry.value === value);
-      return option ? option.label ?? String(option.value) : String(value);
-    }
-    if (Number.isFinite(value)) {
-      return item.unit ? `${value} ${item.unit}` : String(value);
-    }
-    return item.unit ? `${value} ${item.unit}` : String(value);
-  };
-
-  const getDefaultValue = (item) => simConfig?.[item.key];
-
-  const resolveBooleanValue = (key, rawValue) => {
-    if (typeof rawValue === 'boolean') return rawValue;
-    const defaultValue = simConfig?.[key];
-    if (typeof defaultValue === 'boolean') return defaultValue;
-    if (defaultOnKeys.has(key)) return true;
-    return false;
-  };
-
-  const getBooleanDefault = (key, fallback) => {
-    if (typeof fallback === 'boolean') return fallback;
-    if (defaultOnKeys.has(key)) return true;
-    return false;
-  };
-
-  const shouldMarkWorldDirty = (key) => {
-    if (key === 'seed') return false;
-    if (rebuildKeys.has(key)) return true;
-    return configMeta?.[key]?.category === 'world';
-  };
-
   const setWorldDirty = (nextDirty) => {
     worldDirty = nextDirty;
     rebuildBanner.classList.toggle('config-rebuild--hidden', !worldDirty);
-  };
-
-  const isValueDifferent = (key, nextValue) => {
-    const currentValue = config?.[key];
-    if (typeof nextValue === 'object') {
-      return JSON.stringify(currentValue) !== JSON.stringify(nextValue);
-    }
-    return currentValue !== nextValue;
-  };
-
-  const validateStructuredValue = (value, defaultValue) => {
-    if (defaultValue === undefined) return { ok: false, message: 'No default value found.' };
-    const defaultIsArray = Array.isArray(defaultValue);
-    const valueIsArray = Array.isArray(value);
-    if (defaultIsArray !== valueIsArray) {
-      return { ok: false, message: 'Value type does not match default.' };
-    }
-    if (!defaultIsArray && (typeof value !== 'object' || value === null)) {
-      return { ok: false, message: 'Value must be an object.' };
-    }
-    if (defaultIsArray && !Array.isArray(value)) {
-      return { ok: false, message: 'Value must be an array.' };
-    }
-    if (!defaultIsArray) {
-      const defaultKeys = Object.keys(defaultValue);
-      const extraKeys = Object.keys(value).filter((key) => !defaultKeys.includes(key));
-      if (extraKeys.length > 0) {
-        return { ok: false, message: `Unknown keys: ${extraKeys.join(', ')}` };
-      }
-    }
-    return { ok: true };
-  };
-
-  const buildPresetPayload = (configState) => {
-    const payload = {};
-    for (const key of Object.keys(simConfig)) {
-      if (configState && Object.prototype.hasOwnProperty.call(configState, key)) {
-        payload[key] = configState[key];
-      } else {
-        payload[key] = simConfig[key];
-      }
-    }
-    return payload;
-  };
-
-  const applyPresetPayload = (payload, updateEntry) => {
-    const validKeys = new Set(Object.keys(simConfig));
-    const rejected = [];
-    const ignored = [];
-    const changedKeys = [];
-    let seedValue;
-    let seedChanged = false;
-    for (const [key, value] of Object.entries(payload)) {
-      if (key === 'ticksPerSecond') {
-        ignored.push(key);
-        continue;
-      }
-      if (!validKeys.has(key)) {
-        rejected.push(key);
-        continue;
-      }
-      const defaultValue = simConfig[key];
-      if (Array.isArray(defaultValue)) {
-        if (!Array.isArray(value)) {
-          rejected.push(key);
-          continue;
-        }
-      } else if (typeof defaultValue === 'object' && defaultValue !== null) {
-        if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-          rejected.push(key);
-          continue;
-        }
-      } else if (typeof value !== typeof defaultValue) {
-        rejected.push(key);
-        continue;
-      }
-      const hasChanged = isValueDifferent(key, value);
-      if (key === 'seed') {
-        seedValue = value;
-        seedChanged = hasChanged;
-      } else {
-        updateEntry(key, value);
-      }
-      if (hasChanged) changedKeys.push(key);
-    }
-    return { rejected, ignored, changedKeys, seedValue, seedChanged };
   };
 
   const applyConfigChange = (key, value, { markDirty = true } = {}) => {
@@ -367,6 +215,16 @@ export function createConfigPanel({
     }
   };
 
+  const {
+    formatValue,
+    getDefaultValue,
+    resolveBooleanValue,
+    getBooleanDefault,
+    shouldMarkWorldDirty,
+    validateStructuredValue,
+    buildPresetPayload,
+    applyPresetPayload
+  } = createConfigValues({ config, defaultOnKeys, rebuildKeys });
   // Store input elements for updating
   const inputs = new Map();
   const rowEntries = [];
@@ -396,379 +254,29 @@ export function createConfigPanel({
     .filter((category) => !categoryOrder.includes(category))
     .sort();
 
-  for (const category of [...categoryOrder, ...extraCategories]) {
-    const items = categories[category];
-    if (!items || items.length === 0) continue;
-
-    const section = document.createElement('details');
-    section.className = 'config-section';
-    section.open = typeof sectionState[category] === 'boolean' ? sectionState[category] : true;
-
-    const info = categoryInfo[category] || { label: category, icon: '📦' };
-    
-    const sectionTitle = document.createElement('summary');
-    sectionTitle.className = 'config-section-title';
-
-    const sectionTitleText = document.createElement('span');
-    sectionTitleText.textContent = `${info.icon} ${info.label}`;
-
-    const sectionActions = document.createElement('span');
-    sectionActions.className = 'config-section-actions';
-
-    const sectionReset = document.createElement('button');
-    sectionReset.type = 'button';
-    sectionReset.className = 'config-section-reset';
-    sectionReset.textContent = 'Reset';
-    sectionReset.addEventListener('click', (event) => {
-      event.preventDefault();
-      event.stopPropagation();
-      for (const item of items) {
-        const defaultValue = getDefaultValue(item);
-        if (defaultValue === undefined) continue;
-        const entry = inputs.get(item.key);
-        if (entry) {
-          entry.update(defaultValue);
-          applyConfigChange(item.key, defaultValue);
-        }
-      }
-    });
-
-    const sectionChevron = document.createElement('span');
-    sectionChevron.className = 'config-section-chevron';
-    sectionChevron.textContent = '▾';
-
-    sectionActions.append(sectionReset, sectionChevron);
-    sectionTitle.append(sectionTitleText, sectionActions);
-
-    section.append(sectionTitle);
-
-    section.addEventListener('toggle', () => {
-      sectionState[category] = section.open;
-      saveSectionState(SECTION_STATE_KEY, sectionState);
-    });
-
-    for (const item of items) {
-      const row = document.createElement('div');
-      row.className = 'config-row';
-
-      const labelWrap = document.createElement('div');
-      labelWrap.className = 'config-label-wrap';
-
-      const label = document.createElement('label');
-      label.className = 'config-label';
-      label.textContent = item.label;
-
-      if (item.advanced) {
-        const badge = document.createElement('span');
-        badge.className = 'config-badge';
-        badge.textContent = 'Advanced';
-        label.append(badge);
-      }
-
-      labelWrap.append(label);
-
-      const favoriteButton = document.createElement('button');
-      favoriteButton.type = 'button';
-      favoriteButton.className = 'config-favorite';
-      favoriteButton.textContent = favorites.has(item.key) ? '★' : '☆';
-      favoriteButton.addEventListener('click', (event) => {
-        event.preventDefault();
-        event.stopPropagation();
-        if (favorites.has(item.key)) {
-          favorites.delete(item.key);
-        } else {
-          favorites.add(item.key);
-        }
-        favoriteButton.textContent = favorites.has(item.key) ? '★' : '☆';
-        row.classList.toggle('config-row--favorite', favorites.has(item.key));
-        saveStoredSet(FAVORITES_KEY, favorites);
-        applyFilter();
-      });
-
-      // Keep the favorite star aligned on the same line as the label text.
-      // (Putting it inside the label lets flex layout place it at the far right.)
-      label.append(favoriteButton);
-
-      if (item.description) {
-        const description = document.createElement('div');
-        description.className = 'config-description';
-        description.textContent = item.description;
-        labelWrap.append(description);
-      }
-
-      const defaultValue = getDefaultValue(item);
-      if (defaultValue !== undefined) {
-        const meta = document.createElement('div');
-        meta.className = 'config-meta';
-        meta.textContent = `Default: ${formatValue(defaultValue, item)}`;
-        labelWrap.append(meta);
-      }
-
-      const controlWrap = document.createElement('div');
-      controlWrap.className = 'config-control';
-
-      let input;
-      let sliderInput;
-      let jsonError;
-      let jsonActions;
-      let sliderFrame = null;
-      const inputType = item.type || 'number';
-      const control = item.control || (inputType === 'number' ? 'number' : inputType);
-
-      if (inputType === 'boolean') {
-        row.classList.add('config-row--toggle');
-        controlWrap.classList.add('config-control--toggle');
-        input = document.createElement('input');
-        input.type = 'checkbox';
-        // Use a dedicated switch style. Do not inherit .config-input sizing/padding.
-        input.className = 'config-switch';
-        input.setAttribute('role', 'switch');
-      } else if (inputType === 'select') {
-        input = document.createElement('select');
-        input.className = 'config-input config-select';
-        const options = item.options || [];
-        for (const option of options) {
-          const optionEl = document.createElement('option');
-          optionEl.value = String(option.value);
-          optionEl.textContent = option.label ?? String(option.value);
-          input.append(optionEl);
-        }
-      } else if (inputType === 'json') {
-        input = document.createElement('textarea');
-        input.className = 'config-input config-json';
-        input.rows = item.rows || 6;
-        jsonActions = document.createElement('div');
-        jsonActions.className = 'config-json-actions';
-
-        const validateButton = document.createElement('button');
-        validateButton.type = 'button';
-        validateButton.className = 'btn btn-secondary';
-        validateButton.textContent = 'Validate';
-
-        const applyButton = document.createElement('button');
-        applyButton.type = 'button';
-        applyButton.className = 'btn';
-        applyButton.textContent = 'Apply';
-
-        jsonError = document.createElement('div');
-        jsonError.className = 'config-json-error';
-
-        const validateJson = () => {
-          try {
-            const parsed = JSON.parse(input.value);
-            const result = validateStructuredValue(parsed, defaultValue);
-            if (!result.ok) {
-              jsonError.textContent = result.message;
-              return { ok: false };
-            }
-            jsonError.textContent = '';
-            return { ok: true, value: parsed };
-          } catch (error) {
-            jsonError.textContent = 'Invalid JSON.';
-            return { ok: false };
-          }
-        };
-
-        validateButton.addEventListener('click', () => {
-          validateJson();
-        });
-
-        applyButton.addEventListener('click', () => {
-          const result = validateJson();
-          if (!result.ok) return;
-          applyConfigChange(item.key, result.value);
-          setRowChanged(result.value);
-        });
-
-        jsonActions.append(validateButton, applyButton);
-      } else {
-        if (control === 'slider') {
-          sliderInput = document.createElement('input');
-          sliderInput.type = 'range';
-          sliderInput.className = 'config-input config-slider';
-          if (item.min !== undefined) sliderInput.min = item.min;
-          if (item.max !== undefined) sliderInput.max = item.max;
-          if (item.step !== undefined) sliderInput.step = item.step;
-
-          input = document.createElement('input');
-          input.type = 'number';
-          input.className = 'config-input';
-        } else {
-          input = document.createElement('input');
-          input.type = 'number';
-          input.className = 'config-input';
-        }
-
-        if (item.min !== undefined) input.min = item.min;
-        if (item.max !== undefined) input.max = item.max;
-        if (item.step !== undefined) input.step = item.step;
-      }
-
-      input.id = `config-${item.key}`;
-      label.setAttribute('for', input.id);
-
-      const currentValue = config?.[item.key];
-      if (inputType === 'boolean') {
-        input.checked = resolveBooleanValue(item.key, currentValue);
-      } else if (inputType === 'select') {
-        input.value = currentValue ?? '';
-      } else if (inputType === 'json') {
-        input.value = JSON.stringify(currentValue ?? defaultValue ?? {}, null, 2);
-      } else {
-        input.value = Number.isFinite(currentValue) ? currentValue : '';
-      }
-
-      if (sliderInput) {
-        sliderInput.value = Number.isFinite(currentValue) ? currentValue : '';
-      }
-
-      const setRowChanged = (value) => {
-        if (defaultValue === undefined) {
-          row.classList.remove('config-row--changed');
-          return;
-        }
-        const nextValue = inputType === 'select' ? value : Number(value);
-        const hasChanged =
-          inputType === 'boolean'
-            ? resolveBooleanValue(item.key, value) !==
-              getBooleanDefault(item.key, defaultValue)
-            : inputType === 'select'
-              ? value !== defaultValue
-              : inputType === 'json'
-                ? JSON.stringify(value) !== JSON.stringify(defaultValue)
-              : Number.isFinite(nextValue) && Number(nextValue) !== Number(defaultValue);
-        row.classList.toggle('config-row--changed', hasChanged);
-      };
-
-      setRowChanged(currentValue);
-
-      if (sliderInput) {
-        const commitSliderValue = () => {
-          if (sliderFrame !== null) return;
-          sliderFrame = requestAnimationFrame(() => {
-            sliderFrame = null;
-            const value = parseFloat(sliderInput.value);
-            if (Number.isFinite(value)) {
-              input.value = sliderInput.value;
-              applyConfigChange(item.key, value);
-              setRowChanged(value);
-            }
-          });
-        };
-
-        sliderInput.addEventListener('input', () => {
-          input.value = sliderInput.value;
-          commitSliderValue();
-        });
-      }
-
-      input.addEventListener('change', () => {
-        if (inputType === 'boolean') {
-          const nextValue = input.checked;
-          applyConfigChange(item.key, nextValue);
-          setRowChanged(nextValue);
-          return;
-        }
-
-        if (inputType === 'select') {
-          const rawValue = input.value;
-          const nextValue = item.optionType === 'number' ? Number(rawValue) : rawValue;
-          applyConfigChange(item.key, nextValue);
-          setRowChanged(nextValue);
-          return;
-        }
-
-        if (inputType === 'json') {
-          return;
-        }
-
-        const value = parseFloat(input.value);
-        if (Number.isFinite(value)) {
-          applyConfigChange(item.key, value);
-          if (sliderInput) sliderInput.value = input.value;
-          setRowChanged(value);
-        }
-      });
-
-      if (sliderInput) {
-        sliderInput.addEventListener('change', () => {
-          const value = parseFloat(sliderInput.value);
-          if (Number.isFinite(value)) {
-            input.value = sliderInput.value;
-            setRowChanged(value);
-          }
-        });
-      }
-
-      // Make inputs easier to use on mobile
-      input.addEventListener('focus', () => {
-        input.select();
-      });
-
-      const updateEntry = (nextValue) => {
-        if (inputType === 'boolean') {
-          input.checked = resolveBooleanValue(item.key, nextValue);
-          setRowChanged(nextValue);
-        } else if (inputType === 'select') {
-          input.value = nextValue ?? '';
-          setRowChanged(nextValue);
-        } else if (inputType === 'json') {
-          input.value = JSON.stringify(nextValue ?? defaultValue ?? {}, null, 2);
-          setRowChanged(nextValue);
-          if (jsonError) jsonError.textContent = '';
-        } else if (Number.isFinite(nextValue)) {
-          input.value = nextValue;
-          if (sliderInput) sliderInput.value = nextValue;
-          setRowChanged(nextValue);
-        }
-      };
-
-      inputs.set(item.key, {
-        input,
-        sliderInput,
-        type: inputType,
-        row,
-        defaultValue,
-        update: updateEntry
-      });
-      rowEntries.push({
-        key: item.key,
-        row,
-        section,
-        label: item.label,
-        description: item.description,
-        category,
-        advanced: Boolean(item.advanced)
-      });
-      row.classList.toggle('config-row--favorite', favorites.has(item.key));
-      controlWrap.append(input);
-      if (sliderInput) {
-        controlWrap.prepend(sliderInput);
-      }
-      if (jsonActions) {
-        controlWrap.append(jsonActions);
-      }
-      if (jsonError) {
-        controlWrap.append(jsonError);
-      }
-      row.append(labelWrap, controlWrap);
-      section.append(row);
-    }
-
-    categories[category].section = section;
-    content.append(section);
-  }
-
-  // Add reset button
-  const resetSection = document.createElement('div');
-  resetSection.style.marginTop = 'var(--space-lg)';
-  resetSection.style.paddingTop = 'var(--space-lg)';
-  resetSection.style.borderTop = '1px solid var(--border-subtle)';
-
-  const resetButton = document.createElement('button');
-  resetButton.textContent = '🔄 Reset to Defaults';
-  resetButton.className = 'btn';
-  resetButton.style.width = '100%';
+  const { resetButton, resetSection } = buildConfigSections({
+    categoryOrder,
+    extraCategories,
+    categories,
+    sectionState,
+    categoryInfo,
+    getDefaultValue,
+    inputs,
+    applyConfigChange,
+    saveSectionState,
+    SECTION_STATE_KEY,
+    favorites,
+    saveStoredSet,
+    FAVORITES_KEY,
+    applyFilter: (...args) => applyFilter(...args),
+    formatValue,
+    validateStructuredValue,
+    config,
+    resolveBooleanValue,
+    getBooleanDefault,
+    rowEntries,
+    content
+  });
 
   resetButton.addEventListener('click', () => {
     onConfigChange?.('__reset__', null);
@@ -874,6 +382,10 @@ export function createConfigPanel({
 
   // Close button handler - dispatch custom event for UI to handle
   closeBtn.addEventListener('click', () => {
+    if (onClose) {
+      onClose();
+      return;
+    }
     container.classList.remove('visible');
     // Find the config FAB and remove active class
     const configFab = document.querySelector('.fab-config');

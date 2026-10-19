@@ -62,12 +62,12 @@ const ensureChaseState = (creature) => {
  */
 const findTargetById = (id, creatures, spatialIndex) => {
   if (!Number.isFinite(id)) return null;
-  
+
   // Use spatial index if provided and has creatures
   if (spatialIndex && spatialIndex.creatureCount > 0) {
     return spatialIndex.getById(id);
   }
-  
+
   // Fall back to linear scan
   if (!Array.isArray(creatures)) return null;
   for (const creature of creatures) {
@@ -147,7 +147,7 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
   const loseTicks = resolveTimeTicks(config?.creatureChaseLoseTime, 0.1, tps);
 
   for (const creature of creatures) {
-    if (!creature?.position) {
+    if (!creature?.position || creature.meters?.hp <= 0) {
       continue;
     }
     const chase = ensureChaseState(creature);
@@ -163,6 +163,17 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
       continue;
     }
 
+    if (creature.intent && creature.intent.type !== 'hunt') {
+      concludeChase({
+        chase,
+        config,
+        metrics,
+        tick,
+        outcome: 'abandoned',
+        chaserSpecies: creature.species
+      });
+      continue;
+    }
     const staminaRatio = getStaminaRatio(creature, baseStamina);
     if (staminaRatio < stopThreshold) {
       concludeChase({
@@ -177,7 +188,7 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
     }
 
     const target = findTargetById(chase.targetId, creatures, spatialIndex);
-    if (!target?.position) {
+    if (!target?.position || target.meters?.hp <= 0) {
       concludeChase({
         chase,
         config,

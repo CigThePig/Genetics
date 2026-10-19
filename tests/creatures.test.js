@@ -458,13 +458,23 @@ describe('creature movement', () => {
 
     updateCreatureMovement({
       creatures: [slowTicksCreature],
-      config: { creatureBaseSpeed: 10, ticksPerSecond: 10 },
+      config: {
+        creatureBaseSpeed: 10,
+        ticksPerSecond: 10,
+        creatureAcceleration: 1,
+        creatureFrictionDrag: 0
+      },
       rng: rngStub,
       world
     });
     updateCreatureMovement({
       creatures: [fastTicksCreature],
-      config: { creatureBaseSpeed: 10, ticksPerSecond: 20 },
+      config: {
+        creatureBaseSpeed: 10,
+        ticksPerSecond: 20,
+        creatureAcceleration: 1,
+        creatureFrictionDrag: 0
+      },
       rng: rngStub,
       world
     });

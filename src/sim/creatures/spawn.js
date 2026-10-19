@@ -252,7 +252,7 @@ export function createCreatures({ config, rng, world }) {
   for (let i = 0; i < count; i += 1) {
     const species = spawnQueue[i] ?? SPECIES_LIST[i % SPECIES_LIST.length];
     const anchor = anchors[species] ?? findRandomLandPosition();
-    let position = anchor;
+    let position = { ...anchor };
     for (let attempt = 0; attempt < spawnRetries; attempt += 1) {
       const angle = rng.nextFloat() * Math.PI * 2;
       const distance = rng.nextFloat() * clusterJitter;

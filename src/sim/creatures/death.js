@@ -65,8 +65,8 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
   for (let i = 0; i < creatures.length; i += 1) {
     const creature = creatures[i];
     // Use per-creature maxAgeTicks if available (genetic longevity), otherwise global
-    const creatureMaxAgeTicks = Number.isFinite(creature.maxAgeTicks) 
-      ? creature.maxAgeTicks 
+    const creatureMaxAgeTicks = Number.isFinite(creature.maxAgeTicks)
+      ? creature.maxAgeTicks
       : globalMaxAgeTicks;
     const cause = selectDeathCause({ creature, maxAgeTicks: creatureMaxAgeTicks });
     if (!cause) {
@@ -81,7 +81,10 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
     } else if (counts) {
       counts.other += 1;
     }
-    if (metrics?.deathsBySpeciesTotal && metrics.deathsBySpeciesTotal[creature.species] !== undefined) {
+    if (
+      metrics?.deathsBySpeciesTotal &&
+      metrics.deathsBySpeciesTotal[creature.species] !== undefined
+    ) {
       metrics.deathsBySpeciesTotal[creature.species] += 1;
     }
     if (

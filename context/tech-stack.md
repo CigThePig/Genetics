@@ -30,3 +30,5 @@ Sim performance:
 Determinism:
 
 - Required: same seed + same config => same outcomes.
+
+Audit verification: `npm run test:soak` uses Node built-ins, with no added package dependency. It runs default-config seeds 1, 42 and 1337 for 18,000 ticks each; `-- --ticks=N` adjusts its length. Browser smoke verification used temporary external tooling, not a new production/test dependency.
