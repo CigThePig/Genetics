@@ -111,8 +111,12 @@ export function createCreatures({ config, rng, world }) {
   const spawnQueue = createSpawnQueue(count, predatorCount);
   const creatures = [];
   const waterTerrain = resolveWaterTerrain(config);
-  const spawnRetries = 20;
-  const anchorRetries = 30;
+  const spawnRetries = Number.isFinite(config?.creatureSpawnRetries)
+    ? Math.max(1, Math.min(1000, Math.trunc(config.creatureSpawnRetries)))
+    : 20;
+  const anchorRetries = Number.isFinite(config?.creatureSpawnAnchorRetries)
+    ? Math.max(1, Math.min(1000, Math.trunc(config.creatureSpawnAnchorRetries)))
+    : 30;
   const clusterSpread = Number.isFinite(config?.creatureSpawnClusterSpread)
     ? Math.max(0, config.creatureSpawnClusterSpread)
     : 12;

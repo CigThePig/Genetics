@@ -69,4 +69,32 @@ describe('repository audit: terrain caches', () => {
       cache.ensureTerrainCache(world, config, 20);
       expect(cache.terrainCache.grass).not.toBe(grass);
     }));
+  it('slices dirty grass work, throttles rebuilds, and retains edits made during a rebuild', () =>
+    withCanvas(() => {
+      const world = createWorldGrid({ width: 4, height: 6, defaultGrass: 0.5 });
+      const config = { grassCap: 1 };
+      const cache = createTerrainCache({ ctx: {}, texNoise: { simplex2: () => 0 } });
+      cache.ensureTerrainCache(world, config, 20);
+      world.setGrassAt(0, 0, 0.8);
+      let now = 0;
+      const spy = vi.spyOn(performance, 'now').mockImplementation(() => (now += 3));
+      try {
+        cache.maybeUpdateGrassCache(cache.terrainCache, world, config, 20, null, 1000);
+        expect(cache.terrainCache.grassRebuildActive).toBe(true);
+        expect(cache.terrainCache.grassRebuildNextRow).toBe(1);
+        const target = cache.terrainCache.grassRebuildTargetDirtyCounter;
+        world.setGrassAt(1, 0, 0.9);
+        for (let i = 0; i < 5; i++) {
+          cache.maybeUpdateGrassCache(cache.terrainCache, world, config, 20, null, 1010 + i);
+        }
+        expect(cache.terrainCache.grassRebuildActive).toBe(false);
+        expect(cache.terrainCache.lastGrassDirtyCounter).toBe(target);
+        cache.maybeUpdateGrassCache(cache.terrainCache, world, config, 20, null, 1100);
+        expect(cache.terrainCache.grassRebuildActive).toBe(false);
+        cache.maybeUpdateGrassCache(cache.terrainCache, world, config, 20, null, 1300, true);
+        expect(cache.terrainCache.lastGrassDirtyCounter).toBe(world.grassDirtyCounter);
+      } finally {
+        spy.mockRestore();
+      }
+    }));
 });

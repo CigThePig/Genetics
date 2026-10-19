@@ -117,7 +117,7 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex, world }) {
 
     // If creature has urgent survival needs, don't apply herding
     // Let them go get food/water
-    if (hasUrgentNeed(creature)) {
+    if (hasUrgentNeed(creature) && !herding.isThreatened) {
       herding.targetOffset = null;
       clearSmoothedOffset(herding);
       continue;
@@ -131,9 +131,16 @@ function updateCreatureHerdingSync({ creatures, config, spatialIndex, world }) {
     if (threats.length > 0) {
       const fleeVector = calculateFleeVector(threats, threatRange);
       if (fleeVector) {
-        offsetX += fleeVector.x * threatStrength * fleeVector.magnitude;
-        offsetY += fleeVector.y * threatStrength * fleeVector.magnitude;
-        hasOffset = true;
+        // Safety steering must not be reversed by a stale smoothed heading
+        // or by separation/cohesion toward nearby herd members.
+        applySmoothedOffset(
+          herding,
+          fleeVector.x * threatStrength * fleeVector.magnitude,
+          fleeVector.y * threatStrength * fleeVector.magnitude,
+          0,
+          1
+        );
+        continue;
       }
     }
 

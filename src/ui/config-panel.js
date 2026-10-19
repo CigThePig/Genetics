@@ -46,7 +46,12 @@ export function createConfigPanel({
   let worldDirty = false;
   const sectionState = loadSectionState(SECTION_STATE_KEY);
 
-  const rebuildKeys = new Set(['hotspotSeed']);
+  const rebuildKeys = new Set([
+    'hotspotSeed',
+    'creatureCount',
+    'creaturePredatorCount',
+    ...Object.keys(configMeta).filter((key) => key.startsWith('creatureSpawn'))
+  ]);
   const defaultOnKeys = new Set([
     'creatureGrazeEnabled',
     'creatureHerdingEnabled',
@@ -286,9 +291,21 @@ export function createConfigPanel({
   resetSection.append(resetButton);
   content.append(resetSection);
 
+  const favoritesSection = document.createElement('section');
+  favoritesSection.className = 'config-favorites';
+  const favoritesTitle = document.createElement('h3');
+  favoritesTitle.textContent = '⭐ Favorites';
+  favoritesSection.append(favoritesTitle);
+  controls.after(favoritesSection);
+
   const applyFilter = () => {
     const query = searchInput.value.trim().toLowerCase();
     for (const entry of rowEntries) {
+      if (favorites.has(entry.key)) {
+        favoritesSection.append(entry.row);
+      } else if (entry.row.parentElement !== entry.section) {
+        entry.section.append(entry.row);
+      }
       const matchesQuery =
         !query ||
         entry.label.toLowerCase().includes(query) ||
@@ -300,6 +317,9 @@ export function createConfigPanel({
       entry.row.classList.toggle('config-row--hidden', !isVisible);
     }
 
+    favoritesSection.hidden = !rowEntries.some(
+      (entry) => favorites.has(entry.key) && !entry.row.classList.contains('config-row--hidden')
+    );
     for (const category of [...categoryOrder, ...extraCategories]) {
       const section = categories[category]?.section;
       if (!section) continue;
@@ -361,7 +381,7 @@ export function createConfigPanel({
 
       const warnings = [];
       if (result.rejected.length > 0) {
-        warnings.push(`Unknown keys skipped: ${result.rejected.join(', ')}`);
+        warnings.push(`Invalid or unknown keys skipped: ${result.rejected.join(', ')}`);
       }
       if (result.ignored.length > 0) {
         warnings.push(`Ignored keys: ${result.ignored.join(', ')}`);

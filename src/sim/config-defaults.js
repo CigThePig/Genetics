@@ -65,6 +65,8 @@ export const simConfig = {
 
   // === CREATURES: SPAWNING ===
   creatureCount: 80,
+  creatureSpawnRetries: 20,
+  creatureSpawnAnchorRetries: 30,
   creaturePredatorCount: 8, // (was 5 - more predators for better ecosystem pressure)
   creatureSpawnClusterSpread: 12,
   creatureSpawnSpeciesAnchorSpread: 18,

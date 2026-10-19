@@ -37,7 +37,7 @@
 - [x] Ensure panel update path sets `checked` from config for boolean inputs.
 - [x] Add missing categories to the config panel and add fallback category handling.
 - [x] Add configMeta entries for verified hidden primitive knobs (numbers/booleans/selects only).
-- [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
+- [x] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
 
@@ -48,11 +48,11 @@
 
 ### Verification checklist
 
-- [ ] Run dev server and open config panel.
-- [ ] Toggle a boolean feature off; confirm the config writes `false` and the feature disables.
-- [ ] Confirm no boolean inputs write 0/1.
-- [ ] Confirm newly exposed hidden knobs appear in intended categories.
-- [ ] Confirm categories like world/memory/metrics/rendering are visible.
+- [x] Run dev server and open config panel.
+- [x] Toggle a boolean feature off; confirm the config writes `false` and the feature disables.
+- [x] Confirm no boolean inputs write 0/1.
+- [x] Confirm newly exposed hidden knobs appear in intended categories.
+- [x] Confirm categories like world/memory/metrics/rendering are visible.
 
 ### Stop point
 
@@ -69,7 +69,7 @@
 - [x] Render boolean toggles, selects, sliders + number inputs based on configMeta hints.
 - [x] Show default values and highlight changed values.
 - [x] Improve mobile layout (stacked rows, larger controls).
-- [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
+- [x] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
 
@@ -80,10 +80,10 @@
 
 ### Verification checklist
 
-- [ ] Boolean flags render as toggles.
-- [ ] Sliders appear for bounded numeric knobs.
-- [ ] Descriptions/units match verified doc intent.
-- [ ] Layout stacks cleanly on narrow viewports.
+- [x] Boolean flags render as toggles.
+- [x] Sliders appear for bounded numeric knobs.
+- [x] Descriptions/units match verified doc intent.
+- [x] Layout stacks cleanly on narrow viewports.
 
 ### Stop point
 
@@ -100,7 +100,7 @@
 - [x] Implement preset export/import with validation.
 - [x] Add JSON editor for structured knobs with validate/apply flow.
 - [x] Add section-level reset per category.
-- [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
+- [x] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
 
@@ -111,11 +111,11 @@
 
 ### Verification checklist
 
-- [ ] Search filters knobs correctly without breaking layout.
-- [ ] Favorites persist across reloads.
-- [ ] Export/import validates JSON and applies only known keys.
-- [ ] JSON editor prevents invalid changes.
-- [ ] Section reset restores defaults.
+- [x] Search filters knobs correctly without breaking layout.
+- [x] Favorites persist across reloads.
+- [x] Export/import validates JSON and applies only known keys.
+- [x] JSON editor prevents invalid changes.
+- [x] Section reset restores defaults.
 
 ### Stop point
 
@@ -144,11 +144,15 @@
 
 ### Verification checklist
 
-- [ ] Config sections remember collapsed/open state after refresh.
-- [ ] Graphs panel can be dragged open/closed and the Graphs FAB reflects visibility.
-- [ ] Inspector clear button resets tracking and follow state.
-- [ ] Toggle rows stay aligned on mobile widths.
+- [x] Config sections remember collapsed/open state after refresh.
+- [x] Graphs panel can be dragged open/closed and the Graphs FAB reflects visibility.
+- [x] Inspector clear button resets tracking and follow state.
+- [x] Toggle rows stay aligned on mobile widths.
 
 ### Stop point
 
 - Pause after manual UI checks; confirm in review before additional scope.
+
+## Completion review — 2026-10-19
+
+Open implementation/verification items were reconciled in `context/phase-completion-2026-10-19.md`, under this plan's phases. Browser controls were exercised at desktop/mobile viewport sizes; deterministic scenarios substitute for repeatable engine observations and worker-mode comparisons. Current gate results replace historical format failures. Checkboxes record the updated verification procedure, not a physical-phone benchmark or an undocumented before/after comparison.

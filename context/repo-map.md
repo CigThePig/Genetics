@@ -272,3 +272,22 @@ Rules:
   - Lifecycle, determinism, behavior, app-boundary and render-cache regression scenarios.
 - scripts/verify-simulation.mjs
   - Reusable three-seed finite-state, bounds, ID and population-accounting soak; npm run test:soak.
+
+## Unfinished-phase completion (2026-10-19)
+
+- tracks/2026-10-19-unfinished-phase-completion/
+  - Scope, blueprint, phased execution and verification checkpoints for historical open items.
+- context/phase-completion-2026-10-19.md
+  - Evidence and disposition for every historical unfinished phase, plus limits of verification.
+- src/ui/config-validation.js
+  - Shared primitive/domain validation for structured drawers and preset imports.
+- src/ui/config-panel.js, config-sections.js, config-values.js
+  - Live pinned Favorites, structured drawers, cloned resets and validated preset values.
+- src/app/timebase.js
+  - Fixed-step wall-clock accumulator used by bootstrap, independently testable across display rates.
+- src/sim/creatures/herding-simple.js, herding.js
+  - Regroup/countdown in both modes; threat steering takes priority over stale herd forces.
+- tests/config-validation.test.js, phase-completion.test.js
+  - Unsafe config/import regressions; timebase, pregnancy, pack, grazing, rendezvous and regroup scenarios.
+- scripts/verify-simulation.mjs
+  - Adds first-minute mortality and median death timing to existing seeded soak evidence.

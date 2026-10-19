@@ -160,11 +160,15 @@ After all tasks:
 - [x] No duplicated life-stage code (extracted to life-stages.js)
 - [x] No duplicated resolver functions (extracted to utils/resolvers.js)
 - [x] Ticks/seconds naming is documented (comments added to config.js)
-- [ ] All tests still pass (verify with npm test)
-- [ ] Simulation behaves identically (verify same seed = same results)
+- [x] All tests still pass (verify with npm test)
+- [x] Simulation behaves identically (verify same seed = same results)
 
 ---
 
 ## Ready to Start?
 
 When you're ready, say "Let's start Task 1.1" and I'll begin with extracting the life-stages module. I'll show you exactly what I'm doing and why at each step.
+
+## Completion review — 2026-10-19
+
+Phases 1–2 were already implemented and pass the current suite. Phase 3 now has an explicit time/unit section in architecture. Phase 4 species colors already exist; spawn/anchor retry limits are now configurable with unchanged defaults. Current tests, deterministic replay and seeded soaks pass. See `context/phase-completion-2026-10-19.md` for evidence and scope. The original session instructions above are retained as history; this roadmap's implementation is complete.

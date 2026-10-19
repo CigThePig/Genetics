@@ -1918,3 +1918,26 @@ body {
     max-height: 150px;
   }
 }
+
+.config-favorites h3 {
+  margin: var(--space-md) 0;
+  font-size: var(--font-size-sm);
+}
+
+.config-json-drawer {
+  width: 100%;
+  min-width: 0;
+}
+
+.config-json-drawer > summary {
+  cursor: pointer;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  color: var(--text-primary);
+}
+
+.config-json-drawer .config-json {
+  width: 100%;
+  box-sizing: border-box;
+}

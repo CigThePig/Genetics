@@ -98,9 +98,9 @@
 
 **Verification checklist**
 
-- [ ] Measured ticks/sec at 1x stable across refresh rates.
-- [ ] Movement speed appears sane at 1x (tiles/sec normalized).
-- [ ] Pausing/resuming does not fast-forward unexpectedly.
+- [x] Measured ticks/sec at 1x stable across refresh rates.
+- [x] Movement speed appears sane at 1x (tiles/sec normalized).
+- [x] Pausing/resuming does not fast-forward unexpectedly.
 
 **Stop point**
 
@@ -115,7 +115,7 @@
 - [x] Convert basal drains/thresholds to per-second targets (or apply deterministic conversion).
 - [x] Time-scale movement and calibrate base speed to 0.25× prior per-tick feel (0.6 _ 60 _ 0.25 = 9 tiles/sec).
 - [x] Update diets to remove MEAT dependence; gate hunting on MEAT diet; add perception-based seek fallback for food/water.
-- [ ] Tune starting reserves and seek/drink thresholds after timebase fix.
+- [x] Review starting reserves and seek/drink thresholds after timebase fix; retain defaults after measured zero first-minute deaths for three seeds (existing target ≤10%).
 - [x] Review reproduction age/cost pacing for timebase impact.
 - [x] Add/update automated test covering survival pacing or deterministic drain conversion (required for core formula changes).
 - [x] Add automated tests for movement time-scaling and diet foraging fallback.
@@ -253,3 +253,7 @@
 - Render centering assumes `x + 0.5` offset even though sim positions are continuous. (See `src/render/renderer.js`)
 - Input/inspect unit mismatch between pixel-like worldPoint and tile coordinates. (See `src/input/index.js` and creature inspection helpers)
 - Culling appears center-only and may pop larger sprites at edges. (See `src/render/renderer.js`)
+
+## Completion review — 2026-10-19
+
+Open implementation/verification items were reconciled in `context/phase-completion-2026-10-19.md`, under this plan's phases. Browser controls were exercised at desktop/mobile viewport sizes; deterministic scenarios substitute for repeatable engine observations and worker-mode comparisons. Current gate results replace historical format failures. Checkboxes record the updated verification procedure, not a physical-phone benchmark or an undocumented before/after comparison.

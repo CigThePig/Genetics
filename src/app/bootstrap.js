@@ -8,6 +8,7 @@
  * - Floating panel UI
  */
 
+import { createTickClock } from './timebase.js';
 import { createSim } from '../sim/sim.js';
 import { createSimWorkerStub } from '../sim/worker.js';
 import { findNearestCreature } from '../sim/creatures/index.js';
@@ -55,14 +56,11 @@ export function bootApplication(app) {
   let speed = initialSettings.speed;
   let rafId = null;
   let tickTimerId = null;
-  let lastTickTime = null;
-  let accumulatorMs = 0;
+  const tickClock = createTickClock();
   let lastFrameStartMs = null;
   let lastFrameTotalMs = 0;
 
   const tickLoopIntervalMs = 16;
-  const maxTickDeltaMs = 250;
-  const maxTicksPerInterval = 240;
 
   // ═══════════════════════════════════════════════════════════════════════════
   // HELPER FUNCTIONS
@@ -117,13 +115,7 @@ export function bootApplication(app) {
   };
 
   const resetTickTimebase = () => {
-    lastTickTime = performance.now();
-    accumulatorMs = 0;
-  };
-
-  const getTickIntervalMs = () => {
-    const ticksPerSecond = sim.config?.ticksPerSecond ?? 1;
-    return 1000 / Math.max(1, ticksPerSecond);
+    tickClock.reset(performance.now());
   };
 
   const updateCameraFollow = () => {
@@ -193,27 +185,11 @@ export function bootApplication(app) {
     if (!running) return;
 
     const now = performance.now();
-    if (lastTickTime === null) {
-      lastTickTime = now;
-      return;
-    }
-
-    const deltaMs = Math.min(now - lastTickTime, maxTickDeltaMs);
-    lastTickTime = now;
-    accumulatorMs += deltaMs * speed;
-
-    const tickIntervalMs = getTickIntervalMs();
-    let ticksThisInterval = 0;
-
-    while (accumulatorMs >= tickIntervalMs && ticksThisInterval < maxTicksPerInterval) {
-      sim.tick();
-      accumulatorMs -= tickIntervalMs;
-      ticksThisInterval += 1;
-    }
-
-    if (ticksThisInterval >= maxTicksPerInterval) {
-      accumulatorMs = Math.min(accumulatorMs, tickIntervalMs);
-    }
+    const ticksThisInterval = tickClock.advance(now, {
+      ticksPerSecond: sim.config?.ticksPerSecond ?? 1,
+      speed,
+      tick: () => sim.tick()
+    });
 
     if (ticksThisInterval > 0) {
       metrics.update({ ticks: ticksThisInterval, time: now });

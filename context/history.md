@@ -20,3 +20,11 @@
 ## 2026-10-19 — Maintenance: Comprehensive repository audit
 
 Reviewed source and tooling by subsystem. Repaired deterministic isolation, perception freshness, herd-mode selection, behavior integration, feeding/chase lifecycle, conception/birth inheritance and IDs, render invalidation, app/input/storage faults, profiler counters and workflow faults. Extracted oversized simulation/config/render modules with compatible public exports. Added 33 regression tests (59 total) and a reusable three-seed soak command. npm run verify passes; three five-minute simulations, desktop/mobile browser interactions and workflow syntax checks pass. Behavior/RNG consumption changes are documented; long-term balance and planned future systems are not claimed. See repository-audit-2026-10-19.md.
+
+## 2026-10-19 — Maintenance: unfinished phase completion
+
+- Reviewed all 24 prior phase plans and the maintenance roadmap; reconciled the seven plans with open items against current code and evidence.
+- Completed config power controls and safe domain validation, isolated the fixed-step clock, documented units, and exposed spawn retry budgets with unchanged defaults.
+- Completed simple-mode long-range regroup/post-drink countdown and made threat steering take priority over stale herd forces. Seed trajectories change intentionally; tick order and predator formulas are preserved.
+- Added clock, pregnancy, pack/herd, worker-flag parity, spawn compatibility, config-safety and sliced-cache regressions. Three final five-minute seed runs have zero first-minute deaths and all species present. Desktop/mobile browser controls and live resize/profiler checks pass.
+- Details and scoped limitations: context/phase-completion-2026-10-19.md. Future Tracks 11–13 remain unplanned roadmap work.
