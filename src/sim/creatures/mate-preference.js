@@ -9,7 +9,9 @@ export function matePreferenceMismatch(source, candidate) {
     Math.min(1, (c.bodySaturation ?? 0.5) * 2) *
     (2 * Math.min(clamp01(c.bodyLightness ?? 0.5), 1 - clamp01(c.bodyLightness ?? 0.5))) *
     (0.25 + clamp01(t.colourDiscrimination ?? 0.5) * 0.75);
-  return hueDistance(t.matePreferenceHue, c.bodyHue) * 2 * clamp01(t.mateChoosiness ?? 0) * signal;
+  const hueMismatch = hueDistance(t.matePreferenceHue, c.bodyHue) * 2;
+  // Unresolvable colour is neutral, not a perfect match for every preference.
+  return (0.5 + (hueMismatch - 0.5) * signal) * clamp01(t.mateChoosiness ?? 0);
 }
 export function mateSelectionCost(source, candidate, distance, config = {}) {
   if (config.colourMatePreferenceEnabled === false) return distance;

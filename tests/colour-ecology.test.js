@@ -206,6 +206,17 @@ describe('habitat appearance and contextual detection', () => {
     expect(visibilityRange(observer, target, w, simConfig, 12)).toBeLessThan(low);
     expect(colourContrast(hslToRgb(0.99, 0.5, 0.5), hslToRgb(0.01, 0.5, 0.5))).toBeLessThan(0.05);
   });
+  it('keeps existing inherited senses stable when the base config is edited', () => {
+    const observer = animal(1),
+      target = animal(2, 'circle', 17),
+      world = worldOf();
+    const range = visibilityRange(observer, target, world, simConfig, 12);
+    expect(
+      visibilityRange(observer, target, world, { ...simConfig, creaturePerceptionRange: 20 }, 12)
+    ).toBe(range);
+    observer.traits.perceptionRange = 2.5;
+    expect(visibilityRange(observer, target, world, simConfig, 12)).toBeLessThan(range);
+  });
   it.each([false, true])('changes actual predator acquisition with index %s', (indexed) => {
     const predator = animal(1, 'triangle'),
       prey = animal(2, 'circle', 17),
@@ -255,6 +266,12 @@ describe('habitat appearance and contextual detection', () => {
         world.terrainDirtyCounter++;
         updateCreatureHerding({ ...opts, tick: 2 });
         expect(prey.herding.nearbyThreats).toBe(1);
+        predator.position = { ...prey.position };
+        index.rebuild(creatures);
+        updateCreatureHerding({ ...opts, tick: 3 });
+        expect(prey.herding.nearestThreatDistance).toBe(0);
+        for (const v of Object.values(prey.herding.targetOffset ?? {}))
+          expect(Number.isFinite(v)).toBe(true);
       }
     }
   );
@@ -350,11 +367,13 @@ describe('soft mate choice and lifecycle consistency', () => {
     b.traits.bodySaturation = 1;
     for (const lightness of [0, 1]) {
       b.traits.bodyLightness = lightness;
-      expect(matePreferenceMismatch(a, b)).toBe(0);
+      expect(matePreferenceMismatch(a, b)).toBe(0.5);
     }
+    b.traits.bodyHue = 0;
+    expect(matePreferenceMismatch(a, b)).toBe(0.5);
     b.traits.bodyLightness = 0.5;
     b.traits.bodySaturation = 0;
-    expect(matePreferenceMismatch(a, b)).toBe(0);
+    expect(matePreferenceMismatch(a, b)).toBe(0.5);
   });
   it('honors a pursued mate over a nearer substitute and waits for distant commitments', () => {
     const source = animal(2),

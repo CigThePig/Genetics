@@ -7,7 +7,18 @@ const ok = { ok: true };
 const species = ['square', 'triangle', 'circle', 'octagon'];
 const foods = ['grass', 'berries', 'meat'];
 const genes = Object.keys(simConfig.creatureGenomeDefaults.default);
-const traitKeys = [...genes, 'foodEfficiency'];
+const multiplierGenes = genes.filter(
+  (key) =>
+    ![
+      'bodyHue',
+      'bodySaturation',
+      'bodyLightness',
+      'matePreferenceHue',
+      'mateChoosiness',
+      'colourDiscrimination'
+    ].includes(key)
+);
+const traitKeys = [...multiplierGenes, 'foodEfficiency'];
 const numeric = (value, path, min = 0, max = Infinity) =>
   typeof value === 'number' && Number.isFinite(value) && value >= min && value <= max
     ? ok
@@ -96,7 +107,7 @@ export function validateConfigValue(key, value) {
         record(v, p, genes, (n, at) => numeric(n, at, 0, 1))
       );
     case 'creatureGenomeRanges':
-      return record(value, key, genes, (v, p) => {
+      return record(value, key, multiplierGenes, (v, p) => {
         const result = record(v, p, ['min', 'max'], (n, at) => numeric(n, at));
         if (!result.ok) return result;
         return own(v, 'min') && own(v, 'max') && v.min <= v.max

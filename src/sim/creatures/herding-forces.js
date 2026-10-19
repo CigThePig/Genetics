@@ -132,6 +132,7 @@ export const calculateFleeVector = (threats, threatRange) => {
   let fleeY = 0;
 
   for (const threat of threats) {
+    if (threat.distance < 0.01) continue; // Coincident actors remain detected, with no undefined direction.
     // Strength inversely proportional to distance (closer = stronger)
     const strength = 1 - threat.distance / threatRange;
     const strengthSq = strength * strength; // Quadratic falloff

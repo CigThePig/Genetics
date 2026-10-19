@@ -1,3 +1,4 @@
+import { simConfig } from '../config-defaults.js';
 import { habitatRgbAt } from '../habitat-colours.js';
 import { colourContrast, hslToRgb, clamp01 } from '../colour.js';
 import { getTerrainEffectsAt } from '../terrain-effects.js';
@@ -29,12 +30,10 @@ export function visibilityRange(observer, target, world, config = {}, range = 0,
     Math.floor(p?.x ?? -1),
     Math.floor(p?.y ?? -1)
   ).perception;
-  const base =
-    Number.isFinite(config.creaturePerceptionRange) && config.creaturePerceptionRange > 0
-      ? config.creaturePerceptionRange
-      : 10;
+  // Normalize the inherited absolute trait against the engine's fixed reference.
+  // Editing a config default must not retroactively change an existing animal's senses.
   const senses = Number.isFinite(observer?.traits?.perceptionRange)
-    ? observer.traits.perceptionRange / base
+    ? observer.traits.perceptionRange / simConfig.creaturePerceptionRange
     : 1;
   const exposure =
     config.colourCamouflageEnabled === false ||

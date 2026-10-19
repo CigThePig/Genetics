@@ -1,3 +1,4 @@
+import { simConfig } from '../src/sim/config.js';
 import { describe, it, expect } from 'vitest';
 import { generateTerrain } from '../src/sim/regional-terrain.js';
 import { createWorldGrid } from '../src/sim/world-grid.js';
@@ -5,7 +6,7 @@ import { createRng } from '../src/sim/rng.js';
 import { analyzeHabitats } from '../src/sim/habitat-analysis.js';
 const make = (seed, width = 120, height = 160, config = {}) => {
   const world = createWorldGrid({ width, height });
-  generateTerrain({ world, rng: createRng(seed), config: { seed, ...config } });
+  generateTerrain({ world, rng: createRng(seed), config: { ...simConfig, seed, ...config } });
   return world;
 };
 describe('regional geography', () => {
