@@ -39,7 +39,7 @@ Tasks:
 - [x] Verify relocation/regroup/threat/water and renderer cache expectations.
 - [x] Run npm run verify and npm run test:soak.
 - [x] Reconcile all historical open checklists with named evidence and limitations.
-- [ ] Update repo-map, history, active-track and create a PR.
+- [x] Update repo-map, history, active-track and create a PR.
 
 Files: tests/phase-completion.test.js, existing track plans, context/maintenance-roadmap.md, context/phase-completion-2026-10-19.md, context/history.md, context/active-track.md.
 Verification: repository gates, deterministic scenario tests, desktop/mobile checks, default seeded soak.
@@ -60,3 +60,5 @@ Verification exposed that simple herding omitted long-range regroup and its post
 ## Phase 3 review checkpoint
 
 Final seeded soak passes for all three seeds: no first-minute deaths, all species present, and finite/bounded state with exact population accounting. Both browser viewport suites and live resize/profiler checks pass. Historical plans now point to an evidence table and disclose automated substitutions and remaining subjective/device observations. Implementation review is complete; PR creation/closeout is the final administrative step.
+
+Closeout: PR #136 opened for review. All planned implementation and verification checkpoints are complete; physical-device performance and subjective long-run behavior remain playtesting observations, as documented in the evidence report.

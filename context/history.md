@@ -28,3 +28,5 @@ Reviewed source and tooling by subsystem. Repaired deterministic isolation, perc
 - Completed simple-mode long-range regroup/post-drink countdown and made threat steering take priority over stale herd forces. Seed trajectories change intentionally; tick order and predator formulas are preserved.
 - Added clock, pregnancy, pack/herd, worker-flag parity, spawn compatibility, config-safety and sliced-cache regressions. Three final five-minute seed runs have zero first-minute deaths and all species present. Desktop/mobile browser controls and live resize/profiler checks pass.
 - Details and scoped limitations: context/phase-completion-2026-10-19.md. Future Tracks 11–13 remain unplanned roadmap work.
+
+- Completion PR: https://github.com/CigThePig/Genetics/pull/136 (open for review; not merged).
