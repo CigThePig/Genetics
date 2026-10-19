@@ -95,8 +95,8 @@ describe('sim scaffold', () => {
     const fullCount = countWaterTiles(full.state.world);
     const reducedCount = countWaterTiles(reduced.state.world);
 
-    expect(full.state.world.terrainWaterLevelEffective).toBeDefined();
-    expect(reduced.state.world.terrainWaterLevelEffective).toBeDefined();
+    expect(full.state.world.regions.length).toBeGreaterThan(0);
+    expect(reduced.state.world.regions).toEqual(full.state.world.regions);
     expect(reducedCount).toBeLessThan(fullCount);
   });
 });

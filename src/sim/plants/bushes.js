@@ -1,3 +1,4 @@
+import { getTerrainEffectsAt } from '../terrain-effects.js';
 import { resolveTicksPerSecond } from '../utils/resolvers.js';
 
 const DEFAULT_BUSH_INIT = {
@@ -84,6 +85,8 @@ export function updateBushes({ world, config, rng }) {
         if (world.getTerrainAt && world.getTerrainAt(x, y) === waterTerrain) {
           continue;
         }
+        const suitability = Math.min(1, getTerrainEffectsAt(world, x, y).plantCap);
+        if (rng?.nextFloat && rng.nextFloat() > suitability) continue;
         placed = true;
         break;
       }
@@ -132,7 +135,10 @@ export function updateBushes({ world, config, rng }) {
     }
 
     if (berryMax > 0 && berryRegenRate > 0) {
-      const regen = berryRegenRate * Math.max(0, Math.min(1, health));
+      const regen =
+        berryRegenRate *
+        Math.max(0, Math.min(1, health)) *
+        getTerrainEffectsAt(world, bush.x, bush.y).plantCap;
       berries = Math.min(berryMax, Math.max(0, berries + regen));
     } else {
       berries = Math.min(berryMax, Math.max(0, berries));

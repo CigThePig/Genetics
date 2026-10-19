@@ -1,3 +1,4 @@
+import { HABITATS } from '../sim/habitat-colours.js';
 import { getActivePerf } from '../metrics/perf-registry.js';
 export function createTerrainView({
   resolveTileSize,
@@ -49,16 +50,25 @@ export function createTerrainView({
     const endRow = Math.min(world.height, Math.ceil((maxWorldY - originY) / tileSize) + padding);
 
     const { cells: _cells } = world;
-    const grassStress = Array.isArray(world.grassStress) ? world.grassStress : null;
-    const stressThreshold = Number.isFinite(config?.grassStressVisibleThreshold)
-      ? config.grassStressVisibleThreshold
-      : 0.25;
-
     // Detail level based on zoom
     const showDetail = state.zoom > 0.3;
     const showFineDetail = state.zoom > 0.6;
     // Reserved for future ultra-detailed rendering: const showUltraDetail = state.zoom > 1.0;
 
+    if (config?.biomeDebugView) {
+      for (let y = startRow; y < endRow; y++)
+        for (let x = startCol; x < endCol; x++) {
+          ctx.fillStyle = HABITATS[_cells[y * world.width + x]]?.debug ?? '#888';
+          ctx.fillRect(
+            originX + x * tileSize,
+            originY + y * tileSize,
+            tileSize + 0.5,
+            tileSize + 0.5
+          );
+        }
+      ctx.restore();
+      return;
+    }
     ensureTerrainCache(world, config, tileSize, perf);
     const nowMs = performance.now();
     maybeUpdateGrassCache(terrainCache, world, config, tileSize, perf, nowMs, flushGrass);
@@ -102,14 +112,6 @@ export function createTerrainView({
     // PASS 2: Terrain edge blending
     // ─────────────────────────────────────────────────────────────────────────
 
-    if (showDetail) {
-      const tP2 = perf?.start('render.terrain.pass2');
-      if (terrainCache.detail && sw > 0 && sh > 0) {
-        ctx.drawImage(terrainCache.detail.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
-      }
-      perf?.end('render.terrain.pass2', tP2);
-    }
-
     // ─────────────────────────────────────────────────────────────────────────
     // PASS 3: Water edge effects
     // ─────────────────────────────────────────────────────────────────────────
@@ -131,32 +133,13 @@ export function createTerrainView({
       perf?.end('render.terrain.pass4', tP4);
     }
 
+    if (showDetail && terrainCache.detail && sw > 0 && sh > 0) {
+      ctx.drawImage(terrainCache.detail.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
+    }
+
     // ─────────────────────────────────────────────────────────────────────────
     // PASS 5: Stress overlay
     // ─────────────────────────────────────────────────────────────────────────
-
-    if (grassStress) {
-      const tP5 = perf?.start('render.terrain.pass5');
-      for (let y = startRow; y < endRow; y++) {
-        const rowOffset = y * world.width;
-        const tileY = originY + y * tileSize;
-
-        for (let x = startCol; x < endCol; x++) {
-          const idx = rowOffset + x;
-          const stressValue = Number.isFinite(grassStress[idx]) ? grassStress[idx] : 0;
-
-          if (stressValue >= stressThreshold) {
-            const tileX = originX + x * tileSize;
-
-            // Muted brown-orange for stressed areas
-            const stressAlpha = Math.min(0.35, 0.08 + stressValue * 0.25);
-            ctx.fillStyle = `rgba(140, 90, 50, ${stressAlpha})`;
-            ctx.fillRect(tileX, tileY, tileSize, tileSize);
-          }
-        }
-      }
-      perf?.end('render.terrain.pass5', tP5);
-    }
 
     // ─────────────────────────────────────────────────────────────────────────
     // PASS 6: Bushes
