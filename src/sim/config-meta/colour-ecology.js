@@ -21,6 +21,7 @@ export const metaColourEcology = {
     label: 'Biome prevalence',
     description: 'Weights for extra regions; each primary biome retains a core. Rebuild world.',
     category: 'world',
+    type: 'json',
     advanced: true
   },
   biomeDebugView: {
