@@ -53,7 +53,9 @@ const applyTradeoffs = (traits, genome, config) => {
   const sprintToStaminaScale = Number.isFinite(config?.creatureTradeoffSprintToStaminaDrainScale)
     ? config.creatureTradeoffSprintToStaminaDrainScale
     : 0.7;
-  const perceptionToReactionScale = Number.isFinite(config?.creatureTradeoffPerceptionToReactionDelayScale)
+  const perceptionToReactionScale = Number.isFinite(
+    config?.creatureTradeoffPerceptionToReactionDelayScale
+  )
     ? config.creatureTradeoffPerceptionToReactionDelayScale
     : 0.5;
 
@@ -176,7 +178,11 @@ export const createCreatureTraits = ({ config, species, genome } = {}) => {
       genomeMultipliers.berryEatMin
     ),
     gestationMultiplier: clampGestationMultiplier(
-      applyMultipliers(gestationBase, multipliers.gestationMultiplier, genomeMultipliers.gestationMultiplier)
+      applyMultipliers(
+        gestationBase,
+        multipliers.gestationMultiplier,
+        genomeMultipliers.gestationMultiplier
+      )
     ),
     foodEfficiency: resolveFoodEfficiency(
       config?.creatureFoodEfficiency,

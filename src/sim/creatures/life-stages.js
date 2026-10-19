@@ -59,7 +59,7 @@ export const getLifeStageDefinitions = (config) => {
     }));
 
   if (!normalized.length) {
-    return fallbackLifeStages;
+    return getLifeStageDefinitions({ ...config, creatureLifeStages: fallbackLifeStages });
   }
 
   return normalized.sort((a, b) => a.minAge - b.minAge);

@@ -259,7 +259,10 @@ const updateMutationMetrics = ({
     (metrics.pleiotropyStrengthLastTick ?? 0) + pleiotropyStrength;
   metrics.pleiotropyStrengthTotal = (metrics.pleiotropyStrengthTotal ?? 0) + pleiotropyStrength;
   if (species) {
-    if (metrics.mutationsBySpeciesLastTick && metrics.mutationsBySpeciesLastTick[species] !== undefined) {
+    if (
+      metrics.mutationsBySpeciesLastTick &&
+      metrics.mutationsBySpeciesLastTick[species] !== undefined
+    ) {
       metrics.mutationsBySpeciesLastTick[species] += mutationCount;
     }
     if (

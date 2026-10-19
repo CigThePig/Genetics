@@ -1,6 +1,7 @@
 # Blueprint — Herd Anchor Stability + Wander Cohesion
 
 ## Summary
+
 - Tune herding defaults to reduce diffusion and keep subtle steering effects.
 - Add new movement tuning for herd-aware wander correlation.
 - Add intelligent herd anchors evaluated on the main thread with low-frequency sampling, hysteresis, and drift.
@@ -10,6 +11,7 @@
 - Reduce world water coverage via a multiplier-driven effective threshold/river count.
 
 ## Files
+
 - src/sim/config.js
   - Update herding defaults and add new config keys + configMeta entries.
 - src/sim/sim.js
@@ -28,11 +30,13 @@
   - Add post-drink regroup timer.
 
 ## Data & State
+
 - New per-species anchor state stored in a module map (pos, target, softRadius, cooldown, scores, threatHeat).
 - World debug snapshot for anchors stored on world.herdAnchors.
 - New per-species water rendezvous state stored in module map with world.herdWaterTargets snapshot.
 
 ## Logic
+
 - Anchor evaluation uses seeded RNG when available, sampled candidates around herd centroid, and lightweight scoring for food, water proximity, threats, crowding, and boundary bias.
 - Anchor pulls are gentle, distance-clamped, and disabled for urgent needs/threatened creatures and small herds.
 - Wander retargeting in herds biases headings toward herding offset and reduces jitter/retarget frequency.
@@ -42,6 +46,7 @@
 - Water coverage multiplier preserves shoreline thickness while reducing effective water/river generation.
 
 ## Risks & Mitigations
+
 - Risk: anchor dominates behavior.
   - Mitigation: soft radius + max influence distance + urgent-need gating + low pull strength.
 - Risk: nondeterminism.
@@ -52,6 +57,7 @@
   - Mitigation: commit windows + eval cooldown + small candidate count.
 
 ## Verification
+
 - npm test
 - Manual sim run: verify cohesive herds, smooth movement, and worker consistency.
 - Manual sim run: verify shared water rendezvous, post-drink regroup, and herbivore mating mingling.

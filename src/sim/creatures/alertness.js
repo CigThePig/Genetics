@@ -35,7 +35,11 @@ export function updateCreatureAlertness({ creatures, config }) {
       : 0;
 
     let reactionCooldown = previousCooldown;
-    if (creature?.perception?.changed) {
+    if (
+      creature?.perception?.changed &&
+      previousCooldown <= 0 &&
+      creature?.alertness?.canReact !== false
+    ) {
       reactionCooldown = reactionDelay;
     }
 

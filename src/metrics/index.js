@@ -27,8 +27,18 @@ export function createMetrics({ container } = {}) {
     overlay.textContent = `FPS: ${fps} | TPS: ${tps}`;
   };
 
+  const updateTickRate = (now) => {
+    const elapsed = now - lastTickTime;
+    if (elapsed >= 1000) {
+      tps = Math.round((tickCount * 1000) / elapsed);
+      tickCount = 0;
+      lastTickTime = now;
+      updateOverlayText();
+    }
+  };
+
   const updateOverlay = (time) => {
-    frameCount += 1;
+    updateTickRate(time);
     const elapsed = time - lastTime;
     if (elapsed >= 1000) {
       fps = Math.round((frameCount * 1000) / elapsed);
@@ -78,16 +88,13 @@ export function createMetrics({ container } = {}) {
   ];
 
   return {
+    recordFrame() {
+      frameCount += 1;
+    },
     update({ ticks = 0, time } = {}) {
       const now = Number.isFinite(time) ? time : performance.now();
       tickCount += ticks;
-      const elapsed = now - lastTickTime;
-      if (elapsed >= 1000) {
-        tps = Math.round((tickCount * 1000) / elapsed);
-        tickCount = 0;
-        lastTickTime = now;
-        updateOverlayText();
-      }
+      updateTickRate(now);
     },
     snapshot() {
       return {
@@ -131,6 +138,7 @@ export function createMetrics({ container } = {}) {
     },
     destroy() {
       stopRaf();
+      if (perf.isEnabled()) setActivePerf(null);
       overlay.remove();
     }
   };

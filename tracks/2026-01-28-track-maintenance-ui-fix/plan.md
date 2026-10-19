@@ -1,6 +1,7 @@
 # Plan — Maintenance: UI Config Panel Fixes
 
 ## Recon Summary
+
 - **Files likely to change:**
   - `src/ui/config-panel.js` (input rendering, categories, control types, power features).
   - `src/sim/config.js` (configMeta coverage, boolean types, UI schema hints).
@@ -22,6 +23,7 @@
 ---
 
 ## Deviation Note (2026-02-04)
+
 - Added Phase 4 to capture requested UI polish (graphs bottom sheet handle/FAB, config section persistence, inspector clear button) that extends beyond `context/UI-FIX` while remaining UI-only and determinism-safe.
 
 ---
@@ -29,6 +31,7 @@
 ## Phase 1 — Boolean trap + hidden knob exposure
 
 ### Tasks
+
 - [x] Audit `configMeta` for boolean feature flags and set `type: 'boolean'` while removing numeric min/max/step.
 - [x] Update config panel rendering to use checkboxes/toggles for boolean type and write true/false.
 - [x] Ensure panel update path sets `checked` from config for boolean inputs.
@@ -37,12 +40,14 @@
 - [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
+
 - `src/ui/config-panel.js`
 - `src/sim/config.js`
 - `src/styles.css` (only if checkbox styling is needed)
 - `src/main.js` (only if wiring changes are needed)
 
 ### Verification checklist
+
 - [ ] Run dev server and open config panel.
 - [ ] Toggle a boolean feature off; confirm the config writes `false` and the feature disables.
 - [ ] Confirm no boolean inputs write 0/1.
@@ -50,6 +55,7 @@
 - [ ] Confirm categories like world/memory/metrics/rendering are visible.
 
 ### Stop point
+
 - Pause after manual UI checks; do not proceed to Phase 2 without review.
 
 ---
@@ -57,6 +63,7 @@
 ## Phase 2 — UI reorg + real controls + descriptions
 
 ### Tasks
+
 - [x] Extend configMeta with `description`, `unit`, `control`, and `advanced` hints from verified doc.
 - [x] Render categories as collapsible sections with readable headers.
 - [x] Render boolean toggles, selects, sliders + number inputs based on configMeta hints.
@@ -65,18 +72,21 @@
 - [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
+
 - `src/ui/config-panel.js`
 - `src/sim/config.js`
 - `src/styles.css`
 - `src/main.js` (only if needed for reset hooks)
 
 ### Verification checklist
+
 - [ ] Boolean flags render as toggles.
 - [ ] Sliders appear for bounded numeric knobs.
 - [ ] Descriptions/units match verified doc intent.
 - [ ] Layout stacks cleanly on narrow viewports.
 
 ### Stop point
+
 - Pause after manual UI checks; do not proceed to Phase 3 without review.
 
 ---
@@ -84,6 +94,7 @@
 ## Phase 3 — Power tuning + structured knob editors
 
 ### Tasks
+
 - [x] Add search/filter over label/key/description.
 - [x] Add favorites/pinning with localStorage persistence.
 - [x] Implement preset export/import with validation.
@@ -92,12 +103,14 @@
 - [ ] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
+
 - `src/ui/config-panel.js`
 - `src/styles.css`
 - `src/sim/config.js`
 - `src/main.js` (optional for batch apply support)
 
 ### Verification checklist
+
 - [ ] Search filters knobs correctly without breaking layout.
 - [ ] Favorites persist across reloads.
 - [ ] Export/import validates JSON and applies only known keys.
@@ -105,6 +118,7 @@
 - [ ] Section reset restores defaults.
 
 ### Stop point
+
 - Pause after manual UI checks; no further phases until review.
 
 ---
@@ -112,6 +126,7 @@
 ## Phase 4 — UI polish + panel usability
 
 ### Tasks
+
 - [x] Persist config section collapse state and update toggle row layout hooks.
 - [x] Add graphs bottom-sheet handle with drag open/close and a visibility callback.
 - [x] Add Graphs FAB and sync its active state with panel visibility.
@@ -120,6 +135,7 @@
 - [x] ✅ Reminder: update `/context/repo-map.md` if files/roles change.
 
 ### Files touched
+
 - `src/ui/config-panel.js`
 - `src/ui/graphs-panel.js`
 - `src/ui/index.js`
@@ -127,10 +143,12 @@
 - `src/styles.css`
 
 ### Verification checklist
+
 - [ ] Config sections remember collapsed/open state after refresh.
 - [ ] Graphs panel can be dragged open/closed and the Graphs FAB reflects visibility.
 - [ ] Inspector clear button resets tracking and follow state.
 - [ ] Toggle rows stay aligned on mobile widths.
 
 ### Stop point
+
 - Pause after manual UI checks; confirm in review before additional scope.

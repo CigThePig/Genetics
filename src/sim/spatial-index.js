@@ -24,6 +24,7 @@ const DEFAULT_CELL_SIZE = 16;
  * @returns {Object} Spatial index instance
  */
 export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
+  cellSize = Number.isFinite(cellSize) && cellSize > 0 ? cellSize : DEFAULT_CELL_SIZE;
   const grid = new Map(); // cellKey -> Set of creatures
   const creatureToCell = new Map(); // creature -> cellKey
   const creaturesById = new Map(); // id -> creature
@@ -58,6 +59,8 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
     const y = creature.position.y;
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
 
+    const previousKey = creatureToCell.get(creature);
+    if (previousKey !== undefined) grid.get(previousKey)?.delete(creature);
     const key = getCellKey(x, y);
 
     if (!grid.has(key)) {
@@ -89,7 +92,8 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
    */
   const getById = (id) => {
     if (!Number.isFinite(id)) return null;
-    return creaturesById.get(id) ?? null;
+    const creature = creaturesById.get(id);
+    return creature?.meters?.hp <= 0 ? null : (creature ?? null);
   };
 
   /**
@@ -106,6 +110,7 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
    */
   const queryNearby = (x, y, radius, { exclude = null, filter = null } = {}) => {
     const results = [];
+    if (![x, y, radius].every(Number.isFinite) || radius < 0) return results;
     const radiusSq = radius * radius;
 
     // Calculate cell range to check
@@ -120,7 +125,7 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
         if (!cell) continue;
 
         for (const creature of cell) {
-          if (creature === exclude) continue;
+          if (creature === exclude || creature.meters?.hp <= 0) continue;
           if (filter && !filter(creature)) continue;
 
           const dx = creature.position.x - x;
@@ -142,6 +147,7 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
    */
   const countNearby = (x, y, radius, { exclude = null, filter = null } = {}) => {
     let count = 0;
+    if (![x, y, radius].every(Number.isFinite) || radius < 0) return count;
     const radiusSq = radius * radius;
 
     const { cx: minCx, cy: minCy } = getCellCoords(x - radius, y - radius);
@@ -154,7 +160,7 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
         if (!cell) continue;
 
         for (const creature of cell) {
-          if (creature === exclude) continue;
+          if (creature === exclude || creature.meters?.hp <= 0) continue;
           if (filter && !filter(creature)) continue;
 
           const dx = creature.position.x - x;
@@ -184,6 +190,7 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
    */
   const findNearest = (x, y, maxRadius, { exclude = null, filter = null } = {}) => {
     let nearest = null;
+    if (![x, y, maxRadius].every(Number.isFinite) || maxRadius < 0) return nearest;
     let nearestDistSq = maxRadius * maxRadius;
 
     const { cx: minCx, cy: minCy } = getCellCoords(x - maxRadius, y - maxRadius);
@@ -196,14 +203,17 @@ export function createSpatialIndex({ cellSize = DEFAULT_CELL_SIZE } = {}) {
         if (!cell) continue;
 
         for (const creature of cell) {
-          if (creature === exclude) continue;
+          if (creature === exclude || creature.meters?.hp <= 0) continue;
           if (filter && !filter(creature)) continue;
 
           const dx = creature.position.x - x;
           const dy = creature.position.y - y;
           const distanceSq = dx * dx + dy * dy;
 
-          if (distanceSq < nearestDistSq) {
+          if (
+            distanceSq <= nearestDistSq &&
+            (!nearest || distanceSq < nearestDistSq || creature.id < nearest.creature.id)
+          ) {
             nearest = { creature, distanceSq, dx, dy };
             nearestDistSq = distanceSq;
           }

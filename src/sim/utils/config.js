@@ -45,6 +45,7 @@ export const mergeSimConfig = (baseConfig, overrideConfig) => {
 
   const mergeInto = (target, source) => {
     for (const [key, nextValue] of Object.entries(source)) {
+      if (['__proto__', 'constructor', 'prototype'].includes(key)) continue;
       if (isPlainObject(nextValue) && isPlainObject(target[key])) {
         mergeInto(target[key], nextValue);
       } else {

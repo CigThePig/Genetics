@@ -354,13 +354,16 @@ self.onmessage = (ev) => {
     } catch (err) {
       console.error('[HerdingWorker] Error:', err);
       // Return buffers even on error so main thread can reuse
-      self.postMessage({
-        type: 'error',
-        jobId: data.jobId,
-        tick: data.tick,
-        error: err.message,
-        buffers: data.buffers
-      }, Object.values(data.buffers));
+      self.postMessage(
+        {
+          type: 'error',
+          jobId: data.jobId,
+          tick: data.tick,
+          error: err.message,
+          buffers: data.buffers
+        },
+        Object.values(data.buffers)
+      );
     }
   }
 };

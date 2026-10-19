@@ -105,7 +105,13 @@ export function createInput({ canvas, camera, onTap, onCameraChange, worldToTile
       pinchStartZoom = camera.getState().zoom;
     }
 
-    if (onTap && tapState.pointerId === event.pointerId && !tapState.moved && pointers.size === 0) {
+    if (
+      event.type !== 'pointercancel' &&
+      onTap &&
+      tapState.pointerId === event.pointerId &&
+      !tapState.moved &&
+      pointers.size === 0
+    ) {
       const rect = canvas.getBoundingClientRect();
       const screenPoint = {
         x: event.clientX - rect.left,

@@ -36,7 +36,7 @@ export function applyCreatureActions({ creatures, config, world }) {
 
   for (const creature of creatures) {
     const meters = creature?.meters;
-    if (!meters || !creature.position) {
+    if (!meters || !creature.position || meters.hp <= 0) {
       continue;
     }
     const drinkAmount = resolveActionAmount(creature?.traits?.drinkAmount, fallbackDrinkAmount);

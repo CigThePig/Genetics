@@ -9,306 +9,32 @@ import {
   resolveDistance,
   resolveBasalDrain,
   resolveTraitDrain,
-  resolveMinAgeTicks,
-  resolveWaterTerrain,
-  isWaterTile
+  resolveMinAgeTicks
 } from '../utils/resolvers.js';
+import {
+  resolveBaseMeter,
+  resolveChance,
+  resolvePerTickChanceFromPerSecond,
+  resolveGestationTicks,
+  resolvePregnancyMultiplier,
+  resolveCooldownTicks,
+  resolveCost,
+  isReadyToReproduce,
+  findMate,
+  createOffspringPosition,
+  resolveGestationMultiplier,
+  createPregnancyState,
+  resolveNewbornMeterMultiplier
+} from './reproduction-helpers.js';
 
-const resolveBaseMeter = (value) => (Number.isFinite(value) && value > 0 ? value : 1);
-
-const resolveChance = (value, fallback) => {
-  if (!Number.isFinite(value)) {
-    return fallback;
-  }
-  return Math.min(1, Math.max(0, value));
-};
-
-// Converts a probability expressed "per second" into a per-tick probability that
-// stays stable when ticksPerSecond changes.
-const resolvePerTickChanceFromPerSecond = (chancePerSecond, ticksPerSecond) => {
-  if (!Number.isFinite(chancePerSecond)) {
-    return null;
-  }
-  const tps = Number.isFinite(ticksPerSecond) && ticksPerSecond > 0 ? ticksPerSecond : 60;
-  const clamped = Math.min(1, Math.max(0, chancePerSecond));
-  if (clamped === 0) return 0;
-  if (clamped === 1) return 1;
-  return 1 - Math.pow(1 - clamped, 1 / tps);
-};
-
-const resolveGestationTicks = (seconds, fallbackSeconds, ticksPerSecond) => {
-  const tps = Number.isFinite(ticksPerSecond) ? ticksPerSecond : 60;
-  const value = Number.isFinite(seconds) ? seconds : fallbackSeconds;
-  return Math.max(1, Math.trunc(value * tps));
-};
-
-const resolvePregnancyMultiplier = (value, fallback) => {
-  if (!Number.isFinite(value)) {
-    return fallback;
-  }
-  return Math.max(0, value);
-};
-
-const resolveCooldownTicks = (value, fallback, ticksPerSecond) => {
-  if (!Number.isFinite(value)) {
-    return Math.max(0, Math.trunc(fallback * ticksPerSecond));
-  }
-  return Math.max(0, Math.trunc(value * ticksPerSecond));
-};
-
-const resolveCost = (value, fallback) => (Number.isFinite(value) ? Math.max(0, value) : fallback);
-
-const clampPosition = (value, min, max) => Math.min(max, Math.max(min, value));
-
-export const isReadyToReproduce = ({
-  creature,
-  baseEnergy,
-  baseWater,
-  minEnergyRatio,
-  minWaterRatio,
-  minAgeTicks,
-  sexEnabled,
-  pregnancyEnabled
-}) => {
-  const meters = creature?.meters;
-  if (!meters) {
-    return false;
-  }
-  if (
-    sexEnabled &&
-    pregnancyEnabled &&
-    creature.sex === 'female' &&
-    creature.reproduction?.pregnancy?.isPregnant
-  ) {
-    return false;
-  }
-  // Use effective age: fast growers reach maturity sooner
-  const maturityScale = Number.isFinite(creature.maturityScale) ? creature.maturityScale : 1;
-  const effectiveAgeTicks = (creature.ageTicks ?? 0) * maturityScale;
-  if (!Number.isFinite(effectiveAgeTicks) || effectiveAgeTicks < minAgeTicks) {
-    return false;
-  }
-  const energyRatio = meters.energy / baseEnergy;
-  const waterRatio = meters.water / baseWater;
-  return energyRatio >= minEnergyRatio && waterRatio >= minWaterRatio;
-};
-
-const isMateCandidate = ({
-  candidate,
-  source,
-  baseEnergy,
-  baseWater,
-  minEnergyRatio,
-  minWaterRatio,
-  minAgeTicks,
-  pairedIds,
-  sexEnabled,
-  pregnancyEnabled
-}) => {
-  if (!candidate || candidate.species !== source.species) {
-    return false;
-  }
-  if (sexEnabled) {
-    if (!candidate.sex || !source.sex || candidate.sex === source.sex) {
-      return false;
-    }
-    if (
-      pregnancyEnabled &&
-      candidate.sex === 'female' &&
-      candidate.reproduction?.pregnancy?.isPregnant
-    ) {
-      return false;
-    }
-  }
-  if (pairedIds?.has(candidate.id)) {
-    return false;
-  }
-  const cooldown = candidate.reproduction?.cooldownTicks ?? 0;
-  if (cooldown > 0) {
-    return false;
-  }
-  return isReadyToReproduce({
-    creature: candidate,
-    baseEnergy,
-    baseWater,
-    minEnergyRatio,
-    minWaterRatio,
-    minAgeTicks,
-    sexEnabled,
-    pregnancyEnabled
-  });
-};
-
-export const selectMateTarget = ({
+export function updateCreatureReproduction({
   creatures,
-  startIndex = -1,
-  source,
-  maxDistanceSq,
-  baseEnergy,
-  baseWater,
-  minEnergyRatio,
-  minWaterRatio,
-  minAgeTicks,
-  pairedIds,
-  sexEnabled,
-  pregnancyEnabled,
+  config,
+  rng,
+  world,
+  metrics,
   spatialIndex
-}) => {
-  // Use spatial index if available for O(k) performance instead of O(n)
-  if (spatialIndex && source?.position) {
-    const maxDistance = Math.sqrt(maxDistanceSq);
-    const nearby = spatialIndex.queryNearby(
-      source.position.x,
-      source.position.y,
-      maxDistance,
-      {
-        exclude: source,
-        filter: (candidate) =>
-          isMateCandidate({
-            candidate,
-            source,
-            baseEnergy,
-            baseWater,
-            minEnergyRatio,
-            minWaterRatio,
-            minAgeTicks,
-            pairedIds,
-            sexEnabled,
-            pregnancyEnabled
-          })
-      }
-    );
-
-    // Find closest mate
-    let chosen = null;
-    let closestDistSq = Infinity;
-    for (const { creature, distanceSq } of nearby) {
-      if (distanceSq < closestDistSq) {
-        chosen = creature;
-        closestDistSq = distanceSq;
-      }
-    }
-    return chosen;
-  }
-
-  // Fallback to linear scan if no spatial index
-  let chosen = null;
-  let closestDistance = Infinity;
-
-  const rawOffset = Number.isFinite(startIndex) ? Math.trunc(startIndex) : -1;
-  const offset = Math.min(creatures.length - 1, Math.max(-1, rawOffset));
-  const scanRange = (start, end) => {
-    for (let i = start; i < end; i += 1) {
-      const candidate = creatures[i];
-      if (
-        !isMateCandidate({
-          candidate,
-          source,
-          baseEnergy,
-          baseWater,
-          minEnergyRatio,
-          minWaterRatio,
-          minAgeTicks,
-          pairedIds,
-          sexEnabled,
-          pregnancyEnabled
-        })
-      ) {
-        continue;
-      }
-      const dx = candidate.position.x - source.position.x;
-      const dy = candidate.position.y - source.position.y;
-      const distanceSq = dx * dx + dy * dy;
-      if (distanceSq > maxDistanceSq) {
-        continue;
-      }
-      if (distanceSq < closestDistance) {
-        chosen = candidate;
-        closestDistance = distanceSq;
-      }
-    }
-  };
-
-  scanRange(offset + 1, creatures.length);
-  if (offset > 0) {
-    scanRange(0, offset);
-  }
-
-  return chosen;
-};
-
-const findMate = (options) => selectMateTarget(options);
-
-const spawnOffset = (rng) => (rng.nextFloat() * 2 - 1) * 0.35;
-
-const createOffspringPosition = ({ rng, world, source, mate, config }) => {
-  const maxX = Number.isFinite(world?.width) ? Math.max(0, world.width - 0.001) : 0;
-  const maxY = Number.isFinite(world?.height) ? Math.max(0, world.height - 0.001) : 0;
-  const x = (source.position.x + mate.position.x) * 0.5 + spawnOffset(rng);
-  const y = (source.position.y + mate.position.y) * 0.5 + spawnOffset(rng);
-  const clampedX = clampPosition(x, 0, maxX);
-  const clampedY = clampPosition(y, 0, maxY);
-  const waterTerrain = resolveWaterTerrain(config);
-  if (!isWaterTile(world, Math.floor(clampedX), Math.floor(clampedY), waterTerrain)) {
-    return { x: clampedX, y: clampedY };
-  }
-  return { x: source.position.x, y: source.position.y };
-};
-
-const clampGestationMultiplier = (value) => {
-  if (!Number.isFinite(value)) {
-    return 1;
-  }
-  return Math.min(1.5, Math.max(0.5, value));
-};
-
-const resolveGestationMultiplier = ({ creature, config }) => {
-  if (config?.creatureGestationTraitEnabled === false) {
-    return 1;
-  }
-  return clampGestationMultiplier(creature?.traits?.gestationMultiplier ?? 1);
-};
-
-const createPregnancyState = () => ({
-  isPregnant: false,
-  fatherId: null,
-  gestationTicksTotal: 0,
-  gestationTicksRemaining: 0
-});
-
-const resolveNewbornMeterMultiplier = (config, gestationMultiplier) => {
-  const fastThreshold = Number.isFinite(
-    config?.creatureBirthChildStartingMetersFastIfMultiplierBelow
-  )
-    ? config.creatureBirthChildStartingMetersFastIfMultiplierBelow
-    : 0.9;
-  const slowThreshold = Number.isFinite(
-    config?.creatureBirthChildStartingMetersSlowIfMultiplierAbove
-  )
-    ? config.creatureBirthChildStartingMetersSlowIfMultiplierAbove
-    : 1.1;
-  const fastMultiplier = resolvePregnancyMultiplier(
-    config?.creatureBirthChildStartingMetersFastMultiplier,
-    0.85
-  );
-  const slowMultiplier = resolvePregnancyMultiplier(
-    config?.creatureBirthChildStartingMetersSlowMultiplier,
-    1.1
-  );
-
-  if (!Number.isFinite(gestationMultiplier)) {
-    return 1;
-  }
-  if (gestationMultiplier < fastThreshold) {
-    return fastMultiplier;
-  }
-  if (gestationMultiplier > slowThreshold) {
-    return slowMultiplier;
-  }
-  return 1;
-};
-
-export function updateCreatureReproduction({ creatures, config, rng, world, metrics, spatialIndex }) {
+}) {
   if (!Array.isArray(creatures) || !rng || !world) {
     return;
   }
@@ -373,7 +99,7 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
   const fallbackEnergyDrain = resolveBasalDrain(config?.creatureBasalEnergyDrain);
   const fallbackWaterDrain = resolveBasalDrain(config?.creatureBasalWaterDrain);
 
-  let nextId = 0;
+  let nextId = world.nextCreatureId ?? 0;
   const creaturesById = new Map();
   for (const creature of creatures) {
     if (Number.isFinite(creature?.id) && creature.id >= nextId) {
@@ -384,6 +110,15 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
     }
   }
 
+  // Initialize everyone before pairing: a male can select a female later in the array.
+  for (const creature of creatures) {
+    creature.reproduction ??= { cooldownTicks: 0 };
+    if (pregnancyEnabled && sexEnabled) {
+      creature.reproduction.pregnancy ??= createPregnancyState();
+    }
+  }
+
+  const pregnantAtStart = new Set(creatures.filter((c) => c.reproduction?.pregnancy?.isPregnant));
   const pairedIds = new Set();
   const cooldownUpdatedIds = new Set();
   const newborns = [];
@@ -420,7 +155,12 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
 
   for (let i = 0; i < originalCount; i += 1) {
     const creature = creatures[i];
-    if (!creature) {
+    if (
+      !creature ||
+      creature.meters?.hp <= 0 ||
+      creature.meters?.energy <= 0 ||
+      creature.meters?.water <= 0
+    ) {
       continue;
     }
     if (!creature.reproduction) {
@@ -438,6 +178,7 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       creature.sex === 'female' &&
       creature.reproduction.pregnancy?.isPregnant
     ) {
+      if (!pregnantAtStart.has(creature)) continue;
       const meters = creature.meters;
       const pregnancy = creature.reproduction.pregnancy;
       const gestationMultiplier = resolveGestationMultiplier({ creature, config });
@@ -466,6 +207,7 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       ) {
         pregnancy.isPregnant = false;
         pregnancy.fatherId = null;
+        pregnancy.fatherGenome = null;
         pregnancy.gestationTicksTotal = 0;
         pregnancy.gestationTicksRemaining = 0;
         if (metrics) {
@@ -490,12 +232,14 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
       pregnancy.gestationTicksRemaining = Math.max(0, pregnancy.gestationTicksRemaining - 1);
       if (pregnancy.gestationTicksRemaining <= 0) {
         const father = pregnancy.fatherId !== null ? creaturesById.get(pregnancy.fatherId) : null;
-        const mate = father ?? creature;
+        const mate = pregnancy.fatherGenome
+          ? { genome: pregnancy.fatherGenome, species: creature.species }
+          : (father ?? creature);
         const position = createOffspringPosition({
           rng,
           world,
           source: creature,
-          mate,
+          mate: creature, // Live birth happens beside the mother.
           config
         });
         const genome = mutateCreatureGenome({
@@ -546,6 +290,7 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
         nextId += 1;
         pregnancy.isPregnant = false;
         pregnancy.fatherId = null;
+        pregnancy.fatherGenome = null;
         pregnancy.gestationTicksTotal = 0;
         pregnancy.gestationTicksRemaining = 0;
 
@@ -654,6 +399,7 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
         if (didConceive) {
           const gestationTicks = Math.max(1, Math.trunc(gestationBaseTicks * gestationMultiplier));
           female.reproduction.pregnancy.fatherId = male?.id ?? null;
+          female.reproduction.pregnancy.fatherGenome = { ...male.genome };
           female.reproduction.pregnancy.gestationTicksTotal = gestationTicks;
           female.reproduction.pregnancy.gestationTicksRemaining = gestationTicks;
           if (metrics) {
@@ -674,6 +420,7 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
           }
         } else {
           female.reproduction.pregnancy.fatherId = null;
+          female.reproduction.pregnancy.fatherGenome = null;
           female.reproduction.pregnancy.gestationTicksTotal = 0;
           female.reproduction.pregnancy.gestationTicksRemaining = 0;
         }
@@ -755,7 +502,11 @@ export function updateCreatureReproduction({ creatures, config, rng, world, metr
     }
   }
 
+  world.nextCreatureId = nextId;
   if (newborns.length) {
     creatures.push(...newborns);
   }
 }
+
+export { isReadyToReproduce } from './reproduction-helpers.js';
+export { selectMateTarget } from './reproduction-helpers.js';

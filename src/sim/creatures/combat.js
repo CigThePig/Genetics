@@ -13,6 +13,7 @@ export function applyCreatureCombat({ creatures, world, config, metrics, tick })
   }
   const processed = new Set();
   for (const creature of creatures) {
+    if (creature?.meters?.hp <= 0) continue;
     const chase = creature?.chase;
     if (!chase || chase.lastOutcome !== 'caught') {
       continue;

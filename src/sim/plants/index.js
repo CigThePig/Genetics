@@ -24,3 +24,19 @@ export function updatePlants({ state, config, rng }) {
 
   return state.metrics;
 }
+
+export function initializePlants({ state, config, rng }) {
+  return updatePlants({
+    state,
+    rng,
+    config: {
+      ...config,
+      grassRegrowthRate: 0,
+      grassStressIncrease: 0,
+      grassStressRecoveryRate: 0,
+      bushRecoveryRate: 0,
+      bushBerryRegenRate: 0,
+      carcassDecayRate: 0
+    }
+  });
+}

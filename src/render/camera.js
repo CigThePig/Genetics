@@ -1,6 +1,6 @@
 /**
  * Enhanced Camera Module
- * 
+ *
  * Features:
  * - Pan and zoom with smooth transitions
  * - Map bounds clamping
@@ -8,11 +8,11 @@
  * - Viewport-aware positioning
  */
 
-export function createCamera({ 
-  minZoom = 0.25, 
-  maxZoom = 4, 
-  zoom = 1, 
-  x = 0, 
+export function createCamera({
+  minZoom = 0.25,
+  maxZoom = 4,
+  zoom = 1,
+  x = 0,
   y = 0,
   followSmoothing = 0.15
 } = {}) {
@@ -39,37 +39,43 @@ export function createCamera({
    */
   const clampToBounds = () => {
     if (!state.bounds) return;
-    
+
     const { minX, maxX, minY, maxY } = state.bounds;
     const { width, height } = state.viewport;
-    
+
     if (width === 0 || height === 0) return;
-    
+
     // Calculate visible area in world coordinates
-    const halfVisibleWidth = (width / 2) / state.zoom;
-    const halfVisibleHeight = (height / 2) / state.zoom;
-    
+    const halfVisibleWidth = width / 2 / state.zoom;
+    const halfVisibleHeight = height / 2 / state.zoom;
+
     // World dimensions
     const worldWidth = maxX - minX;
     const worldHeight = maxY - minY;
     const worldCenterX = (minX + maxX) / 2;
     const worldCenterY = (minY + maxY) / 2;
-    
+
     // If viewport can see entire world, center it
     if (halfVisibleWidth * 2 >= worldWidth) {
       state.x = -worldCenterX * state.zoom;
     } else {
       // Clamp to edges
       const targetX = -state.x / state.zoom;
-      const clampedX = Math.max(minX + halfVisibleWidth, Math.min(maxX - halfVisibleWidth, targetX));
+      const clampedX = Math.max(
+        minX + halfVisibleWidth,
+        Math.min(maxX - halfVisibleWidth, targetX)
+      );
       state.x = -clampedX * state.zoom;
     }
-    
+
     if (halfVisibleHeight * 2 >= worldHeight) {
       state.y = -worldCenterY * state.zoom;
     } else {
       const targetY = -state.y / state.zoom;
-      const clampedY = Math.max(minY + halfVisibleHeight, Math.min(maxY - halfVisibleHeight, targetY));
+      const clampedY = Math.max(
+        minY + halfVisibleHeight,
+        Math.min(maxY - halfVisibleHeight, targetY)
+      );
       state.y = -clampedY * state.zoom;
     }
   };
@@ -88,9 +94,9 @@ export function createCamera({
 
   return {
     getState() {
-      return { 
-        x: state.x, 
-        y: state.y, 
+      return {
+        x: state.x,
+        y: state.y,
         zoom: state.zoom,
         isFollowing: state.isFollowing,
         followTarget: state.followTarget
@@ -123,10 +129,10 @@ export function createCamera({
         state.bounds = null;
         return;
       }
-      
+
       const halfWidth = (world.width * tileSize) / 2;
       const halfHeight = (world.height * tileSize) / 2;
-      
+
       state.bounds = {
         minX: -halfWidth,
         maxX: halfWidth,
@@ -145,7 +151,7 @@ export function createCamera({
         state.isFollowing = false;
         state.followTarget = null;
       }
-      
+
       state.x += dx;
       state.y += dy;
       clampToBounds();
@@ -190,7 +196,7 @@ export function createCamera({
       state.zoom = clamped;
       state.x = screenX - originX - worldX * state.zoom;
       state.y = screenY - originY - worldY * state.zoom;
-      
+
       clampToBounds();
     },
 
@@ -198,7 +204,10 @@ export function createCamera({
      * Zoom to specific level centered on viewport
      */
     zoomTo(nextZoom) {
+      const oldZoom = state.zoom;
       state.zoom = clampZoom(nextZoom);
+      state.x *= state.zoom / oldZoom;
+      state.y *= state.zoom / oldZoom;
       clampToBounds();
     },
 
@@ -239,35 +248,36 @@ export function createCamera({
      */
     updateFollow(creatures, tileSize, worldWidth, worldHeight) {
       if (!state.isFollowing || state.followTarget === null) return false;
-      
-      const creature = creatures?.find(c => c?.id === state.followTarget);
+
+      const creature = creatures?.find((c) => c?.id === state.followTarget);
       if (!creature || !creature.position) {
-        // Creature died or lost - keep following state but don't move
+        state.isFollowing = false;
+        state.followTarget = null;
         return false;
       }
-      
+
       // Convert creature tile position to world coordinates
       const worldPos = tileToWorld(
-        creature.position.x, 
-        creature.position.y, 
-        tileSize, 
-        worldWidth, 
+        creature.position.x,
+        creature.position.y,
+        tileSize,
+        worldWidth,
         worldHeight
       );
-      
+
       // Target camera position (centering on creature)
       const targetX = -worldPos.x * state.zoom;
       const targetY = -worldPos.y * state.zoom;
-      
+
       // Smooth interpolation
       const dx = targetX - state.x;
       const dy = targetY - state.y;
-      
+
       // Apply smoothing (higher = snappier)
       const smoothing = state.followSmoothing;
       state.x += dx * smoothing;
       state.y += dy * smoothing;
-      
+
       clampToBounds();
       return true;
     },
