@@ -1,4 +1,24 @@
 export const metaCreatures1 = {
+  creatureSpawnRetries: {
+    label: 'Spawn Land Attempts',
+    description: 'Maximum land-position attempts for each creature at spawn.',
+    min: 1,
+    max: 1000,
+    step: 1,
+    unit: 'count',
+    category: 'creatures',
+    advanced: true
+  },
+  creatureSpawnAnchorRetries: {
+    label: 'Spawn Anchor Attempts',
+    description: 'Maximum land-position attempts when choosing a species anchor.',
+    min: 1,
+    max: 1000,
+    step: 1,
+    unit: 'count',
+    category: 'creatures',
+    advanced: true
+  },
   creatureCount: {
     label: 'Creature Count',
     description: 'Total starting population.',

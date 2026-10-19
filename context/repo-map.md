@@ -13,7 +13,7 @@ Rules:
 ## Top-level
 
 - AGENTS.md
-  - Role: agent rules + constraints + workflow gates
+  - Role: canonical agent guidance, correctness invariants and proportional workflow
 - README.md
   - Role: repo landing page + quickstart + deployment summary
 - LICENSE
@@ -50,7 +50,7 @@ Rules:
   - Role: the ordered roadmap packaged into track definitions
   - Used by: planning to create tracks consistently
 - context/planning-checklist.md
-  - Role: the ritual + prompts for creating tracks and phases safely
+  - Role: proportional scope, design and verification checklist for substantial tracks
 - context/repo-map.md
   - Role: canonical index of modules/files and their interactions
 - context/product.md
@@ -62,13 +62,13 @@ Rules:
 - context/tech-stack.md
   - Role: tools, build, deploy
 - context/code-style.md
-  - Role: module boundaries + file rules (new system=new file, max 600 LOC)
+  - Role: cohesive module boundaries, state ownership and implementation conventions
 - context/active-track.md
   - Role: pointer to current track folder + current phase/task
 - context/history.md
   - Role: append-only track summaries + verification notes
 - context/UI-FIX
-  - Role: phased UI config panel fix prompts and constraints
+  - Role: historical UI config panel prompts; current workflow is in AGENTS.md
 
 ## Tracks
 
@@ -272,3 +272,46 @@ Rules:
   - Lifecycle, determinism, behavior, app-boundary and render-cache regression scenarios.
 - scripts/verify-simulation.mjs
   - Reusable three-seed finite-state, bounds, ID and population-accounting soak; npm run test:soak.
+
+## Unfinished-phase completion (2026-10-19)
+
+- tracks/2026-10-19-unfinished-phase-completion/
+  - Scope, blueprint, phased execution and verification checkpoints for historical open items.
+- context/phase-completion-2026-10-19.md
+  - Evidence and disposition for every historical unfinished phase, plus limits of verification.
+- src/ui/config-validation.js
+  - Shared primitive/domain validation for structured drawers and preset imports.
+- src/ui/config-panel.js, config-sections.js, config-values.js
+  - Live pinned Favorites, structured drawers, cloned resets and validated preset values.
+- src/app/timebase.js
+  - Fixed-step wall-clock accumulator used by bootstrap, independently testable across display rates.
+- src/sim/creatures/herding-simple.js, herding.js
+  - Regroup/countdown in both modes; threat steering takes priority over stale herd forces.
+- tests/config-validation.test.js, phase-completion.test.js
+  - Unsafe config/import regressions; timebase, pregnancy, pack, grazing, rendezvous and regroup scenarios.
+- scripts/verify-simulation.mjs
+  - Adds first-minute mortality and median death timing to existing seeded soak evidence.
+
+## Review follow-up for PRs #135 / #136
+
+- src/app/loop.js
+  - Owns timer/RAF lifecycle, fixed-step clock integration and per-frame view updates.
+- src/app/config-controller.js
+  - Connects config panel callbacks to world rebuilds, inspector rate and loop clock updates.
+- src/app/bootstrap.js
+  - Initializes modules and wires camera/input/view dependencies; loop and config ownership are delegated.
+- src/sim/creatures/behavior-hunting.js
+  - Hunting phase transitions extracted from behavior-state; common state helpers remain shared.
+- tests/review-followup.test.js
+  - Charging-only catches, scaled meter decisions, fallback prey parity, threat-distance threshold and regroup invalidation regressions.
+- tracks/2026-10-19-pr-review-followup/, context/pr-review-followup-2026-10-19.md
+  - Authorized review fixes, per-comment dispositions and updated verification evidence.
+
+## Newest review and guidance refresh
+
+- context/review-guidance-refresh-2026-10-19.md
+  - Latest review dispositions, standing-rule audit and current verification evidence.
+- src/sim/creatures/behavior-state.js, behavior-helpers.js
+  - Per-creature assessed-threat memory avoids repeated distant alerts while retaining closer-danger reassessment.
+- tests/review-followup.test.js, config-validation.test.js
+  - Multi-tick alert reassessment in both herd modes; anchor radius metadata/import/runtime agreement.

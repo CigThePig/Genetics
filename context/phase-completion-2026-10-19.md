@@ -1,0 +1,68 @@
+# Existing phase completion — 2026-10-19
+
+Historical verification snapshot at PR #136 commit `7b35fd4`. Subsequent review fixes and their current results are recorded in `context/pr-review-followup-2026-10-19.md`; the hashes and population counts below apply to the earlier implementation.
+
+Base: `65969b4312628b69285a2eb215806ddf18cd60d9` (merged audit PR #135).
+
+Reviewed all 24 pre-existing track plans, the maintenance roadmap, UI-FIX instructions and current implementation. Seven historical track plans retained open checkboxes. Most were verification debt; this pass also found unfinished behavior and UI features. The user authorized completing all existing phases in one run, with sequential verification checkpoints instead of intermediate approval stops.
+
+## Implemented gaps
+
+- Config JSON drawers and imports now share domain validation: finite numeric values, allowed keys/types, gene bounds, ordered/complete life stages, valid range pairs, known terrain/food/species names, and nested prototype-key rejection. Invalid entries are rejected before their callback; valid imported structures and section resets own copies.
+- Pinned controls have a dedicated Favorites section using their existing live DOM binding. Structured editors collapse behind Edit. Focusing select controls no longer calls a nonexistent `select()` method. Fixed an anchor-radius slider minimum that excluded its own default. Spawn/population edits now show the rebuild banner.
+- Extracted the existing fixed-step clock to an isolated helper and verified it across render refresh schedules, speed scaling, pause/resume and catch-up caps.
+- Added configurable spawn land/anchor retry budgets (20/30 by default, preserving prior spawning). Documented seconds/ticks, per-tick exceptions, tile/pixel units and speed semantics.
+- Added the missing long-range regroup path and post-drink countdown to simple herd mode. Local cohesion cannot recover members beyond its neighbor radius. Complex-herd escape steering now takes priority over separation/cohesion and old smoothing; simple mode also bypasses old smoothing while threatened.
+- Expanded the seeded soak output with first-minute mortality and median death timing. Kept current starting reserves/thresholds: measured results meet the existing ≤10% first-minute mortality criterion, so further default tuning was unnecessary.
+
+## Disposition by existing plan and phase
+
+Historical checkboxes are reconciled against the evidence below. Where an old manual procedure is replaced by a reproducible scenario, the phase record says so; a checked box does not assert a physical-phone test or a historical visual/performance comparison.
+
+| Existing plan        | Phases / unfinished work                                                                  | Verification and disposition                                                                                                                                                                                                                                                |
+| -------------------- | ----------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Maintenance roadmap  | 1: life-stage/resolver/module extraction; 2: entrypoint/metrics cleanup                   | Already implemented in baseline; inspected modules and existing regression coverage. Required gates now pass.                                                                                                                                                               |
+| Maintenance roadmap  | 3: naming/time conventions; 4: colors and spawn constants                                 | Added architecture units and configurable retry budgets. Species renderer colors already exist. Default retry settings preserve seed-42 initial creatures exactly.                                                                                                          |
+| UI fix               | 1: boolean writes, metadata/categories                                                    | Browser unchecks a switch, exports literal false, imports true. Audit metadata contract covers every default. Added metadata for retry budgets.                                                                                                                             |
+| UI fix               | 2: real controls, help and narrow layout                                                  | Desktop/mobile browser checks and inspected screenshots; controls retain metadata labels/descriptions/units, slider/default compatibility tested.                                                                                                                           |
+| UI fix               | 3: search, favorites, presets, structured values/reset                                    | 23 validation cases; actual DOM/pointer checks of valid/invalid imports and editors, persisted Favorites, reset of a pinned row. Complete defaults round-trip through validator.                                                                                            |
+| UI fix               | 4: collapse persistence, graph handle/FAB, inspector clear                                | Browser reload preserves category collapse; drag opens graph sheet and FAB tracks it; real inspector module selects, follows and clears with `(null, false)` callback.                                                                                                      |
+| Track 10.5           | 1: timebase                                                                               | Clock scenarios use timer callbacks with 30/60/120/144 Hz render schedules, ~600 ticks in ten seconds at 1x; speed, reset and catch-up caps tested. Existing movement test covers tiles/second.                                                                             |
+| Track 10.5           | 2: reserve/threshold tuning                                                               | Reviewed and retained defaults based on zero first-minute deaths for seeds 1/42/1337. Median observed death times reported below; no unsupported comparison to an unrecorded pre-timebase baseline. Later map/population tuning remains authoritative.                      |
+| Track 10.6           | 3 preempt: pregnancy reset, double conception, cooldown, sex, accounting, gestation clamp | Dedicated deterministic birth/miscarriage tests, newborn sex assertion, cooldown progression and no double accounting. Existing initial sex-split and inheritance tests retained.                                                                                           |
+| Track 10.6           | 5–6: metrics/default births                                                               | Browser metrics UI remains wired; seeded five-minute runs record pregnancies and births. Replaces the stale comparative “higher totals” claim with measured present-runtime totals. Later ecosystem/behavior changes make historical birth-count comparisons inappropriate. |
+| Performance profiler | 1: verify gate, FPS/panel behavior                                                        | All gates pass. Desktop/mobile playback and Performance panel checks have no page errors; profiler group/reset behavior covered by audit tests.                                                                                                                             |
+| Renderer performance | 1–2: viewport, cache layers/grass                                                         | Actual desktop/mobile rendering plus cache read-only/initial build/appearance invalidation tests. Renderer output code remains unchanged. Live resize/profiler checks supplement these.                                                                                     |
+| Renderer performance | 3–4: cropped blits, dirty/throttled/sliced rebuilds                                       | New cache test forces a one-row slice, completes subsequent slices, checks 250 ms throttling, and confirms edits during rebuild are not lost. Existing paused flush test retained. Work-budget verification replaces an unmeasured promise of no hardware frame spikes.     |
+| World scale / pack   | 1: scale/scarcity/relocation                                                              | Current defaults are 120×160, with prior scarcity tuning retained. Deterministic idle-pack relocation and need-priority test passes; both views render the current world.                                                                                                   |
+| World scale / pack   | 2: grazing/cohesion/threats/movement UI                                                   | Both herd modes graze with kin, lone herbivores wander, and threats cancel grazing and supply escape steering. Metadata includes movement controls. Smoothness remains a visual tuning judgment.                                                                            |
+| World scale / pack   | 3: separated spawns/regroup/worker parity                                                 | Default spawning is land-safe for the tested seed; separation code preserved. Both modes now pull separated kin back from beyond local radius and suppress regroup for urgent needs/threats. Legacy worker settings 0/1 produce identical 120-tick authoritative state.     |
+| Herd anchor          | 1: gates/cohesion/worker parity                                                           | Existing anchor land/bounds test, both-mode independent/interleaved replay, worker-flag parity and herd scenarios pass. Simple mode uses local flocking + long-range regroup; anchor force remains the complex-mode feature.                                                |
+| Herd anchor          | 2: shared water, regroup and mating                                                       | Shared shoreline target test and post-drink timer/force scenarios pass; existing mate selection, intent and birth scenarios retained. Five-minute runs record viable births. This is behavioral evidence, not proof of indefinite ecological balance.                       |
+
+## Final validation
+
+- Vitest unit/scenario suite: 100 tests across 11 files, including 41 added scenarios.
+- ESLint, repository-wide Prettier check and Vite production build pass.
+- Headless Chromium at 1280×800 and 390×844: startup, boolean editing/export, invalid/valid preset and JSON editor paths, favorites/category persistence, section reset, narrow control bounds, graph FAB/drag/close, playback/step, Performance panel and inspector follow/clear. No application page errors. Temporary browser tooling was installed outside the repository; no package/lockfile changes.
+- Live resize checks at 640×600, 390×844 and 1280×800 pass: canvas backing dimensions match viewport/device scale. Browser profiler exposes frame.delta, frame.wait and grassRebuildTotal; repeated FPS overlay toggles retain exactly one overlay.
+- Existing audit tests continue to verify independent/interleaved/restarted simulation replay and read-only rendering.
+- `npm run test:soak`: final implementation, 18,000 ticks (five simulated minutes) per seed; finite/nonnegative meters, bounds, unique live IDs and population accounting checked every tick.
+
+| Seed | Deaths in first 60 s | Median observed death (s) | Pregnancies | Births | Final population | Squares / Triangles / Circles / Octagons | Kills / deaths |
+| ---- | -------------------: | ------------------------: | ----------: | -----: | ---------------: | ---------------------------------------- | -------------- |
+| 1    |                    0 |                    178.77 |          78 |     59 |              129 | 49 / 5 / 70 / 5                          | 10 / 10        |
+| 42   |                    0 |                    210.12 |          76 |     66 |              141 | 71 / 4 / 61 / 5                          | 3 / 5          |
+| 1337 |                    0 |                    144.90 |          79 |     61 |              140 | 63 / 6 / 66 / 5                          | 1 / 1          |
+
+Final state hashes (SHA-256):
+
+- Seed 1: `2b59c4b000a4a16351f46085de3c3cc383d1e77621d1fb3be634a8e39226f998`
+- Seed 42: `c4f553caad8515bf88a4fb573c4e90e058db9bda2c6036aa84c0cb2d8628c7df`
+- Seed 1337: `e9f6eef918c12a893a2c19e689abb2adeecd2f7a762e02c307ecfab2a801b436`
+
+## Scope and practical limits
+
+All unfinished implementation items in existing plans have been addressed or confirmed present. Repeated historical verification has current evidence or an explicit updated procedure. The report does not equate passing local steering tests with guaranteed interesting long-run behavior, smoothness on every device, or population balance indefinitely. Five-minute population growth is observable, not a claim of stability. Actual phone performance, thermal behavior and subjective herd motion still merit playtesting.
+
+Tracks 11–13 are future roadmap definitions without phase plans; full color/mate preferences, multi-hit combat/healing and long-run stability controls are not claimed as completed. Strict canonical diet restoration/general pathfinding remain separate design work described in the prior audit. No merge or deployment is performed here.

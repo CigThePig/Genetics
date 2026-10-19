@@ -25,7 +25,7 @@ Rendering:
 
 Sim performance:
 
-- If needed, run simulation in a Web Worker to keep UI responsive on mobile.
+- Measure bottlenecks first. Authoritative simulation/herding is currently synchronous. A future worker migration must preserve tick boundaries, deterministic result application and per-world state ownership.
 
 Determinism:
 

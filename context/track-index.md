@@ -6,14 +6,15 @@ Purpose:
 - Each track is a bounded unit of work that produces a playable improvement.
 - Each track must produce:
   - spec.md (intent + acceptance)
-  - blueprint.md (file plan + APIs + risks, no code)
-  - plan.md (phases + verification + stop points)
+  - blueprint.md (technical design, interfaces, state ownership and risks)
+  - plan.md (phases + verification + any requested review checkpoints)
 
 Rules:
 
 - Follow track order unless explicitly overridden.
 - Each track should be achievable without touching more than a handful of systems.
-- New system = new file. No file > 600 LOC.
+- Use cohesive module boundaries and explicit state ownership; follow current `AGENTS.md` and `context/code-style.md`.
+- These artifacts apply to substantial roadmap tracks. Small maintenance/review fixes may use a concise PR checklist under the current workflow.
 
 Implementation Guardrail (applies to all future tracks):
 

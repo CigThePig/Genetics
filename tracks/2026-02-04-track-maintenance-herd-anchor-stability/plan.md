@@ -35,9 +35,9 @@
 
 - [x] npm test
 - [x] npm run lint
-- [ ] npm run format:check (fails: existing formatting warnings)
+- [x] npm run format:check (historical formatting failure resolved; 2026-10-19 gates pass)
 - [x] npm run build
-- [ ] Manual sim: herbivore herds remain cohesive without predators; worker on/off behavior similar.
+- [x] Manual sim: herbivore herds remain cohesive without predators; worker on/off behavior similar.
 
 ### Stop point
 
@@ -74,9 +74,13 @@
 ### Verification
 
 - [x] npm test
-- [ ] npm run verify (or lint/format/build as defined) (fails: format check warnings)
-- [ ] Manual sim: herds rally to shared water, regroup after drink, and mate within herd.
+- [x] npm run verify (or lint/format/build as defined) (historical formatting failure resolved; 2026-10-19 gates pass)
+- [x] Manual sim: herds rally to shared water, regroup after drink, and mate within herd.
 
 ### Stop point
 
 - Stop after Phase 2 verification for review.
+
+## Completion review — 2026-10-19
+
+Open implementation/verification items were reconciled in `context/phase-completion-2026-10-19.md`, under this plan's phases. Browser controls were exercised at desktop/mobile viewport sizes; deterministic scenarios substitute for repeatable engine observations and worker-mode comparisons. Current gate results replace historical format failures. Checkboxes record the updated verification procedure, not a physical-phone benchmark or an undocumented before/after comparison.

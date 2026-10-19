@@ -1,164 +1,32 @@
-# Planning Checklist (Ritual for creating Tracks from Track Index)
+# Planning checklist
 
-Purpose:
+Use this checklist for substantial tracks; small fixes can keep a concise checklist in the PR. `AGENTS.md` is the canonical agent guidance.
 
-- Generate spec/blueprint/plan reliably as the repo grows.
-- Prevent drift by always pulling the same canonical inputs.
-- Make "Create Track N" deterministic and repeatable.
+## Establish scope from current evidence
 
-Canonical Inputs (always read):
+- Read the user request, active pointer, repo map and relevant source/tests.
+- For a numbered roadmap track, read its goal, included steps, acceptance, risks and verification in `context/track-index.md`. An explicit request can change order or scope.
+- Read architecture for simulation changes and product goals for design decisions. Historical reports can explain earlier decisions but do not establish current behavior.
+- Identify affected modules, state ownership, units, cross-system effects, determinism and tick-order implications, risks and useful observability.
 
-1. /AGENTS.md
-2. /context/track-index.md
-3. /context/repo-map.md
-4. /context/product.md
-5. /context/architecture.md
-6. /context/workflow.md
-7. /context/history.md (optional but recommended once it has entries)
+## Write proportional artifacts
 
-Golden rule:
+For a substantial track, create `tracks/YYYY-MM-DD-track-N-slug/` (or a descriptive maintenance slug) with:
 
-- Do NOT plan from memory.
-- Plans are derived from: Track Index + current repo state + Recon Summary.
+- `spec.md`: problem, scope, acceptance criteria and exclusions where useful.
+- `blueprint.md`: proposed responsibilities, interfaces/state ownership, tradeoffs and risks. Diagrams or illustrative code are optional when they clarify the design.
+- `plan.md`: actionable tasks grouped into coherent phases, likely files/roles, verification and any explicitly requested review checkpoints.
 
----
+Set the active pointer to the track or maintenance scope. Index substantial new modules/track folders in the repo map. Avoid duplicating the same rationale across documents.
 
-## Step 0) Choose scope
+## Build a useful verification plan
 
-Default:
+- Cover changed formulas and determinism-sensitive logic with automated regressions or seeded scenarios that expose the actual failure.
+- Exercise config metadata, validation and runtime semantics together when changing tunables.
+- Include browser checks for affected UI/lifecycle flows and performance measurements when performance motivates the change.
+- State the duration and scope of seeded simulations; do not infer long-run stability from a short smoke test.
+- Include current standard checks (`npm run verify`) and targeted additional checks where relevant.
 
-- Pick Track N from /context/track-index.md.
+## Execute and close
 
-Custom:
-
-- If user explicitly requests a custom track, write it in the same format as Track Index items
-  (Goal, Includes, Acceptance, Risks, Verification).
-
----
-
-## Step A) CREATE TRACK N (skeleton + artifacts)
-
-When asked "Create Track N":
-
-1. Create folder: /tracks/YYYY-MM-DD-track-N-short-slug/
-2. Generate:
-   - spec.md
-   - blueprint.md (NO CODE)
-   - plan.md
-3. Update:
-   - /context/active-track.md (point to the new folder)
-   - /context/repo-map.md (add the new track folder entry)
-
-### Codex prompt: CREATE TRACK N (NO CODE)
-
-Paste to Codex:
-
-Read AGENTS.md and:
-
-- /context/track-index.md
-- /context/repo-map.md
-- /context/product.md
-- /context/architecture.md
-- /context/workflow.md
-- /context/history.md
-
-Task:
-Create Track <N> exactly as defined in track-index.md.
-
-Rules:
-
-- Do not write code.
-- Create the track folder /tracks/YYYY-MM-DD-track-<N>-<slug>/.
-- Generate spec.md, blueprint.md (no code), plan.md.
-- Plan must include phases mapped to the "Includes" steps for Track N.
-- Each phase must include: tasks, files touched, verification, stop point.
-- Include a "Recon Summary" section at the top of plan.md (can be empty initially).
-- Update /context/active-track.md to point to this track.
-- Update /context/repo-map.md with the new track folder entry.
-
----
-
-## Step B) Recon (refresh relevant context WITHOUT bloat)
-
-Goal:
-
-- Identify what’s relevant before blueprint/implementation.
-
-Output:
-
-- Files likely to change (why)
-- Key modules/functions involved (or "not found yet")
-- Invariants to respect (tick order, determinism, file rules)
-- Cross-module side effects (who depends on this? what could break?)
-- Tick order impact (does this require changing or depending on tick order?)
-- Observability impact (does this require a new metric or inspector field?)
-- File rules impact (new system => new file; any file at risk of exceeding 600 LOC?)
-- Risks/regressions
-- Verification commands/checks
-
-Store Recon:
-
-- Paste into tracks/<id>/plan.md under "Recon Summary".
-
-### Codex prompt: RECON ONLY (NO CODE)
-
-Read AGENTS.md, then read:
-
-- /context/repo-map.md
-- /context/product.md
-- /context/architecture.md
-- /context/history.md
-- the active track files
-
-My change request is the active track scope.
-Do NOT modify code.
-
-Produce a Recon Summary with:
-
-- files likely to change (why)
-- key modules/functions involved
-- invariants to respect
-- cross-module side effects
-- tick order impact
-- observability impact (new metric/inspector field required?)
-- file rules impact (new system/new file, 600 LOC risk)
-- risks/regressions
-- verification commands/checks
-
----
-
-## Step C) Spec / Blueprint / Plan refinement
-
-If the initial artifacts need tightening:
-
-- Update spec.md first
-- Then blueprint.md
-- Then plan.md
-
-Blueprint must contain NO CODE.
-Plan must map directly to included steps from track-index.
-
----
-
-## Step D) Execute (Builder mode)
-
-### Codex prompt: BUILD ONE PHASE ONLY
-
-Read AGENTS.md and the active track.
-Implement Phase <N> only.
-
-- Follow plan.md precisely.
-- Run verification for the phase.
-- Update plan checkboxes.
-- Update /context/repo-map.md if any files were added or roles changed.
-  Stop after Phase <N> is verified.
-
----
-
-## Step E) Closeout (GC)
-
-When track complete:
-
-- Append summary to /context/history.md (include Track N).
-- Clear /context/active-track.md.
-- Ensure /context/repo-map.md matches reality.
+Verify each phase and continue through authorized scope using `context/workflow.md`. Update plans when evidence changes the design. At closeout, record substantial results, reconcile the repo map and clear the active pointer. Do not invent a review stop solely because a phase ended.

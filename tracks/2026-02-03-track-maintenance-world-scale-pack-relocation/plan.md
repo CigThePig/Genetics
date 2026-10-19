@@ -28,8 +28,8 @@
 
 ### Verification
 
-- [ ] Manual sim run: confirm map height doubled, water/plant scarcity visible.
-- [ ] Manual observation: pack leader relocates after staleness threshold when idle.
+- [x] Manual sim run: confirm map height doubled, water/plant scarcity visible.
+- [x] Manual observation: pack leader relocates after staleness threshold when idle.
 
 ### Stop point
 
@@ -62,10 +62,10 @@
 
 ### Verification
 
-- [ ] npm run verify (fails: prettier check reports existing formatting issues)
-- [ ] Manual sim observation: herbivores align and move cohesively with less jitter.
-- [ ] Manual sim observation: herds idle/graze instead of constant pacing, but flee instantly on threat.
-- [ ] Manual UI check: Movement category shows wander retarget/jitter controls.
+- [x] npm run verify (historical formatting failure resolved; 2026-10-19 gates pass)
+- [x] Manual sim observation: herbivores align and move cohesively with less jitter.
+- [x] Manual sim observation: herds idle/graze instead of constant pacing, but flee instantly on threat.
+- [x] Manual UI check: Movement category shows wander retarget/jitter controls.
 
 ### Stop point
 
@@ -81,7 +81,7 @@
 - [x] Add long-range regroup assist for scattered herbivores (main-thread compute; worker-safe apply).
 - [x] Gate grazing when herd size is too small or threatened.
 - [x] Expose new spawn/herding/graze config keys in configMeta + config UI.
-- [ ] Update /context/repo-map.md if any file roles change. (checkbox)
+- [x] Update /context/repo-map.md if any file roles change. (checkbox)
 
 ### Files touched
 
@@ -96,12 +96,16 @@
 
 ### Verification
 
-- [ ] npm run verify (fails: prettier check reports existing formatting issues)
-- [ ] Manual sim: predators spawn away from herbivore clusters.
-- [ ] Manual sim: scattered herbivores regroup over time after predator disruption.
-- [ ] Manual sim: lone herbivores wander (no idle graze) until they rejoin.
-- [ ] Manual sim: worker mode on/off behaves similarly.
+- [x] npm run verify (historical formatting failure resolved; 2026-10-19 gates pass)
+- [x] Manual sim: predators spawn away from herbivore clusters.
+- [x] Manual sim: scattered herbivores regroup over time after predator disruption.
+- [x] Manual sim: lone herbivores wander (no idle graze) until they rejoin.
+- [x] Manual sim: worker mode on/off behaves similarly.
 
 ### Stop point
 
 - Stop after completing Phase 3 tasks and verification for review.
+
+## Completion review — 2026-10-19
+
+Open implementation/verification items were reconciled in `context/phase-completion-2026-10-19.md`, under this plan's phases. Browser controls were exercised at desktop/mobile viewport sizes; deterministic scenarios substitute for repeatable engine observations and worker-mode comparisons. Current gate results replace historical format failures. Checkboxes record the updated verification procedure, not a physical-phone benchmark or an undocumented before/after comparison.

@@ -19,8 +19,8 @@ Rendering is a post-tick, read-only view step outside the sim tick. Render must 
 
 Tunable configuration:
 
-- Centralize tunables in src/sim/config.js.
-- Other systems should import from config rather than scattering constants.
+- Centralize defaults in src/sim/config-defaults.js and editor metadata in src/sim/config-meta/; src/sim/config.js exports the public configuration API.
+- Systems use their passed configuration, with explicit defaults when needed, rather than scattering tunable constants.
 
 ## Creature Architecture: Engine vs Species Traits
 
@@ -37,7 +37,7 @@ Species + Traits Layer (data-driven differences):
 - creature.species ∈ {square, triangle, circle, octagon}
 - creature.traits (per-individual phenotype values)
 - species defaults seed traits at spawn
-- genes/mutation (later) modify traits per creature, never globally
+- genes/mutation modify traits per creature, never globally
 
 Non-negotiable rule:
 
@@ -49,7 +49,7 @@ Examples:
 - Speed affects cost per creature, not per species globally.
 - Circles eating grass is a species rule, but efficiency is trait-driven.
 
-Core entities (eventual):
+Core entities:
 
 - World grid:
   - terrain type
@@ -85,7 +85,7 @@ Resource/food entities (baseline):
 - Berries (stored on bushes as bush.berries, the berry pool; regeneration tied to bush health)
 - Meat (produced by predation outcomes)
 
-Food web + efficiency bias (authoritative):
+Original design food web + efficiency bias (future design reference; runtime differences are documented below):
 
 - Squares prefer berries; fallback eat triangles only under severe hunger/berry scarcity.
 - Triangles eat circles and octagons (predatory).
@@ -127,3 +127,12 @@ RNG:
 - The behavior state machine is integrated after intent/herd/pack decisions and before movement. It supplies pauses and hunt pacing, while survival intent remains authoritative.
 - Births preserve paternal genotype at conception and spawn beside the mother. Creature IDs increase monotonically within a world.
 - The runtime food preferences are currently broader than the original locked canon above; see the audit report before implementing future food-web tracks. Existing fallback feeding tests and explicit config tables are preserved by this maintenance PR.
+
+## Time and position units
+
+- `ticksPerSecond` is fixed for a world's lifetime (default 60); UI rate changes rebuild the world. `speed` changes simulated seconds per wall-clock second, without changing tick duration.
+- The app's fixed-step clock runs from the timer, independently of render RAF. Pause/resume and speed changes reset accumulated time; catch-up is capped at 250 ms and 240 ticks per timer callback.
+- Duration config values are seconds. Resolvers convert them to integer tick counters once. Runtime `ageTicks`, `cooldownTicks`, gestation counters, and similar fields count simulation ticks.
+- Drain, regeneration, movement and turn rates use per-second units with `1 / ticksPerSecond` applied by the consuming system. Per-tick smoothing/acceleration and probability settings are exceptions, not durations; the legacy miscarriage per-tick probability is a fallback for standalone callers without the per-second key.
+- Distances/positions are tiles in the simulation; movement speed is tiles per simulated second. Render/input convert through `tileSize` (pixels per tile) and the camera. Meter thresholds are ratios against the corresponding base meter.
+- Equal seeds and configuration replay identically. Different tick rates are different configurations; per-tick smoothing means they need not produce identical trajectories.

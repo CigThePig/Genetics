@@ -145,6 +145,7 @@ export const ensureBehaviorState = (creature) => {
       lockedUntilTick: 0,
       phaseLockedUntilTick: 0,
       alertDirection: null,
+      assessedThreatDistance: null,
       targetPosition: null,
       lastTerrainType: null,
       environmentPauseTicks: 0
@@ -178,3 +179,17 @@ export const canTransition = (creature, tick) => {
 export const canTransitionPhase = (creature, tick) => {
   return tick >= (creature.behaviorState?.phaseLockedUntilTick ?? 0);
 };
+
+export const behaviorMeterRatio = (creature, config, meter) => {
+  const baseKey = meter === 'water' ? 'creatureBaseWater' : 'creatureBaseEnergy';
+  const configuredBase = config?.[baseKey];
+  const base = Number.isFinite(configuredBase) && configuredBase > 0 ? configuredBase : 1;
+  const value = creature?.meters?.[meter];
+  return Number.isFinite(value) ? Math.min(1, Math.max(0, value / base)) : 1;
+};
+
+// Catching is a charging action; missing/uninitialized behavior must not skip the wind-up.
+export const canCatchPrey = (creature, config) =>
+  config?.creatureBehaviorStateEnabled === false ||
+  (creature?.behaviorState?.state === BEHAVIOR_STATES.HUNTING &&
+    creature.behaviorState.phase === HUNTING_PHASES.CHARGING);

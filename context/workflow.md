@@ -1,48 +1,24 @@
-# Workflow (Track Index → Recon → Spec → Blueprint → Plan → Build → Verify → GC)
+# Workflow
 
-## What changed
+`AGENTS.md` defines the standing agent rules. Use the roadmap for planned feature scope and the user's request for explicitly authorized maintenance or changes to order.
 
-We use /context/track-index.md as the authoritative roadmap for creating tracks.
-Planning starts by selecting Track N from track-index and generating artifacts from that definition.
+## Choose the amount of planning
 
-## Track definition
+- Small fixes and review follow-ups: a concise scope and verification checklist in the PR is sufficient.
+- Substantial work: create or update a track with `spec.md` (intent/acceptance), `blueprint.md` (state ownership, interfaces, risks) and `plan.md` (tasks, phases, verification).
+- Planning-only requests produce documents; implementation requests proceed through the authorized work.
 
-A Track is one ordered unit of work from track-index.md that produces a verifiable improvement.
+Read relevant current code and tests before choosing an approach. For substantial work, set `context/active-track.md` to the intended scope before implementation.
 
-## Required per track
+## Execute and verify
 
-- spec.md (what/why/acceptance)
-- blueprint.md (technical design: files/APIs/state/risks; NO CODE)
-- plan.md (phases + verification per phase + stop points)
-- Update /context/repo-map.md when files/roles change
+1. Implement a coherent phase or fix.
+2. Run checks appropriate to the change and repair regressions.
+3. Update the plan and active pointer at meaningful checkpoints; update the repo map when module responsibilities change.
+4. Continue through the requested scope. Stop for an explicit user-requested review gate, a genuine blocker or an unresolved decision beyond the authorized scope.
 
-## Planning sequence (scales with repo size)
+When new evidence changes the design, update affected documents and explain the material deviation. Historical plans may contain obsolete process instructions; use current `AGENTS.md` for workflow.
 
-0. Select Track N from /context/track-index.md (or explicit custom track request)
-1. Set/update /context/active-track.md to the intended track (required before any planning or code)
-2. Create track folder (if new)
-3. Recon (NO CODE): relevant files, risks, verification commands
-4. Spec (derived from Track Index + Recon)
-5. Blueprint (derived from Spec + Recon, NO CODE)
-6. Plan (derived from Blueprint; phased checklist)
+## Closeout
 
-## Execution loop
-
-- Implement ONE phase
-- Verify
-- Update plan checkboxes
-- Update /context/repo-map.md if files were added or roles changed
-- Update /context/active-track.md (Current phase + Next task)
-- Stop for review
-
-## Deviation protocol
-
-If new info changes the approach:
-
-- Write a Deviation Note in plan.md
-- Update blueprint/plan before continuing
-
-## GC (closeout)
-
-- Append summary to /context/history.md (Track N + verification)
-- Clear /context/active-track.md
+Record substantial changes and verification in `context/history.md`, update tooling documentation if needed, and clear `context/active-track.md`. Report tests and evidence honestly, including limits and any pending hosted CI. Merging and deployment require authorization.

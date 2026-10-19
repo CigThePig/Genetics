@@ -8,6 +8,7 @@ const createCreature = ({ id, species, x, y }) => ({
   species,
   position: { x, y },
   meters: { energy: 1, water: 1, stamina: 1, hp: 1 },
+  behaviorState: { state: 'hunting', phase: 'charging' },
   chase: {
     status: 'pursuing',
     targetId: null,

@@ -1,3 +1,4 @@
+import { canCatchPrey } from './behavior-helpers.js';
 import { resolveTicksPerSecond } from '../utils/resolvers.js';
 
 const resolveNeedMeterBase = (value) => (Number.isFinite(value) && value > 0 ? value : 1);
@@ -205,7 +206,7 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
     const distance = Math.sqrt(dx * dx + dy * dy);
     chase.distance = distance;
 
-    if (distance <= catchDistance) {
+    if (distance <= catchDistance && canCatchPrey(creature, config)) {
       concludeChase({
         chase,
         config,

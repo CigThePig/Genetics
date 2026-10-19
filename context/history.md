@@ -20,3 +20,27 @@
 ## 2026-10-19 — Maintenance: Comprehensive repository audit
 
 Reviewed source and tooling by subsystem. Repaired deterministic isolation, perception freshness, herd-mode selection, behavior integration, feeding/chase lifecycle, conception/birth inheritance and IDs, render invalidation, app/input/storage faults, profiler counters and workflow faults. Extracted oversized simulation/config/render modules with compatible public exports. Added 33 regression tests (59 total) and a reusable three-seed soak command. npm run verify passes; three five-minute simulations, desktop/mobile browser interactions and workflow syntax checks pass. Behavior/RNG consumption changes are documented; long-term balance and planned future systems are not claimed. See repository-audit-2026-10-19.md.
+
+## 2026-10-19 — Maintenance: unfinished phase completion
+
+- Reviewed all 24 prior phase plans and the maintenance roadmap; reconciled the seven plans with open items against current code and evidence.
+- Completed config power controls and safe domain validation, isolated the fixed-step clock, documented units, and exposed spawn retry budgets with unchanged defaults.
+- Completed simple-mode long-range regroup/post-drink countdown and made threat steering take priority over stale herd forces. Seed trajectories change intentionally; tick order and predator formulas are preserved.
+- Added clock, pregnancy, pack/herd, worker-flag parity, spawn compatibility, config-safety and sliced-cache regressions. Three final five-minute seed runs have zero first-minute deaths and all species present. Desktop/mobile browser controls and live resize/profiler checks pass.
+- Details and scoped limitations: context/phase-completion-2026-10-19.md. Future Tracks 11–13 remain unplanned roadmap work.
+
+- Completion PR: https://github.com/CigThePig/Genetics/pull/136 (open for review; not merged).
+
+## 2026-10-19 — PR #135/#136 review follow-up
+
+- Verified all five Codex findings from merged PR #135 and both initial findings from PR #136. The active-track closeout was already fixed; repaired the remaining six issues on #136.
+- Split app loop/config wiring and hunting transitions into focused modules. Gated catches on charging, normalized behavior meters, aligned partial-config prey defaults, honored direct-threat distance, and invalidated stale regroup caches.
+- 116 tests, lint, formatting and build pass. Desktop/mobile browser controls and config rebuild/rate-reset lifecycle checks pass. Final three-seed 3,600-tick smoke passes bounds/finite-state/ID/accounting checks with no deaths.
+- Per-finding links, dispositions and validation limits: context/pr-review-followup-2026-10-19.md. No merge/deployment.
+
+## 2026-10-19 — PR #136 newest review and agent guidance refresh
+
+- Fixed repeated distant-threat alert pauses with per-creature assessment memory and closer/returning-danger reassessment in both herd modes. Aligned anchor food radius metadata/import minimum with its runtime clamp.
+- Removed standing file-size limits, automatic phase stops and mandatory full track artifacts for small fixes. Reviewed every rule group and synchronized current companion guidance; retained correctness, mobile support, verification and authorization boundaries. Old prompt documents are historical rather than standing instructions.
+- Validation: 120 tests, lint, formatting and build pass; targeted Chromium config/import/playback checks pass; three seeded 3,600-tick smoke runs pass finite-meter, bounds, ID and population accounting checks. Initial-minute runs are not long-run balance evidence.
+- Review links, rule-by-rule dispositions and current seed hashes: context/review-guidance-refresh-2026-10-19.md.

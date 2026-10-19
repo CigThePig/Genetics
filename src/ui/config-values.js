@@ -1,4 +1,6 @@
 import { simConfig, configMeta } from '../sim/config.js';
+import { validateConfigValue } from './config-validation.js';
+import { cloneConfigValue } from '../sim/utils/config.js';
 export function createConfigValues({ config, defaultOnKeys, rebuildKeys }) {
   const formatValue = (value, item) => {
     if (value === undefined || value === null || Number.isNaN(value)) return '—';
@@ -37,28 +39,6 @@ export function createConfigValues({ config, defaultOnKeys, rebuildKeys }) {
     }
     return currentValue !== nextValue;
   };
-  const validateStructuredValue = (value, defaultValue) => {
-    if (defaultValue === undefined) return { ok: false, message: 'No default value found.' };
-    const defaultIsArray = Array.isArray(defaultValue);
-    const valueIsArray = Array.isArray(value);
-    if (defaultIsArray !== valueIsArray) {
-      return { ok: false, message: 'Value type does not match default.' };
-    }
-    if (!defaultIsArray && (typeof value !== 'object' || value === null)) {
-      return { ok: false, message: 'Value must be an object.' };
-    }
-    if (defaultIsArray && !Array.isArray(value)) {
-      return { ok: false, message: 'Value must be an array.' };
-    }
-    if (!defaultIsArray) {
-      const defaultKeys = Object.keys(defaultValue);
-      const extraKeys = Object.keys(value).filter((key) => !defaultKeys.includes(key));
-      if (extraKeys.length > 0) {
-        return { ok: false, message: `Unknown keys: ${extraKeys.join(', ')}` };
-      }
-    }
-    return { ok: true };
-  };
   const buildPresetPayload = (configState) => {
     const payload = {};
     for (const key of Object.keys(simConfig)) {
@@ -86,18 +66,7 @@ export function createConfigValues({ config, defaultOnKeys, rebuildKeys }) {
         rejected.push(key);
         continue;
       }
-      const defaultValue = simConfig[key];
-      if (Array.isArray(defaultValue)) {
-        if (!Array.isArray(value)) {
-          rejected.push(key);
-          continue;
-        }
-      } else if (typeof defaultValue === 'object' && defaultValue !== null) {
-        if (typeof value !== 'object' || value === null || Array.isArray(value)) {
-          rejected.push(key);
-          continue;
-        }
-      } else if (typeof value !== typeof defaultValue) {
+      if (!validateConfigValue(key, value).ok) {
         rejected.push(key);
         continue;
       }
@@ -106,7 +75,7 @@ export function createConfigValues({ config, defaultOnKeys, rebuildKeys }) {
         seedValue = value;
         seedChanged = hasChanged;
       } else {
-        updateEntry(key, value);
+        updateEntry(key, cloneConfigValue(value));
       }
       if (hasChanged) changedKeys.push(key);
     }
@@ -119,7 +88,7 @@ export function createConfigValues({ config, defaultOnKeys, rebuildKeys }) {
     getBooleanDefault,
     shouldMarkWorldDirty,
     isValueDifferent,
-    validateStructuredValue,
+    validateStructuredValue: validateConfigValue,
     buildPresetPayload,
     applyPresetPayload
   };

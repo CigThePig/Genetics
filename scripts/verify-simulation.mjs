@@ -11,6 +11,9 @@ for (const seed of [1, 42, 1337]) {
   const sim = createSim({ seed });
   const initialPopulation = sim.state.creatures.length;
   let maxPopulation = initialPopulation;
+  let deathsFirstMinute = null;
+  let previousDeaths = 0;
+  const deathTimes = [];
   for (let tick = 0; tick < ticks; tick++) {
     sim.tick();
     const ids = new Set();
@@ -29,6 +32,12 @@ for (const seed of [1, 42, 1337]) {
       initialPopulation + sim.state.metrics.birthsTotal - sim.state.metrics.deathsTotal,
       `Seed ${seed}: population accounting at tick ${tick}`
     );
+    const deaths = sim.state.metrics.deathsTotal;
+    for (let i = previousDeaths; i < deaths; i++) {
+      deathTimes.push((tick + 1) / sim.config.ticksPerSecond);
+    }
+    previousDeaths = deaths;
+    if (tick + 1 === 60 * sim.config.ticksPerSecond) deathsFirstMinute = deaths;
     maxPopulation = Math.max(maxPopulation, sim.state.creatures.length);
   }
   const summary = sim.getSummary();
@@ -40,6 +49,8 @@ for (const seed of [1, 42, 1337]) {
       seed,
       ticks,
       maxPopulation,
+      deathsFirstMinute,
+      medianDeathSeconds: deathTimes.length ? deathTimes[Math.floor(deathTimes.length / 2)] : null,
       population: summary.creatureCount,
       species: [
         summary.squaresCount,

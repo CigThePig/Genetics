@@ -1,3 +1,9 @@
+import { computeRegroupAssist } from './herding-forces.js';
+import {
+  resolveRegroupStrength,
+  resolvePostDrinkRegroupAnchorBoost,
+  resolvePostDrinkRegroupMaxTicks
+} from './herding-config.js';
 import {
   isPredator,
   resolveSimpleHerdingEnabled,
@@ -47,6 +53,9 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
   const threatDecayTicks = resolveThreatDecayTicks(config);
 
   const smoothing = resolveOffsetSmoothing(config);
+  const regroupStrength = resolveRegroupStrength(config);
+  const postDrinkBoost = resolvePostDrinkRegroupAnchorBoost(config);
+  const postDrinkMaxTicks = resolvePostDrinkRegroupMaxTicks(config);
 
   // First pass: detect direct threats and calculate personal flee directions
   for (const creature of creatures) {
@@ -54,10 +63,14 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
 
     const herding = ensureHerdingState(creature);
 
+    herding.postDrinkRegroupTicks = Math.max(0, (herding.postDrinkRegroupTicks ?? 0) - 1);
+    herding.postDrinkRegroupMaxTicks = postDrinkMaxTicks;
+
     // Predators don't herd
     if (isPredator(creature.species)) {
       herding.herdSize = 1;
       herding.nearbyThreats = 0;
+      herding.nearestThreatDistance = null;
       herding.isThreatened = false;
       herding.targetOffset = null;
       herding.threatDirection = null;
@@ -68,6 +81,9 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
     // Find direct threats
     const threats = findThreats(creature, creatures, threatRange, spatialIndex);
     herding.nearbyThreats = threats.length;
+    herding.nearestThreatDistance = threats.length
+      ? Math.min(...threats.map((threat) => threat.distance))
+      : null;
 
     // Decay threat state
     if (herding.threatDecayTicks > 0) {
@@ -131,6 +147,7 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
     const intent = creature.intent?.type;
     herding.herdHeading = null;
     if (!herding.isThreatened && (intent === 'drink' || intent === 'eat' || intent === 'hunt')) {
+      herding.lastRegroupVector = null;
       herding.targetOffset = null;
       continue;
     }
@@ -182,12 +199,25 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
       }
     }
 
+    // Long-range regroup is shared by both herd modes; local cohesion alone
+    // cannot bring a creature back once it is outside the neighbor radius.
+    const regroup = computeRegroupAssist(creature, creatures, spatialIndex, config);
+    if (regroup) {
+      const ratio =
+        postDrinkMaxTicks > 0 ? Math.min(1, herding.postDrinkRegroupTicks / postDrinkMaxTicks) : 0;
+      const strength = regroupStrength + postDrinkBoost * 0.15 * ratio;
+      offsetX += regroup.x * strength;
+      offsetY += regroup.y * strength;
+      hasOffset = true;
+    }
+
     // Apply smoothing
     if (hasOffset) {
       const prevX = herding.smoothedOffset?.x ?? 0;
       const prevY = herding.smoothedOffset?.y ?? 0;
-      const smoothedX = prevX + (offsetX - prevX) * smoothing;
-      const smoothedY = prevY + (offsetY - prevY) * smoothing;
+      const alpha = herding.isThreatened ? 1 : smoothing;
+      const smoothedX = prevX + (offsetX - prevX) * alpha;
+      const smoothedY = prevY + (offsetY - prevY) * alpha;
 
       herding.smoothedOffset = { x: smoothedX, y: smoothedY };
 

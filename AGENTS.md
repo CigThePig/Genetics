@@ -1,143 +1,45 @@
-# AGENTS.md — Rules for AI coding help (Codex, etc.)
+# Agent guidance
 
-## 0) Bootstrap commands (update if you change tooling)
+## Scope and context
 
-- Install: npm install
-- Dev: npm run dev
-- Build: npm run build
-- Preview: npm run preview
-- Tests: npm test
-- Planned after Track 0: npm run lint, npm run format
+- Follow the user's current request. The roadmap supplies default scope; explicit maintenance, review fixes and multi-phase requests can override its order.
+- Start with `context/active-track.md` and `context/repo-map.md`, then read the relevant source, tests and design documents. Read `context/architecture.md` before simulation changes and `context/product.md` for product decisions. Read active track files when working on that track.
+- This file is the canonical agent guidance. `context/workflow.md`, `context/planning-checklist.md` and `context/code-style.md` expand it. Completed track plans, old prompt files and dated reports are historical evidence, not additional standing rules. Check current code before relying on their claims.
+- Inspect the working tree before editing; preserve unrelated user changes. Keep changes within the requested scope.
 
-## 1) Required reading order (before any work)
+## Plan and execute
 
-1. /context/track-index.md
-2. /context/repo-map.md
-3. /context/product.md
-4. /context/architecture.md
-5. /context/workflow.md
-6. /context/planning-checklist.md
-7. /context/active-track.md
-8. Active track files (spec/blueprint/plan)
+- Scale planning to the work. Small fixes can use a concise task/verification checklist in the PR; substantial features or cross-system work should use a track with spec, blueprint and phased plan. Do not create duplicate documents for routine follow-ups.
+- A request specifically for planning or creating track documents stays planning-only unless implementation is also requested.
+- Keep `context/active-track.md` accurate for substantial work: identify the track or maintenance scope, current phase and next task. Update at meaningful checkpoints and clear it at closeout.
+- Verify each phase, record progress and continue through the authorized scope. Pause only for a real blocker, an explicit review checkpoint requested by the user, or a decision outside that scope. A phase boundary alone does not require a new conversation.
+- If evidence changes the approach, update the affected plan/design and explain the material deviation. Avoid unrelated refactors.
+- Routine reversible edits, including removing obsolete files within scope, do not require separate approval. Ask before destructive actions outside the request, discarding user work, merging or deploying unless already authorized. Explain broad refactors or behavior changes with their purpose and validation.
 
-## Active Track Discipline (MUST)
+## Code organization
 
-- /context/active-track.md is the canonical pointer to current work.
-- BEFORE any planning or code changes, open it and confirm it matches the intended track.
-- If it does not match, update it first, then proceed.
-- MUST update /context/active-track.md when:
-  - starting a new track
-  - switching tracks
-  - changing scope in a way that affects plan/blueprint
-  - advancing phases
-- At end of each run/phase, update Current phase and Next task.
-- If doing non-track work, set Active track to “Maintenance” and note why + files touched.
+- Choose module boundaries by responsibility, state ownership, coupling and testability. Extract a module when it improves these properties; extend an existing cohesive module when appropriate. There are no file-length caps or size-triggered split requirements.
+- Keep entrypoints focused on initialization and wiring. Simulation orchestration belongs in `src/sim/sim.js`, rendering in `src/render/`, and gestures in `src/input/`; app lifecycle helpers live in `src/app/`.
+- Follow `context/code-style.md`. Prefer data-driven species differences and per-creature traits over duplicated engines.
 
-## 2) Track-index rule (the roadmap is the boss)
+## Simulation correctness
 
-- /context/track-index.md defines the official track order and scope.
-- When asked to "Create Track N":
-  - Do NOT write code.
-  - Create the track folder and generate spec.md, blueprint.md (no code), plan.md.
-  - The track’s scope must match Track Index:
-    - Goal, Included Steps, Acceptance, Risks, Verification.
-  - Do not add extra scope unless explicitly requested.
+- Seed + initial configuration + the same tick sequence must replay identically. Simulation randomness comes from the passed seeded RNG; no wall clock or `Math.random()` in authoritative logic.
+- Preserve the major tick order: Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics. Changes require an explicit design rationale, regression coverage and documentation of behavioral impact.
+- Rendering reads simulation state without mutating it. State and caches belong to their simulation/world; avoid hidden mutable singletons and cross-instance coupling.
+- Current herding decisions are synchronous. A worker design must preserve deterministic tick boundaries and state ownership; asynchronous completion order must not affect outcomes.
+- Respect units, configured meter bases and trait-first lookup. Keep config defaults, editor metadata, validation and runtime resolvers consistent. See `context/architecture.md` for details and known design/runtime differences.
+- Preserve metrics and inspector explanations; add or update observability when needed to understand changed behavior.
 
-## 3) Workflow gates (must follow)
+## UI and verification
 
-- Do not modify code unless an active track exists with:
-  - spec.md
-  - blueprint.md (required unless the change is tiny)
-  - plan.md
-- Work in phases. Implement ONE phase per run, then stop for review.
-- If reality changes the approach: write a "Deviation Note" in plan.md and update blueprint/plan before continuing.
+- Support touch, usable tap targets, drag/pinch controls and narrow screens. Avoid hover-only interactions. Measure performance before adding concurrency or restructuring hot paths.
+- Add meaningful regression coverage for bug fixes and determinism-sensitive changes, including core formulas, targeting and trait mapping. Documentation-only edits need consistency/link checks, not artificial tests.
+- Install with `npm ci`; develop with `npm run dev`. `npm run verify` runs tests, lint, formatting checks and production build. Use `npm run format` for formatting and `npm run test:soak -- --ticks=N` for seeded simulation checks when relevant.
+- Exercise affected UI/lifecycle flows in a browser when available. Report exact checks and limitations; distinguish local results from hosted CI and short smoke runs from long-run balance evidence.
 
-## 4) Repo Map rule (master context index)
+## Closeout
 
-- /context/repo-map.md is the canonical index of the codebase.
-- Every time you add a file OR substantially change a file’s role, update repo-map.md in the same phase.
-- Keep each entry short (2–6 bullets). No essays.
-
-## 5) Your constraints (hard rules)
-
-### New system = new file
-
-- If you introduce a new system (new state + update logic + invariants), create a new module file for it.
-  Examples: rng, genetics, metabolism, perception, color, memory, behavior, combat, reproduction, metrics, input, camera.
-- Do not cram a new system into an existing file “because it’s nearby”.
-
-### Max file length
-
-- Hard cap: no source file may exceed 600 lines.
-- Soft cap: when a file approaches ~450 lines, plan a split before adding more.
-
-## App entrypoint rule (prevent main.js bloat)
-
-- src/main.js may contain ONLY:
-  - boot/config loading
-  - module initialization (sim, renderer, ui, input, metrics)
-  - wiring event handlers
-  - lifecycle control (start/pause/step)
-- src/main.js must NOT contain:
-  - simulation system logic (genetics, metabolism, perception, combat, reproduction, etc.)
-  - tick-order logic (that belongs in src/sim/sim.js)
-  - rendering draw logic (belongs in render/\*)
-  - input gesture math (belongs in input/\*)
-- If you need new logic, create a new file/module for that system and import it.
-- Stricter size cap for src/main.js: target < 300 lines. If it approaches 300, split wiring into app/\* helper modules.
-
-## 6) Simulation invariants (never break)
-
-- Determinism: simulation must be deterministic with a seed.
-- Central RNG: all randomness must go through a single rng module.
-- Tick order invariant:
-  Sense → Decide → Act → Costs → LifeHistory → Regen → Metrics
-  - Render is a post-tick, read-only view step outside the sim tick.
-- Observability is required: major system changes must expose at least one metric or inspector readout.
-
-## 7) Mobile-first requirements
-
-- Touch controls are priority: large tap targets, drag-to-pan, pinch-to-zoom.
-- Avoid hover-only UX.
-- Keep UI responsive under load (use a Web Worker for sim if needed).
-
-## 8) Plan Lint (a plan is invalid unless it has this)
-
-Each phase in plan.md must include:
-
-- Tasks (checkboxes)
-- Files touched
-- Verification checklist
-- Stop point (pause for review)
-  Also:
-- Include a checkbox reminder to update /context/repo-map.md when files/roles change.
-
-If a phase touches any core sim formula or determinism-sensitive logic (metabolism, friction, perception, targeting, genetics/phenotype mapping, color contrast, chase scoring):
-
-- The plan must include a task to add/update an automated test.
-- Acceptable tests:
-  - unit test for the function(s), or
-  - deterministic scenario test (seed + N ticks + expected summary/hash/metrics)
-
-## 9) Risk gates (ask before doing)
-
-HIGH RISK (must ask):
-
-- deleting files
-- changing tick order
-- changing core formulas (metabolism, color contrast, targeting) without updating tests
-- changing build/deploy (GitHub Pages), service worker/PWA
-  MEDIUM RISK (notify):
-- wide refactors across many files
-  LOW RISK (auto):
-- adding tests
-- adding small pure helper functions
-- adding inspector metrics / UI text
-
-## 10) Closeout (GC)
-
-When a track is done:
-
-- Append a summary to /context/history.md (include Track N).
-- Update /context/tech-stack.md if dependencies/tools changed.
-- Clear /context/active-track.md.
+- Update `context/repo-map.md` for meaningful new modules or changed responsibilities, and `context/tech-stack.md` when tools/dependencies change.
+- Record substantial completed work and verification in `context/history.md`; keep detailed evidence in the track or a dated report when useful. Preserve historical results as snapshots, clearly labeled when superseded.
+- Summarize what changed, why, verification and remaining limitations. Keep the active-work pointer consistent with the final status.

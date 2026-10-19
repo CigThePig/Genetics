@@ -1,3 +1,4 @@
+import { cloneConfigValue } from '../sim/utils/config.js';
 export function buildConfigSections({
   categoryOrder,
   extraCategories,
@@ -53,7 +54,7 @@ export function buildConfigSections({
         const entry = inputs.get(item.key);
         if (entry) {
           entry.update(defaultValue);
-          applyConfigChange(item.key, defaultValue);
+          applyConfigChange(item.key, cloneConfigValue(defaultValue));
         }
       }
     });
@@ -181,7 +182,7 @@ export function buildConfigSections({
         const validateJson = () => {
           try {
             const parsed = JSON.parse(input.value);
-            const result = validateStructuredValue(parsed, defaultValue);
+            const result = validateStructuredValue(item.key, parsed);
             if (!result.ok) {
               jsonError.textContent = result.message;
               return { ok: false };
@@ -326,7 +327,7 @@ export function buildConfigSections({
 
       // Make inputs easier to use on mobile
       input.addEventListener('focus', () => {
-        input.select();
+        input.select?.();
       });
 
       const updateEntry = (nextValue) => {
@@ -365,14 +366,23 @@ export function buildConfigSections({
         advanced: Boolean(item.advanced)
       });
       row.classList.toggle('config-row--favorite', favorites.has(item.key));
-      controlWrap.append(input);
+      if (inputType === 'json') {
+        const drawer = document.createElement('details');
+        drawer.className = 'config-json-drawer';
+        const summary = document.createElement('summary');
+        summary.textContent = 'Edit…';
+        drawer.append(summary, input, jsonActions, jsonError);
+        controlWrap.append(drawer);
+      } else {
+        controlWrap.append(input);
+      }
       if (sliderInput) {
         controlWrap.prepend(sliderInput);
       }
-      if (jsonActions) {
+      if (jsonActions && inputType !== 'json') {
         controlWrap.append(jsonActions);
       }
-      if (jsonError) {
+      if (jsonError && inputType !== 'json') {
         controlWrap.append(jsonError);
       }
       row.append(labelWrap, controlWrap);

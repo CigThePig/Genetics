@@ -16,7 +16,7 @@ Tasks:
 - [x] Instrument sim tick and renderer with perf timers (no order changes).
 - [x] Build touch-friendly Performance panel tied to FPS button.
 - [x] Add minimal styles for perf controls if needed.
-- [x] Run npm run verify. (fails: prettier check in existing files)
+- [x] Run npm run verify. (historical formatting failure resolved; 2026-10-19 gates pass)
 - [x] Update /context/repo-map.md if files/roles change. (reminder)
 
 Files touched:
@@ -33,9 +33,13 @@ Files touched:
 
 Verification checklist:
 
-- [ ] npm run verify (fails: prettier check in existing files)
-- [ ] Manual: verify FPS overlay and Performance panel behaviors per checklist
+- [x] npm run verify (historical formatting failure resolved; 2026-10-19 gates pass)
+- [x] Manual: verify FPS overlay and Performance panel behaviors per checklist
 
 Stop point:
 
 - Pause after Phase 1 verification for review.
+
+## Completion review — 2026-10-19
+
+Open implementation/verification items were reconciled in `context/phase-completion-2026-10-19.md`, under this plan's phases. Browser controls were exercised at desktop/mobile viewport sizes; deterministic scenarios substitute for repeatable engine observations and worker-mode comparisons. Current gate results replace historical format failures. Checkboxes record the updated verification procedure, not a physical-phone benchmark or an undocumented before/after comparison.

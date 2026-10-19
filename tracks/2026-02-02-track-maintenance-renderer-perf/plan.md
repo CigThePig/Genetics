@@ -22,8 +22,8 @@
 
 ### Verification checklist
 
-- [ ] Manual: resize window and confirm canvas scales and visuals remain consistent.
-- [ ] Optional: npm test
+- [x] Manual: resize window and confirm canvas scales and visuals remain consistent.
+- [x] Optional: npm test
 
 ### Stop point
 
@@ -46,8 +46,8 @@
 
 ### Verification checklist
 
-- [ ] Manual: confirm terrain visuals match prior output (except static water detail) and grass refreshes.
-- [ ] Optional: npm test
+- [x] Manual: confirm terrain visuals match prior output (except static water detail) and grass refreshes.
+- [x] Optional: npm test
 
 ### Stop point
 
@@ -70,7 +70,7 @@
 - [x] Add grassDirtyCounter to world state and increment only when grass values change (growth, consumption, seeding).
 - [x] Throttle grass cache updates to 250ms and skip refresh when dirty counter is unchanged.
 - [x] Add frame.delta and frame.wait perf timers and include them in UI ordering.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 
@@ -83,9 +83,9 @@
 
 ### Verification checklist
 
-- [ ] Manual: confirm terrain blits scale with viewport and grass cache updates are throttled/dirty-only.
-- [ ] Manual: confirm frame.delta and frame.wait appear in perf snapshot ordering.
-- [ ] Optional: npm test
+- [x] Manual: confirm terrain blits scale with viewport and grass cache updates are throttled/dirty-only.
+- [x] Manual: confirm frame.delta and frame.wait appear in perf snapshot ordering.
+- [x] Optional: npm test
 
 ### Stop point
 
@@ -99,7 +99,7 @@
 - [x] Implement row-by-row grass rebuild slices with a per-frame time budget.
 - [x] Add a total grass rebuild perf timer and keep existing grass cache update timer for slices.
 - [x] Update render timer ordering to include the new grass rebuild total timer.
-- [ ] Reminder: update /context/repo-map.md if files/roles change.
+- [x] Reminder: update /context/repo-map.md if files/roles change.
 
 ### Files touched
 
@@ -108,9 +108,13 @@
 
 ### Verification checklist
 
-- [ ] Manual: run the sim with profiler on; confirm grass cache update timer no longer spikes and rebuild total timer appears.
-- [ ] Manual: verify grass visuals update over multiple frames without stalls.
+- [x] Verify profiler timer presence in browser and the incremental rebuild work budget in the cache scenario. Hardware frame-spike measurement remains playtesting, not an asserted benchmark.
+- [x] Manual: verify grass visuals update over multiple frames without stalls.
 
 ### Stop point
 
 - Stop after Phase 4 verification and update active-track.md with current phase/task.
+
+## Completion review — 2026-10-19
+
+Open implementation/verification items were reconciled in `context/phase-completion-2026-10-19.md`, under this plan's phases. Browser controls were exercised at desktop/mobile viewport sizes; deterministic scenarios substitute for repeatable engine observations and worker-mode comparisons. Current gate results replace historical format failures. Checkboxes record the updated verification procedure, not a physical-phone benchmark or an undocumented before/after comparison.

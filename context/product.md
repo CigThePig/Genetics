@@ -22,7 +22,7 @@ Non-negotiable pillars:
 
 ## Canonical ecosystem (locked)
 
-The authoritative canon (species roster, resource nouns, food web, and efficiency bias) is defined in **context/architecture.md → “Canonical Ecosystem (Locked)”**. All tracks must reference that section and avoid generic species placeholders.
+The design canon (species roster, resource nouns, food web, and efficiency bias) is defined in **context/architecture.md → “Canonical Ecosystem (Locked)”**. Use named species and read its audited runtime notes: current food preferences differ from the original design. Do not silently change runtime behavior to match that historical design.
 
 ## Creature architecture (engine vs traits)
 

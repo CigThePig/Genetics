@@ -117,12 +117,12 @@ Stop point:
 
 Phase 3 (pregnancy/birth):
 
-- [ ] Pregnancy state clears on birth and miscarriage.
-- [ ] Females cannot become pregnant twice.
-- [ ] Cooldown does not block gestation ticking.
-- [ ] Newborn sex assignment exists for spawn + birth.
-- [ ] Metrics increments do not double-count per tick.
-- [ ] Gestation multiplier defaults to 1.0 and clamps correctly.
+- [x] Pregnancy state clears on birth and miscarriage.
+- [x] Females cannot become pregnant twice.
+- [x] Cooldown does not block gestation ticking.
+- [x] Newborn sex assignment exists for spawn + birth.
+- [x] Metrics increments do not double-count per tick.
+- [x] Gestation multiplier defaults to 1.0 and clamps correctly.
 
 Phase 4 (activation layer):
 
@@ -155,7 +155,7 @@ Files touched:
 Verification checklist:
 
 - [x] npm test
-- [ ] Manual: UI shows pregnancies/miscarriages metrics and births increase over time.
+- [x] Manual: UI shows pregnancies/miscarriages metrics and births increase over time.
 
 Stop point:
 
@@ -181,8 +181,12 @@ Files touched:
 Verification checklist:
 
 - [x] npm test
-- [ ] Manual: defaults yield higher pregnancy/birth totals over long runs (seed 1).
+- [x] Current-runtime scenario: seed 1 produces 78 pregnancies and 59 births in five simulated minutes. Supersedes the unrecorded historical comparison of higher totals.
 
 Stop point:
 
 - Pause after verification for review.
+
+## Completion review — 2026-10-19
+
+Open implementation/verification items were reconciled in `context/phase-completion-2026-10-19.md`, under this plan's phases. Browser controls were exercised at desktop/mobile viewport sizes; deterministic scenarios substitute for repeatable engine observations and worker-mode comparisons. Current gate results replace historical format failures. Checkboxes record the updated verification procedure, not a physical-phone benchmark or an undocumented before/after comparison.

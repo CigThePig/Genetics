@@ -1,3 +1,5 @@
+HISTORICAL PROMPTS — completed UI work; retained as design history, not standing agent instructions. Follow current AGENTS.md for workflow and verify current code before using the descriptions below.
+
 PHASE 1 (Codex Prompt) — Fix boolean trap + expose verified hidden knobs (no gameplay changes)
 
 You are working in the Genetics simulation repo.
