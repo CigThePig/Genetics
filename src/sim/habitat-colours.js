@@ -9,6 +9,7 @@ export const HABITATS = {
   shore: { hsl: [0.13, 0.26, 0.53], vegetation: [0.23, 0.35, 0.41], debug: '#ff8455' },
   water: { hsl: [0.56, 0.47, 0.32], vegetation: [0.56, 0.47, 0.32], debug: '#258cf7' }
 };
+const STRESS_RGB = [0.5, 0.32, 0.18];
 const vegetation = Object.fromEntries(
   Object.entries(HABITATS).map(([k, v]) => [k, hslToRgb(...v.vegetation)])
 );
@@ -35,15 +36,18 @@ export function habitatRgbAt(world, i, config = {}, includeVegetation = true) {
   const cached =
     world.habitatBaseColours && world.habitatColourRevision === world.terrainDirtyCounter;
   const rgb = cached
-    ? Array.from(world.habitatBaseColours.subarray(i * 3, i * 3 + 3))
+    ? [
+        world.habitatBaseColours[i * 3],
+        world.habitatBaseColours[i * 3 + 1],
+        world.habitatBaseColours[i * 3 + 2]
+      ]
     : substrateRgb(world, i);
   if (!includeVegetation || world.cells[i] === 'water') return rgb;
   const cover = clamp01((world.grass?.[i] ?? 0) / (config.grassCap || 1)) * 0.38;
   const green = vegetation[world.cells[i]] ?? vegetation.plains;
   const stress = clamp01(world.grassStress?.[i] ?? 0) * 0.18;
   for (let c = 0; c < 3; c++)
-    rgb[c] =
-      (rgb[c] * (1 - cover) + green[c] * cover) * (1 - stress) + [0.5, 0.32, 0.18][c] * stress;
+    rgb[c] = (rgb[c] * (1 - cover) + green[c] * cover) * (1 - stress) + STRESS_RGB[c] * stress;
   return rgb;
 }
 export const habitatCssAt = (world, i, config, vegetation = true) =>

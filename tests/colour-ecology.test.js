@@ -232,6 +232,12 @@ describe('habitat appearance and contextual detection', () => {
       config: { ...simConfig, creatureTargetingRange: 12 }
     };
     expect(selectPredatorTarget(options)).toBeNull();
+    expect(
+      selectPredatorTarget({
+        ...options,
+        config: { ...options.config, colourCamouflageEnabled: false }
+      }).target.id
+    ).toBe(prey.id);
     w.cells.fill('sand');
     w.terrainDirtyCounter++;
     expect(selectPredatorTarget(options).target.id).toBe(prey.id);
@@ -532,5 +538,11 @@ describe('replay, ecology and bounded observation', () => {
     ).toBe(true);
     expect(validateConfigValue('colourInitialVariation', 0.8).ok).toBe(false);
     expect(validateConfigValue('colourCamouflageEnabled', false).ok).toBe(true);
+    expect(validateConfigValue('creatureGenomeRanges', { bodyHue: { min: 0, max: 1 } }).ok).toBe(
+      false
+    );
+    expect(validateConfigValue('creatureTraitMultipliers', { circle: { bodyHue: 2 } }).ok).toBe(
+      false
+    );
   });
 });

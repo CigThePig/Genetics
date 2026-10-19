@@ -141,6 +141,7 @@ export function bootApplication(app) {
     updateCameraBounds();
     renderer.render(sim, { immediate: !loop.isRunning() });
     graphsPanel.reset();
+    graphsPanel.recordMetrics(sim.getSummary());
     settings.save({ seed: sim.getSeed() });
     ui.setStatus(`Seed: ${sim.getSeed()}`);
     loop.resetTimebase();

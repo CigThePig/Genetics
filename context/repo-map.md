@@ -131,15 +131,15 @@ Rules:
 - src/app/settings.js
   - Role: settings persistence (seed, speed, toggles)
 - src/sim/config.js
-  - Role: centralized tunable config (terrain + plant scaffolding)
+  - Role: public defaults, category metadata and presets for simulation, ecology and presentation
 - src/sim/rng.js
   - Role: seeded RNG module for deterministic randomness
 - src/sim/sim.js
-  - Role: sim orchestration stub + RNG wiring
+  - Role: simulation/world ownership, seeded lifecycle orchestration and bounded colour-history sampling
 - src/sim/world-grid.js
   - Role: world grid data structure + terrain/grass/stress accessors
 - src/sim/terrain-generator.js
-  - Role: deterministic terrain blob generator for world grid initialization
+  - Role: public regional terrain entry point with a retained legacy blob export
 - src/sim/terrain-effects.js
   - Role: terrain effects lookup table (friction, perception, plant cap)
 - src/sim/species.js
@@ -315,3 +315,22 @@ Rules:
   - Per-creature assessed-threat memory avoids repeated distant alerts while retaining closer-danger reassessment.
 - tests/review-followup.test.js, config-validation.test.js
   - Multi-tick alert reassessment in both herd modes; anchor radius metadata/import/runtime agreement.
+
+## Track 11 — Regional colour ecology
+
+- tracks/2026-10-19-track-11-regional-colour-evolution/
+  - Expanded spec, architecture, seven-phase plan, measurements and browser evidence.
+- src/sim/regional-terrain.js, habitat-analysis.js
+  - Seeded regional sites/biomes, local catchments, connected components and land-path water access.
+- src/sim/habitat-colours.js, colour.js
+  - Shared substrate/vegetation sampling, RGB contrast, circular hue math and statistics; no DOM.
+- src/sim/creatures/visibility.js, mate-preference.js
+  - Contextual detection and soft reciprocal preference; used by acquisition, chase, both herd modes and mating.
+- src/sim/colour-metrics.js, src/ui/colour-evolution.js
+  - World-lifetime founding snapshot plus bounded 10-second samples; per-species hue histograms and earlier/latest comparison.
+- src/sim/config-meta/colour-ecology.js
+  - Region scale/prevalence/borders, biome view and independent colour-effect switches.
+- tests/regional-terrain.test.js, colour-ecology.test.js
+  - Multi-seed topology, circular genetics, causal hunting/choice, lifecycle, indexed parity and replay.
+- scripts/verify-track11.mjs, verify-track11-browser.cjs
+  - Repeatable map/ablation batches and optional real-browser evidence with test-only app-handle instrumentation.

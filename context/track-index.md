@@ -386,24 +386,13 @@ Verification:
 
 ---
 
-## Track 11 — Color System + Mating Preferences (Steps 48–49)
+## Track 11 — Regional World Generation, Colour Adaptation + Mate Selection
 
-Goal: Add universal color and mating preference visibility.
-Includes: 48) Universal color integration across all canonical species 49) Color perception + mate preference inspector upgrades
+Implemented in `tracks/2026-10-19-track-11-regional-colour-evolution/` (expanded by explicit user assignment from steps 48–49).
 
-Acceptance:
+Seven phases: regional geography and hydrology; shared habitat appearance and biome view; ecological/resource/spawn integration; inherited body HSL and mate-preference/choosiness/discrimination; contextual detection and pursuit; commitment-safe soft mate choice; inspector, circular histories, controlled scenarios and browser/multi-seed verification.
 
-- Color affects detection and mating behavior.
-- Inspector exposes body color and mate preference.
-
-Risks:
-
-- Color dominates outcomes in unintended ways.
-
-Verification:
-
-- Manual: color distributions and preferences drift.
-- Metrics: color summaries update over time.
+Acceptance: geographically readable habitats, habitat-dependent detection, inherited reproductive selection and observable colour distributions. Seeded replay and canonical species/diets remain intact. Tests demonstrate causal hunting/choice effects; multi-seed runs measure viability and expose sparse predation/species-loss risks. Long-term adaptive divergence and indefinite ecological stability are not asserted; Track 13 remains necessary.
 
 ---
 

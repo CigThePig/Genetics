@@ -1,0 +1,13 @@
+# Architecture
+
+World generation uses jittered stratified regional sites, weighted biome allocation, domain-warped nearest-region assignment, low-frequency elevation/moisture and bounded local texture. Regions scale with world dimensions. Small isolated primary-biome components are absorbed before hydrology. Local ponds and short tributaries provide water without bisecting the map with impassable rivers. Land-component and distance-to-water fields support spawn safety and map analysis. Generation and seeded RNG consumption intentionally change trajectories.
+
+Pure shared habitat/colour modules sit below both renderer and AI. Static texture is deterministic by tile; current grass/stress contributes a bounded approximation of vegetation appearance. Rendering draws this same sample, with decorative overlays remaining a documented approximation. Individual phenotype stores HSL, CSS and a compact perceptual vector once at trait creation. Contrast uses a weighted RGB distance plus a luminance term. It is inexpensive, continuous at hue wrap, and a display-space approximation rather than physiological colour vision. Unresolvable hue on grey, black and white partners is scored neutrally rather than as an ideal match.
+
+Visibility attenuates the existing range, terrain and inherited perception. Close encounters remain visible; motion increases exposure; tracked targets receive hysteresis and existing last-known-position grace. Both herd modes use this policy. No per-candidate procedural noise, random detection rolls, DOM access or render-dependent decisions.
+
+Colour loci are direct normalized phenotypes (other genes remain trait multipliers). Hue inheritance follows the shortest arc; exact antipodes use the positive half-turn from the first parent deterministically. Mutation wraps hue and clamps other genes. Initial hue variation is broader than metabolic jitter.
+
+Mate scoring uses distance multiplied by a bounded preference mismatch penalty, with reciprocal preference and deterministic ID ties. A candidate committed elsewhere is unavailable for conception; a source with a valid distant commitment does not substitute a nearer mate. Eligibility is revalidated. Weak choosiness approaches nearest-eligible behavior, strong choosiness can cause longer travel without hard rejection.
+
+World-owned periodic colour snapshots use 12-bin circular histograms and circular means/concentration per species. History is capped; inspector and graphs only read it. Configuration follows defaults, metadata, validation and presets. Sim tick order remains unchanged; history is sampled after regeneration.

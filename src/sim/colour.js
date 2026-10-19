@@ -18,7 +18,8 @@ export function hslToRgb(h, s, l) {
   };
   return [channel(0), channel(8), channel(4)];
 }
-export const rgbCss = (rgb) => `rgb(${rgb.map((v) => Math.round(clamp01(v) * 255)).join(', ')})`;
+export const rgbCss = (rgb) =>
+  `rgb(${Math.round(clamp01(rgb[0]) * 255)}, ${Math.round(clamp01(rgb[1]) * 255)}, ${Math.round(clamp01(rgb[2]) * 255)})`;
 export const hslCss = (h, s, l) =>
   `hsl(${wrapHue(h) * 360}, ${clamp01(s) * 100}%, ${clamp01(l) * 100}%)`;
 // Weighted RGB distance with a separate luminance term: cheap and continuous at hue wrap.
