@@ -13,7 +13,7 @@ Rules:
 ## Top-level
 
 - AGENTS.md
-  - Role: agent rules + constraints + workflow gates
+  - Role: canonical agent guidance, correctness invariants and proportional workflow
 - README.md
   - Role: repo landing page + quickstart + deployment summary
 - LICENSE
@@ -50,7 +50,7 @@ Rules:
   - Role: the ordered roadmap packaged into track definitions
   - Used by: planning to create tracks consistently
 - context/planning-checklist.md
-  - Role: the ritual + prompts for creating tracks and phases safely
+  - Role: proportional scope, design and verification checklist for substantial tracks
 - context/repo-map.md
   - Role: canonical index of modules/files and their interactions
 - context/product.md
@@ -62,13 +62,13 @@ Rules:
 - context/tech-stack.md
   - Role: tools, build, deploy
 - context/code-style.md
-  - Role: module boundaries + file rules (new system=new file, max 600 LOC)
+  - Role: cohesive module boundaries, state ownership and implementation conventions
 - context/active-track.md
   - Role: pointer to current track folder + current phase/task
 - context/history.md
   - Role: append-only track summaries + verification notes
 - context/UI-FIX
-  - Role: phased UI config panel fix prompts and constraints
+  - Role: historical UI config panel prompts; current workflow is in AGENTS.md
 
 ## Tracks
 
@@ -306,3 +306,12 @@ Rules:
   - Charging-only catches, scaled meter decisions, fallback prey parity, threat-distance threshold and regroup invalidation regressions.
 - tracks/2026-10-19-pr-review-followup/, context/pr-review-followup-2026-10-19.md
   - Authorized review fixes, per-comment dispositions and updated verification evidence.
+
+## Newest review and guidance refresh
+
+- context/review-guidance-refresh-2026-10-19.md
+  - Latest review dispositions, standing-rule audit and current verification evidence.
+- src/sim/creatures/behavior-state.js, behavior-helpers.js
+  - Per-creature assessed-threat memory avoids repeated distant alerts while retaining closer-danger reassessment.
+- tests/review-followup.test.js, config-validation.test.js
+  - Multi-tick alert reassessment in both herd modes; anchor radius metadata/import/runtime agreement.

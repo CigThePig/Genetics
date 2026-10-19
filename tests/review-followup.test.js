@@ -194,6 +194,68 @@ describe('PR #135: alert distance and PR #136: stale regroup', () => {
     }
   );
 
+  it.each([true, false])(
+    'assesses a persistent distant threat once and reassesses closer or returning threats (simple %s)',
+    (simple) => {
+      const member = animal(0),
+        predator = animal(1, 'triangle', 29);
+      const config = {
+        ...simConfig,
+        ticksPerSecond: 1,
+        creatureHerdingSimpleMode: simple,
+        creatureHerdingThreatRange: 15,
+        creatureSimpleHerdingThreatRange: 15,
+        creatureBehaviorAlertToFleeThreshold: 8,
+        creatureBehaviorAlertMinSeconds: 1,
+        creatureBehaviorAlertMaxSeconds: 1,
+        creatureBehaviorEnvironmentPauseEnabled: false
+      };
+      const options = context([member, predator], config);
+      const step = (tick) => {
+        updateCreatureHerding({ ...options, tick });
+        updateBehaviorIntegration({ ...options, tick });
+      };
+      step(1);
+      expect(member.behaviorState.state).toBe('alert');
+      step(2);
+      expect(member.behaviorState.state).toBe('relaxed');
+      // Multiple real integration ticks, rather than just checking the assessment exit.
+      for (let tick = 3; tick <= 20; tick++) {
+        step(tick);
+        expect(member.behaviorState.state).not.toBe('alert');
+      }
+      // A closer threat warrants a new assessment even outside the flee threshold.
+      predator.position.x = 28.5;
+      step(21);
+      expect(member.behaviorState.state).toBe('alert');
+      step(22);
+      expect(member.behaviorState.state).toBe('relaxed');
+      step(23);
+      expect(member.behaviorState.state).toBe('relaxed');
+      // A live threshold change must also bypass the previous assessment.
+      config.creatureBehaviorAlertToFleeThreshold = 9;
+      step(24);
+      expect(member.behaviorState.state).toBe('alert');
+      step(25);
+      expect(member.behaviorState.state).toBe('fleeing');
+      // Losing visibility clears the assessment; the same distance on return alerts again.
+      predator.position.x = 90;
+      for (let tick = 26; tick <= 40; tick++) step(tick);
+      config.creatureBehaviorAlertToFleeThreshold = 8;
+      predator.position.x = 29;
+      step(41);
+      expect(member.behaviorState.state).toBe('alert');
+      step(42);
+      expect(member.behaviorState.state).toBe('relaxed');
+      // Closing inside the danger threshold still escalates after the alert lock.
+      predator.position.x = 27;
+      step(43);
+      expect(member.behaviorState.state).toBe('alert');
+      step(44);
+      expect(member.behaviorState.state).toBe('fleeing');
+    }
+  );
+
   it('changing the distance setting changes the alert decision', () => {
     const member = animal(1);
     member.herding = { isThreatened: true, nearbyThreats: 1, nearestThreatDistance: 9 };

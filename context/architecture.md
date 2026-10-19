@@ -19,8 +19,8 @@ Rendering is a post-tick, read-only view step outside the sim tick. Render must 
 
 Tunable configuration:
 
-- Centralize tunables in src/sim/config.js.
-- Other systems should import from config rather than scattering constants.
+- Centralize defaults in src/sim/config-defaults.js and editor metadata in src/sim/config-meta/; src/sim/config.js exports the public configuration API.
+- Systems use their passed configuration, with explicit defaults when needed, rather than scattering tunable constants.
 
 ## Creature Architecture: Engine vs Species Traits
 
@@ -37,7 +37,7 @@ Species + Traits Layer (data-driven differences):
 - creature.species ∈ {square, triangle, circle, octagon}
 - creature.traits (per-individual phenotype values)
 - species defaults seed traits at spawn
-- genes/mutation (later) modify traits per creature, never globally
+- genes/mutation modify traits per creature, never globally
 
 Non-negotiable rule:
 
@@ -49,7 +49,7 @@ Examples:
 - Speed affects cost per creature, not per species globally.
 - Circles eating grass is a species rule, but efficiency is trait-driven.
 
-Core entities (eventual):
+Core entities:
 
 - World grid:
   - terrain type
@@ -85,7 +85,7 @@ Resource/food entities (baseline):
 - Berries (stored on bushes as bush.berries, the berry pool; regeneration tied to bush health)
 - Meat (produced by predation outcomes)
 
-Food web + efficiency bias (authoritative):
+Original design food web + efficiency bias (future design reference; runtime differences are documented below):
 
 - Squares prefer berries; fallback eat triangles only under severe hunger/berry scarcity.
 - Triangles eat circles and octagons (predatory).

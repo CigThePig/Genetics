@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { simConfig } from '../src/sim/config.js';
+import { simConfig, configMeta } from '../src/sim/config.js';
 import { validateConfigValue } from '../src/ui/config-validation.js';
+import { resolveHerdingAnchorFoodSampleRadius } from '../src/sim/creatures/herding-config.js';
 import { createConfigValues } from '../src/ui/config-values.js';
 
 describe('UI phase 3: safe structured tuning', () => {
@@ -25,6 +26,7 @@ describe('UI phase 3: safe structured tuning', () => {
     ['creatureLifeStages', []],
     ['creatureLifeStages', [{ id: 'adult', minAge: 1 }]],
     ['worldWidth', -1],
+    ['creatureHerdingAnchorFoodSampleRadius', 0],
     ['worldHeight', 1.5],
     ['seed', NaN],
     ['creatureHerdingEnabled', 0],
@@ -37,6 +39,20 @@ describe('UI phase 3: safe structured tuning', () => {
     const result = values.applyPresetPayload({ [key]: value }, (...args) => applied.push(args));
     expect(result.rejected).toContain(key);
     expect(applied).toEqual([]);
+  });
+
+  it('accepts anchor food radii that retain the same runtime meaning', () => {
+    const key = 'creatureHerdingAnchorFoodSampleRadius';
+    expect(configMeta[key].min).toBe(1);
+    for (const radius of [1, 3, configMeta[key].max]) {
+      expect(validateConfigValue(key, radius).ok).toBe(true);
+      expect(resolveHerdingAnchorFoodSampleRadius({ [key]: radius })).toBe(radius);
+      const applied = {};
+      createConfigValues({ config: simConfig }).applyPresetPayload({ [key]: radius }, (k, v) => {
+        applied[k] = v;
+      });
+      expect(applied[key]).toBe(radius);
+    }
   });
 
   it('permits valid species overrides, gene ranges and new life-stage thresholds', () => {

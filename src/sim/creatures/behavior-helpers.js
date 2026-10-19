@@ -145,6 +145,7 @@ export const ensureBehaviorState = (creature) => {
       lockedUntilTick: 0,
       phaseLockedUntilTick: 0,
       alertDirection: null,
+      assessedThreatDistance: null,
       targetPosition: null,
       lastTerrainType: null,
       environmentPauseTicks: 0

@@ -159,8 +159,8 @@ export const metaHerding2 = {
   },
   creatureHerdingAnchorFoodSampleRadius: {
     label: 'Anchor Food Radius',
-    description: 'Food sampling radius for anchors.',
-    min: 0,
+    description: 'Food sampling radius for anchors (at least one tile).',
+    min: 1,
     max: 120,
     step: 1,
     unit: 'tiles',

@@ -37,3 +37,10 @@ Reviewed source and tooling by subsystem. Repaired deterministic isolation, perc
 - Split app loop/config wiring and hunting transitions into focused modules. Gated catches on charging, normalized behavior meters, aligned partial-config prey defaults, honored direct-threat distance, and invalidated stale regroup caches.
 - 116 tests, lint, formatting and build pass. Desktop/mobile browser controls and config rebuild/rate-reset lifecycle checks pass. Final three-seed 3,600-tick smoke passes bounds/finite-state/ID/accounting checks with no deaths.
 - Per-finding links, dispositions and validation limits: context/pr-review-followup-2026-10-19.md. No merge/deployment.
+
+## 2026-10-19 — PR #136 newest review and agent guidance refresh
+
+- Fixed repeated distant-threat alert pauses with per-creature assessment memory and closer/returning-danger reassessment in both herd modes. Aligned anchor food radius metadata/import minimum with its runtime clamp.
+- Removed standing file-size limits, automatic phase stops and mandatory full track artifacts for small fixes. Reviewed every rule group and synchronized current companion guidance; retained correctness, mobile support, verification and authorization boundaries. Old prompt documents are historical rather than standing instructions.
+- Validation: 120 tests, lint, formatting and build pass; targeted Chromium config/import/playback checks pass; three seeded 3,600-tick smoke runs pass finite-meter, bounds, ID and population accounting checks. Initial-minute runs are not long-run balance evidence.
+- Review links, rule-by-rule dispositions and current seed hashes: context/review-guidance-refresh-2026-10-19.md.

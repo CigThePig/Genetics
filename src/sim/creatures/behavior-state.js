@@ -130,7 +130,8 @@ const updateAlertState = (creature, config, rng, tick, durations) => {
       secondsToTicks(durations.fleeingMinSeconds, durations.tps)
     );
   } else {
-    // No close threat: finish the assessment rather than remaining paused indefinitely.
+    // Remember this assessment until threats disappear or a closer danger needs attention.
+    creature.behaviorState.assessedThreatDistance = Number.isFinite(distance) ? distance : Infinity;
     transitionTo(
       creature,
       BEHAVIOR_STATES.RELAXED,
@@ -191,8 +192,17 @@ export function updateCreatureBehaviorState({ creatures, config, rng, world, tic
     const threats = creature.herding?.nearbyThreats ?? 0;
     const threatDirection = creature.herding?.threatDirection;
 
-    // Critical: Always flee if directly threatened and close
-    if (isThreatened && threats > 0 && bs.state !== BEHAVIOR_STATES.FLEEING) {
+    const hasDirectThreat = isThreatened && threats > 0;
+    const distance = creature.herding?.nearestThreatDistance;
+    if (!hasDirectThreat) bs.assessedThreatDistance = null;
+    const needsAssessment =
+      bs.assessedThreatDistance == null ||
+      (Number.isFinite(distance) &&
+        (distance < bs.assessedThreatDistance || distance <= durations.alertToFleeThreshold));
+
+    // A persistent assessed distant threat must not repeatedly interrupt normal behavior.
+    // Closer danger (including a changed flee threshold) can still bypass state locks.
+    if (hasDirectThreat && needsAssessment && bs.state !== BEHAVIOR_STATES.FLEEING) {
       if (bs.state !== BEHAVIOR_STATES.ALERT) {
         // Trigger alert first unless already fleeing
         const alertDuration =

@@ -22,7 +22,7 @@ The goal is not scripted behavior. The goal is **emergent outcomes** you can see
 
 ## Canonical ecosystem (locked)
 
-The authoritative canon is defined in context/architecture.md → “Canonical Ecosystem (Locked)”. Future tracks must reference that section and avoid generic species placeholders.
+The ecosystem design is in context/architecture.md → “Canonical Ecosystem (Locked)”. Read the audited runtime differences there before changing feeding rules; use named species rather than generic placeholders.
 
 ## Anti-drift (engine vs traits)
 
@@ -60,7 +60,7 @@ This project keeps important context in `/context/` so agents (and humans) can w
   The official roadmap broken into Tracks (the “menu” for creating work).
 
 - `context/planning-checklist.md`  
-  The repeatable ritual for making tracks: Recon → Spec → Blueprint → Plan.
+  A proportional checklist for planning substantial tracks.
 
 - `context/repo-map.md`  
   The “master context index” of files/modules and how they interact.
@@ -77,49 +77,17 @@ Other helpful docs:
 
 ## How to work on this repo (human or AI)
 
-### 1) Create a track (planning only, no code)
+Follow `AGENTS.md` for current agent rules, `context/workflow.md` for execution and `context/planning-checklist.md` for substantial track planning. Small fixes can use a PR checklist; larger changes use track documents. Verify each phase and continue through the authorized scope unless the user requested a review checkpoint.
 
-Pick the next Track from `context/track-index.md` and generate:
-
-- `tracks/YYYY-MM-DD-track-N-slug/spec.md`
-- `tracks/YYYY-MM-DD-track-N-slug/blueprint.md` (no code)
-- `tracks/YYYY-MM-DD-track-N-slug/plan.md`
-
-Update:
-
-- `context/active-track.md`
-- `context/repo-map.md`
-
-### 2) Execute one phase at a time
-
-Follow the track’s `plan.md`:
-
-- implement **one phase**
-- verify it
-- mark checkboxes
-- update repo-map if files/roles changed
-- stop and review before next phase
-
-### 3) Close out
-
-When the track is done:
-
-- add a summary to `context/history.md`
-- clear `context/active-track.md`
-
----
+At closeout, record substantial results in `context/history.md`, update the repo map when responsibilities change and clear the active pointer. Completed plans and old prompt files are historical context.
 
 ## Development
 
-This repo is scaffolding-only but has a working dev loop:
-
-- Install: `npm install`
+- Install: `npm ci`
 - Dev: `npm run dev`
-- Build: `npm run build`
+- Verify: `npm run verify` (tests, lint, formatting and production build)
+- Seeded checks: `npm run test:soak -- --ticks=N`
 - Preview: `npm run preview`
-- Tests: `npm test`
-
----
 
 ## Hosting
 

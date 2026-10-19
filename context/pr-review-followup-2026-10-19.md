@@ -1,5 +1,7 @@
 # Codex review follow-up — PRs #135 and #136
 
+Historical snapshot for revision 0b8d1fd. A subsequent review found repeated distant-threat reassessment; current repairs, guidance changes and verification are in context/review-guidance-refresh-2026-10-19.md.
+
 Starting commit: `7b35fd482e6baef77df44962599dfa775c601fcb` on PR #136. All five findings on merged PR #135 and both findings on the first review of PR #136 were checked against source. Six required repairs; the active-track closeout finding was already addressed.
 
 | Review finding                                                                                              | Disposition                                                                                                                                                                                                                                                                                                                                                                                                          |
