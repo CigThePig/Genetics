@@ -7,7 +7,6 @@ import { simConfig } from '../src/sim/config.js';
 import { updateCreatureReproduction } from '../src/sim/creatures/reproduction.js';
 import { resolveGestationMultiplier } from '../src/sim/creatures/reproduction-helpers.js';
 import { updateCreaturePack } from '../src/sim/creatures/pack.js';
-import { computeRegroupAssist } from '../src/sim/creatures/herding-forces.js';
 import { updateCreatureHerding } from '../src/sim/creatures/herding.js';
 import { updateCreatureIntent } from '../src/sim/creatures/intent.js';
 import { applyCreatureActions } from '../src/sim/creatures/actions.js';
@@ -176,7 +175,10 @@ describe('maintenance phases: pack and herd behavior', () => {
     const world = createWorldGrid({ width: 100, height: 100 });
     const config = { ...simConfig, ticksPerSecond: 1, creaturePackRelocateAfterSeconds: 1 };
     updateCreaturePack({ creatures: [leader, follower], config, world, rng: createRng(2) });
-    expect(leader.pack.home).not.toEqual({ x: 50, y: 50 });
+    for (let i = 0; i < 3; i++)
+      updateCreaturePack({ creatures: [leader, follower], config, world, rng: createRng(2) });
+    expect(leader.pack.waypoint).not.toEqual({ x: 50, y: 50 });
+    expect(leader.pack.waypointTicksRemaining).toBeGreaterThan(8);
     expect(follower.pack.home).toEqual(leader.pack.home);
     const home = { ...leader.pack.home };
     leader.intent = { type: 'drink', target: { x: 5, y: 5 } };
@@ -185,16 +187,20 @@ describe('maintenance phases: pack and herd behavior', () => {
     expect(leader.intent.target).toEqual({ x: 5, y: 5 });
   });
 
-  it('pulls a separated member toward kin and cancels regroup for threats/needs', () => {
+  it('selects rejoining as a goal and cancels it for threats and needs', () => {
     const source = creature(0),
-      kin = creature(1, 30);
-    const config = { ...simConfig, creatureHerdingRegroupIntervalSeconds: 0.05 };
-    expect(computeRegroupAssist(source, [source, kin], null, config)?.x).toBeGreaterThan(0);
-    source.herding.isThreatened = true;
-    expect(computeRegroupAssist(source, [source, kin], null, config)).toBeNull();
-    source.herding.isThreatened = false;
+      kin = creature(1, 30),
+      world = createWorldGrid({ width: 100, height: 100 });
+    const args = { creatures: [source, kin], world, config: simConfig, rng: createRng(8) };
+    updateCreatureHerding(args);
+    expect(source.herding.rejoinTarget.x).toBeGreaterThan(source.position.x);
+    const threat = { ...creature(3, 9), species: 'triangle' };
+    updateCreatureHerding({ ...args, creatures: [source, kin, threat] });
+    expect(source.herding.rejoinTarget).toBeNull();
+    source.herding.threatDecayTicks = 0;
     source.intent.type = 'drink';
-    expect(computeRegroupAssist(source, [source, kin], null, config)).toBeNull();
+    updateCreatureHerding(args);
+    expect(source.herding.rejoinTarget).toBeNull();
   });
 
   it.each([true, false])(
@@ -240,6 +246,7 @@ describe('maintenance phases: pack and herd behavior', () => {
       creatureHerdingSimpleMode: false,
       creatureMateSeekingEnabled: false
     };
+    creatures[0].perception = { waterCell: { x: 15, y: 10 } };
     updateCreatureIntent({ creatures, world, config, rng: createRng(8), tick: 1 });
     expect(world.herdWaterTargets.circle).toBeDefined();
     expect(creatures[0].intent.target).toEqual(creatures[1].intent.target);
@@ -268,7 +275,7 @@ describe('regroup completion across both herd modes', () => {
         creatures = [source, kin];
       updateCreatureHerding({ creatures, world, config, rng, tick: 1 });
       expect(source.herding.herdSize).toBe(1);
-      expect(source.herding.targetOffset.x).toBeGreaterThan(0);
+      expect(source.herding.rejoinTarget.x).toBeGreaterThan(source.position.x);
       expect(source.herding.postDrinkRegroupTicks).toBe(9);
       source.intent = { type: 'drink' };
       updateCreatureHerding({ creatures, world, config, rng, tick: 2 });

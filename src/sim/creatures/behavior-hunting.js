@@ -18,6 +18,12 @@ export const updateHuntingState = (creature, config, rng, tick, durations) => {
   const hasTarget = chase?.targetId != null;
   const targetDistance = chase?.distance ?? Infinity;
 
+  // Slow stalking is useful only while prey has not visibly begun escape.
+  // Charging responds to observed velocity, never a hidden prey decision.
+  if (hasTarget && chase.preyEscaping && bs.phase === HUNTING_PHASES.STALKING) {
+    transitionPhase(creature, HUNTING_PHASES.CHARGING, tick, secondsToTicks(0.1, durations.tps));
+    return;
+  }
   if (!canTransitionPhase(creature, tick)) {
     return;
   }

@@ -435,3 +435,7 @@ Verification:
 
 - Run long sim seeds and confirm stable cycles.
 - Automated: long-run summary hashes match expected.
+
+## Authorized maintenance — Pre-Track 12 foundation
+
+`tracks/2026-10-20-pre-track12-foundation/` implements individual movement goals, geographical herds/packs, committed search/scouting, finite local alarms, physical escape/navigation and survival-driven hunting. It includes seeded baseline/final recordings, optional motion/browser tools and integration readiness. Track 12's multi-hit attacks, wounds and healing remain excluded.

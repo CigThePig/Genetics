@@ -9,7 +9,7 @@ import {
 import { resolveNeedMeterBase, resolveActionThreshold, normalizeNeedRatio } from './metabolism.js';
 import {
   FOOD_TYPES,
-  getDietPreferences,
+  getFeedingPreferences,
   getFoodAvailabilityAtCell,
   selectFoodChoice
 } from './food.js';
@@ -132,7 +132,9 @@ export function updateCreatureIntent({
     const minLocalHerdSize = resolveHerdingMinGroupSize(config);
     const isInHerd = localHerdSize >= minLocalHerdSize;
     const speciesKey = getSpeciesKey(creature.species);
-    const waterTarget = speciesKey ? world?.herdWaterTargets?.[speciesKey] : null;
+    const waterTarget = speciesKey
+      ? world?.herdWaterTargets?.[creature.herding?.groupId ?? speciesKey]
+      : null;
     if (creature.search?.goal === 'water-rendezvous' && waterRatio >= concernThreshold) {
       clearSearchState(creature);
     }
@@ -146,21 +148,23 @@ export function updateCreatureIntent({
     const canDrink = waterRatio < drinkThreshold && nearbyWater;
     const canEat = energyRatio < eatThreshold;
     const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
-    const dietPreferences = getDietPreferences(creature.species);
+    const dietPreferences = getFeedingPreferences(creature, config);
     const canEatMeat = dietPreferences.includes(FOOD_TYPES.MEAT);
 
     const isPredator = canEatMeat && dietPreferences[0] === FOOD_TYPES.MEAT;
     let predatorIsResting = false;
     if (isPredator && predatorRestEnabled) {
       if (!creature.predatorState) {
-        creature.predatorState = { isResting: energyRatio >= predatorRestThreshold };
+        creature.predatorState = {
+          isResting: energyRatio >= Math.max(predatorRestThreshold, eatThreshold + 0.08)
+        };
       }
       if (creature.predatorState.isResting) {
-        if (energyRatio < predatorHuntThreshold) {
+        if (energyRatio < Math.max(predatorHuntThreshold, eatThreshold)) {
           creature.predatorState.isResting = false;
         }
       } else {
-        if (energyRatio >= predatorRestThreshold) {
+        if (energyRatio >= Math.max(predatorRestThreshold, eatThreshold + 0.08)) {
           creature.predatorState.isResting = true;
         }
       }
@@ -394,6 +398,8 @@ export function updateCreatureIntent({
     ) {
       const availableMeal = selectFoodChoice({
         species: creature.species,
+        creature,
+        config,
         availability: foodAvailability,
         minimums: foodMinimums
       });
@@ -446,6 +452,8 @@ export function updateCreatureIntent({
         if (intent !== 'hunt') {
           const choice = selectFoodChoice({
             species: creature.species,
+            creature,
+            config,
             availability: foodAvailability,
             minimums: foodMinimums
           });
@@ -454,7 +462,7 @@ export function updateCreatureIntent({
             foodType = choice.type;
           } else if (canSeekPerceivedFood) {
             intent = 'seek';
-            target = { ...perceivedFoodCell };
+            target = { x: perceivedFoodCell.x + 0.5, y: perceivedFoodCell.y + 0.5 };
             foodType = perceivedFoodType;
           } else if (shouldHunt) {
             const predatorTarget = selectPredatorTarget({
@@ -576,7 +584,7 @@ export function updateCreatureIntent({
 
     if (memoryEntry) {
       intent = 'seek';
-      target = { x: memoryEntry.x, y: memoryEntry.y };
+      target = { x: memoryEntry.x + 0.5, y: memoryEntry.y + 0.5 };
       foodType = memoryEntry.foodType ?? null;
     }
 
@@ -588,9 +596,15 @@ export function updateCreatureIntent({
       const missingWater =
         memoryEntry.type === MEMORY_TYPES.WATER && !hasNearbyWater(world, cell, config);
       const missingFood =
+        // A nearby cell may still be outside perception (especially diagonally).
+        // Only invalidate food after entering its remembered cell.
         memoryEntry.type === MEMORY_TYPES.FOOD &&
+        cell.x === memoryEntry.x &&
+        cell.y === memoryEntry.y &&
         !selectFoodChoice({
           species: creature.species,
+          creature,
+          config,
           availability: foodAvailability,
           minimums: foodMinimums
         });
@@ -601,6 +615,25 @@ export function updateCreatureIntent({
       }
     }
 
+    if (
+      isPredator &&
+      !urgentThirst &&
+      ['pursuing', 'losing'].includes(creature.chase?.status) &&
+      creature.chase?.lastKnownPosition
+    ) {
+      intent = 'hunt';
+      target = { ...creature.chase.lastKnownPosition };
+      foodType = null;
+      targeting = {
+        targetId: creature.chase.targetId,
+        preySpecies: creature.chase.preySpecies,
+        distance: creature.chase.distance
+      };
+    }
+    if (isPredator && predatorIsResting && intent === 'wander' && energyRatio >= eatThreshold) {
+      intent = 'rest';
+      target = null;
+    }
     creature.intent = { type: intent, foodType, target };
     creature.targeting = targeting;
   }

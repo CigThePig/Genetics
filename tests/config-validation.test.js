@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { simConfig, configMeta } from '../src/sim/config.js';
 import { validateConfigValue } from '../src/ui/config-validation.js';
-import { resolveHerdingAnchorFoodSampleRadius } from '../src/sim/creatures/herding-config.js';
+import { resolveSeparationRadius } from '../src/sim/creatures/herding-simple-helpers.js';
 import { createConfigValues } from '../src/ui/config-values.js';
 
 describe('UI phase 3: safe structured tuning', () => {
@@ -41,12 +41,12 @@ describe('UI phase 3: safe structured tuning', () => {
     expect(applied).toEqual([]);
   });
 
-  it('accepts anchor food radii that retain the same runtime meaning', () => {
-    const key = 'creatureHerdingAnchorFoodSampleRadius';
-    expect(configMeta[key].min).toBe(1);
-    for (const radius of [1, 3, configMeta[key].max]) {
+  it('accepts personal-space radii that retain the same runtime meaning', () => {
+    const key = 'creatureSimpleHerdingSeparationRadius';
+    expect(configMeta[key].min).toBe(0.5);
+    for (const radius of [0.5, 3, configMeta[key].max]) {
       expect(validateConfigValue(key, radius).ok).toBe(true);
-      expect(resolveHerdingAnchorFoodSampleRadius({ [key]: radius })).toBe(radius);
+      expect(resolveSeparationRadius({ [key]: radius })).toBe(radius);
       const applied = {};
       createConfigValues({ config: simConfig }).applyPresetPayload({ [key]: radius }, (k, v) => {
         applied[k] = v;

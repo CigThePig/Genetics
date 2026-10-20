@@ -577,10 +577,11 @@ describe('creature stamina sprinting', () => {
   it('toggles sprinting based on stamina thresholds', () => {
     const creature = {
       meters: { stamina: 0.8 },
-      intent: { type: 'wander' },
+      intent: { type: 'hunt' },
       motion: { isSprinting: false }
     };
     const config = {
+      creatureBehaviorStateEnabled: false,
       creatureBaseStamina: 1,
       creatureSprintStartThreshold: 0.7,
       creatureSprintStopThreshold: 0.4

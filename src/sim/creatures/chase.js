@@ -224,6 +224,12 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
       distance <= loseDistance &&
       canSeeCreature(creature, target, world, config, loseDistance, true)
     ) {
+      // Only a visual observation can reveal motion away from the observer.
+      const velocity = target.motion?.velocity;
+      chase.preyEscaping = velocity
+        ? ((velocity.x ?? 0) * dx + (velocity.y ?? 0) * dy) / Math.max(0.1, distance) >
+          Math.max(0.5, (target.traits?.speed ?? 1) * 0.4)
+        : false;
       chase.status = 'pursuing';
       chase.lastSeenTick = tick;
       chase.lastKnownPosition = {

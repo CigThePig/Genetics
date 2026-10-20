@@ -256,10 +256,10 @@ Rules:
   - Read-only population/genome and UI metric summary construction.
 - src/sim/creatures/behavior-helpers.js, behavior-integration.js
   - State definitions/transitions and intent-to-state/movement integration.
-- src/sim/creatures/herding-config.js, herding-forces.js, herding-anchors.js
-  - Complex-herding settings/forces and world-owned anchor decisions.
+- src/sim/creatures/herding.js, herding-simple.js
+  - Authoritative local social information and finite threats; old complex anchors/forces were removed by the pre-Track 12 foundation.
 - src/sim/creatures/herding-simple-helpers.js
-  - Simple-herd neighbor/force calculations and state defaults.
+  - Local-neighbour/visibility queries, active configuration resolvers and state defaults.
 - src/sim/creatures/intent-helpers.js, water-rendezvous.js
   - Shared intent/search helpers and world-owned drinking rendezvous planning.
 - src/sim/creatures/movement-helpers.js, pack-helpers.js, reproduction-helpers.js
@@ -334,3 +334,19 @@ Rules:
   - Multi-seed topology, circular genetics, causal hunting/choice, lifecycle, indexed parity and replay.
 - scripts/verify-track11.mjs, verify-track11-browser.cjs
   - Repeatable map/ablation batches and optional real-browser evidence with test-only app-handle instrumentation.
+
+## Pre-Track 12 behavioural foundation
+
+- tracks/2026-10-20-pre-track12-foundation/
+  - Design, phased progress, configuration, reproducible evidence and combat integration readiness.
+- src/sim/creatures/local-groups.js, locomotion.js
+  - Bounded geographical membership and persistent individual travel/graze/rejoin goals.
+- src/sim/creatures/herding.js, herding-simple.js, herding-simple-helpers.js
+  - One authoritative local herd/finite-alarm engine, individual escape scoring and real movement contagion; both legacy mode values use it.
+- src/sim/creatures/pack.js, pack-helpers.js, navigation.js
+  - Committed local search/scouting, bounded observed memory and world-owned terrain routes.
+- scripts/behaviour-scenarios.mjs, verify-behaviour.mjs, behaviour-playback.html
+  - Deterministic controlled cohorts, per-tick motion metrics and compressed temporal baseline/final playback.
+- scripts/verify-behaviour-browser.cjs, plot-behaviour.py; tests/behaviour-foundation.test.js
+  - Optional browser/matplotlib observation tools and causal movement/group/escape regressions.
+- Removed obsolete species-anchor/force/config implementation and src/workers/herding-worker.js; historical track documents describe their original snapshots only.

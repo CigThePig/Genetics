@@ -430,6 +430,34 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       behaviorBody.append(row('Target', `#${creature.targeting.targetId}`));
     }
 
+    const goal = creature.locomotion;
+    if (
+      goal &&
+      ['wander', 'graze'].includes(creature.intent?.type) &&
+      !creature.herding?.isThreatened
+    )
+      behaviorBody.append(row('Movement', goal.reason));
+    const destination = creature.intent?.target;
+    if (destination)
+      behaviorBody.append(
+        row('Destination', `${destination.x.toFixed(1)}, ${destination.y.toFixed(1)}`)
+      );
+    const group = creature.pack?.id ?? creature.herding?.groupId;
+    if (group) behaviorBody.append(row(creature.pack?.id ? 'Pack' : 'Herd', String(group)));
+    if (creature.herding?.isThreatened)
+      behaviorBody.append(
+        row(
+          'Danger',
+          creature.herding.nearbyThreats ? 'Visible predator' : 'Remembered / social warning'
+        )
+      );
+    if (creature.pack?.waypoint && creature.intent?.type !== 'hunt')
+      behaviorBody.append(
+        row(
+          'Search',
+          `${creature.pack.role}; ${creature.pack.visited?.length ?? 0} recent locations`
+        )
+      );
     content.append(behaviorSection);
 
     // TRAITS SECTION

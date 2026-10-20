@@ -195,6 +195,9 @@ export function updateCreatureBehaviorState({ creatures, config, rng, world, tic
     const hasDirectThreat = isThreatened && threats > 0;
     const distance = creature.herding?.nearestThreatDistance;
     if (!hasDirectThreat) bs.assessedThreatDistance = null;
+    if (hasDirectThreat && distance <= 2 && bs.state !== BEHAVIOR_STATES.FLEEING) {
+      startFleeing(creature, tick, config);
+    }
     const needsAssessment =
       bs.assessedThreatDistance == null ||
       (Number.isFinite(distance) &&

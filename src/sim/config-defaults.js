@@ -132,7 +132,7 @@ export const simConfig = {
   // === CREATURES: HERDING ===
   // Only herbivores (squares, circles) herd - predators hunt independently
   creatureHerdingEnabled: true,
-  creatureHerdingSimpleMode: true, // true = use simple 3-rule boid system, false = complex system
+  creatureHerdingSimpleMode: true, // Legacy preset flag; both values use local goals
 
   // === CREATURES: SIMPLE HERDING (3-rule boid system) ===
   creatureSimpleHerdingSeparationRadius: 2.5, // tiles - push away from neighbors
@@ -325,7 +325,7 @@ export const simConfig = {
   creatureMemoryMinStrength: 0.05,
   creatureMemoryMergeDistance: 1.5,
   creatureMemoryVisitPenalty: 0.5,
-  creatureWaterMemoryInHerdEnabled: false,
+  creatureWaterMemoryInHerdEnabled: true,
 
   // === CREATURES: METABOLISM ===
   creatureBasalEnergyDrain: 0.007, // (was 0.008 - slightly slower drain)

@@ -15,6 +15,15 @@ export function updateBehaviorIntegration({ creatures, config, rng, world, tick 
   for (const creature of creatures) {
     const state = ensureBehaviorState(creature);
     const intent = creature.intent?.type;
+    if (
+      creature.herding?.shouldStartMoving &&
+      state.state === BEHAVIOR_STATES.RELAXED &&
+      ['paused', 'adjusting'].includes(state.phase)
+    ) {
+      state.phase = RELAXED_PHASES.MOVING;
+      state.ticksInPhase = 0;
+      state.phaseLockedUntilTick = tick + Math.ceil((config.ticksPerSecond ?? 60) * 2);
+    }
     if (creature.herding?.isThreatened) {
       // Threat propagation also counts, even without a directly visible predator.
       if (

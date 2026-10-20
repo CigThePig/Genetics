@@ -1,204 +1,223 @@
+import { localGroups } from './local-groups.js';
+import { navigationTarget } from './navigation.js';
 import {
   isPackSpecies,
-  isPackEnabled,
+  ensurePackState,
   resolvePackSpacing,
   resolvePatrolRadius,
-  resolvePatrolRetargetTime,
-  resolvePackRelocation,
   resolveTicksPerSecond,
-  ensurePackState,
-  ensureHome,
-  groupIntoPacks,
+  resolvePackRelocation,
   resolvePatrolMemory,
   recordPreySighting,
   decayPatrolMemory,
-  pickPatrolWaypoint,
-  pickRetargetTicks,
-  distanceSq,
-  calculateFormationPosition,
-  shouldUsePackBehavior,
-  isLeaderEngaged,
-  pickRelocationHome
+  distanceSq
 } from './pack-helpers.js';
 
+function chooseSearchDestination(leader, world, rng, config) {
+  const p = leader.position,
+    state = leader.pack;
+  const radius = resolvePatrolRadius(config);
+  const recent = state.visited ?? [];
+  // Revisit actual observations preferentially, but never read unseen prey.
+  const sighting = state.preySightings
+    ?.filter((s) => s.strength > 0.2 && distanceSq(p, s) > 16)
+    .sort((a, b) => b.strength - a.strength)[0];
+  if (sighting && rng.nextFloat() < resolvePatrolMemory(config).preySightingWeight)
+    return { x: sighting.x, y: sighting.y };
+  let best = null,
+    bestScore = -Infinity;
+  const relocate = resolvePackRelocation(config);
+  const reach =
+    relocate.enabled && (state.unsuccessfulSeconds ?? 0) > relocate.afterSeconds
+      ? Math.max(radius, relocate.searchRadius * 0.6)
+      : radius;
+  for (let i = 0; i < 16; i++) {
+    const a = rng.nextFloat() * Math.PI * 2,
+      d = reach * (0.45 + rng.nextFloat() * 0.55);
+    const target = { x: p.x + Math.cos(a) * d, y: p.y + Math.sin(a) * d };
+    if (
+      target.x < 0.5 ||
+      target.y < 0.5 ||
+      target.x > world.width - 0.5 ||
+      target.y > world.height - 0.5
+    )
+      continue;
+    if (
+      world.getTerrainAt(Math.floor(target.x), Math.floor(target.y)) ===
+      (world.waterTerrainType ?? 'water')
+    )
+      continue;
+    const novelty = recent.length
+      ? Math.min(...recent.map((v) => Math.sqrt(distanceSq(v, target))))
+      : reach;
+    const score = novelty + Math.sqrt(distanceSq(p, target)) * 0.35;
+    if (score > bestScore && navigationTarget(world, p, target)) {
+      best = target;
+      bestScore = score;
+    }
+  }
+  return best;
+}
+const searching = (c) =>
+  c.intent?.type === 'wander' ||
+  (c.intent?.type === 'seek' && c.search?.goal === 'food' && !c.intent?.foodType);
 export function updateCreaturePack({ creatures, config, rng, world }) {
-  if (!Array.isArray(creatures) || !rng || !world) {
+  if (!Array.isArray(creatures) || !rng || !world) return;
+  if (config?.creaturePackEnabled === false) {
+    // Drop all active social/search state, including spacing and group membership.
+    for (const c of creatures) c.pack = null;
     return;
   }
-
-  if (!isPackEnabled(config)) {
-    return;
-  }
-
-  const ticksPerSecond = resolveTicksPerSecond(config);
-  const patrolRadius = resolvePatrolRadius(config);
-  const patrolRetarget = resolvePatrolRetargetTime(config);
-  const packSpacing = resolvePackSpacing(config);
-  const relocation = resolvePackRelocation(config);
-
-  // Decay prey sighting memory for all predators
-  for (const creature of creatures) {
-    if (isPackSpecies(creature.species)) {
-      decayPatrolMemory(creature, config);
-
-      // Record prey sighting if currently chasing/seeing prey
-      if (creature.chase?.lastKnownPosition) {
-        recordPreySighting(creature, creature.chase.lastKnownPosition, config);
-      }
+  const predators = creatures.filter(
+    (c) => isPackSpecies(c.species) && c.position && !(c.meters?.hp <= 0)
+  );
+  const groups = localGroups(predators, {
+    field: 'pack',
+    radius: resolvePackSpacing(config) * 4,
+    maxMembers: 8
+  });
+  const tps = resolveTicksPerSecond(config);
+  for (const c of predators) {
+    ensurePackState(c);
+    decayPatrolMemory(c, config);
+    if (c.chase?.status === 'pursuing' && c.chase.lastSeenTick !== c.pack.recordedSightingTick) {
+      recordPreySighting(c, c.chase.lastKnownPosition, config);
+      c.pack.recordedSightingTick = c.chase.lastSeenTick;
     }
   }
-
-  // Group predators into packs by species
-  const packs = groupIntoPacks(creatures);
-
-  // Process each pack
-  for (const [species, members] of packs) {
-    if (members.length === 0) continue;
-
-    // Leader is first in sorted list (lowest id)
-    const leader = members[0];
-    const leaderPack = ensurePackState(leader);
-    const leaderHome = ensureHome(leader);
-
-    leaderPack.id = species;
-    leaderPack.role = 'leader';
-    leaderPack.leaderId = leader.id;
-    if (!Number.isFinite(leaderPack.staleTicks)) {
-      leaderPack.staleTicks = 0;
+  for (const [id, members] of groups) {
+    const leader = members[0],
+      state = leader.pack;
+    state.id = id;
+    state.role = 'leader';
+    state.leaderId = leader.id;
+    state.home ??= { ...leader.position };
+    // Retain deduplication per live member, bounded by current pack membership.
+    const shared = state.sharedSightingTicks ?? {};
+    state.sharedSightingTicks = {};
+    for (const m of members.slice(1)) {
+      const tick = m.pack.recordedSightingTick;
+      state.sharedSightingTicks[m.id] = shared[m.id];
+      if (
+        distanceSq(m.position, leader.position) < (resolvePackSpacing(config) * 4) ** 2 &&
+        tick != null &&
+        tick !== shared[m.id] &&
+        tick === m.chase?.lastSeenTick &&
+        m.chase?.lastKnownPosition
+      ) {
+        recordPreySighting(leader, m.chase.lastKnownPosition, config);
+        state.sharedSightingTicks[m.id] = tick;
+      }
     }
-
-    // Leader waypoint logic (only if wandering)
-    if (shouldUsePackBehavior(leader)) {
-      // Decrement timer
-      if (leaderPack.waypointTicksRemaining > 0) {
-        leaderPack.waypointTicksRemaining -= 1;
+    if (searching(leader)) {
+      state.unsuccessfulSeconds = (state.unsuccessfulSeconds ?? 0) + 1 / tps;
+      const reached = state.waypoint && distanceSq(leader.position, state.waypoint) < 2.25;
+      state.waypointTicksRemaining = Math.max(0, (state.waypointTicksRemaining ?? 0) - 1);
+      if (reached && !state.pausedAtWaypoint) {
+        state.pausedAtWaypoint = true;
+        state.patrolPauseTicks = Math.ceil(resolvePatrolMemory(config).pauseDuration * tps);
+        state.goalsCompleted = (state.goalsCompleted ?? 0) + 1;
       }
-
-      // Finish a scanning pause before selecting the next waypoint.
-      const reached = leaderPack.waypoint && distanceSq(leader.position, leaderPack.waypoint) < 4;
-      if (reached && !leaderPack.pausedAtWaypoint) {
-        leaderPack.pausedAtWaypoint = true;
-        leaderPack.patrolPauseTicks = Math.floor(
-          resolvePatrolMemory(config).pauseDuration * ticksPerSecond
-        );
-      }
-      const pausing = leaderPack.patrolPauseTicks > 0;
-      const needNewWaypoint = !pausing && (leaderPack.waypointTicksRemaining <= 0 || reached);
-
-      if (needNewWaypoint || !leaderPack.waypoint) {
-        leaderPack.lastWaypoint = leaderPack.waypoint;
-        leaderPack.waypoint = pickPatrolWaypoint(
-          leaderHome,
-          patrolRadius,
-          world,
-          rng,
-          config,
-          leader
-        );
-        leaderPack.waypointTicksRemaining = pickRetargetTicks(
-          rng,
-          patrolRetarget.min,
-          patrolRetarget.max,
-          ticksPerSecond
-        );
-        // Reset patrol pause flag for new waypoint
-        leaderPack.pausedAtWaypoint = false;
-      }
-
-      if (relocation.enabled && leaderHome) {
-        const engaged = isLeaderEngaged(leader);
-        const staleRadius = Math.max(6, patrolRadius * 0.35);
-        const staleRadiusSq = staleRadius * staleRadius;
-        const waypointLocal = leaderPack.waypoint
-          ? distanceSq(leaderPack.waypoint, leaderHome) <= staleRadiusSq
-          : true;
-        const waypointRepeated =
-          leaderPack.waypoint &&
-          leaderPack.lastWaypoint &&
-          distanceSq(leaderPack.waypoint, leaderPack.lastWaypoint) <= staleRadiusSq;
-        if (!engaged && (waypointLocal || waypointRepeated || !leaderPack.waypoint)) {
-          leaderPack.staleTicks += 1;
-        } else {
-          leaderPack.staleTicks = Math.max(0, leaderPack.staleTicks - 2);
-        }
-        const staleThreshold = Math.trunc(relocation.afterSeconds * ticksPerSecond);
-        if (leaderPack.staleTicks >= staleThreshold) {
-          const newHome = pickRelocationHome(leader, leaderHome, world, rng, config, relocation);
-          if (newHome) {
-            leaderPack.home = newHome;
-            leaderPack.lastWaypoint = null;
-            leaderPack.waypoint = pickPatrolWaypoint(
-              newHome,
-              patrolRadius,
-              world,
-              rng,
-              config,
-              leader
-            );
-            leaderPack.waypointTicksRemaining = pickRetargetTicks(
-              rng,
-              patrolRetarget.min,
-              patrolRetarget.max,
-              ticksPerSecond
-            );
-            leaderPack.pausedAtWaypoint = false;
-          }
-          leaderPack.staleTicks = 0;
-        }
-      } else {
-        leaderPack.staleTicks = 0;
-      }
-
-      // Handle patrol pause countdown
-      if (leaderPack.patrolPauseTicks > 0) {
-        leaderPack.patrolPauseTicks--;
+      if (state.patrolPauseTicks > 0) {
+        state.patrolPauseTicks--;
         leader.intent.target = null;
-      } else if (leaderPack.waypoint && leader.intent) {
-        leader.intent.target = { x: leaderPack.waypoint.x, y: leaderPack.waypoint.y };
+      } else {
+        if (
+          !state.waypoint ||
+          reached ||
+          state.waypointTicksRemaining === 0 ||
+          state.staleTicks > resolvePackRelocation(config).afterSeconds * tps
+        ) {
+          state.visited ??= [];
+          state.visited.push(state.waypoint ?? { ...leader.position });
+          if (state.visited.length > 16) state.visited.shift();
+          if (state.waypoint && !reached) state.goalsAbandoned = (state.goalsAbandoned ?? 0) + 1;
+          state.waypoint = chooseSearchDestination(leader, world, rng, config);
+          state.home = { ...leader.position };
+          state.pausedAtWaypoint = false;
+          state.staleTicks = 0;
+          const speed = Math.max(
+            0.5,
+            (leader.traits?.speed ?? config?.creatureBaseSpeed ?? 10) * 0.4
+          );
+          state.waypointTicksRemaining = state.waypoint
+            ? Math.ceil(
+                (8 + (Math.sqrt(distanceSq(leader.position, state.waypoint)) / speed) * 3) * tps
+              )
+            : tps;
+        }
+        leader.intent.target = state.waypoint ? { ...state.waypoint } : null;
       }
-    } else {
-      leaderPack.staleTicks = 0;
-    }
-
-    // Process followers
-    for (let i = 1; i < members.length; i++) {
-      const member = members[i];
-      const memberPack = ensurePackState(member);
-      ensureHome(member);
-
-      memberPack.id = species;
-      memberPack.role = 'member';
-      memberPack.leaderId = leader.id;
-      memberPack.waypoint = leaderPack.waypoint; // Share leader's waypoint for reference
-      memberPack.home = leaderPack.home;
-
-      // Formation following (only if wandering)
-      if (shouldUsePackBehavior(member)) {
-        const formationPos = calculateFormationPosition(leader, i, members.length, packSpacing);
-
-        // Set member's intent target to their formation position
-        if (member.intent) {
-          member.intent.target = { x: formationPos.x, y: formationPos.y };
+      const last = state.progressPosition ?? leader.position;
+      state.staleTicks =
+        distanceSq(last, leader.position) < 0.000001 ? (state.staleTicks ?? 0) + 1 : 0;
+      state.progressPosition = { ...leader.position };
+    } else if (leader.chase?.status === 'pursuing') state.unsuccessfulSeconds = 0;
+    for (const m of members.slice(1)) {
+      const s = m.pack;
+      s.id = id;
+      s.role = 'member';
+      s.leaderId = leader.id;
+      s.home = { ...state.home };
+      s.waypoint = state.waypoint ? { ...state.waypoint } : null;
+      // A survivor can take over search without losing all territory knowledge.
+      s.visited = (state.visited ?? []).map((v) => ({ ...v }));
+      s.patrolPauseTicks = 0;
+      const waypointKey = s.waypoint ? `${s.waypoint.x},${s.waypoint.y}` : null;
+      if (waypointKey !== s.sharedWaypointKey) {
+        s.sharedWaypointKey = waypointKey;
+        s.scoutTarget = null;
+        if (s.waypoint) {
+          for (let attempt = 0; attempt < 4; attempt++) {
+            const angle = rng.nextFloat() * Math.PI * 2,
+              spread = resolvePackSpacing(config) * (1 + rng.nextFloat());
+            const candidate = {
+              x: s.waypoint.x + Math.cos(angle) * spread,
+              y: s.waypoint.y + Math.sin(angle) * spread
+            };
+            if (
+              candidate.x >= 0.5 &&
+              candidate.y >= 0.5 &&
+              candidate.x < world.width - 0.5 &&
+              candidate.y < world.height - 0.5 &&
+              world.getTerrainAt(Math.floor(candidate.x), Math.floor(candidate.y)) !==
+                (world.waterTerrainType ?? 'water')
+            ) {
+              s.scoutTarget = candidate;
+              break;
+            }
+          }
         }
       }
+      if (searching(m)) {
+        const far = distanceSq(m.position, leader.position) > (resolvePackSpacing(config) * 4) ** 2;
+        m.intent.target = far
+          ? { ...leader.position }
+          : (s.scoutTarget ?? s.waypoint)
+            ? { ...(s.scoutTarget ?? s.waypoint) }
+            : null;
+      }
+    }
+    // Bounded local spacing; no rotating slots, no force attracting to pack centre.
+    for (const m of members) {
+      let x = 0,
+        y = 0;
+      for (const n of members) {
+        if (n === m) continue;
+        const d = Math.sqrt(distanceSq(m.position, n.position));
+        if (d > 0 && d < resolvePackSpacing(config)) {
+          const f = (1 - d / resolvePackSpacing(config)) ** 2;
+          x += ((m.position.x - n.position.x) / d) * f;
+          y += ((m.position.y - n.position.y) / d) * f;
+        }
+      }
+      m.pack.spacing = { x, y };
     }
   }
 }
-
-export function getPackInfo(creature) {
-  return creature?.pack ?? null;
+export const getPackInfo = (c) => c?.pack ?? null;
+export const isPackLeader = (c) => c?.pack?.role === 'leader';
+export function recordPredatorPreySighting(c, p, config) {
+  if (c && p && isPackSpecies(c.species)) recordPreySighting(c, p, config);
 }
-
-export function isPackLeader(creature) {
-  return creature?.pack?.role === 'leader';
-}
-
-export function recordPredatorPreySighting(creature, position, config) {
-  if (!creature || !position) return;
-  if (!isPackSpecies(creature.species)) return;
-  recordPreySighting(creature, position, config);
-}
-
-export function isPatrolPaused(creature) {
-  return (creature?.pack?.patrolPauseTicks ?? 0) > 0;
-}
+export const isPatrolPaused = (c) => (c?.pack?.patrolPauseTicks ?? 0) > 0;

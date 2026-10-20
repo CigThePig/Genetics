@@ -1,7 +1,8 @@
 export const metaPredator1 = {
   creaturePredatorRestThreshold: {
     label: 'Rest When Energy >',
-    description: 'Energy ratio to switch to resting.',
+    description:
+      'Rest threshold; kept at least 0.08 above individual appetite to prevent state flicker.',
     min: 0.3,
     max: 1,
     step: 0.05,
@@ -10,7 +11,7 @@ export const metaPredator1 = {
   },
   creaturePredatorHuntThreshold: {
     label: 'Hunt When Energy <',
-    description: 'Energy ratio to start hunting.',
+    description: 'Minimum hunt readiness; individual appetite can trigger hunting earlier.',
     min: 0.1,
     max: 0.8,
     step: 0.05,
@@ -71,8 +72,8 @@ export const metaPredator1 = {
     advanced: true
   },
   creaturePackRelocateMinDistance: {
-    label: 'Relocate Min Distance',
-    description: 'Candidate new homes must be at least this far from current home.',
+    label: 'Legacy: Relocate Min Distance',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 200,
     step: 1,
@@ -93,8 +94,8 @@ export const metaPredator1 = {
     advanced: true
   },
   creaturePackRelocateSampleAttempts: {
-    label: 'Relocate Sample Attempts',
-    description: 'Number of random candidates evaluated for new homes.',
+    label: 'Legacy: Relocate Sample Attempts',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 1,
     max: 80,
     step: 1,
@@ -103,10 +104,11 @@ export const metaPredator1 = {
     advanced: true
   },
   creaturePackRelocateAvoidWater: {
-    label: 'Pack Relocate Avoid Water',
-    description: 'Avoid water tiles when relocating.',
+    label: 'Legacy: Pack Relocate Avoid Water',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     type: 'boolean',
-    category: 'predator'
+    category: 'predator',
+    advanced: true
   },
   creaturePackEnabled: {
     label: 'Pack Enabled',
@@ -136,8 +138,8 @@ export const metaPredator1 = {
     control: 'slider'
   },
   creaturePredatorPatrolRetargetTimeMin: {
-    label: 'Patrol Retarget Min (s)',
-    description: 'Min waypoint commit time before choosing a new patrol heading.',
+    label: 'Legacy: Patrol Retarget Min (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.25,
     max: 30,
     step: 0.25,
@@ -147,8 +149,8 @@ export const metaPredator1 = {
     advanced: true
   },
   creaturePredatorPatrolRetargetTimeMax: {
-    label: 'Patrol Retarget Max (s)',
-    description: 'Max waypoint commit time before choosing a new patrol heading.',
+    label: 'Legacy: Patrol Retarget Max (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.25,
     max: 60,
     step: 0.25,
@@ -167,13 +169,14 @@ export const metaPredator1 = {
     control: 'slider'
   },
   creaturePredatorPatrolGrassWeight: {
-    label: 'Grass Area Priority',
-    description: 'Chance to patrol toward high-grass areas.',
+    label: 'Legacy: Grass Area Priority',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.1,
     category: 'predator',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creaturePredatorPatrolPauseDuration: {
     label: 'Patrol Pause Duration',
