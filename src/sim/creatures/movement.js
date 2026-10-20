@@ -45,8 +45,8 @@ export function updateCreatureMovement({ creatures, config, rng, world }) {
     let target = c.intent?.target;
     if (threatened && c.herding.threatDirection)
       target = {
-        x: p.x + c.herding.threatDirection.x * 6,
-        y: p.y + c.herding.threatDirection.y * 6
+        x: p.x + c.herding.threatDirection.x * 3,
+        y: p.y + c.herding.threatDirection.y * 3
       };
     motion.route ??= {};
     const route = target ? navigationTarget(world, p, target, motion.route) : null;

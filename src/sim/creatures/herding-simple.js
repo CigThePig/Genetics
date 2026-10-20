@@ -1,3 +1,4 @@
+import { resolveHerdingRegroupMinLocalHerdSize } from './movement-helpers.js';
 import { localGroups } from './local-groups.js';
 import { clearLandLine } from './navigation.js';
 import {
@@ -193,7 +194,7 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
     // Rejoin a local known group only when outside its comfort band. No perpetual
     // pull on every animal and no species-centroid target shared across the map.
     if (
-      neighbors.length < 2 &&
+      h.herdSize < resolveHerdingRegroupMinLocalHerdSize(config) &&
       config?.creatureHerdingRegroupEnabled !== false &&
       ['wander', 'graze'].includes(c.intent?.type)
     ) {

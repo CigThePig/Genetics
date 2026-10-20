@@ -15,7 +15,11 @@ export function clearLandLine(world, from, to) {
   return true;
 }
 const land = (w, x, y) =>
-  x >= 0 && y >= 0 && x < w.width && y < w.height && w.getTerrainAt(x, y) !== 'water';
+  x >= 0 &&
+  y >= 0 &&
+  x < w.width &&
+  y < w.height &&
+  w.getTerrainAt(x, y) !== (w.waterTerrainType ?? 'water');
 export function navigationTarget(world, position, target, routeState = null) {
   if (!target || !world?.getTerrainAt) return target;
   if (!land(world, Math.floor(target.x), Math.floor(target.y))) {
@@ -38,14 +42,22 @@ export function navigationTarget(world, position, target, routeState = null) {
   const tx = Math.floor(target.x),
     ty = Math.floor(target.y);
   if (!land(world, tx, ty)) return null;
-  if (world.navigation?.version !== world.terrainDirtyCounter)
-    world.navigation = { version: world.terrainDirtyCounter, fields: new Map() };
+  if (
+    world.navigation?.version !== world.terrainDirtyCounter ||
+    world.navigation?.waterTerrainType !== (world.waterTerrainType ?? 'water')
+  )
+    world.navigation = {
+      version: world.terrainDirtyCounter,
+      waterTerrainType: world.waterTerrainType ?? 'water',
+      fields: new Map()
+    };
   world.navigation ??= { version: world.terrainDirtyCounter, fields: new Map() };
   const cache = world.navigation.fields,
     key = ty * world.width + tx;
   if (
     routeState?.key === key &&
     routeState.version === world.terrainDirtyCounter &&
+    routeState.waterTerrainType === (world.waterTerrainType ?? 'water') &&
     routeState.path?.length
   ) {
     const next = followPath(world, position, routeState.path);
@@ -109,6 +121,7 @@ export function navigationTarget(world, position, target, routeState = null) {
   if (routeState) {
     routeState.key = key;
     routeState.version = world.terrainDirtyCounter;
+    routeState.waterTerrainType = world.waterTerrainType ?? 'water';
     routeState.path = path;
   }
   return followPath(world, position, path);

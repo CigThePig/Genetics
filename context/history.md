@@ -54,3 +54,7 @@ Completed the explicitly expanded seven-phase Track 11: regional habitats/catchm
 ## 2026-10-20 — Pre-Track 12 behavioural foundation
 
 Replaced species-wide/force-driven grouping with local membership, individual goals, committed pack search/scouting, finite local alarms, retained terrain routes, arrival braking and survival-driven feeding/hunting. Removed obsolete anchor/complex-force/worker code; retained colour, regional and mating mechanisms. Added controlled scenarios, motion exports/viewer, causal regressions, inspector explanations and combat-readiness notes. Local verify passes 186 tests, lint, formatting and build. Independent 36,000-tick reruns match all three seeds; catches change from 0/0/0 to 26/21/17. Ecological losses and performance limits are documented. Large remaining media omitted at user request to expedite PR submission. No merge/deployment; hosted CI is separate.
+
+## 2026-10-20 — PR #138 Codex review corrections
+
+Addressed all seven findings: configured water in routing/collision/search, centred resource-memory destinations and visit-safe food confidence, complete live herd/pack cleanup, edge-safe escape horizons, per-member prey-sighting deduplication and the active regroup-size threshold. Added 13 regression cases; verified failures against the submitted snapshot and fixes against 199 passing tests, lint, formatting and build. Review-specific soak results are appended to the foundation evidence. No merge/deployment.

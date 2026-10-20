@@ -11,6 +11,8 @@ import {
   updateCreatureHerdingSimple,
   escapeDirection
 } from '../src/sim/creatures/herding-simple.js';
+import { updateCreatureHerding } from '../src/sim/creatures/herding.js';
+import { updateCreaturePerception } from '../src/sim/creatures/perception.js';
 import { updateCreaturePack } from '../src/sim/creatures/pack.js';
 import { getFeedingPreferences } from '../src/sim/creatures/food.js';
 import { updateCreatureIntent } from '../src/sim/creatures/intent.js';
@@ -238,5 +240,145 @@ describe('integrated seeded scenarios', () => {
     for (let i = 0; i < 1200; i++) scenarioStep(sim, 'recovery');
     expect(sim.state.creatures.every((c) => !c.herding?.isThreatened)).toBe(true);
     expect(sim.state.creatures.some((c) => c.locomotion?.target)).toBe(true);
+  });
+});
+
+describe('PR review regressions', () => {
+  it('routes and collides against configured water, including retained-route invalidation', () => {
+    const w = world();
+    w.waterTerrainType = 'rock';
+    for (let y = 0; y < 40; y++) w.setTerrainAt(35, y, 'rock');
+    const c = actor(0, 30.5, 30.5);
+    c.intent = { type: 'seek', target: { x: 40.5, y: 30.5 } };
+    const routeState = {};
+    const first = navigationTarget(w, c.position, c.intent.target, routeState);
+    expect(clearLandLine(w, c.position, c.intent.target)).toBe(false);
+    expect(first.y).toBeGreaterThan(c.position.y);
+    const o = options([c], w);
+    for (let tick = 0; tick < 2400; tick++) {
+      updateCreatureMovement(o);
+      expect(w.getTerrainAt(Math.floor(c.position.x), Math.floor(c.position.y))).not.toBe('rock');
+    }
+    expect(Math.hypot(c.position.x - 40.5, c.position.y - 30.5)).toBeLessThan(1);
+    // A water-type change must invalidate both caches, even without terrain edits.
+    w.waterTerrainType = 'water';
+    for (let y = 40; y < 80; y++) w.setTerrainAt(35, y, 'water');
+    navigationTarget(w, { x: 30.5, y: 50.5 }, { x: 40.5, y: 50.5 }, routeState);
+    const field = w.navigation;
+    w.waterTerrainType = 'rock';
+    navigationTarget(w, { x: 30.5, y: 30.5 }, { x: 40.5, y: 30.5 }, routeState);
+    expect(w.navigation).not.toBe(field);
+    expect(routeState.waterTerrainType).toBe('rock');
+  });
+  it('reaches diagonal remembered food with minimum perception before invalidating memory', () => {
+    const w = createWorldGrid({ width: 80, height: 80 });
+    w.setGrassAt(25, 25, 1);
+    const c = actor(0, 22.5, 22.5);
+    c.traits.perceptionRange = 1;
+    c.meters.energy = 0.1;
+    c.priority = 'hunger';
+    const entry = { type: 'food', foodType: 'grass', x: 25, y: 25, strength: 1, ageTicks: 0 };
+    c.memory = { entries: [entry] };
+    const o = options([c], w);
+    updateCreatureIntent(o);
+    expect(c.intent.target).toEqual({ x: 25.5, y: 25.5 });
+    for (let tick = 0; tick < 1200 && c.intent.type !== 'eat'; tick++) {
+      updateCreaturePerception(o);
+      updateCreatureIntent(o);
+      updateCreatureMovement(o);
+      expect(entry.strength).toBe(1);
+    }
+    expect(c.intent.type).toBe('eat');
+    expect(Math.floor(c.position.x)).toBe(25);
+    expect(Math.floor(c.position.y)).toBe(25);
+    // Empty memories still lose confidence after the animal actually visits.
+    w.setGrassAt(25, 25, 0);
+    updateCreaturePerception(o);
+    updateCreatureIntent(o);
+    expect(entry.strength).toBeLessThan(1);
+  });
+  it('stops renewing social goals after disabling herding live', () => {
+    const leader = actor(0, 20),
+      follower = actor(1, 21);
+    leader.locomotion = { target: { x: 40, y: 10 } };
+    follower.herding = {
+      shouldStartMoving: true,
+      localLeaderId: 0,
+      groupId: 'circle:0',
+      leaderId: 0,
+      rejoinTarget: { x: 20, y: 10 },
+      threatPosition: { x: 19, y: 10 },
+      threatHops: 1
+    };
+    const o = options([leader, follower]);
+    o.config = { ...config, creatureHerdingEnabled: false };
+    updateCreatureHerding(o);
+    expect(follower.herding.shouldStartMoving).toBe(false);
+    expect(follower.herding.localLeaderId).toBeNull();
+    expect(follower.herding.groupId).toBeNull();
+    updateLocomotionGoals(o);
+    expect(follower.locomotion.reason).toBe('explore');
+    expect(follower.intent.target).not.toEqual(leader.locomotion.target);
+  });
+  it('removes spacing and local search state when packs are disabled live', () => {
+    const cs = [actor(0, 20, 20, 'triangle'), actor(1, 21, 20, 'triangle')];
+    const o = options(cs);
+    updateCreaturePack(o);
+    expect(Math.abs(cs[0].pack.spacing.x)).toBeGreaterThan(0);
+    o.config = { ...config, creaturePackEnabled: false };
+    updateCreaturePack(o);
+    expect(cs.every((c) => !c.pack?.spacing && !c.pack?.groupId && !c.pack?.leaderId)).toBe(true);
+    // Movement after disabling is identical to an animal with no prior pack.
+    for (const c of cs) c.intent = { type: 'seek', target: { x: c.position.x + 10, y: 20 } };
+    const independent = structuredClone(cs[0]);
+    independent.pack = null;
+    updateCreatureMovement(o);
+    updateCreatureMovement(options([independent], o.world));
+    expect(cs[0].motion).toEqual(independent.motion);
+    o.config = config;
+    updateCreaturePack(o);
+    expect(cs[0].pack.id).toBe(cs[1].pack.id);
+  });
+  it.each([
+    [4, 40, Math.PI, -1, 0],
+    [76, 40, 0, 1, 0],
+    [40, 4, -Math.PI / 2, 0, -1],
+    [40, 76, Math.PI / 2, 0, 1]
+  ])('can flee toward available land near an edge (%s, %s)', (x, y, heading, dx, dy) => {
+    const c = actor(0, x, y);
+    c.motion.heading = heading;
+    c.herding = { isThreatened: true, threatDirection: { x: dx, y: dy } };
+    const o = options([c]);
+    for (let tick = 0; tick < 10; tick++) updateCreatureMovement(o);
+    expect((c.position.x - x) * dx + (c.position.y - y) * dy).toBeGreaterThan(0.1);
+  });
+  it('retains simultaneous distinct sightings and deduplicates each current member', () => {
+    const cs = [
+      actor(0, 20, 20, 'triangle'),
+      actor(1, 21, 20, 'triangle'),
+      actor(2, 22, 20, 'triangle')
+    ];
+    cs[1].chase = { status: 'pursuing', lastSeenTick: 10, lastKnownPosition: { x: 30, y: 20 } };
+    cs[2].chase = { status: 'pursuing', lastSeenTick: 10, lastKnownPosition: { x: 20, y: 35 } };
+    const o = options(cs);
+    updateCreaturePack(o);
+    expect(cs[0].pack.preySightings.map(({ x, y }) => ({ x, y }))).toEqual([
+      { x: 30, y: 20 },
+      { x: 20, y: 35 }
+    ]);
+    const strengths = cs[0].pack.preySightings.map((s) => s.strength);
+    updateCreaturePack(o);
+    expect(cs[0].pack.preySightings.every((s, i) => s.strength < strengths[i])).toBe(true);
+    o.creatures = cs.slice(0, 2);
+    updateCreaturePack(o);
+    expect(Object.keys(cs[0].pack.sharedSightingTicks)).toEqual(['1']);
+  });
+  it.each([1, 2, 3, 10])('honors regroup minimum %s including the animal itself', (minimum) => {
+    const cs = [actor(0, 20), actor(1, 40)];
+    const o = options(cs);
+    o.config = { ...config, creatureHerdingRegroupMinLocalHerdSize: minimum };
+    updateCreatureHerdingSimple(o);
+    expect(cs[0].herding.herdSize).toBe(1);
+    expect(cs[0].herding.rejoinTarget).toEqual(minimum === 1 ? null : cs[1].position);
   });
 });

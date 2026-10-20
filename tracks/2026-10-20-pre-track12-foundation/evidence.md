@@ -96,3 +96,27 @@ See [Track 12 readiness](track12-readiness.md) for combat ownership/timing and w
 ## Delivery scope
 
 Video and browser screenshot binaries, final ten-minute motion archives, and the stress motion archive are omitted to expedite the PR as requested. Their aggregate numeric results and replay hashes remain included; large per-animal JSON exports are also omitted and can be regenerated. The scenario/recording/browser tools regenerate these artifacts; controlled comparison recordings and trajectory/contact-sheet figures already uploaded are included. Optional `?long=1` playback requires regenerating the final long recording first.
+
+## PR #138 review corrections
+
+Codex reviewed submitted commit `0daab8e`. All seven findings were reproduced against that snapshot using the new `PR review regressions` tests: ten failing parameter cases, three passing threshold cases. The same cases pass after correction.
+
+- Land routing, route caches, collision checks and pack destination selection honor `world.waterTerrainType`; retained fields/paths also invalidate when that type changes. A rock-water barrier test checks every movement step and eventual arrival through its opening.
+- Remembered resource destinations use cell centres. Food memories are penalized only after entering the remembered cell, so a diagonal approach with perception range 1 reaches and eats the food without losing confidence prematurely. Empty visited memories still receive a penalty.
+- Disabling herding clears contagion, local leaders, geographical identity and alarm state. Subsequent individual goals cannot keep copying stale social information.
+- Disabling packs discards active pack state, including spacing, membership and search/scouting state. Movement then matches an independent actor; re-enabling forms fresh local packs.
+- Flee movement uses the same three-tile horizon validated by escape-direction selection. Tests cover available outward escape land at all four map edges.
+- Pack sightings deduplicate by member and observation tick; simultaneous distinct sightings both reach the leader. Deduplication retains only current members and repeated observations do not refresh confidence.
+- Regrouping uses the configured minimum local herd size (including the animal itself), with threshold cases 1, 2, 3 and 10.
+
+`npm run verify` passes all **199 tests**, ESLint, formatting and the production build. This adds 13 regression cases to the original 186 tests. Existing deterministic pursuit/recovery tests rerun seeds 1, 42 and 1337. Original recordings and tables above remain evidence of the submitted snapshot rather than being relabelled as recordings of these corrections. No new videos or media uploads were needed for this review fix.
+
+Post-review `npm run test:soak -- --ticks=36000` passes all three seeds (108,000 total ticks), including per-tick finite meters/positions, bounds, unique IDs and population accounting. All have zero first-minute deaths. These runs include every correction above; full hashes and demographics are in [review-soak.json](evidence/review-soak.json).
+
+| Seed | Population | Pursuits | Catches | Square / triangle / circle / octagon |
+| ---- | ---------: | -------: | ------: | ------------------------------------ |
+| 1    |        119 |       82 |      17 | 51 / 1 / 66 / 1                      |
+| 42   |        164 |       70 |      13 | 83 / 1 / 79 / 1                      |
+| 1337 |        156 |       68 |      11 | 77 / 2 / 77 / 0                      |
+
+Population trajectories differ after the corrections. They remain observational results rather than acceptance thresholds; octagons are absent at the end of seed 1337, so long-term ecological equilibrium remains unproven.

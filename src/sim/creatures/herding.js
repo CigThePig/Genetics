@@ -4,6 +4,17 @@ export function updateCreatureHerding(args) {
   if (args.config?.creatureHerdingEnabled === false) {
     for (const c of args.creatures ?? [])
       if (c.herding) {
+        c.herding.shouldStartMoving = false;
+        c.herding.localLeaderId = null;
+        c.herding.groupId = null;
+        c.herding.leaderId = null;
+        c.herding.contagionDelayTicks = 0;
+        c.herding.movingTicksCounter = 0;
+        c.herding.leadershipScore = 0;
+        c.herding.isMoving = false;
+        c.herding.threatPosition = null;
+        c.herding.threatHops = 0;
+        c.herding.escapeCommitTicks = 0;
         c.herding.targetOffset = null;
         c.herding.smoothedOffset = { x: 0, y: 0 };
         c.herding.isThreatened = false;

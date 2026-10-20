@@ -584,7 +584,7 @@ export function updateCreatureIntent({
 
     if (memoryEntry) {
       intent = 'seek';
-      target = { x: memoryEntry.x, y: memoryEntry.y };
+      target = { x: memoryEntry.x + 0.5, y: memoryEntry.y + 0.5 };
       foodType = memoryEntry.foodType ?? null;
     }
 
@@ -596,7 +596,11 @@ export function updateCreatureIntent({
       const missingWater =
         memoryEntry.type === MEMORY_TYPES.WATER && !hasNearbyWater(world, cell, config);
       const missingFood =
+        // A nearby cell may still be outside perception (especially diagonally).
+        // Only invalidate food after entering its remembered cell.
         memoryEntry.type === MEMORY_TYPES.FOOD &&
+        cell.x === memoryEntry.x &&
+        cell.y === memoryEntry.y &&
         !selectFoodChoice({
           species: creature.species,
           creature,

@@ -42,7 +42,11 @@ function chooseSearchDestination(leader, world, rng, config) {
       target.y > world.height - 0.5
     )
       continue;
-    if (world.getTerrainAt(Math.floor(target.x), Math.floor(target.y)) === 'water') continue;
+    if (
+      world.getTerrainAt(Math.floor(target.x), Math.floor(target.y)) ===
+      (world.waterTerrainType ?? 'water')
+    )
+      continue;
     const novelty = recent.length
       ? Math.min(...recent.map((v) => Math.sqrt(distanceSq(v, target))))
       : reach;
@@ -60,12 +64,8 @@ const searching = (c) =>
 export function updateCreaturePack({ creatures, config, rng, world }) {
   if (!Array.isArray(creatures) || !rng || !world) return;
   if (config?.creaturePackEnabled === false) {
-    for (const c of creatures)
-      if (c.pack) {
-        c.pack.id = null;
-        c.pack.waypoint = null;
-        c.pack.patrolPauseTicks = 0;
-      }
+    // Drop all active social/search state, including spacing and group membership.
+    for (const c of creatures) c.pack = null;
     return;
   }
   const predators = creatures.filter(
@@ -92,17 +92,21 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
     state.role = 'leader';
     state.leaderId = leader.id;
     state.home ??= { ...leader.position };
+    // Retain deduplication per live member, bounded by current pack membership.
+    const shared = state.sharedSightingTicks ?? {};
+    state.sharedSightingTicks = {};
     for (const m of members.slice(1)) {
-      if (distanceSq(m.position, leader.position) < (resolvePackSpacing(config) * 4) ** 2) {
-        const observation = m.pack.preySightings?.[m.pack.preySightings.length - 1];
-        if (
-          observation &&
-          observation.strength > 0.5 &&
-          state.sharedSightingTick !== m.chase?.lastSeenTick
-        ) {
-          recordPreySighting(leader, observation, config);
-          state.sharedSightingTick = m.chase?.lastSeenTick;
-        }
+      const tick = m.pack.recordedSightingTick;
+      state.sharedSightingTicks[m.id] = shared[m.id];
+      if (
+        distanceSq(m.position, leader.position) < (resolvePackSpacing(config) * 4) ** 2 &&
+        tick != null &&
+        tick !== shared[m.id] &&
+        tick === m.chase?.lastSeenTick &&
+        m.chase?.lastKnownPosition
+      ) {
+        recordPreySighting(leader, m.chase.lastKnownPosition, config);
+        state.sharedSightingTicks[m.id] = tick;
       }
     }
     if (searching(leader)) {
@@ -176,7 +180,8 @@ export function updateCreaturePack({ creatures, config, rng, world }) {
               candidate.y >= 0.5 &&
               candidate.x < world.width - 0.5 &&
               candidate.y < world.height - 0.5 &&
-              world.getTerrainAt(Math.floor(candidate.x), Math.floor(candidate.y)) !== 'water'
+              world.getTerrainAt(Math.floor(candidate.x), Math.floor(candidate.y)) !==
+                (world.waterTerrainType ?? 'water')
             ) {
               s.scoutTarget = candidate;
               break;
