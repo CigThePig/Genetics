@@ -144,17 +144,29 @@ export const selectMateTarget = (options) => {
           .queryNearby(source.position.x, source.position.y, range, { exclude: source })
           .map((entry) => entry.creature)
       : creatures;
-  const committedId = (c) =>
-    c.intent?.type === 'mate' && Number.isFinite(c.reproduction?.mate?.targetId)
-      ? c.reproduction.mate.targetId
+  const findById = (id) =>
+    spatialIndex?.getById(id) ?? creatures.find((creature) => creature.id === id);
+  const committedId = (creature) => {
+    const state = creature.reproduction?.mate;
+    // Commitments belong to the reproduction state, not a transient eat/drink intent.
+    return Number.isFinite(state?.targetId) &&
+      Number.isFinite(state?.commitTicksRemaining) &&
+      state.commitTicksRemaining > 0
+      ? state.targetId
       : null;
-  const available = (candidate) =>
-    isMateCandidate({ ...options, candidate }) &&
-    (!honorCommitment || committedId(candidate) === null || committedId(candidate) === source.id);
+  };
+  const available = (candidate) => {
+    if (!isMateCandidate({ ...options, candidate })) return false;
+    if (!honorCommitment) return true;
+    const reservedId = committedId(candidate);
+    if (reservedId === null || reservedId === source.id) return true;
+    // An expired or ineligible partner must not reserve this candidate indefinitely.
+    const reservedMate = findById(reservedId);
+    return !isMateCandidate({ ...options, source: candidate, candidate: reservedMate });
+  };
   const ownCommitment = honorCommitment ? committedId(source) : null;
   if (ownCommitment !== null) {
-    const mate =
-      spatialIndex?.getById(ownCommitment) ?? creatures.find((c) => c.id === ownCommitment);
+    const mate = findById(ownCommitment);
     if (mate && isMateCandidate({ ...options, candidate: mate })) {
       if (!available(mate)) return null; // Wait for this commitment; do not substitute a rival's partner.
       const d =
