@@ -1,3 +1,4 @@
+import { canSeeCreature } from './visibility.js';
 import { simConfig } from '../config-defaults.js';
 
 const resolveTargetingWeights = (species, config) =>
@@ -20,7 +21,7 @@ const resolveDistanceWeight = (config) =>
     ? Math.max(0, config.creatureTargetingDistanceWeight)
     : 0.12;
 
-export const selectPredatorTarget = ({ predator, creatures, config, spatialIndex }) => {
+export const selectPredatorTarget = ({ predator, creatures, config, spatialIndex, world }) => {
   if (!predator?.position || !Array.isArray(creatures)) {
     return null;
   }
@@ -53,6 +54,7 @@ export const selectPredatorTarget = ({ predator, creatures, config, spatialIndex
     });
 
     for (const { creature: candidate, distanceSq } of nearby) {
+      if (!canSeeCreature(predator, candidate, world, config, range)) continue;
       const weight = weights[candidate.species];
       const distance = Math.sqrt(distanceSq);
       const score = weight - distance * distanceWeight;
@@ -97,7 +99,7 @@ export const selectPredatorTarget = ({ predator, creatures, config, spatialIndex
       const dx = candidate.position.x - predator.position.x;
       const dy = candidate.position.y - predator.position.y;
       const distanceSq = dx * dx + dy * dy;
-      if (distanceSq > rangeSq) {
+      if (distanceSq > rangeSq || !canSeeCreature(predator, candidate, world, config, range)) {
         continue;
       }
       const distance = Math.sqrt(distanceSq);

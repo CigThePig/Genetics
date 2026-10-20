@@ -68,6 +68,7 @@ export function createWorldGrid({
     if (index === -1) {
       return false;
     }
+    if (grassStress[index] !== amount) world.grassDirtyCounter += 1;
     grassStress[index] = amount;
     return true;
   };

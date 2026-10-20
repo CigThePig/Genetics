@@ -149,13 +149,22 @@ export function createCreatures({ config, rng, world }) {
   const resolveLandPosition = (position) => {
     const cellX = Math.floor(position.x);
     const cellY = Math.floor(position.y);
-    return !isWaterTile(world, cellX, cellY, waterTerrain);
+    if (isWaterTile(world, cellX, cellY, waterTerrain)) return false;
+    const i = cellY * width + cellX;
+    const access = world.habitatAccess;
+    return (
+      !access ||
+      (access.mainLand[i] &&
+        access.waterDistance[i] >= 0 &&
+        access.waterDistance[i] <= Math.max(12, Math.min(width, height) * 0.22) &&
+        ['forest', 'plains'].includes(world.cells[i]))
+    );
   };
 
   const findFallbackLandPosition = () => {
     for (let y = 0; y < height; y += 1) {
       for (let x = 0; x < width; x += 1) {
-        if (!isWaterTile(world, x, y, waterTerrain)) {
+        if (resolveLandPosition({ x: x + 0.5, y: y + 0.5 })) {
           return { x: x + 0.5, y: y + 0.5 };
         }
       }
@@ -285,6 +294,7 @@ export function createCreatures({ config, rng, world }) {
       : null;
     creatures.push({
       id: i,
+      generation: 0,
       position,
       species,
       sex,

@@ -93,6 +93,8 @@ export function buildSimSummary(state, resolvedConfig) {
   const getSpeciesDeathCause = (species, cause) =>
     state.metrics.deathsByCauseBySpecies?.[species]?.[cause] ?? 0;
   return {
+    colourHistory: state.colourHistory,
+    colourBaseline: state.colourBaseline,
     seed: resolvedConfig.seed,
     tick: state.tick,
     lastRoll: state.lastRoll,

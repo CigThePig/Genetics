@@ -32,7 +32,7 @@ import {
   ensureHerdingState
 } from './herding-simple-helpers.js';
 
-export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, rng }) {
+export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, rng, world }) {
   if (!Array.isArray(creatures)) return;
   if (!resolveSimpleHerdingEnabled(config)) return;
 
@@ -79,7 +79,7 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
     }
 
     // Find direct threats
-    const threats = findThreats(creature, creatures, threatRange, spatialIndex);
+    const threats = findThreats(creature, creatures, threatRange, spatialIndex, world, config);
     herding.nearbyThreats = threats.length;
     herding.nearestThreatDistance = threats.length
       ? Math.min(...threats.map((threat) => threat.distance))

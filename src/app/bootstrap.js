@@ -36,7 +36,7 @@ export function bootApplication(app) {
 
   // Camera with enhanced features
   const camera = createCamera({
-    minZoom: 0.25,
+    minZoom: 0.1,
     maxZoom: 5,
     zoom: 1,
     followSmoothing: 0.12
@@ -141,6 +141,7 @@ export function bootApplication(app) {
     updateCameraBounds();
     renderer.render(sim, { immediate: !loop.isRunning() });
     graphsPanel.reset();
+    graphsPanel.recordMetrics(sim.getSummary());
     settings.save({ seed: sim.getSeed() });
     ui.setStatus(`Seed: ${sim.getSeed()}`);
     loop.resetTimebase();
@@ -223,6 +224,7 @@ export function bootApplication(app) {
 
   // Give UI access to graphs panel for metric click handling
   ui.setGraphsPanel?.(graphsPanel);
+  graphsPanel.recordMetrics(sim.getSummary());
 
   // ═══════════════════════════════════════════════════════════════════════════
   // INPUT HANDLING
@@ -262,7 +264,12 @@ export function bootApplication(app) {
       }
 
       // Initial update to show creature data immediately
-      inspector.update({ creatures: sim.state?.creatures, tick: sim.state?.tick });
+      inspector.update({
+        creatures: sim.state?.creatures,
+        tick: sim.state?.tick,
+        world: sim.state?.world,
+        config: sim.config
+      });
     }
   });
 

@@ -1,3 +1,4 @@
+import { canSeeCreature } from './visibility.js';
 import {
   isPredator,
   resolveRegroupEnabled,
@@ -68,7 +69,7 @@ export const findNearbyHerdMembers = (creature, creatures, spatialIndex, range) 
   return members;
 };
 
-export const findNearbyThreats = (creature, creatures, spatialIndex, range) => {
+export const findNearbyThreats = (creature, creatures, spatialIndex, range, world, config) => {
   const threats = [];
   const x = creature.position.x;
   const y = creature.position.y;
@@ -82,7 +83,11 @@ export const findNearbyThreats = (creature, creatures, spatialIndex, range) => {
     });
 
     for (const { creature: other, distanceSq, dx, dy } of nearby) {
-      if (distanceSq <= 0) continue;
+      if (
+        distanceSq < 0 ||
+        !canSeeCreature(creature, other, world, config, range, creature.herding?.isThreatened)
+      )
+        continue;
       threats.push({
         creature: other,
         dx,
@@ -95,12 +100,15 @@ export const findNearbyThreats = (creature, creatures, spatialIndex, range) => {
     // Fall back to linear scan
     for (const other of creatures) {
       if (other === creature || !other?.position) continue;
-      if (!isPredator(other.species)) continue;
+      if (!isPredator(other.species) || other.meters?.hp <= 0) continue;
 
       const dx = other.position.x - x;
       const dy = other.position.y - y;
       const distSq = dx * dx + dy * dy;
-      if (distSq <= rangeSq && distSq > 0) {
+      if (
+        distSq <= rangeSq &&
+        canSeeCreature(creature, other, world, config, range, creature.herding?.isThreatened)
+      ) {
         threats.push({
           creature: other,
           dx,
@@ -124,6 +132,7 @@ export const calculateFleeVector = (threats, threatRange) => {
   let fleeY = 0;
 
   for (const threat of threats) {
+    if (threat.distance < 0.01) continue; // Coincident actors remain detected, with no undefined direction.
     // Strength inversely proportional to distance (closer = stronger)
     const strength = 1 - threat.distance / threatRange;
     const strengthSq = strength * strength; // Quadratic falloff

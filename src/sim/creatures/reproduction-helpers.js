@@ -1,3 +1,5 @@
+import { mateSelectionCost } from './mate-preference.js';
+import { canSeeCreature } from './visibility.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 
 export const resolveBaseMeter = (value) => (Number.isFinite(value) && value > 0 ? value : 1);
@@ -124,106 +126,75 @@ const isMateCandidate = ({
   });
 };
 
-export const selectMateTarget = ({
-  creatures,
-  startIndex = -1,
-  source,
-  maxDistanceSq,
-  baseEnergy,
-  baseWater,
-  minEnergyRatio,
-  minWaterRatio,
-  minAgeTicks,
-  pairedIds,
-  sexEnabled,
-  pregnancyEnabled,
-  spatialIndex
-}) => {
-  // Use spatial index if available for O(k) performance instead of O(n)
-  if (spatialIndex && source?.position) {
-    const maxDistance = Math.sqrt(maxDistanceSq);
-    const nearby = spatialIndex.queryNearby(source.position.x, source.position.y, maxDistance, {
-      exclude: source,
-      filter: (candidate) =>
-        isMateCandidate({
-          candidate,
-          source,
-          baseEnergy,
-          baseWater,
-          minEnergyRatio,
-          minWaterRatio,
-          minAgeTicks,
-          pairedIds,
-          sexEnabled,
-          pregnancyEnabled
-        })
-    });
-
-    // Find closest mate
-    let chosen = null;
-    let closestDistSq = Infinity;
-    for (const { creature, distanceSq } of nearby) {
-      if (
-        distanceSq < closestDistSq ||
-        (distanceSq === closestDistSq && creature.id < chosen?.id)
-      ) {
-        chosen = creature;
-        closestDistSq = distanceSq;
-      }
-    }
-    return chosen;
-  }
-
-  // Fallback to linear scan if no spatial index
-  let chosen = null;
-  let closestDistance = Infinity;
-
-  const rawOffset = Number.isFinite(startIndex) ? Math.trunc(startIndex) : -1;
-  const offset = Math.min(creatures.length - 1, Math.max(-1, rawOffset));
-  const scanRange = (start, end) => {
-    for (let i = start; i < end; i += 1) {
-      const candidate = creatures[i];
-      if (
-        !isMateCandidate({
-          candidate,
-          source,
-          baseEnergy,
-          baseWater,
-          minEnergyRatio,
-          minWaterRatio,
-          minAgeTicks,
-          pairedIds,
-          sexEnabled,
-          pregnancyEnabled
-        })
-      ) {
-        continue;
-      }
-      const dx = candidate.position.x - source.position.x;
-      const dy = candidate.position.y - source.position.y;
-      const distanceSq = dx * dx + dy * dy;
-      if (distanceSq > maxDistanceSq) {
-        continue;
-      }
-      if (
-        distanceSq < closestDistance ||
-        (distanceSq === closestDistance && candidate.id < chosen?.id)
-      ) {
-        chosen = candidate;
-        closestDistance = distanceSq;
-      }
-    }
+export const selectMateTarget = (options) => {
+  const {
+    creatures,
+    source,
+    maxDistanceSq,
+    spatialIndex,
+    config = {},
+    world,
+    honorCommitment = false
+  } = options;
+  if (!source?.position || !Array.isArray(creatures)) return null;
+  const range = Math.sqrt(maxDistanceSq);
+  const candidates =
+    spatialIndex && spatialIndex.creatureCount > 0
+      ? spatialIndex
+          .queryNearby(source.position.x, source.position.y, range, { exclude: source })
+          .map((entry) => entry.creature)
+      : creatures;
+  const findById = (id) =>
+    spatialIndex?.getById(id) ?? creatures.find((creature) => creature.id === id);
+  const committedId = (creature) => {
+    const state = creature.reproduction?.mate;
+    // Commitments belong to the reproduction state, not a transient eat/drink intent.
+    return Number.isFinite(state?.targetId) &&
+      Number.isFinite(state?.commitTicksRemaining) &&
+      state.commitTicksRemaining > 0
+      ? state.targetId
+      : null;
   };
-
-  scanRange(offset + 1, creatures.length);
-  if (offset > 0) {
-    scanRange(0, offset);
+  const available = (candidate) => {
+    if (!isMateCandidate({ ...options, candidate })) return false;
+    if (!honorCommitment) return true;
+    const reservedId = committedId(candidate);
+    if (reservedId === null || reservedId === source.id) return true;
+    // An expired or ineligible partner must not reserve this candidate indefinitely.
+    const reservedMate = findById(reservedId);
+    return !isMateCandidate({ ...options, source: candidate, candidate: reservedMate });
+  };
+  const ownCommitment = honorCommitment ? committedId(source) : null;
+  if (ownCommitment !== null) {
+    const mate = findById(ownCommitment);
+    if (mate && isMateCandidate({ ...options, candidate: mate })) {
+      if (!available(mate)) return null; // Wait for this commitment; do not substitute a rival's partner.
+      const d =
+        (mate.position.x - source.position.x) ** 2 + (mate.position.y - source.position.y) ** 2;
+      // A valid distant or concealed commitment cannot be replaced at conception.
+      return d <= maxDistanceSq && canSeeCreature(source, mate, world, config, range, true)
+        ? mate
+        : null;
+    }
   }
-
+  let chosen = null,
+    best = Infinity;
+  for (const candidate of candidates) {
+    if (!available(candidate)) continue;
+    const d =
+      (candidate.position.x - source.position.x) ** 2 +
+      (candidate.position.y - source.position.y) ** 2;
+    if (d > maxDistanceSq || !canSeeCreature(source, candidate, world, config, range)) continue;
+    const cost = mateSelectionCost(source, candidate, Math.sqrt(d), config);
+    if (cost < best || (cost === best && candidate.id < (chosen?.id ?? Infinity))) {
+      chosen = candidate;
+      best = cost;
+    }
+  }
   return chosen;
 };
 
-export const findMate = (options) => selectMateTarget(options);
+export const findMate = (options) => selectMateTarget({ ...options, honorCommitment: true });
 
 const spawnOffset = (rng) => (rng.nextFloat() * 2 - 1) * 0.35;
 

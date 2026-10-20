@@ -1,3 +1,4 @@
+import { canSeeCreature } from './visibility.js';
 import { resolveTicksPerSecond } from './life-stages.js';
 import {
   resolveRatio,
@@ -220,7 +221,7 @@ export function updateCreatureIntent({
 
     if (canConsiderMate && reproductionState.mate && (creaturesById || spatialIndex)) {
       const mateState = reproductionState.mate;
-      let candidate = null;
+      let waitingOnCommittedMate = false;
       if (Number.isFinite(mateState.targetId)) {
         const existing = spatialIndex
           ? spatialIndex.getById(mateState.targetId)
@@ -250,18 +251,21 @@ export function updateCreatureIntent({
           !existingPregnant &&
           existingReady
         ) {
-          candidate = existing;
+          // Commitment time continues even when camouflage interrupts visual tracking.
+          mateState.commitTicksRemaining = Math.max(0, (mateState.commitTicksRemaining ?? 0) - 1);
+          if (mateState.commitTicksRemaining > 0) {
+            if (canSeeCreature(creature, existing, world, config, mateSeekRange, true)) {
+              mateTarget = existing;
+              mateState.lastSeenPosition = { ...existing.position };
+            } else {
+              // Do not replace an eligible committed partner merely because it is concealed.
+              waitingOnCommittedMate = true;
+            }
+          }
         }
       }
 
-      if (candidate) {
-        mateState.commitTicksRemaining = Math.max(0, mateState.commitTicksRemaining - 1);
-        if (mateState.commitTicksRemaining > 0) {
-          mateTarget = candidate;
-        }
-      }
-
-      if (!mateTarget) {
+      if (!mateTarget && !waitingOnCommittedMate) {
         const found = selectMateTarget({
           creatures,
           source: creature,
@@ -273,16 +277,26 @@ export function updateCreatureIntent({
           minAgeTicks,
           sexEnabled,
           pregnancyEnabled,
-          spatialIndex
+          spatialIndex,
+          config,
+          world
         });
         if (found) {
           mateState.targetId = found.id ?? null;
           mateState.commitTicksRemaining = mateSeekCommitTicks;
+          mateState.lastSeenPosition = { ...found.position };
           mateTarget = found;
         } else {
           mateState.targetId = null;
           mateState.commitTicksRemaining = 0;
+          mateState.lastSeenPosition = null;
         }
+      }
+
+      if (waitingOnCommittedMate) {
+        // Keep the mating intent so conception respects this commitment. Travel only
+        // towards the last *observed* position, never the hidden creature's live position.
+        mateTarget = { position: mateState.lastSeenPosition ?? null };
       }
     } else if (mateSeekingEnabled && reproductionState.mate && !canSeekMate) {
       reproductionState.mate.targetId = null;
@@ -316,7 +330,7 @@ export function updateCreatureIntent({
     if (!handled && mateTarget) {
       clearSearchState(creature);
       intent = 'mate';
-      target = { x: mateTarget.position.x, y: mateTarget.position.y };
+      target = mateTarget.position ? { ...mateTarget.position } : null;
     } else if (!handled && canConsiderMate) {
       if (isHerbivoreSpecies(creature.species) && !creature.herding?.isThreatened) {
         if (isInHerd) {
@@ -405,7 +419,8 @@ export function updateCreatureIntent({
             predator: creature,
             creatures,
             config,
-            spatialIndex
+            spatialIndex,
+            world
           });
           if (predatorTarget) {
             const started = startCreatureChase({
@@ -446,7 +461,8 @@ export function updateCreatureIntent({
               predator: creature,
               creatures,
               config,
-              spatialIndex
+              spatialIndex,
+              world
             });
             if (predatorTarget) {
               const started = startCreatureChase({

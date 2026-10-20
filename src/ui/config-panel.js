@@ -48,6 +48,8 @@ export function createConfigPanel({
 
   const rebuildKeys = new Set([
     'hotspotSeed',
+    'colourInitialVariation',
+    'creatureGenomeDefaults',
     'creatureCount',
     'creaturePredatorCount',
     ...Object.keys(configMeta).filter((key) => key.startsWith('creatureSpawn'))

@@ -65,35 +65,41 @@ export const metaWorld1 = {
     ]
   },
   terrainNoiseScale: {
-    label: 'Terrain Noise Scale',
-    description: 'Noise sampling scale (smaller = larger features).',
+    label: 'Legacy: Terrain Noise Scale',
+    description:
+      'Legacy preset field; unused by regional generation. Noise sampling scale (smaller = larger features).',
     min: 0.005,
     max: 0.12,
     step: 0.005,
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   terrainWaterLevel: {
-    label: 'Terrain Water Level',
-    description: 'Height threshold for water before coverage scaling.',
+    label: 'Legacy: Terrain Water Level',
+    description:
+      'Legacy preset field; unused by regional generation. Height threshold for water before coverage scaling.',
     min: -1,
     max: 1,
     step: 0.02,
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   terrainShoreLevel: {
-    label: 'Terrain Shore Level',
-    description: 'Height threshold for shore before coverage scaling.',
+    label: 'Legacy: Terrain Shore Level',
+    description:
+      'Legacy preset field; unused by regional generation. Height threshold for shore before coverage scaling.',
     min: -1,
     max: 1,
     step: 0.02,
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   terrainWaterCoverageMultiplier: {
     label: 'Water Coverage Mult',
-    description: 'Scales water coverage relative to baseline.',
+    description: 'Scales regional pond size; each catchment retains a drinking source.',
     min: 0.1,
     max: 1,
     step: 0.05,
@@ -101,54 +107,65 @@ export const metaWorld1 = {
     control: 'slider'
   },
   terrainRockThreshold: {
-    label: 'Terrain Rock Threshold',
-    description: 'Roughness threshold for rock biome.',
+    label: 'Legacy: Terrain Rock Threshold',
+    description:
+      'Legacy preset field; unused by regional generation. Roughness threshold for rock biome.',
     min: 0,
     max: 1,
     step: 0.02,
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   terrainForestMoisture: {
-    label: 'Terrain Forest Moisture',
-    description: 'Moisture threshold for forest biome.',
+    label: 'Legacy: Terrain Forest Moisture',
+    description:
+      'Legacy preset field; unused by regional generation. Moisture threshold for forest biome.',
     min: 0,
     max: 1,
     step: 0.02,
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   terrainSandMoisture: {
-    label: 'Terrain Sand Moisture',
-    description: 'Moisture threshold for sand biome.',
+    label: 'Legacy: Terrain Sand Moisture',
+    description:
+      'Legacy preset field; unused by regional generation. Moisture threshold for sand biome.',
     min: 0,
     max: 1,
     step: 0.02,
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   waterCorridorCount: {
-    label: 'River Count',
-    description: 'Number of rivers (scaled by water coverage).',
+    label: 'Legacy: River Count',
+    description:
+      'Legacy preset field; unused by regional generation. Number of rivers (scaled by water coverage).',
     min: 0,
     max: 24,
     step: 1,
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   waterCorridorWidth: {
-    label: 'River Width',
-    description: 'River half-width when painting water cells.',
+    label: 'Legacy: River Width',
+    description:
+      'Legacy preset field; unused by regional generation. River half-width when painting water cells.',
     min: 1,
     max: 6,
     step: 1,
     unit: 'tiles',
     category: 'world',
+    advanced: true,
     control: 'slider'
   },
   terrainBlobCount: {
-    label: 'Legacy Terrain Blobs',
-    description: 'Legacy blob painter count (unused by default).',
+    label: 'Legacy: Legacy Terrain Blobs',
+    description:
+      'Legacy preset field; unused by regional generation. Legacy blob painter count (unused by default).',
     min: 0,
     max: 200,
     step: 1,
@@ -157,8 +174,9 @@ export const metaWorld1 = {
     advanced: true
   },
   terrainBlobMinRadius: {
-    label: 'Legacy Blob Min Radius',
-    description: 'Legacy blob painter min radius.',
+    label: 'Legacy: Legacy Blob Min Radius',
+    description:
+      'Legacy preset field; unused by regional generation. Legacy blob painter min radius.',
     min: 1,
     max: 12,
     step: 1,
@@ -168,8 +186,9 @@ export const metaWorld1 = {
     advanced: true
   },
   terrainBlobMaxRadius: {
-    label: 'Legacy Blob Max Radius',
-    description: 'Legacy blob painter max radius.',
+    label: 'Legacy: Legacy Blob Max Radius',
+    description:
+      'Legacy preset field; unused by regional generation. Legacy blob painter max radius.',
     min: 1,
     max: 20,
     step: 1,
@@ -179,8 +198,8 @@ export const metaWorld1 = {
     advanced: true
   },
   waterCorridorMinLength: {
-    label: 'Legacy River Min Length',
-    description: 'Legacy corridor min length.',
+    label: 'Legacy: Legacy River Min Length',
+    description: 'Legacy preset field; unused by regional generation. Legacy corridor min length.',
     min: 1,
     max: 60,
     step: 1,
@@ -190,8 +209,8 @@ export const metaWorld1 = {
     advanced: true
   },
   waterCorridorMaxLength: {
-    label: 'Legacy River Max Length',
-    description: 'Legacy corridor max length.',
+    label: 'Legacy: Legacy River Max Length',
+    description: 'Legacy preset field; unused by regional generation. Legacy corridor max length.',
     min: 1,
     max: 80,
     step: 1,
@@ -201,8 +220,9 @@ export const metaWorld1 = {
     advanced: true
   },
   waterCorridorTurnChance: {
-    label: 'Legacy River Turn Chance',
-    description: 'Legacy corridor turn probability.',
+    label: 'Legacy: Legacy River Turn Chance',
+    description:
+      'Legacy preset field; unused by regional generation. Legacy corridor turn probability.',
     min: 0,
     max: 1,
     step: 0.05,

@@ -82,6 +82,7 @@ export function updateGrass({ world, config }) {
       }
       grass[i] = 0;
       if (grassStress) {
+        if (grassStress[i] !== 0) changed = true;
         grassStress[i] = 0;
       }
       continue;
@@ -114,6 +115,7 @@ export function updateGrass({ world, config }) {
       } else if (shouldRecover) {
         nextStress = Math.max(0, currentStress - stressRecoveryRate);
       }
+      if (nextStress !== currentStress) changed = true;
       grassStress[i] = nextStress;
       if (nextStress >= stressVisibleThreshold) {
         stressedCells += 1;

@@ -44,7 +44,7 @@ const seedGrassPatches = ({ world, config, rng }) => {
     const effects = getTerrainEffectsAt(world, x, y);
     const plantCap = resolveNumber(effects?.plantCap, 1, 0);
     const cellCap = cap * plantCap;
-    const amount = cellCap > 0 ? Math.min(cellCap, baseAmount) : 0;
+    const amount = cellCap > 0 ? Math.min(cellCap, baseAmount * plantCap) : 0;
     if (grass[i] !== amount) {
       changed = true;
     }

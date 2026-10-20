@@ -136,3 +136,17 @@ RNG:
 - Drain, regeneration, movement and turn rates use per-second units with `1 / ticksPerSecond` applied by the consuming system. Per-tick smoothing/acceleration and probability settings are exceptions, not durations; the legacy miscarriage per-tick probability is a fallback for standalone callers without the per-second key.
 - Distances/positions are tiles in the simulation; movement speed is tiles per simulated second. Render/input convert through `tileSize` (pixels per tile) and the camera. Meter thresholds are ratios against the corresponding base meter.
 - Equal seeds and configuration replay identically. Different tick rates are different configurations; per-tick smoothing means they need not produce identical trajectories.
+
+## Track 11 — Environment, colour and mating
+
+The enhanced terrain entry point now delegates to regional-terrain.js. Stratified jittered region sites and bounded domain warp create primary habitat interiors; local ponds/orthogonally connected streams preserve land continuity. Water-access fields are static land-path data for generation/spawning. Initial creatures retain species clusters but start on connected vegetated land with accessible water. Legacy noise knobs are retained for preset compatibility and labeled inactive in the editor.
+
+habitat-colours.js owns substrate HSL, deterministic local texture and bounded grass/stress appearance. Simulation and renderer share RGB samples. Decorative edges, bush sprites and water highlights are approximations outside the colour model; grass cache refresh can lag by 250 ms. Trait creation caches individual body RGB/CSS; rendering never changes phenotype.
+
+Body H/S/L, preferred hue, choosiness and discrimination are direct normalized traits rather than multiplicative genes. Hue loci inherit along the shortest circular arc and wrap mutation. Exact antipodes take a positive half-turn from the first parent. Other colour loci clamp. Existing metabolic-gene mappings and costs remain in place. Better discrimination can strengthen both prey detection and mate-colour selectivity; choosiness incurs travel/opportunity costs through decisions.
+
+Visibility uses inherited perception, observer terrain, weighted RGB/luminance contrast and movement. Detection range has a close-range floor; pursuit gets hysteresis and uses existing last-known-position grace. Uncoloured legacy actors retain colour-neutral visibility. The colour camouflage flag disables contrast attenuation while retaining ordinary senses/terrain. Social herd warnings propagate as information rather than new visual sightings.
+
+Mate acquisition and conception share eligibility/ranking. Soft reciprocal mismatch competes with distance, with deterministic ID ties. Active commitments are honored by both parties at conception; a valid distant, hidden or nonreciprocal target causes waiting rather than substitution. Death, pregnancy or ineligibility allows reselection. Birth-tick pairing guards prevent immediate reconception. Saved paternal genotype and generation survive paternal death.
+
+After regeneration, colour-metrics.js records one sample every ten simulated seconds, at most 120 samples plus the founding snapshot. Histograms/means are circular; undefined means are null for empty or directionless samples. Summaries and UI read this world-owned history. Reset replaces it. Tick ordering is otherwise unchanged.

@@ -266,6 +266,7 @@ export function updateCreatureReproduction({
 
         newborns.push({
           id: nextId,
+          generation: 1 + Math.max(creature.generation ?? 0, pregnancy.fatherGeneration ?? 0),
           position,
           species: creature.species,
           sex,
@@ -288,6 +289,7 @@ export function updateCreatureReproduction({
         });
 
         nextId += 1;
+        pairedIds.add(creature.id); // A mother cannot reconceive on her birth tick.
         pregnancy.isPregnant = false;
         pregnancy.fatherId = null;
         pregnancy.fatherGenome = null;
@@ -349,7 +351,9 @@ export function updateCreatureReproduction({
       pairedIds,
       sexEnabled,
       pregnancyEnabled,
-      spatialIndex: index
+      spatialIndex: index,
+      config,
+      world
     });
 
     if (!mate) {
@@ -400,6 +404,7 @@ export function updateCreatureReproduction({
           const gestationTicks = Math.max(1, Math.trunc(gestationBaseTicks * gestationMultiplier));
           female.reproduction.pregnancy.fatherId = male?.id ?? null;
           female.reproduction.pregnancy.fatherGenome = { ...male.genome };
+          female.reproduction.pregnancy.fatherGeneration = male.generation ?? 0;
           female.reproduction.pregnancy.gestationTicksTotal = gestationTicks;
           female.reproduction.pregnancy.gestationTicksRemaining = gestationTicks;
           if (metrics) {
@@ -460,6 +465,7 @@ export function updateCreatureReproduction({
 
     newborns.push({
       id: nextId,
+      generation: 1 + Math.max(creature.generation ?? 0, mate.generation ?? 0),
       position,
       species: creature.species,
       sex,

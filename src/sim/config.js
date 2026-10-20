@@ -1,3 +1,4 @@
+import { metaColourEcology } from './config-meta/colour-ecology.js';
 import { metaSimulation1 } from './config-meta/simulation-1.js';
 import { metaWorld1 } from './config-meta/world-1.js';
 import { metaRendering1 } from './config-meta/rendering-1.js';
@@ -41,6 +42,7 @@ import { simConfig } from './config-defaults.js';
  * Defines which config values are editable and how to display them.
  */
 export const configMeta = {
+  ...metaColourEcology,
   ...metaSimulation1,
   ...metaWorld1,
   ...metaRendering1,

@@ -31,6 +31,14 @@ describe('repository audit: terrain caches', () => {
     expect(world.grassDirtyCounter).toBe(1);
     expect(world.terrainDirtyCounter).toBe(1);
   });
+  it('invalidates shared vegetation colour when only stress changes', () => {
+    const world = createWorldGrid({ width: 1, height: 1, defaultGrass: 1 });
+    const before = world.grassDirtyCounter;
+    world.setGrassStressAt(0, 0, 0.5);
+    expect(world.grassDirtyCounter).toBe(before + 1);
+    world.setGrassStressAt(0, 0, 0.5);
+    expect(world.grassDirtyCounter).toBe(before + 1);
+  });
   it('builds all initial grass and flushes later edits for paused rendering', () =>
     withCanvas((ctx) => {
       const world = createWorldGrid({ width: 4, height: 4, defaultGrass: 0.5 });

@@ -1,6 +1,17 @@
+import { wrapHue, mixHue, hueDelta } from '../colour.js';
+const isHue = (key) => key === 'bodyHue' || key === 'matePreferenceHue';
+const boundGene = (key, value) =>
+  isHue(key) ? wrapHue(value) : clamp01(Number.isFinite(value) ? value : 0.5);
 const clamp01 = (value) => Math.min(1, Math.max(0, value));
 
 const DEFAULT_GENOME = {
+  bodyHue: 0.25,
+  bodySaturation: 0.45,
+  bodyLightness: 0.45,
+  matePreferenceHue: 0.25,
+  mateChoosiness: 0.4,
+  colourDiscrimination: 0.5,
+
   speed: 0.5,
   perceptionRange: 0.5,
   alertness: 0.5,
@@ -139,7 +150,7 @@ const resolveInheritanceMixChance = (config) => {
 const normalizeGenome = (genome = {}) => {
   const normalized = {};
   for (const key of Object.keys(genome)) {
-    normalized[key] = clamp01(genome[key]);
+    normalized[key] = boundGene(key, genome[key]);
   }
   return normalized;
 };
@@ -169,8 +180,11 @@ export const createCreatureGenome = ({ config, species, rng } = {}) => {
 
   for (const key of Object.keys(defaults)) {
     const base = defaults[key];
-    const noise = rng && jitter > 0 ? (rng.nextFloat() * 2 - 1) * jitter : 0;
-    genome[key] = clamp01(Number.isFinite(base) ? base + noise : 0.5 + noise);
+    const variation = isHue(key)
+      ? Math.min(0.5, Math.max(0, config?.colourInitialVariation ?? 0.28))
+      : jitter;
+    const noise = rng && variation > 0 ? (rng.nextFloat() * 2 - 1) * variation : 0;
+    genome[key] = boundGene(key, Number.isFinite(base) ? base + noise : 0.5 + noise);
   }
 
   return genome;
@@ -195,10 +209,10 @@ export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) =>
     if (rng && rng.nextFloat() < mixChance) {
       // Random blend between parents
       const t = rng.nextFloat();
-      base = resolvedA + (resolvedB - resolvedA) * t;
+      base = isHue(key) ? mixHue(resolvedA, resolvedB, t) : resolvedA + (resolvedB - resolvedA) * t;
     } else {
       // Simple midpoint average
-      base = (resolvedA + resolvedB) * 0.5;
+      base = isHue(key) ? mixHue(resolvedA, resolvedB) : (resolvedA + resolvedB) * 0.5;
     }
 
     // Add inheritance noise if rng available and noise > 0
@@ -208,7 +222,7 @@ export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) =>
       value = base + noise;
     }
 
-    genome[key] = clamp01(value);
+    genome[key] = boundGene(key, value);
   }
 
   return genome;
@@ -318,8 +332,10 @@ export const mutateCreatureGenome = ({ genome, rng, config, metrics, species } =
       continue;
     }
     const delta = (rng.nextFloat() * 2 - 1) * mutationStrength;
-    const nextValue = clamp01(normalized[key] + delta);
-    const appliedDelta = nextValue - normalized[key];
+    const nextValue = boundGene(key, normalized[key] + delta);
+    const appliedDelta = isHue(key)
+      ? hueDelta(normalized[key], nextValue)
+      : nextValue - normalized[key];
     if (!Number.isFinite(appliedDelta) || appliedDelta === 0) {
       continue;
     }

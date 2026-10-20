@@ -1,0 +1,132 @@
+{
+  "errors": [],
+  "observations": [
+    {
+      "fixture": true,
+      "predatorTarget": 3,
+      "mates": [
+        {
+          "id": 0,
+          "target": 1
+        },
+        {
+          "id": 1,
+          "target": 0
+        },
+        {
+          "id": 2,
+          "target": 3
+        },
+        {
+          "id": 3,
+          "target": 2
+        },
+        {
+          "id": 4,
+          "target": 5
+        },
+        {
+          "id": 5,
+          "target": 4
+        },
+        {
+          "id": 6,
+          "target": 7
+        },
+        {
+          "id": 7,
+          "target": 6
+        }
+      ],
+      "inspector": "🔍 #2📍 Follow🧹×🎨 Colour & habitat▶Body130° · S 32% · L 25%Preferred hue0°Choosiness100%Discrimination70%HabitatforestBackground contrast2%Colour exposure50%Generation0Mate target#3 · mismatch 35%Exposure estimates colour concealment; actual detection also depends on observer senses, range and movement. Species is identified by shape.📋 Status▶Species🔵 CirclesID#2Age2m 46sStageAdultPosition(54, 80)Sex♀ Female❤️ Vitals▶Energy100%Water100%Health100%Stamina100%🧠 Behavior▶Activity💕 Seeking a matePrioritythirstAlertness--SprintingNo🦵 Traits▶Speed10.3 tiles/sSprint18.0 tiles/sVision5.1 tilesEnergy burn0.80%/sWater burn0.97%/s🧬 Genetics▶Alertness+11%Basal Energy Drain+14%Basal Stamina Drain+17%Basal Water Drain-2%Berry Eat Min+5%Drink Amount-14%Drink Threshold-18%Eat Amount+5%Eat Threshold-10%Gestation Multiplier+19%Grass Eat Min-5%Growth Rate-4%Longevity+12%Perception Range+7%Reaction Delay-7%Speed+15%Sprint Speed Multiplier-14%Sprint Stamina Drain-5%Sprint Start Threshold+6%Sprint Stop Threshold-10%Stamina Regen+9%Behavior: relaxed / noneTick: 1 • Live"
+    },
+    {
+      "crossing": {
+        "from": "forest",
+        "to": "sand",
+        "position": {
+          "x": 63.06855179343818,
+          "y": 87.64655172908485
+        }
+      }
+    }
+  ],
+  "frameMeasurements": [
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "population": 80,
+      "renderMs": {
+        "median": 15.100000000093132,
+        "p95": 19.299999999813735
+      },
+      "tickMs": {
+        "median": 6.199999999720603,
+        "p95": 9.799999999813735
+      },
+      "frameIntervalMs": {
+        "median": 26.59999999962747,
+        "p95": 37.39999999990687
+      }
+    },
+    {
+      "viewport": {
+        "width": 1280,
+        "height": 900
+      },
+      "population": 240,
+      "renderMs": {
+        "median": 15.600000000093132,
+        "p95": 19.299999999813735
+      },
+      "tickMs": {
+        "median": 17.399999999906868,
+        "p95": 22.399999999906868
+      },
+      "frameIntervalMs": {
+        "median": 39.60000000009313,
+        "p95": 47.200000000186265
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "population": 80,
+      "renderMs": {
+        "median": 7.600000000093132,
+        "p95": 11
+      },
+      "tickMs": {
+        "median": 5.5,
+        "p95": 7
+      },
+      "frameIntervalMs": {
+        "median": 16.700000000186265,
+        "p95": 20.200000000186265
+      }
+    },
+    {
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "population": 240,
+      "renderMs": {
+        "median": 8.899999999906868,
+        "p95": 11.599999999627471
+      },
+      "tickMs": {
+        "median": 17.100000000093132,
+        "p95": 20.799999999813735
+      },
+      "frameIntervalMs": {
+        "median": 29.899999999906868,
+        "p95": 39.1999999997206
+      }
+    }
+  ]
+}

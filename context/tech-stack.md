@@ -32,3 +32,5 @@ Determinism:
 - Required: same seed + same config => same outcomes.
 
 Audit verification: `npm run test:soak` uses Node built-ins, with no added package dependency. It runs default-config seeds 1, 42 and 1337 for 18,000 ticks each; `-- --ticks=N` adjusts its length. Browser smoke verification used temporary external tooling, not a new production/test dependency.
+
+Track 11 adds no dependencies. `node scripts/verify-track11.mjs --mode=maps --ticks=0` analyzes 32 seeded maps; `--mode=full|no-camouflage|no-preference|neither --ticks=N --seeds=1,42,1337` runs repeatable comparisons. Map mode accepts `--baseline=/path/to/checkout`. Optional `scripts/verify-track11-browser.cjs` uses an externally available Playwright module/Chromium via `PLAYWRIGHT_MODULE` and `BROWSER_EXECUTABLE`, starts Vite itself, and captures desktop/mobile evidence. `TRACK11_RESULTS` can supply a full-mode JSONL result for measured descendant graph captures; no synthetic evolution is implied.
