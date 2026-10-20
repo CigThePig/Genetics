@@ -280,7 +280,7 @@ describe('PR #135: alert distance and PR #136: stale regroup', () => {
       };
       const options = context([member, kin], config);
       updateCreatureHerding({ ...options, tick: 1 });
-      expect(member.herding.lastRegroupVector?.x).toBeGreaterThan(0);
+      expect(member.herding.rejoinTarget?.x).toBeGreaterThan(member.position.x);
       member.ageTicks = 1;
       updateCreatureHerding({ ...options, creatures: [member, kin, predator], tick: 2 });
       expect(member.herding.lastRegroupVector).toBeNull();

@@ -49,6 +49,19 @@ export const getFoodProperties = (config, foodType) => resolveFoodProperties(con
 export const getDietPreferences = (species) =>
   DEFAULT_DIET_PREFERENCES[species] ?? [FOOD_TYPES.GRASS];
 
+// Diet identity is unchanged. Predators reserve plant fallback for emergencies;
+// the individual's inherited appetite threshold scales its emergency reserve.
+export function getFeedingPreferences(creature, config) {
+  const prefs = getDietPreferences(creature?.species);
+  if (prefs[0] !== FOOD_TYPES.MEAT) return prefs;
+  const base = config?.creatureBaseEnergy > 0 ? config.creatureBaseEnergy : 1;
+  const emergency = (creature?.traits?.eatThreshold ?? config?.creatureEatThreshold ?? 0.8) * 0.5;
+  const recovering = creature?.intent?.type === 'eat' && creature.intent.foodType !== 'meat';
+  return (creature?.meters?.energy ?? base) / base < emergency + (recovering ? 0.1 : 0)
+    ? prefs
+    : [FOOD_TYPES.MEAT];
+}
+
 export const getDigestiveEfficiency = (creature, foodType, config) => {
   const traitValue = creature?.traits?.foodEfficiency?.[foodType];
   if (Number.isFinite(traitValue)) {
@@ -99,11 +112,11 @@ export const getFoodAvailabilityAtCell = ({ world, cell }) => {
   };
 };
 
-export const selectFoodChoice = ({ species, availability, minimums }) => {
+export const selectFoodChoice = ({ species, availability, minimums, creature, config }) => {
   if (!availability) {
     return null;
   }
-  const prefs = getDietPreferences(species);
+  const prefs = creature ? getFeedingPreferences(creature, config) : getDietPreferences(species);
   const mins = minimums ?? {};
 
   for (const foodType of prefs) {

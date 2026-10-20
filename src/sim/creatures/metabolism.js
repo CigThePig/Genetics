@@ -105,9 +105,8 @@ export function updateCreatureSprintDecision({ creatures, config }) {
     }
     const intentType = creature.intent?.type;
     if (
-      intentType === 'drink' ||
-      intentType === 'eat' ||
-      intentType === 'rest' ||
+      (!creature.herding?.isThreatened && intentType !== 'hunt') ||
+      (!creature.herding?.isThreatened && ['drink', 'eat', 'rest'].includes(intentType)) ||
       behaviorSpeedMultiplier(creature, config) === 0 ||
       (config?.creatureBehaviorStateEnabled !== false &&
         creature.behaviorState?.state === 'hunting' &&

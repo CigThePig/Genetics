@@ -1,12 +1,13 @@
 export const metaHerding1 = {
   creatureHerdingStrength: {
-    label: 'Herd Cohesion',
-    description: 'Base cohesion strength for herding.',
+    label: 'Legacy: Herd Cohesion',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.01,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingEnabled: {
     label: 'Herding Enabled',
@@ -15,10 +16,11 @@ export const metaHerding1 = {
     category: 'herding'
   },
   creatureHerdingSimpleMode: {
-    label: 'Simple Herding Mode',
-    description: 'Use simple 3-rule boid system instead of complex herding.',
+    label: 'Legacy: Simple Herding Mode',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     type: 'boolean',
-    category: 'herding'
+    category: 'herding',
+    advanced: true
   },
   creatureSimpleHerdingSeparationRadius: {
     label: 'Separation Radius',
@@ -31,14 +33,15 @@ export const metaHerding1 = {
     control: 'slider'
   },
   creatureSimpleHerdingAlignmentRadius: {
-    label: 'Alignment Radius',
-    description: 'Distance at which creatures match neighbor headings.',
+    label: 'Legacy: Alignment Radius',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 1,
     max: 20,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureSimpleHerdingCohesionRadius: {
     label: 'Cohesion Radius',
@@ -60,22 +63,24 @@ export const metaHerding1 = {
     control: 'slider'
   },
   creatureSimpleHerdingAlignmentStrength: {
-    label: 'Alignment Strength',
-    description: 'Force of matching neighbor headings.',
+    label: 'Legacy: Alignment Strength',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 2,
     step: 0.1,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureSimpleHerdingCohesionStrength: {
-    label: 'Cohesion Strength',
-    description: 'Force of pulling toward herd center.',
+    label: 'Legacy: Cohesion Strength',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 2,
     step: 0.1,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureSimpleHerdingThreatRange: {
     label: 'Threat Detection Range',
@@ -88,17 +93,18 @@ export const metaHerding1 = {
     control: 'slider'
   },
   creatureSimpleHerdingThreatStrength: {
-    label: 'Flee Strength',
-    description: 'Force of fleeing from predators.',
+    label: 'Legacy: Flee Strength',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 3,
     step: 0.1,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureSimpleHerdingSmoothing: {
-    label: 'Herding Smoothing',
-    description: 'How smoothly herding forces are applied (prevents jitter).',
+    label: 'Legacy: Herding Smoothing',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.1,
     max: 1,
     step: 0.05,
@@ -107,13 +113,14 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingHeadingBlend: {
-    label: 'Heading Blend',
-    description: 'How much herd heading influences creature heading.',
+    label: 'Legacy: Heading Blend',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.05,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureThreatPropagationRadius: {
     label: 'Threat Propagation Radius',
@@ -177,8 +184,8 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdLeadershipDecay: {
-    label: 'Leadership Decay',
-    description: 'How fast leadership score decays when not moving.',
+    label: 'Legacy: Leadership Decay',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.001,
     max: 0.1,
     step: 0.005,
@@ -187,13 +194,14 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingAlignmentStrength: {
-    label: 'Herd Alignment',
-    description: 'Alignment weight for herd headings.',
+    label: 'Legacy: Herd Alignment',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.05,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingMinGroupSize: {
     label: 'Min Group Size',
@@ -206,57 +214,62 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingThreatRange: {
-    label: 'Threat Detect Range',
-    description: 'Predator detection radius.',
+    label: 'Legacy: Threat Detect Range',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 2,
     max: 20,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingThreatStrength: {
-    label: 'Flee Strength',
-    description: 'Threat steering strength.',
+    label: 'Legacy: Flee Strength',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 0.5,
     step: 0.05,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingIdealDistance: {
-    label: 'Herd Spacing',
-    description: 'Ideal herd spacing distance.',
+    label: 'Legacy: Herd Spacing',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 2,
     max: 10,
     step: 0.5,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingRange: {
-    label: 'Herd Range',
-    description: 'Local neighbor range for herding.',
+    label: 'Legacy: Herd Range',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 4,
     max: 30,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingSeparation: {
-    label: 'Herd Separation',
-    description: 'Separation distance within the herd.',
+    label: 'Legacy: Herd Separation',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 1,
     max: 6,
     step: 0.2,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingComfortMax: {
-    label: 'Herd Comfort Max',
-    description: 'Comfort band max distance.',
+    label: 'Legacy: Herd Comfort Max',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 2,
     max: 12,
     step: 0.5,
@@ -266,8 +279,8 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingComfortMin: {
-    label: 'Comfort Min (Reserved)',
-    description: 'Resolved but currently unused in steering logic (reserved).',
+    label: 'Legacy: Comfort Min (Reserved)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 10,
     step: 0.5,
@@ -277,8 +290,8 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingSeparationMultiplier: {
-    label: 'Separation Multiplier',
-    description: 'Scales separation contribution.',
+    label: 'Legacy: Separation Multiplier',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.5,
     max: 4,
     step: 0.1,
@@ -287,8 +300,8 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingOffsetDeadzone: {
-    label: 'Offset Deadzone',
-    description: 'Deadzone for herding offset.',
+    label: 'Legacy: Offset Deadzone',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 0.2,
     step: 0.01,
@@ -297,8 +310,8 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingOffsetSmoothing: {
-    label: 'Offset Smoothing',
-    description: 'Smoothing factor for herding offset.',
+    label: 'Legacy: Offset Smoothing',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.05,
@@ -307,8 +320,8 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingHeadingBlendMax: {
-    label: 'Herd Heading Blend',
-    description: 'Max heading blend factor.',
+    label: 'Legacy: Herd Heading Blend',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 0.5,
     step: 0.05,
@@ -317,14 +330,15 @@ export const metaHerding1 = {
     advanced: true
   },
   creatureHerdingTargetBlendEnabled: {
-    label: 'Target Blend Enabled',
-    description: 'Blend toward targets during herding.',
+    label: 'Legacy: Target Blend Enabled',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     type: 'boolean',
-    category: 'herding'
+    category: 'herding',
+    advanced: true
   },
   creatureHerdingTargetBlendMax: {
-    label: 'Target Blend Max',
-    description: 'Max target blend amount.',
+    label: 'Legacy: Target Blend Max',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 0.35,
     step: 0.01,

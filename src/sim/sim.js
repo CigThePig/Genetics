@@ -1,3 +1,4 @@
+import { updateLocomotionGoals } from './creatures/locomotion.js';
 import { recordColourHistory } from './colour-metrics.js';
 import { updateBehaviorIntegration } from './creatures/behavior-integration.js';
 import { simConfig } from './config.js';
@@ -179,6 +180,13 @@ export function createSim(config = simConfig) {
           world: state.world
         });
         perf?.end('tick.pack', tPack);
+
+        updateLocomotionGoals({
+          creatures: state.creatures,
+          config: resolvedConfig,
+          rng,
+          world: state.world
+        });
 
         updateBehaviorIntegration({
           creatures: state.creatures,

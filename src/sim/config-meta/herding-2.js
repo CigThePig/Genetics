@@ -1,7 +1,7 @@
 export const metaHerding2 = {
   creatureHerdingTargetBlendIsolationBoost: {
-    label: 'Isolation Boost',
-    description: 'Extra blend when isolated.',
+    label: 'Legacy: Isolation Boost',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 0.5,
     step: 0.01,
@@ -46,159 +46,175 @@ export const metaHerding2 = {
     control: 'slider'
   },
   creatureHerdingRegroupStrength: {
-    label: 'Regroup Strength',
-    description: 'Strength of regroup pull.',
+    label: 'Legacy: Regroup Strength',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.05,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingRegroupIntervalSeconds: {
-    label: 'Regroup Interval (s)',
-    description: 'Seconds between regroup evaluations.',
+    label: 'Legacy: Regroup Interval (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.1,
     max: 5,
     step: 0.1,
     unit: 's',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorEnabled: {
-    label: 'Anchor Enabled',
-    description: 'Enable herd anchor system.',
+    label: 'Legacy: Anchor Enabled',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     type: 'boolean',
-    category: 'herding'
+    category: 'herding',
+    advanced: true
   },
   creatureHerdingAnchorEvalSeconds: {
-    label: 'Anchor Eval (s)',
-    description: 'Seconds between anchor evaluations.',
+    label: 'Legacy: Anchor Eval (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.25,
     max: 6,
     step: 0.25,
     unit: 's',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorCooldownSeconds: {
-    label: 'Anchor Cooldown (s)',
-    description: 'Cooldown after anchor switch.',
+    label: 'Legacy: Anchor Cooldown (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.25,
     max: 6,
     step: 0.25,
     unit: 's',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorSearchRadius: {
-    label: 'Anchor Search Radius',
-    description: 'Radius for anchor candidates.',
+    label: 'Legacy: Anchor Search Radius',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 5,
     max: 120,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorCandidateCount: {
-    label: 'Anchor Candidates',
-    description: 'Number of anchor candidates.',
+    label: 'Legacy: Anchor Candidates',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 1,
     max: 40,
     step: 1,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorDriftSpeed: {
-    label: 'Anchor Drift Speed',
-    description: 'Anchor drift speed toward target.',
+    label: 'Legacy: Anchor Drift Speed',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 10,
     step: 0.1,
     unit: 'tiles/s',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorPullStrength: {
-    label: 'Anchor Pull Strength',
-    description: 'Strength of anchor pull.',
+    label: 'Legacy: Anchor Pull Strength',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 2,
     step: 0.05,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorSoftRadiusBase: {
-    label: 'Anchor Soft Radius Base',
-    description: 'Base soft radius for anchor pull.',
+    label: 'Legacy: Anchor Soft Radius Base',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 5,
     max: 120,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorSoftRadiusScale: {
-    label: 'Anchor Soft Radius Scale',
-    description: 'Scale for soft radius vs herd size.',
+    label: 'Legacy: Anchor Soft Radius Scale',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.1,
     max: 3,
     step: 0.05,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorMaxInfluenceDistance: {
-    label: 'Anchor Max Influence',
-    description: 'Max distance for anchor pull.',
+    label: 'Legacy: Anchor Max Influence',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 5,
     max: 120,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorFoodSampleRadius: {
-    label: 'Anchor Food Radius',
-    description: 'Food sampling radius for anchors (at least one tile).',
+    label: 'Legacy: Anchor Food Radius',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 1,
     max: 120,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorWaterSearchMax: {
-    label: 'Anchor Water Search',
-    description: 'Max steps for water search scoring.',
+    label: 'Legacy: Anchor Water Search',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 5,
     max: 120,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorThreatHalfLifeSeconds: {
-    label: 'Anchor Threat Half-Life (s)',
-    description: 'Threat decay half-life for anchors.',
+    label: 'Legacy: Anchor Threat Half-Life (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 1,
     max: 30,
     step: 0.5,
     unit: 's',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorSwitchMargin: {
-    label: 'Anchor Switch Margin',
-    description: 'Margin required to switch anchors.',
+    label: 'Legacy: Anchor Switch Margin',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.1,
     max: 1,
     step: 0.05,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureHerdingAnchorRandomness: {
-    label: 'Anchor Randomness',
-    description: 'Randomness added to anchor scores.',
+    label: 'Legacy: Anchor Randomness',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 0.25,
     step: 0.01,
@@ -213,52 +229,57 @@ export const metaHerding2 = {
     category: 'herding'
   },
   creatureWaterRendezvousEvalSeconds: {
-    label: 'Water Rendezvous Eval (s)',
-    description: 'Seconds between rendezvous evaluation.',
+    label: 'Legacy: Water Rendezvous Eval (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.25,
     max: 12,
     step: 0.25,
     unit: 's',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureWaterRendezvousCooldownSeconds: {
-    label: 'Water Rendezvous Cooldown (s)',
-    description: 'Cooldown after switching rendezvous.',
+    label: 'Legacy: Water Rendezvous Cooldown (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.25,
     max: 12,
     step: 0.25,
     unit: 's',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureWaterRendezvousSearchRadius: {
-    label: 'Water Rendezvous Radius',
-    description: 'Search radius for rendezvous targets.',
+    label: 'Legacy: Water Rendezvous Radius',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 5,
     max: 120,
     step: 1,
     unit: 'tiles',
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureWaterRendezvousCandidateCount: {
-    label: 'Water Rendezvous Candidates',
-    description: 'Candidates evaluated per species.',
+    label: 'Legacy: Water Rendezvous Candidates',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 4,
     max: 32,
     step: 1,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureWaterRendezvousThirstPressureThreshold: {
-    label: 'Water Rendezvous Pressure',
-    description: 'Thirst pressure needed to evaluate.',
+    label: 'Legacy: Water Rendezvous Pressure',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 0.5,
     step: 0.01,
     category: 'herding',
-    control: 'slider'
+    control: 'slider',
+    advanced: true
   },
   creatureWaterRendezvousMaxDistance: {
     label: 'Water Rendezvous Max Dist',
@@ -271,10 +292,11 @@ export const metaHerding2 = {
     control: 'slider'
   },
   creatureWaterRendezvousPreferHerdAnchor: {
-    label: 'Water Rendezvous Anchor',
-    description: 'Prefer herd anchor for sampling.',
+    label: 'Legacy: Water Rendezvous Anchor',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     type: 'boolean',
-    category: 'herding'
+    category: 'herding',
+    advanced: true
   },
   creatureWaterRendezvousCommitSeconds: {
     label: 'Water Rendezvous Commit (s)',
@@ -298,8 +320,8 @@ export const metaHerding2 = {
     advanced: true
   },
   creaturePostDrinkRegroupAnchorBoost: {
-    label: 'Post-Drink Anchor Boost',
-    description: 'Boost anchor pull after drinking.',
+    label: 'Legacy: Post-Drink Anchor Boost',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.02,
@@ -308,8 +330,8 @@ export const metaHerding2 = {
     advanced: true
   },
   creaturePostDrinkRegroupDeadzoneMultiplier: {
-    label: 'Post-Drink Deadzone Mult',
-    description: 'Deadzone multiplier after drinking.',
+    label: 'Legacy: Post-Drink Deadzone Mult',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.02,
@@ -318,8 +340,8 @@ export const metaHerding2 = {
     advanced: true
   },
   creaturePostDrinkRegroupTargetBlendBoost: {
-    label: 'Post-Drink Target Blend',
-    description: 'Target blend boost after drinking.',
+    label: 'Legacy: Post-Drink Target Blend',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.02,

@@ -138,8 +138,8 @@ export const metaMovement1 = {
     control: 'slider'
   },
   creatureWanderInHerdRetargetMultiplier: {
-    label: 'Wander Herd Retarget Mult',
-    description: 'Retarget interval multiplier in herds.',
+    label: 'Legacy: Wander Herd Retarget Mult',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.1,
     max: 3,
     step: 0.05,
@@ -148,8 +148,8 @@ export const metaMovement1 = {
     advanced: true
   },
   creatureWanderInHerdJitterMultiplier: {
-    label: 'Wander Herd Jitter Mult',
-    description: 'Jitter multiplier in herds.',
+    label: 'Legacy: Wander Herd Jitter Mult',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0.1,
     max: 3,
     step: 0.05,
@@ -158,8 +158,8 @@ export const metaMovement1 = {
     advanced: true
   },
   creatureWanderInHerdHeadingBias: {
-    label: 'Wander Herd Heading Bias',
-    description: 'Bias toward herd heading.',
+    label: 'Legacy: Wander Herd Heading Bias',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.05,
@@ -168,8 +168,8 @@ export const metaMovement1 = {
     advanced: true
   },
   creatureGrazeSpeedMultiplier: {
-    label: 'Graze Speed Mult',
-    description: 'Speed multiplier while grazing.',
+    label: 'Legacy: Graze Speed Mult',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 1,
     step: 0.05,
@@ -188,8 +188,8 @@ export const metaMovement1 = {
     advanced: true
   },
   creatureGrazeIdleSecondsMin: {
-    label: 'Graze Idle Min (s)',
-    description: 'Min idle time while grazing.',
+    label: 'Legacy: Graze Idle Min (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 10,
     step: 0.5,
@@ -199,8 +199,8 @@ export const metaMovement1 = {
     advanced: true
   },
   creatureGrazeIdleSecondsMax: {
-    label: 'Graze Idle Max (s)',
-    description: 'Max idle time while grazing.',
+    label: 'Legacy: Graze Idle Max (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 12,
     step: 0.5,
@@ -210,8 +210,8 @@ export const metaMovement1 = {
     advanced: true
   },
   creatureGrazeMoveSecondsMin: {
-    label: 'Graze Move Min (s)',
-    description: 'Min move time while grazing.',
+    label: 'Legacy: Graze Move Min (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 10,
     step: 0.5,
@@ -221,8 +221,8 @@ export const metaMovement1 = {
     advanced: true
   },
   creatureGrazeMoveSecondsMax: {
-    label: 'Graze Move Max (s)',
-    description: 'Max move time while grazing.',
+    label: 'Legacy: Graze Move Max (s)',
+    description: 'Legacy preset compatibility. Inactive in the local goal engine.',
     min: 0,
     max: 12,
     step: 0.5,

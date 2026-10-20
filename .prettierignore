@@ -1,3 +1,6 @@
 node_modules/
 dist/
 coverage/
+
+# Machine-generated telemetry and motion recordings
+tracks/2026-10-20-pre-track12-foundation/evidence/

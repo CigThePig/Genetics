@@ -323,8 +323,9 @@ describe('repository audit: predator rest and initial visibility', () => {
       tick: 1,
       config: { creaturePredatorRestThreshold: 0.75, creaturePredatorHuntThreshold: 0.5 }
     });
-    expect(c.intent.type).toBe('wander');
-    c.meters.energy = 0.4;
+    expect(c.intent.type).toBe('seek');
+    expect(c.intent.foodType).toBeNull();
+    c.meters.energy = 0.3;
     updateCreatureIntent({
       creatures: [c],
       world,

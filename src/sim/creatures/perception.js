@@ -142,6 +142,8 @@ export function updateCreaturePerception({ creatures, config, world }) {
           });
           const choice = selectFoodChoice({
             species: creature.species,
+            creature,
+            config,
             availability,
             minimums
           });
