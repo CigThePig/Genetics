@@ -448,16 +448,105 @@ describe('soft mate choice and lifecycle consistency', () => {
       expect(source.intent.target).toEqual(substitute.position);
     }
   );
+  it.each([false, true])(
+    'keeps valid commitments across drinking, distance and expiry (index %s)',
+    (indexed) => {
+      const source = animal(2),
+        mate = animal(3, 'circle', 12),
+        nearer = animal(5, 'circle', 10.5),
+        rival = animal(4, 'circle', 14);
+      const creatures = [source, mate, nearer, rival],
+        index = createSpatialIndex();
+      index.rebuild(creatures);
+      const opts = selectionOptions(source, creatures, {
+        maxDistanceSq: 9,
+        spatialIndex: indexed ? index : null
+      });
+      source.intent = { type: 'drink' };
+      source.reproduction.mate = { targetId: mate.id, commitTicksRemaining: 5 };
+      expect(findMate(opts)).toBe(mate);
+      source.intent = { type: 'eat' };
+      mate.position.x = 20;
+      index.rebuild(creatures);
+      expect(findMate(opts)).toBeNull();
+      source.reproduction.mate.commitTicksRemaining = 0;
+      expect(findMate(opts)).toBe(nearer);
+      source.reproduction.mate.commitTicksRemaining = 5;
+      mate.meters.hp = 0;
+      expect(findMate(opts)).toBe(nearer);
+      mate.meters.hp = 1;
+      mate.position.x = 12;
+      index.rebuild(creatures);
+      mate.intent = { type: 'drink' };
+      mate.reproduction.mate = { targetId: rival.id, commitTicksRemaining: 5 };
+      expect(findMate(opts)).toBeNull();
+      mate.reproduction.mate.commitTicksRemaining = 0;
+      expect(findMate(opts)).toBe(mate);
+    }
+  );
+  it.each([false, true])(
+    'does not recruit an animal committed to another valid mate after it eats (index %s)',
+    (indexed) => {
+      const source = animal(2),
+        nearer = animal(3, 'circle', 11),
+        farther = animal(5, 'circle', 12),
+        rival = animal(4, 'circle', 14);
+      const creatures = [source, nearer, farther, rival],
+        index = createSpatialIndex();
+      index.rebuild(creatures);
+      const opts = selectionOptions(source, creatures, {
+        maxDistanceSq: 9,
+        spatialIndex: indexed ? index : null
+      });
+      nearer.intent = { type: 'eat' };
+      nearer.reproduction.mate = { targetId: rival.id, commitTicksRemaining: 8 };
+      expect(findMate(opts)).toBe(farther);
+      nearer.reproduction.mate.commitTicksRemaining = 0;
+      expect(findMate(opts)).toBe(nearer);
+      nearer.reproduction.mate.commitTicksRemaining = 8;
+      rival.meters.hp = 0;
+      expect(findMate(opts)).toBe(nearer);
+    }
+  );
+  it.each([false, true])(
+    'conceives with the committed father despite temporary drinking intent (index %s)',
+    (indexed) => {
+      const mother = animal(2),
+        father = animal(3, 'circle', 12),
+        nearer = animal(5, 'circle', 10.5),
+        creatures = [mother, father, nearer];
+      mother.intent = { type: 'drink' };
+      mother.reproduction.mate = { targetId: father.id, commitTicksRemaining: 8 };
+      const index = createSpatialIndex();
+      index.rebuild(creatures);
+      updateCreatureReproduction({
+        creatures,
+        world: worldOf('sand'),
+        config: {
+          ...simConfig,
+          creatureReproductionMinAge: 0,
+          creatureReproductionMinEnergyRatio: 0,
+          creatureReproductionMinWaterRatio: 0,
+          creatureReproductionRange: 4,
+          creatureConceptionChance: 1
+        },
+        rng: createRng(12),
+        spatialIndex: indexed ? index : null
+      });
+      expect(mother.reproduction.pregnancy.fatherId).toBe(father.id);
+    }
+  );
   it('honors a pursued mate over a nearer substitute and waits for distant commitments', () => {
     const source = animal(2),
       mate = animal(3, 'circle', 12),
-      other = animal(5, 'circle', 10.5);
+      other = animal(5, 'circle', 10.5),
+      rival = animal(4, 'circle', 14);
     source.intent = { type: 'mate' };
     source.reproduction.mate = { targetId: mate.id, commitTicksRemaining: 50 };
-    const opts = selectionOptions(source, [source, mate, other], { maxDistanceSq: 9 });
+    const opts = selectionOptions(source, [source, mate, other, rival], { maxDistanceSq: 9 });
     expect(findMate(opts)).toBe(mate);
     mate.intent = { type: 'mate' };
-    mate.reproduction.mate = { targetId: other.id };
+    mate.reproduction.mate = { targetId: rival.id, commitTicksRemaining: 50 };
     expect(findMate(opts)).toBeNull();
     mate.intent = { type: 'wander' };
     mate.position.x = 20;
@@ -465,8 +554,13 @@ describe('soft mate choice and lifecycle consistency', () => {
     mate.meters.hp = 0;
     expect(findMate(opts)).toBe(other);
     other.intent = { type: 'mate' };
-    other.reproduction.mate = { targetId: 999 };
+    other.reproduction.mate = { targetId: rival.id, commitTicksRemaining: 50 };
     expect(findMate(opts)).toBeNull();
+    other.reproduction.mate.commitTicksRemaining = 0;
+    expect(findMate(opts)).toBe(other);
+    other.reproduction.mate.commitTicksRemaining = 50;
+    rival.meters.hp = 0;
+    expect(findMate(opts)).toBe(other);
   });
   it('conceives with the pursued father and inherits his saved colour after death', () => {
     const mother = animal(2),
