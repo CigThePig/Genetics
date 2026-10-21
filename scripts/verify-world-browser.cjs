@@ -3,6 +3,8 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const fs = require('node:fs');
 const { resolve } = require('node:path');
 const { spawn } = require('node:child_process');
+const { createInterface } = require('node:readline');
+const { stripVTControlCharacters } = require('node:util');
 const arg = (k, d) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? d;
 const root = resolve(arg('root', '.')),
   out = resolve(arg('out', 'tracks/2026-10-21-world-generation/evidence/browser'));
@@ -21,8 +23,8 @@ const root = resolve(arg('root', '.')),
     { cwd: root }
   );
   await new Promise((res, rej) => {
-    server.stdout.on('data', (d) => {
-      if (d.toString().includes('Local:')) res();
+    createInterface({ input: server.stdout }).on('line', (line) => {
+      if (stripVTControlCharacters(line).includes('Local:')) res();
     });
     server.on('error', rej);
     server.on('exit', (c) => {

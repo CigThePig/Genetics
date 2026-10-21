@@ -2,6 +2,8 @@
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const fs = require('node:fs');
 const { spawn } = require('node:child_process');
+const { createInterface } = require('node:readline');
+const { stripVTControlCharacters } = require('node:util');
 const assert = require('node:assert/strict');
 const out = 'tracks/2026-10-21-world-generation/evidence/app';
 (async () => {
@@ -17,8 +19,8 @@ const out = 'tracks/2026-10-21-world-generation/evidence/app';
   let browser;
   try {
     await new Promise((res, rej) => {
-      server.stdout.on('data', (d) => {
-        if (d.toString().includes('Local:')) res();
+      createInterface({ input: server.stdout }).on('line', (line) => {
+        if (stripVTControlCharacters(line).includes('Local:')) res();
       });
       server.on('error', rej);
       server.on('exit', (code) => rej(Error(`Vite exited before readiness (${code})`)));

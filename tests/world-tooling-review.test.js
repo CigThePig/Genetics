@@ -39,13 +39,18 @@ describe('world diagnostic review regressions', () => {
         stub,
         "exports.chromium = { launch: async () => { throw Error('controlled launch failure'); } };\n"
       );
+      const env = { ...process.env, PLAYWRIGHT_MODULE: stub, FORCE_COLOR: '1' };
+      delete env.NO_COLOR;
       const result = spawnSync(process.execPath, ['scripts/verify-world-app.cjs'], {
         cwd: process.cwd(),
-        env: { ...process.env, PLAYWRIGHT_MODULE: stub },
+        env,
         timeout: 10000,
         encoding: 'utf8'
       });
-      expect(result.error).toBeUndefined();
+      expect(
+        result.error,
+        JSON.stringify({ stdout: result.stdout, stderr: result.stderr })
+      ).toBeUndefined();
       expect(result.status).toBe(1);
       expect(result.stderr).toContain('controlled launch failure');
     } finally {
