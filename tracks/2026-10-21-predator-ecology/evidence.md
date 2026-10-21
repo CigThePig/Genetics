@@ -1,5 +1,7 @@
 # Predator extinction: evidence and remaining limits
 
+> These ecological measurements describe reviewed commit `480f599`. Subsequent PR #139 review corrections and their separately executed validation are documented in [review.md](review.md); the original archives and hashes are retained as historical evidence.
+
 ## Executive finding
 
 Corrected main repeatedly loses predators primarily through **failed demographic replacement, not an inability to make kills or global prey exhaustion**. Across ten 72,000-tick observations, 80 predator founders produce just 11 offspring; 77 of 91 predator deaths are age and 14 thirst. Neither predator species reaches a sampled generation above one, and both disappear in every seed by twenty minutes.

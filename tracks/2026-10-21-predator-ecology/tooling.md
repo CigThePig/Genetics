@@ -46,3 +46,7 @@ node scripts/benchmark-ecology.mjs ../Genetics-baseline .
 The driver inspects actual default worlds at successive times, a labelled observed-contact fixture, read-only rendering and mobile controls. Screenshots are lightweight optional evidence; no video/export is required. Research scripts do not enter the production bundle. Run browser scripts separately from resource-intensive batches for meaningful performance observations.
 
 Archived raw outputs use `.jsonl.gz`; for example `gzip -dc evidence/final-1.jsonl.gz` from the track directory reads the forty-minute run. `compact-ecology.py` preserves counters/events/hashes, retains individual predator traits, and replaces redundant herbivore trait records with initial/final species distributions. `summarize-ecology.py` reads either archived gzip or fresh JSONL. `performance.jsonl` remains directly readable. The archived controls named `*-release` use the final full aging-stage fixture; earlier controlled snapshots are explicitly exploratory and are not the final ecological claims.
+
+## PR #139 review corrections
+
+The original long-run archives and `evidence/provenance.json` describe reviewed commit `480f599`, before the three Codex corrections. See [review.md](review.md) for the correction protocol. `evidence/review-provenance.json` records corrected source fingerprints, and `evidence/review-soak.log` records the fresh three-seed 36,000-tick checks. Do not apply the earlier full-state hashes or ten-seed population results to the corrected source.

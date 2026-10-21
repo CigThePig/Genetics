@@ -354,7 +354,7 @@ Rules:
 ## Predator extinction investigation
 
 - tracks/2026-10-21-predator-ecology/
-  - Specification, mechanism design, phased progress, exact experiments, source variants, paired ecological evidence and limits.
+  - Specification, mechanism design, phased progress, exact experiments, source variants, paired ecological evidence and limits; review.md records PR #139 corrections and separate validation.
 - src/sim/creatures/mate-memory.js
   - Creature-owned observed social contacts; bounded retention, visits and reachable last-location selection without hidden live tracking.
 - src/sim/creatures/intent.js, actions.js, combat.js, death.js, metrics-factory.js

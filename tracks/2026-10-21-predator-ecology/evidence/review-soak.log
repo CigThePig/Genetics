@@ -1,0 +1,8 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> genetics@0.0.0 test:soak
+> node scripts/verify-simulation.mjs --ticks=36000
+
+{"seed":1,"ticks":36000,"maxPopulation":171,"deathsFirstMinute":0,"medianDeathSeconds":534.0166666666667,"population":144,"species":[73,4,60,7],"pregnancies":173,"births":154,"chases":89,"kills":22,"deaths":90,"hash":"78760dd08519d277eaf45e3209893cae17873f488920efbb0c26cdb4e37674b2"}
+{"seed":42,"ticks":36000,"maxPopulation":155,"deathsFirstMinute":0,"medianDeathSeconds":519.1666666666666,"population":109,"species":[38,6,61,4],"pregnancies":137,"births":124,"chases":79,"kills":20,"deaths":95,"hash":"ec26739fd81ed3ba36425869d81120e811004d6dde57b0eca449b646590302e2"}
+{"seed":1337,"ticks":36000,"maxPopulation":171,"deathsFirstMinute":0,"medianDeathSeconds":515.25,"population":151,"species":[53,6,88,4],"pregnancies":174,"births":158,"chases":56,"kills":16,"deaths":87,"hash":"0384b48c5b749cce674114075dc1cc1970b67aaf8815ee358d164979d8e798bf"}
