@@ -9,6 +9,8 @@ export function generateTerrain({ world, rng, config = {} }) {
   if (!world || !rng) return;
   const { width, height, cells } = world,
     size = cells.length;
+  // Regeneration may reuse a grid: old water/shore cannot become input masks.
+  cells.fill('plains');
   world.waterTerrainType = config.waterTerrain ?? 'water';
   const noise = createNoise(deriveSeed(config.seed ?? 1, 'geography'));
   const climate = createNoise(deriveSeed(config.seed ?? 1, 'climate'));

@@ -8,3 +8,5 @@
 - Diagnostic tools load baseline or current checkout and record identical protocols. Baseline remains pinned to main `971e656`.
 
 Risks: drainage barriers, sparse population in large worlds, climate/colour changes altering selection, grass scans scaling with area. Preserve natural ecological failures; measure before tuning or changing defaults.
+
+Browser comparisons use the production `createAppLoop` timer/RAF driver with real simulation/rendering and no-op panel callbacks, rather than coupling ticks to RAF. Full application UI/clock behavior is checked separately by `verify-world-app.cjs`. Camera movement and cache refresh remain enabled in the engine/render profiles.

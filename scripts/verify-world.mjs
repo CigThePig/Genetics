@@ -9,7 +9,7 @@ const arg = (k, d) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k
 const root = resolve(arg('root', '.'));
 const load = (p) => import(pathToFileURL(resolve(root, p)));
 const { createSim } = await load('src/sim/sim.js');
-const { analyzeHabitats } = await load('src/sim/habitat-analysis.js');
+const { analyzeHabitats, neighborsOf } = await load('src/sim/habitat-analysis.js');
 const { generateTerrain } = await load('src/sim/regional-terrain.js');
 const { createWorldGrid } = await load('src/sim/world-grid.js');
 const { createRng } = await load('src/sim/rng.js');
@@ -22,7 +22,8 @@ const fingerprint = createHash('sha256')
       'src/sim/hydrology.js',
       'src/sim/sim.js',
       'src/sim/rng.js',
-      'src/sim/plants/grass.js'
+      'src/sim/plants/grass.js',
+      'src/sim/creatures/spawn.js'
     ]
       .map((p) => {
         try {
@@ -63,6 +64,42 @@ for (const seed of seeds) {
     times.push(performance.now() - t);
   }
   const analysis = analyzeHabitats(world);
+  // Existing access metrics conservatively measure permanent-water adjacency.
+  // Actual drinking also recognizes traversable wet headwaters/shore and the
+  // action system's one-cell neighbourhood, so measure that contract separately.
+  const drinkDistance = new Int32Array(world.cells.length).fill(-1),
+    queue = [];
+  for (let i = 0; i < world.cells.length; i++) {
+    if (world.cells[i] === config.waterTerrain) continue;
+    const x = i % width,
+      y = Math.floor(i / width);
+    let drinkable = false;
+    for (let dy = -1; dy <= 1; dy++)
+      for (let dx = -1; dx <= 1; dx++)
+        if (world.isWaterAt(x + dx, y + dy, config.waterTerrain, config.shoreTerrain))
+          drinkable = true;
+    if (drinkable) {
+      drinkDistance[i] = 0;
+      queue.push(i);
+    }
+  }
+  for (let head = 0; head < queue.length; head++)
+    for (const j of neighborsOf(queue[head], width, height)) {
+      if (world.cells[j] === config.waterTerrain || drinkDistance[j] >= 0) continue;
+      drinkDistance[j] = drinkDistance[queue[head]] + 1;
+      queue.push(j);
+    }
+  const actual = Array.from(drinkDistance).filter((d) => d >= 0);
+  analysis.drinkingDistanceP95 = percentile(actual, 0.95);
+  analysis.drinkingReachableFraction =
+    actual.length / (world.cells.length - (analysis.counts[config.waterTerrain] ?? 0));
+  analysis.spawnSuitableCells = world.cells.filter(
+    (type, i) =>
+      ['forest', 'plains'].includes(type) &&
+      world.habitatAccess.mainLand[i] &&
+      world.habitatAccess.waterDistance[i] >= 0 &&
+      world.habitatAccess.waterDistance[i] <= Math.max(12, Math.min(width, height) * 0.22)
+  ).length;
   // PPM uses the actual shared colour model; the browser runner captures the complete renderer.
   const bytes = Buffer.alloc(width * height * 3);
   for (let i = 0; i < world.cells.length; i++)
@@ -154,6 +191,25 @@ for (const seed of seeds) {
         assert(Object.values(c.meters).every((v) => Number.isFinite(v) && v >= 0));
       }
       assert.equal(s.creatureCount, population + s.birthsTotal - s.deathsTotal);
+      if (t % 6000 === 0 && arg('progress', 'false') === 'true') {
+        writeFileSync(
+          `${out}/seed-${seed}.progress`,
+          JSON.stringify({
+            seed,
+            ticks: t,
+            sample: samples.at(-1),
+            elapsedMs: performance.now() - startTicks
+          })
+        );
+        console.error(
+          JSON.stringify({
+            progress: true,
+            seed,
+            ticks: t,
+            elapsedMs: performance.now() - startTicks
+          })
+        );
+      }
     }
   }
   const elapsedMs = performance.now() - startTicks;

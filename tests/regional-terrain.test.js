@@ -2,6 +2,7 @@ import { simConfig } from '../src/sim/config.js';
 import { describe, it, expect } from 'vitest';
 import { generateTerrain } from '../src/sim/regional-terrain.js';
 import { createWorldGrid } from '../src/sim/world-grid.js';
+import { createCreatures } from '../src/sim/creatures/spawn.js';
 import { createSim } from '../src/sim/sim.js';
 import { createCamera } from '../src/render/camera.js';
 import { createRng, deriveSeed } from '../src/sim/rng.js';
@@ -102,6 +103,18 @@ describe('geography integration invariants', () => {
     }
     expect(Math.abs(sinkFlow - runoff) / runoff).toBeLessThan(0.00001);
   });
+  it('regenerates reused and non-land-default grids exactly like a fresh grid', () => {
+    const reused = make(1);
+    const config = { ...simConfig, seed: 42, terrainWaterCoverageMultiplier: 0.5 };
+    generateTerrain({ world: reused, rng: createRng(42), config });
+    const fresh = make(42, 120, 160, { terrainWaterCoverageMultiplier: 0.5 });
+    expect(reused.cells).toEqual(fresh.cells);
+    expect(reused.heightMap).toEqual(fresh.heightMap);
+    expect(reused.habitatAccess.waterDistance).toEqual(fresh.habitatAccess.waterDistance);
+    const initialWater = createWorldGrid({ width: 120, height: 160, defaultTerrain: 'water' });
+    generateTerrain({ world: initialWater, rng: createRng(42), config });
+    expect(initialWater.cells).toEqual(fresh.cells);
+  });
   it('derives biomes from climate and relief rather than assigning climate to labels', () => {
     const world = make(42);
     const mean = (field, type) => {
@@ -132,6 +145,31 @@ describe('geography integration invariants', () => {
     const spawn = createRng(deriveSeed(42, 'creatures'));
     for (let i = 0; i < 100; i++) terrain.nextFloat();
     expect(spawn.nextFloat()).toBe(createRng(deriveSeed(42, 'creatures')).nextFloat());
+  });
+  it.each([
+    [120, 160],
+    [240, 320],
+    [400, 400]
+  ])('keeps founding cohorts physically local at %i × %i', (width, height) => {
+    for (const seed of [1, 42, 1337]) {
+      const world = createWorldGrid({ width, height });
+      const creatures = createCreatures({ world, config: simConfig, rng: createRng(seed) });
+      const predators = creatures.filter((c) => ['triangle', 'octagon'].includes(c.species));
+      const prey = creatures.filter((c) => ['square', 'circle'].includes(c.species));
+      for (const p of predators) {
+        const nearest = Math.min(
+          ...prey.map((c) => Math.hypot(c.position.x - p.position.x, c.position.y - p.position.y))
+        );
+        // Physical annulus, two species offsets and two individual jitters.
+        expect(nearest).toBeLessThanOrEqual(
+          simConfig.creatureSpawnPredatorAnchorDistance * 2 +
+            2 * Math.SQRT2 * simConfig.creatureSpawnSpeciesAnchorSpread +
+            simConfig.creatureSpawnClusterJitter * 2
+        );
+      }
+      expect(creatures).toHaveLength(80);
+      expect(predators).toHaveLength(8);
+    }
   });
   it('fits enlarged maps on narrow viewports while retaining pan bounds', () => {
     const camera = createCamera({ minZoom: 0.1 });

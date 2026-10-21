@@ -186,26 +186,44 @@ export function createCreatures({ config, rng, world }) {
     if (!origin || minDistance <= 0) {
       return findRandomLandPosition(attempts);
     }
-    const minDistanceSq = minDistance * minDistance;
-    let fallback = null;
-    let fallbackDistSq = -1;
-
+    // Founders form one local ecological community. A minimum-distance draw
+    // across the entire world silently separates predator/prey cohorts farther
+    // as the map grows. Keep the same physical annulus at every world size.
+    const maxDistance = minDistance * 2;
     for (let attempt = 0; attempt < attempts; attempt += 1) {
-      const position = randomPosition();
-      if (!resolveLandPosition(position)) continue;
-      const dx = position.x - origin.x;
-      const dy = position.y - origin.y;
-      const distSq = dx * dx + dy * dy;
-      if (distSq >= minDistanceSq) {
+      const angle = rng.nextFloat() * Math.PI * 2;
+      const distance = Math.sqrt(
+        minDistance ** 2 + rng.nextFloat() * (maxDistance ** 2 - minDistance ** 2)
+      );
+      const position = {
+        x: origin.x + Math.cos(angle) * distance,
+        y: origin.y + Math.sin(angle) * distance
+      };
+      if (
+        position.x >= 0 &&
+        position.y >= 0 &&
+        position.x < width &&
+        position.y < height &&
+        resolveLandPosition(position)
+      )
         return position;
-      }
-      if (distSq > fallbackDistSq) {
-        fallback = position;
-        fallbackDistSq = distSq;
-      }
     }
-
-    return fallback ?? findRandomLandPosition();
+    // Difficult/small maps may have no suitable land in that annulus. Prefer
+    // the nearest physically suitable band, not the most distant world corner.
+    let fallback = null,
+      bestPenalty = Infinity;
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const position = { x: x + 0.5, y: y + 0.5 };
+        if (!resolveLandPosition(position)) continue;
+        const distance = Math.hypot(position.x - origin.x, position.y - origin.y);
+        const penalty = Math.max(0, minDistance - distance, distance - maxDistance);
+        if (penalty < bestPenalty) {
+          bestPenalty = penalty;
+          fallback = position;
+        }
+      }
+    return fallback ?? findFallbackLandPosition();
   };
 
   const clampToWorld = (value, max) => Math.max(0, Math.min(max - 0.001, value));

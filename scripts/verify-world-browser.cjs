@@ -43,6 +43,12 @@ const root = resolve(arg('root', '.')),
       ]
     });
     const results = [];
+    const saveCanvas = async (page, path) => {
+      const data = await page.evaluate(() =>
+        document.querySelector('canvas').toDataURL('image/png')
+      );
+      fs.writeFileSync(path, Buffer.from(data.split(',')[1], 'base64'));
+    };
     for (const mobile of [false, true]) {
       const page = await browser.newPage({
         viewport: mobile ? { width: 390, height: 844 } : { width: 1280, height: 900 },
@@ -55,7 +61,7 @@ const root = resolve(arg('root', '.')),
       await page.route('**/Genetics/world-bench', (r) =>
         r.fulfill({
           contentType: 'text/html',
-          body: '<html><body style="margin:0;background:#101820"></body></html>'
+          body: '<html><head><meta name="viewport" content="width=device-width,initial-scale=1"></head><body style="margin:0;background:#101820"></body></html>'
         })
       );
       await page.goto('http://127.0.0.1:5197/Genetics/world-bench');
@@ -80,11 +86,12 @@ const root = resolve(arg('root', '.')),
         for (const rate of [60, 120])
           for (let trial = 0; trial < Number(arg('trials', 3)); trial++) {
             const result = await page.evaluate(
-              async ({ width, height, trial, rate, duration }) => {
+              async ({ width, height, trial, rate, duration, hunting }) => {
                 const { createPerfSampler } = await import('/Genetics/src/metrics/perf.js');
                 const { setActivePerf } = await import('/Genetics/src/metrics/perf-registry.js');
                 const perf = createPerfSampler({ windowMs: 1e9 });
                 setActivePerf(perf);
+                const { createAppLoop } = await import('/Genetics/src/app/loop.js');
                 const a = window.bench;
                 window.allocations = [];
                 let start = performance.now();
@@ -105,41 +112,90 @@ const root = resolve(arg('root', '.')),
                 sim.setSeed(42);
                 a.renderer.render(sim, { immediate: true });
                 const resetMs = performance.now() - resetStart;
+                if (hunting) {
+                  const predators = sim.state.creatures.filter((c) =>
+                    ['triangle', 'octagon'].includes(c.species)
+                  );
+                  const prey = sim.state.creatures.filter((c) =>
+                    ['square', 'circle'].includes(c.species)
+                  );
+                  for (const c of sim.state.creatures) {
+                    c.ageTicks = 120 * 60;
+                    c.meters.water = 0.9;
+                  }
+                  for (let k = 0; k < predators.length; k++) {
+                    const c = predators[k];
+                    c.meters.energy = 0.4;
+                    const target = prey[k];
+                    for (let d = 3; d <= 8; d++) {
+                      const x = Math.floor(c.position.x) + d,
+                        y = Math.floor(c.position.y);
+                      if (
+                        sim.state.world.isInBounds(x, y) &&
+                        sim.state.world.getTerrainAt(x, y) !== 'water'
+                      ) {
+                        target.position = { x: x + 0.5, y: y + 0.5 };
+                        target.meters.energy = 0.8;
+                        break;
+                      }
+                    }
+                  }
+                }
+
                 for (let w = 0; w < 30; w++) await new Promise(requestAnimationFrame);
                 const frames = [],
                   renders = [],
-                  ticks = [],
-                  counts = [];
+                  ticks = [];
                 let previous = performance.now(),
                   tickCount = 0,
-                  acc = 0;
-                const begin = previous;
-                while (performance.now() - begin < duration) {
-                  await new Promise(requestAnimationFrame);
-                  const now = performance.now();
-                  frames.push(now - previous);
-                  acc += Math.min(250, now - previous);
-                  previous = now;
+                  measuring = true;
+                const originalTick = sim.tick;
+                sim.tick = () => {
                   const t = performance.now();
-                  let count = 0;
-                  while (acc >= 1000 / rate && count < 30) {
-                    sim.tick();
-                    acc -= 1000 / rate;
-                    count++;
-                    tickCount++;
-                  }
+                  originalTick();
                   ticks.push(performance.now() - t);
-                  counts.push(count);
-                  a.camera.zoomTo(zoom * (1 + 1.5 * (0.5 + 0.5 * Math.sin(frames.length * 0.03))));
-                  a.camera.panBy(
-                    Math.sin(frames.length * 0.04) * 2,
-                    Math.cos(frames.length * 0.04) * 2
-                  );
-                  const r = performance.now();
-                  a.renderer.render(sim, { immediate: false });
-                  renders.push(performance.now() - r);
-                }
+                };
+                const loop = createAppLoop({
+                  sim,
+                  renderer: {
+                    render(current, options) {
+                      const t = performance.now();
+                      a.renderer.render(current, options);
+                      if (measuring) renders.push(performance.now() - t);
+                    }
+                  },
+                  metrics: {
+                    recordFrame() {
+                      const now = performance.now();
+                      frames.push(now - previous);
+                      previous = now;
+                    },
+                    update({ ticks: count }) {
+                      tickCount += count;
+                    }
+                  },
+                  updateCameraFollow() {
+                    a.camera.zoomTo(
+                      zoom * (1 + 1.5 * (0.5 + 0.5 * Math.sin(frames.length * 0.03)))
+                    );
+                    a.camera.panBy(
+                      Math.sin(frames.length * 0.04) * 2,
+                      Math.cos(frames.length * 0.04) * 2
+                    );
+                  },
+                  getUI: () => ({ setRunning() {}, setMetrics() {}, setSpeed() {} }),
+                  getGraphsPanel: () => ({ recordMetrics() {} }),
+                  getInspector: () => ({ update() {} }),
+                  initialSpeed: rate / sim.config.ticksPerSecond
+                });
+                const begin = performance.now();
+                previous = begin;
+                loop.start();
+                await new Promise((resolve) => setTimeout(resolve, duration));
                 const elapsed = performance.now() - begin;
+                measuring = false;
+                loop.pause();
+                sim.tick = originalTick;
                 const stats = (values) => {
                   values.sort((a, b) => a - b);
                   return {
@@ -170,6 +226,9 @@ const root = resolve(arg('root', '.')),
                   sizes,
                   frameCount: frames.length,
                   elapsedMs: elapsed,
+                  scenario: hunting ? 'Nearby hungry predator fixture' : 'Ordinary founders',
+                  chases: sim.state.metrics.chaseAttempts,
+                  kills: sim.state.metrics.killsTotal,
                   timers: perf.snapshot().timers,
                   environment: {
                     hardwareConcurrency: navigator.hardwareConcurrency,
@@ -178,23 +237,27 @@ const root = resolve(arg('root', '.')),
                   },
                   frames: stats(frames),
                   renderMs: stats(renders),
-                  tickBatchMs: stats(ticks),
+                  tickMs: stats(ticks),
                   fps: (frames.length * 1000) / elapsed,
                   tps: (tickCount * 1000) / elapsed,
                   longFrames: frames.filter((v) => v > 50).length,
                   heap: performance.memory?.usedJSHeapSize
                 };
               },
-              { width, height, trial, rate, duration: Number(arg('duration', 3000)) }
+              {
+                width,
+                height,
+                trial,
+                rate,
+                duration: Number(arg('duration', 3000)),
+                hunting: arg('hunting', 'false') === 'true'
+              }
             );
             results.push({ mobile, ...result });
             console.log(JSON.stringify(results.at(-1)));
             fs.writeFileSync(`${out}/results.json`, JSON.stringify(results, null, 2));
             if (trial === 0 && rate === 60)
-              await page.screenshot({
-                path: `${out}/${mobile ? 'mobile' : 'desktop'}-${width}.png`,
-                timeout: 60000
-              });
+              await saveCanvas(page, `${out}/${mobile ? 'mobile' : 'desktop'}-${width}.png`);
           }
       }
       for (const seed of [1, 42, 1337, 7, 19, 101]) {
@@ -206,7 +269,7 @@ const root = resolve(arg('root', '.')),
           a.camera.panBy(-a.camera.getState().x, -a.camera.getState().y);
           a.renderer.render(sim, { immediate: true });
         }, seed);
-        if (!mobile) await page.screenshot({ path: `${out}/map-${seed}.png` });
+        if (!mobile) await saveCanvas(page, `${out}/map-${seed}.png`);
       }
       if (errors.length) throw Error(errors.join('\n'));
       await page.close();
