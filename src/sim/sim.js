@@ -214,6 +214,7 @@ export function createSim(config = simConfig) {
 
         const tActions = perf?.start('tick.actions');
         applyCreatureActions({
+          metrics: state.metrics,
           creatures: state.creatures,
           config: resolvedConfig,
           world: state.world

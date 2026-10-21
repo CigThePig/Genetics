@@ -25,7 +25,12 @@ const isMeterEmpty = (value) => Number.isFinite(value) && value <= 0;
  * Determines cause of death for a creature, if any.
  * Returns null if creature should not die.
  */
-const selectDeathCause = ({ creature, maxAgeTicks }) => {
+export const selectDeathCause = ({ creature, maxAgeTicks }) => {
+  // Explicit lethal events take precedence over coincident age or empty reserves.
+  // Otherwise retain the documented age → injury → thirst → starvation order.
+  if (creature.deathCause === 'predation' && isMeterEmpty(creature.meters?.hp)) {
+    return 'predation';
+  }
   if (Number.isFinite(maxAgeTicks) && maxAgeTicks > 0) {
     if (Number.isFinite(creature.ageTicks) && creature.ageTicks >= maxAgeTicks) {
       return 'age';

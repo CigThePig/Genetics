@@ -1,0 +1,22 @@
+diff --git a/src/sim/creatures/intent.js b/src/sim/creatures/intent.js
+index d4da79f..0173579 100644
+--- a/src/sim/creatures/intent.js
++++ b/src/sim/creatures/intent.js
+@@ -126,7 +126,7 @@ export function updateCreatureIntent({
+     const waterRatio = normalizeNeedRatio(meters.water, baseWater);
+     const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
+     const concernThreshold = Math.min(0.98, drinkThreshold + resolveDrinkConcernMargin(config));
+-    const urgentThirst = waterRatio < drinkThreshold;
++    const urgentThirst = waterRatio < drinkThreshold || (creature.intent?.type === 'drink' && waterRatio < Math.max(drinkThreshold, 0.95));
+     const concernedThirst = waterRatio < concernThreshold;
+     const localHerdSize = creature.herding?.herdSize ?? 1;
+     const minLocalHerdSize = resolveHerdingMinGroupSize(config);
+@@ -145,7 +145,7 @@ export function updateCreatureIntent({
+       clearSearchState(creature);
+     }
+     const nearbyWater = hasNearbyWater(world, cell, config);
+-    const canDrink = waterRatio < drinkThreshold && nearbyWater;
++    const canDrink = urgentThirst && nearbyWater;
+     const canEat = energyRatio < eatThreshold;
+     const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
+     const dietPreferences = getFeedingPreferences(creature, config);

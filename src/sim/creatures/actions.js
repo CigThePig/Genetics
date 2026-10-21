@@ -18,11 +18,19 @@ import {
   getFoodProperties
 } from './food.js';
 
+function recordFeeding(metrics, creature, food, consumed, energy) {
+  const counter = metrics?.feedingBySpecies?.[creature.species]?.[food];
+  if (!counter) return;
+  counter.consumed += consumed;
+  counter.energy += energy;
+  counter.ticks++;
+}
+
 /**
  * Applies creature actions (drinking and eating) based on intent.
  * Modifies creature meters and consumes world resources.
  */
-export function applyCreatureActions({ creatures, config, world }) {
+export function applyCreatureActions({ creatures, config, world, metrics }) {
   if (!Array.isArray(creatures) || !world) {
     return;
   }
@@ -89,7 +97,9 @@ export function applyCreatureActions({ creatures, config, world }) {
           const props = getFoodProperties(config, FOOD_TYPES.GRASS);
           const efficiency = getDigestiveEfficiency(creature, FOOD_TYPES.GRASS, config);
           const energyGain = consumed * props.nutrition * efficiency;
+          const before = meters.energy;
           meters.energy = clampMeter(Math.min(baseEnergy, meters.energy + energyGain));
+          recordFeeding(metrics, creature, intentFoodType, consumed, meters.energy - before);
         }
       }
       continue;
@@ -109,7 +119,9 @@ export function applyCreatureActions({ creatures, config, world }) {
           const props = getFoodProperties(config, FOOD_TYPES.BERRIES);
           const efficiency = getDigestiveEfficiency(creature, FOOD_TYPES.BERRIES, config);
           const energyGain = consumed * props.nutrition * efficiency;
+          const before = meters.energy;
           meters.energy = clampMeter(Math.min(baseEnergy, meters.energy + energyGain));
+          recordFeeding(metrics, creature, intentFoodType, consumed, meters.energy - before);
         }
       }
       continue;
@@ -135,7 +147,9 @@ export function applyCreatureActions({ creatures, config, world }) {
         const props = getFoodProperties(config, FOOD_TYPES.MEAT);
         const efficiency = getDigestiveEfficiency(creature, FOOD_TYPES.MEAT, config);
         const energyGain = consumed * props.nutrition * efficiency;
+        const before = meters.energy;
         meters.energy = clampMeter(Math.min(baseEnergy, meters.energy + energyGain));
+        recordFeeding(metrics, creature, intentFoodType, consumed, meters.energy - before);
       }
     }
   }

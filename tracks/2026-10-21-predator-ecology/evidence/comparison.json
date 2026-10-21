@@ -1,0 +1,2018 @@
+{
+  "ticks": 72000,
+  "seeds": [1, 2, 3, 7, 19, 42, 73, 101, 1337, 2026],
+  "paired": {
+    "baseline": {
+      "1": {
+        "square": {
+          "population": 50,
+          "male": 25,
+          "female": 25,
+          "matureMale": 21,
+          "matureFemale": 22,
+          "pregnant": 5,
+          "ready": 4,
+          "energy": 0.689722049439553,
+          "water": 0.6951152032987209,
+          "births": 113,
+          "deaths": 99,
+          "causes": {
+            "injury": 6,
+            "thirst": 18,
+            "starvation": 5,
+            "age": 70
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 67,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 7,
+          "deathsBefore75Seconds": 0
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 1,
+          "deaths": 5,
+          "causes": {
+            "age": 5
+          },
+          "extinctionSeconds": 1021.3166666666667,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 116,
+          "male": 65,
+          "female": 51,
+          "matureMale": 52,
+          "matureFemale": 45,
+          "pregnant": 10,
+          "ready": 20,
+          "energy": 0.7377747179835129,
+          "water": 0.7367574549852248,
+          "births": 197,
+          "deaths": 117,
+          "causes": {
+            "injury": 11,
+            "age": 106
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 117,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 16,
+          "deathsBefore75Seconds": 2
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 1,
+          "deaths": 5,
+          "causes": {
+            "thirst": 2,
+            "age": 3
+          },
+          "extinctionSeconds": 608.5,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "2": {
+        "square": {
+          "population": 65,
+          "male": 34,
+          "female": 31,
+          "matureMale": 26,
+          "matureFemale": 27,
+          "pregnant": 2,
+          "ready": 10,
+          "energy": 0.6753074154000641,
+          "water": 0.6800722690614103,
+          "births": 153,
+          "deaths": 124,
+          "causes": {
+            "injury": 11,
+            "age": 86,
+            "thirst": 19,
+            "starvation": 8
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 82,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 13,
+          "deathsBefore75Seconds": 2
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "age": 4
+          },
+          "extinctionSeconds": 550.8166666666667,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 91,
+          "male": 53,
+          "female": 38,
+          "matureMale": 46,
+          "matureFemale": 32,
+          "pregnant": 11,
+          "ready": 13,
+          "energy": 0.7281959169081835,
+          "water": 0.7285866850653482,
+          "births": 187,
+          "deaths": 132,
+          "causes": {
+            "injury": 10,
+            "age": 103,
+            "thirst": 13,
+            "starvation": 6
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 96,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 13,
+          "deathsBefore75Seconds": 2
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 1,
+          "deaths": 5,
+          "causes": {
+            "age": 5
+          },
+          "extinctionSeconds": 1021.8166666666667,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "3": {
+        "square": {
+          "population": 20,
+          "male": 6,
+          "female": 14,
+          "matureMale": 5,
+          "matureFemale": 11,
+          "pregnant": 1,
+          "ready": 5,
+          "energy": 0.678007165894663,
+          "water": 0.6923781574325101,
+          "births": 101,
+          "deaths": 117,
+          "causes": {
+            "injury": 3,
+            "starvation": 17,
+            "thirst": 45,
+            "age": 52
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 93,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 3,
+          "deathsBefore75Seconds": 1
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "age": 4
+          },
+          "extinctionSeconds": 560.9666666666667,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 80,
+          "male": 35,
+          "female": 45,
+          "matureMale": 28,
+          "matureFemale": 41,
+          "pregnant": 12,
+          "ready": 12,
+          "energy": 0.7313743318423722,
+          "water": 0.7306903202119108,
+          "births": 165,
+          "deaths": 121,
+          "causes": {
+            "injury": 4,
+            "thirst": 14,
+            "age": 90,
+            "starvation": 13
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 94,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 9,
+          "deathsBefore75Seconds": 0
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "thirst": 2,
+            "age": 2
+          },
+          "extinctionSeconds": 589.6666666666666,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "7": {
+        "square": {
+          "population": 61,
+          "male": 29,
+          "female": 32,
+          "matureMale": 24,
+          "matureFemale": 26,
+          "pregnant": 5,
+          "ready": 6,
+          "energy": 0.7346156685467753,
+          "water": 0.7403145889595588,
+          "births": 122,
+          "deaths": 97,
+          "causes": {
+            "injury": 8,
+            "thirst": 21,
+            "starvation": 11,
+            "age": 57
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 65,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 5,
+          "deathsBefore75Seconds": 2
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 1,
+          "deaths": 5,
+          "causes": {
+            "thirst": 2,
+            "age": 3
+          },
+          "extinctionSeconds": 760.8,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 117,
+          "male": 57,
+          "female": 60,
+          "matureMale": 51,
+          "matureFemale": 48,
+          "pregnant": 14,
+          "ready": 8,
+          "energy": 0.7219229033221818,
+          "water": 0.7254346747484837,
+          "births": 189,
+          "deaths": 108,
+          "causes": {
+            "injury": 8,
+            "age": 99,
+            "thirst": 1
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 117,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 15,
+          "deathsBefore75Seconds": 1
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "age": 4
+          },
+          "extinctionSeconds": 543.0833333333334,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "19": {
+        "square": {
+          "population": 66,
+          "male": 31,
+          "female": 35,
+          "matureMale": 27,
+          "matureFemale": 26,
+          "pregnant": 6,
+          "ready": 9,
+          "energy": 0.7168759100856069,
+          "water": 0.7240866657808401,
+          "births": 163,
+          "deaths": 133,
+          "causes": {
+            "injury": 4,
+            "age": 95,
+            "thirst": 31,
+            "starvation": 3
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 90,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 8,
+          "deathsBefore75Seconds": 0
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "age": 4
+          },
+          "extinctionSeconds": 592.5833333333334,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 109,
+          "male": 50,
+          "female": 59,
+          "matureMale": 43,
+          "matureFemale": 51,
+          "pregnant": 13,
+          "ready": 7,
+          "energy": 0.6451598325977446,
+          "water": 0.6457817614650205,
+          "births": 220,
+          "deaths": 147,
+          "causes": {
+            "injury": 6,
+            "age": 126,
+            "starvation": 5,
+            "thirst": 10
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 120,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 20,
+          "deathsBefore75Seconds": 1
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "age": 4
+          },
+          "extinctionSeconds": 574.8333333333334,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "42": {
+        "square": {
+          "population": 75,
+          "male": 37,
+          "female": 38,
+          "matureMale": 33,
+          "matureFemale": 33,
+          "pregnant": 7,
+          "ready": 14,
+          "energy": 0.6468654881793756,
+          "water": 0.6499145250394339,
+          "births": 177,
+          "deaths": 138,
+          "causes": {
+            "injury": 6,
+            "age": 99,
+            "starvation": 6,
+            "thirst": 27
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 97,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 21,
+          "deathsBefore75Seconds": 1
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 1,
+          "deaths": 5,
+          "causes": {
+            "thirst": 1,
+            "age": 4
+          },
+          "extinctionSeconds": 870.0333333333333,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 81,
+          "male": 35,
+          "female": 46,
+          "matureMale": 29,
+          "matureFemale": 38,
+          "pregnant": 5,
+          "ready": 13,
+          "energy": 0.7080664452121912,
+          "water": 0.7057773612125487,
+          "births": 181,
+          "deaths": 136,
+          "causes": {
+            "injury": 8,
+            "age": 109,
+            "thirst": 16,
+            "starvation": 3
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 100,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 10,
+          "deathsBefore75Seconds": 2
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 1,
+          "deaths": 5,
+          "causes": {
+            "age": 5
+          },
+          "extinctionSeconds": 731.1833333333333,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "73": {
+        "square": {
+          "population": 12,
+          "male": 1,
+          "female": 11,
+          "matureMale": 1,
+          "matureFemale": 11,
+          "pregnant": 0,
+          "ready": 10,
+          "energy": 0.7478080165333204,
+          "water": 0.7419713677631101,
+          "births": 56,
+          "deaths": 80,
+          "causes": {
+            "starvation": 6,
+            "thirst": 25,
+            "age": 49
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 66,
+          "sampledMaximumLivingGeneration": 5,
+          "pregnantDeaths": 3,
+          "deathsBefore75Seconds": 0
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "thirst": 3,
+            "age": 1
+          },
+          "extinctionSeconds": 526.3166666666667,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 61,
+          "male": 31,
+          "female": 30,
+          "matureMale": 28,
+          "matureFemale": 24,
+          "pregnant": 8,
+          "ready": 5,
+          "energy": 0.7406643980500996,
+          "water": 0.7439594191790553,
+          "births": 128,
+          "deaths": 103,
+          "causes": {
+            "injury": 4,
+            "age": 89,
+            "thirst": 9,
+            "starvation": 1
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 86,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 13,
+          "deathsBefore75Seconds": 0
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "thirst": 2,
+            "age": 2
+          },
+          "extinctionSeconds": 525.6166666666667,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "101": {
+        "square": {
+          "population": 52,
+          "male": 26,
+          "female": 26,
+          "matureMale": 19,
+          "matureFemale": 24,
+          "pregnant": 4,
+          "ready": 4,
+          "energy": 0.7222221414207122,
+          "water": 0.7264973117452869,
+          "births": 114,
+          "deaths": 98,
+          "causes": {
+            "injury": 7,
+            "thirst": 10,
+            "starvation": 6,
+            "age": 75
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 72,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 10,
+          "deathsBefore75Seconds": 2
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "age": 4
+          },
+          "extinctionSeconds": 580.75,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 89,
+          "male": 52,
+          "female": 37,
+          "matureMale": 44,
+          "matureFemale": 34,
+          "pregnant": 11,
+          "ready": 9,
+          "energy": 0.6762186182410542,
+          "water": 0.6813990284360252,
+          "births": 181,
+          "deaths": 128,
+          "causes": {
+            "injury": 9,
+            "thirst": 18,
+            "starvation": 10,
+            "age": 91
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 102,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 14,
+          "deathsBefore75Seconds": 2
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 2,
+          "deaths": 6,
+          "causes": {
+            "age": 6
+          },
+          "extinctionSeconds": 1081.7833333333333,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "1337": {
+        "square": {
+          "population": 63,
+          "male": 34,
+          "female": 29,
+          "matureMale": 26,
+          "matureFemale": 26,
+          "pregnant": 3,
+          "ready": 14,
+          "energy": 0.7141525828003044,
+          "water": 0.718565411890247,
+          "births": 167,
+          "deaths": 140,
+          "causes": {
+            "thirst": 30,
+            "injury": 2,
+            "age": 96,
+            "starvation": 12
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 94,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 9,
+          "deathsBefore75Seconds": 0
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 2,
+          "deaths": 6,
+          "causes": {
+            "age": 6
+          },
+          "extinctionSeconds": 931.8333333333334,
+          "sampledMaximumPopulation": 6,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 108,
+          "male": 57,
+          "female": 51,
+          "matureMale": 47,
+          "matureFemale": 43,
+          "pregnant": 9,
+          "ready": 12,
+          "energy": 0.7334472850015276,
+          "water": 0.7332435488862062,
+          "births": 202,
+          "deaths": 130,
+          "causes": {
+            "injury": 9,
+            "thirst": 6,
+            "age": 115
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 109,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 17,
+          "deathsBefore75Seconds": 1
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "thirst": 1,
+            "age": 3
+          },
+          "extinctionSeconds": 571.15,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "2026": {
+        "square": {
+          "population": 38,
+          "male": 22,
+          "female": 16,
+          "matureMale": 19,
+          "matureFemale": 16,
+          "pregnant": 4,
+          "ready": 6,
+          "energy": 0.6648421468163651,
+          "water": 0.6632298628578742,
+          "births": 113,
+          "deaths": 111,
+          "causes": {
+            "injury": 4,
+            "thirst": 30,
+            "starvation": 14,
+            "age": 63
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 78,
+          "sampledMaximumLivingGeneration": 5,
+          "pregnantDeaths": 10,
+          "deathsBefore75Seconds": 0
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 0,
+          "deaths": 4,
+          "causes": {
+            "age": 4
+          },
+          "extinctionSeconds": 596.3833333333333,
+          "sampledMaximumPopulation": 4,
+          "sampledMaximumLivingGeneration": 0,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 74,
+          "male": 38,
+          "female": 36,
+          "matureMale": 30,
+          "matureFemale": 32,
+          "pregnant": 11,
+          "ready": 6,
+          "energy": 0.7390336846018181,
+          "water": 0.7416515666826445,
+          "births": 136,
+          "deaths": 98,
+          "causes": {
+            "injury": 10,
+            "thirst": 19,
+            "starvation": 10,
+            "age": 59
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 74,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 7,
+          "deathsBefore75Seconds": 1
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 1,
+          "deaths": 5,
+          "causes": {
+            "thirst": 1,
+            "age": 4
+          },
+          "extinctionSeconds": 591.55,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      }
+    },
+    "final": {
+      "1": {
+        "square": {
+          "population": 91,
+          "male": 38,
+          "female": 53,
+          "matureMale": 34,
+          "matureFemale": 44,
+          "pregnant": 10,
+          "ready": 12,
+          "energy": 0.6442191672740729,
+          "water": 0.7424474475290096,
+          "births": 179,
+          "deaths": 124,
+          "causes": {
+            "predation": 16,
+            "age": 97,
+            "starvation": 7,
+            "thirst": 4
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 96,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 17,
+          "deathsBefore75Seconds": 1
+        },
+        "triangle": {
+          "population": 1,
+          "male": 0,
+          "female": 1,
+          "matureMale": 0,
+          "matureFemale": 1,
+          "pregnant": 0,
+          "ready": 1,
+          "energy": 0.9111617092942954,
+          "water": 0.9144478782669317,
+          "births": 6,
+          "deaths": 9,
+          "causes": {
+            "age": 9
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 9,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 100,
+          "male": 38,
+          "female": 62,
+          "matureMale": 32,
+          "matureFemale": 55,
+          "pregnant": 6,
+          "ready": 18,
+          "energy": 0.658133082642083,
+          "water": 0.7404157444324474,
+          "births": 182,
+          "deaths": 118,
+          "causes": {
+            "predation": 13,
+            "age": 97,
+            "thirst": 5,
+            "starvation": 3
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 103,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 12,
+          "deathsBefore75Seconds": 0
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 2,
+          "deaths": 6,
+          "causes": {
+            "age": 6
+          },
+          "extinctionSeconds": 1023.2833333333333,
+          "sampledMaximumPopulation": 6,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "2": {
+        "square": {
+          "population": 46,
+          "male": 26,
+          "female": 20,
+          "matureMale": 22,
+          "matureFemale": 15,
+          "pregnant": 3,
+          "ready": 6,
+          "energy": 0.6825302240487677,
+          "water": 0.7747560444494815,
+          "births": 120,
+          "deaths": 110,
+          "causes": {
+            "predation": 13,
+            "age": 63,
+            "thirst": 20,
+            "starvation": 14
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 79,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 13,
+          "deathsBefore75Seconds": 3
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 4,
+          "deaths": 8,
+          "causes": {
+            "age": 8
+          },
+          "extinctionSeconds": 984.6333333333333,
+          "sampledMaximumPopulation": 8,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 1,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 112,
+          "male": 63,
+          "female": 49,
+          "matureMale": 54,
+          "matureFemale": 39,
+          "pregnant": 9,
+          "ready": 13,
+          "energy": 0.6942482135330046,
+          "water": 0.7684389633183446,
+          "births": 210,
+          "deaths": 134,
+          "causes": {
+            "predation": 9,
+            "age": 114,
+            "thirst": 4,
+            "starvation": 7
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 112,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 22,
+          "deathsBefore75Seconds": 3
+        },
+        "octagon": {
+          "population": 1,
+          "male": 1,
+          "female": 0,
+          "matureMale": 1,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0.31369048604405825,
+          "water": 0.2682768675198482,
+          "births": 3,
+          "deaths": 6,
+          "causes": {
+            "thirst": 1,
+            "age": 5
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "3": {
+        "square": {
+          "population": 34,
+          "male": 17,
+          "female": 17,
+          "matureMale": 17,
+          "matureFemale": 16,
+          "pregnant": 4,
+          "ready": 2,
+          "energy": 0.5547777584508533,
+          "water": 0.65694856539737,
+          "births": 113,
+          "deaths": 115,
+          "causes": {
+            "predation": 13,
+            "starvation": 12,
+            "thirst": 17,
+            "age": 73
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 65,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 14,
+          "deathsBefore75Seconds": 1
+        },
+        "triangle": {
+          "population": 5,
+          "male": 1,
+          "female": 4,
+          "matureMale": 1,
+          "matureFemale": 3,
+          "pregnant": 0,
+          "ready": 2,
+          "energy": 0.5679820662170205,
+          "water": 0.7535476058232772,
+          "births": 10,
+          "deaths": 9,
+          "causes": {
+            "age": 9
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 8,
+          "sampledMaximumLivingGeneration": 4,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 86,
+          "male": 34,
+          "female": 52,
+          "matureMale": 28,
+          "matureFemale": 45,
+          "pregnant": 11,
+          "ready": 15,
+          "energy": 0.7529475798706095,
+          "water": 0.8353804221936459,
+          "births": 166,
+          "deaths": 116,
+          "causes": {
+            "predation": 23,
+            "thirst": 2,
+            "age": 91
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 90,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 17,
+          "deathsBefore75Seconds": 5
+        },
+        "octagon": {
+          "population": 2,
+          "male": 2,
+          "female": 0,
+          "matureMale": 2,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0.6702512025611693,
+          "water": 0.7232834135435754,
+          "births": 6,
+          "deaths": 8,
+          "causes": {
+            "age": 8
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 7,
+          "sampledMaximumLivingGeneration": 3,
+          "pregnantDeaths": 1,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "7": {
+        "square": {
+          "population": 85,
+          "male": 38,
+          "female": 47,
+          "matureMale": 30,
+          "matureFemale": 42,
+          "pregnant": 4,
+          "ready": 13,
+          "energy": 0.6269436016834862,
+          "water": 0.7155514338109327,
+          "births": 173,
+          "deaths": 124,
+          "causes": {
+            "predation": 18,
+            "age": 88,
+            "thirst": 9,
+            "starvation": 9
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 86,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 14,
+          "deathsBefore75Seconds": 4
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 4,
+          "deaths": 8,
+          "causes": {
+            "age": 8
+          },
+          "extinctionSeconds": 1044.6166666666666,
+          "sampledMaximumPopulation": 8,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 65,
+          "male": 39,
+          "female": 26,
+          "matureMale": 34,
+          "matureFemale": 24,
+          "pregnant": 5,
+          "ready": 13,
+          "energy": 0.7198590992116901,
+          "water": 0.7924006514767911,
+          "births": 139,
+          "deaths": 110,
+          "causes": {
+            "predation": 20,
+            "thirst": 5,
+            "age": 84,
+            "starvation": 1
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 76,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 16,
+          "deathsBefore75Seconds": 1
+        },
+        "octagon": {
+          "population": 2,
+          "male": 0,
+          "female": 2,
+          "matureMale": 0,
+          "matureFemale": 2,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0.7279600295460891,
+          "water": 0.802154693575704,
+          "births": 9,
+          "deaths": 11,
+          "causes": {
+            "age": 10,
+            "thirst": 1
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 9,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "19": {
+        "square": {
+          "population": 111,
+          "male": 56,
+          "female": 55,
+          "matureMale": 50,
+          "matureFemale": 45,
+          "pregnant": 11,
+          "ready": 11,
+          "energy": 0.6516090518002208,
+          "water": 0.7320425916874119,
+          "births": 239,
+          "deaths": 164,
+          "causes": {
+            "predation": 15,
+            "age": 124,
+            "thirst": 18,
+            "starvation": 7
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 131,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 23,
+          "deathsBefore75Seconds": 2
+        },
+        "triangle": {
+          "population": 5,
+          "male": 4,
+          "female": 1,
+          "matureMale": 3,
+          "matureFemale": 1,
+          "pregnant": 0,
+          "ready": 1,
+          "energy": 0.799060922164508,
+          "water": 0.8440063217782712,
+          "births": 11,
+          "deaths": 10,
+          "causes": {
+            "age": 10
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 10,
+          "sampledMaximumLivingGeneration": 4,
+          "pregnantDeaths": 2,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 161,
+          "male": 80,
+          "female": 81,
+          "matureMale": 63,
+          "matureFemale": 61,
+          "pregnant": 17,
+          "ready": 5,
+          "energy": 0.6685427213832777,
+          "water": 0.7578204582219925,
+          "births": 277,
+          "deaths": 152,
+          "causes": {
+            "predation": 19,
+            "age": 126,
+            "thirst": 6,
+            "starvation": 1
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 161,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 19,
+          "deathsBefore75Seconds": 1
+        },
+        "octagon": {
+          "population": 1,
+          "male": 0,
+          "female": 1,
+          "matureMale": 0,
+          "matureFemale": 1,
+          "pregnant": 0,
+          "ready": 1,
+          "energy": 0.877491396613395,
+          "water": 0.7784694569989232,
+          "births": 5,
+          "deaths": 8,
+          "causes": {
+            "thirst": 1,
+            "age": 7
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 7,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "42": {
+        "square": {
+          "population": 66,
+          "male": 34,
+          "female": 32,
+          "matureMale": 29,
+          "matureFemale": 29,
+          "pregnant": 6,
+          "ready": 5,
+          "energy": 0.6215008189492641,
+          "water": 0.7031139810322607,
+          "births": 136,
+          "deaths": 106,
+          "causes": {
+            "predation": 17,
+            "thirst": 14,
+            "starvation": 6,
+            "age": 69
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 69,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 9,
+          "deathsBefore75Seconds": 1
+        },
+        "triangle": {
+          "population": 4,
+          "male": 4,
+          "female": 0,
+          "matureMale": 4,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 3,
+          "energy": 0.7141796266854443,
+          "water": 0.8277616832976034,
+          "births": 10,
+          "deaths": 10,
+          "causes": {
+            "age": 10
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 9,
+          "sampledMaximumLivingGeneration": 4,
+          "pregnantDeaths": 1,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 121,
+          "male": 51,
+          "female": 70,
+          "matureMale": 43,
+          "matureFemale": 56,
+          "pregnant": 13,
+          "ready": 11,
+          "energy": 0.6849183777383027,
+          "water": 0.7662391829654761,
+          "births": 205,
+          "deaths": 120,
+          "causes": {
+            "predation": 14,
+            "thirst": 9,
+            "age": 93,
+            "starvation": 4
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 121,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 21,
+          "deathsBefore75Seconds": 3
+        },
+        "octagon": {
+          "population": 1,
+          "male": 0,
+          "female": 1,
+          "matureMale": 0,
+          "matureFemale": 1,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0.4778410620100372,
+          "water": 0.8675612661160329,
+          "births": 3,
+          "deaths": 6,
+          "causes": {
+            "age": 6
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 6,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 1,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "73": {
+        "square": {
+          "population": 49,
+          "male": 29,
+          "female": 20,
+          "matureMale": 26,
+          "matureFemale": 17,
+          "pregnant": 3,
+          "ready": 7,
+          "energy": 0.7333734649587949,
+          "water": 0.8422350732668388,
+          "births": 104,
+          "deaths": 91,
+          "causes": {
+            "predation": 13,
+            "thirst": 23,
+            "starvation": 8,
+            "age": 47
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 63,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 4,
+          "deathsBefore75Seconds": 2
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 8,
+          "deaths": 12,
+          "causes": {
+            "age": 12
+          },
+          "extinctionSeconds": 1191.5333333333333,
+          "sampledMaximumPopulation": 9,
+          "sampledMaximumLivingGeneration": 3,
+          "pregnantDeaths": 2,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 71,
+          "male": 37,
+          "female": 34,
+          "matureMale": 31,
+          "matureFemale": 29,
+          "pregnant": 6,
+          "ready": 20,
+          "energy": 0.7361657876730782,
+          "water": 0.8278668123490974,
+          "births": 158,
+          "deaths": 123,
+          "causes": {
+            "predation": 17,
+            "age": 81,
+            "thirst": 16,
+            "starvation": 9
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 96,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 15,
+          "deathsBefore75Seconds": 2
+        },
+        "octagon": {
+          "population": 3,
+          "male": 1,
+          "female": 2,
+          "matureMale": 1,
+          "matureFemale": 2,
+          "pregnant": 0,
+          "ready": 1,
+          "energy": 0.7963498775120064,
+          "water": 0.8665732280724031,
+          "births": 9,
+          "deaths": 10,
+          "causes": {
+            "age": 10
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 8,
+          "sampledMaximumLivingGeneration": 5,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "101": {
+        "square": {
+          "population": 30,
+          "male": 18,
+          "female": 12,
+          "matureMale": 16,
+          "matureFemale": 12,
+          "pregnant": 4,
+          "ready": 10,
+          "energy": 0.7271589002957298,
+          "water": 0.800302037951552,
+          "births": 91,
+          "deaths": 97,
+          "causes": {
+            "predation": 6,
+            "thirst": 19,
+            "starvation": 28,
+            "age": 44
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 80,
+          "sampledMaximumLivingGeneration": 5,
+          "pregnantDeaths": 9,
+          "deathsBefore75Seconds": 0
+        },
+        "triangle": {
+          "population": 1,
+          "male": 1,
+          "female": 0,
+          "matureMale": 1,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 1,
+          "energy": 0.7986673539290495,
+          "water": 0.778183658729526,
+          "births": 8,
+          "deaths": 11,
+          "causes": {
+            "age": 10,
+            "thirst": 1
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 9,
+          "sampledMaximumLivingGeneration": 3,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 32,
+          "male": 16,
+          "female": 16,
+          "matureMale": 14,
+          "matureFemale": 13,
+          "pregnant": 2,
+          "ready": 10,
+          "energy": 0.7498092923231795,
+          "water": 0.8251401646976232,
+          "births": 90,
+          "deaths": 94,
+          "causes": {
+            "predation": 15,
+            "starvation": 24,
+            "thirst": 16,
+            "age": 39
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 64,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 6,
+          "deathsBefore75Seconds": 3
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 2,
+          "deaths": 6,
+          "causes": {
+            "age": 6
+          },
+          "extinctionSeconds": 998.3166666666667,
+          "sampledMaximumPopulation": 6,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "1337": {
+        "square": {
+          "population": 73,
+          "male": 34,
+          "female": 39,
+          "matureMale": 30,
+          "matureFemale": 35,
+          "pregnant": 8,
+          "ready": 6,
+          "energy": 0.5734367037903434,
+          "water": 0.682344504980402,
+          "births": 167,
+          "deaths": 130,
+          "causes": {
+            "predation": 17,
+            "thirst": 18,
+            "age": 86,
+            "starvation": 9
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 92,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 12,
+          "deathsBefore75Seconds": 4
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 4,
+          "deaths": 8,
+          "causes": {
+            "age": 7,
+            "starvation": 1
+          },
+          "extinctionSeconds": 923.85,
+          "sampledMaximumPopulation": 8,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 117,
+          "male": 58,
+          "female": 59,
+          "matureMale": 50,
+          "matureFemale": 49,
+          "pregnant": 15,
+          "ready": 12,
+          "energy": 0.7273678595577965,
+          "water": 0.8039666603094842,
+          "births": 214,
+          "deaths": 133,
+          "causes": {
+            "predation": 10,
+            "thirst": 11,
+            "age": 104,
+            "starvation": 8
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 117,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 10,
+          "deathsBefore75Seconds": 3
+        },
+        "octagon": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 2,
+          "deaths": 6,
+          "causes": {
+            "age": 6
+          },
+          "extinctionSeconds": 1024.65,
+          "sampledMaximumPopulation": 6,
+          "sampledMaximumLivingGeneration": 1,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        }
+      },
+      "2026": {
+        "square": {
+          "population": 78,
+          "male": 43,
+          "female": 35,
+          "matureMale": 36,
+          "matureFemale": 28,
+          "pregnant": 11,
+          "ready": 4,
+          "energy": 0.6710569774226774,
+          "water": 0.75413082171115,
+          "births": 173,
+          "deaths": 131,
+          "causes": {
+            "predation": 7,
+            "age": 96,
+            "starvation": 12,
+            "thirst": 16
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 91,
+          "sampledMaximumLivingGeneration": 7,
+          "pregnantDeaths": 21,
+          "deathsBefore75Seconds": 1
+        },
+        "triangle": {
+          "population": 0,
+          "male": 0,
+          "female": 0,
+          "matureMale": 0,
+          "matureFemale": 0,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0,
+          "water": 0,
+          "births": 2,
+          "deaths": 6,
+          "causes": {
+            "thirst": 1,
+            "age": 5
+          },
+          "extinctionSeconds": 1063.3,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 0,
+          "deathsBefore75Seconds": 0
+        },
+        "circle": {
+          "population": 45,
+          "male": 24,
+          "female": 21,
+          "matureMale": 21,
+          "matureFemale": 18,
+          "pregnant": 2,
+          "ready": 8,
+          "energy": 0.6085538377095997,
+          "water": 0.6854566993288083,
+          "births": 144,
+          "deaths": 135,
+          "causes": {
+            "predation": 11,
+            "age": 91,
+            "thirst": 20,
+            "starvation": 13
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 86,
+          "sampledMaximumLivingGeneration": 6,
+          "pregnantDeaths": 9,
+          "deathsBefore75Seconds": 3
+        },
+        "octagon": {
+          "population": 1,
+          "male": 0,
+          "female": 1,
+          "matureMale": 0,
+          "matureFemale": 1,
+          "pregnant": 0,
+          "ready": 0,
+          "energy": 0.4225780017570559,
+          "water": 0.39064472513706133,
+          "births": 4,
+          "deaths": 7,
+          "causes": {
+            "thirst": 1,
+            "age": 6
+          },
+          "extinctionSeconds": null,
+          "sampledMaximumPopulation": 5,
+          "sampledMaximumLivingGeneration": 2,
+          "pregnantDeaths": 1,
+          "deathsBefore75Seconds": 0
+        }
+      }
+    }
+  },
+  "aggregate": {
+    "baseline": {
+      "square": {
+        "extinctRuns": 0,
+        "totalRuns": 10,
+        "extinctionSeconds": [],
+        "medianExtinctionSeconds": null,
+        "runsWithBothSexes": 10,
+        "runsWithMatureBothSexes": 10,
+        "births": 1279,
+        "deaths": 1137,
+        "deathsByCause": {
+          "injury": 51,
+          "thirst": 256,
+          "starvation": 88,
+          "age": 742
+        },
+        "populations": [50, 65, 20, 61, 66, 75, 12, 52, 63, 38],
+        "sampledMaximumPopulation": 97,
+        "sampledMaximumLivingGeneration": 7
+      },
+      "triangle": {
+        "extinctRuns": 10,
+        "totalRuns": 10,
+        "extinctionSeconds": [
+          526.3166666666667, 550.8166666666667, 560.9666666666667, 580.75, 592.5833333333334,
+          596.3833333333333, 760.8, 870.0333333333333, 931.8333333333334, 1021.3166666666667
+        ],
+        "medianExtinctionSeconds": 594.4833333333333,
+        "runsWithBothSexes": 0,
+        "runsWithMatureBothSexes": 0,
+        "births": 5,
+        "deaths": 45,
+        "deathsByCause": {
+          "age": 39,
+          "thirst": 6
+        },
+        "populations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "sampledMaximumPopulation": 6,
+        "sampledMaximumLivingGeneration": 1
+      },
+      "circle": {
+        "extinctRuns": 0,
+        "totalRuns": 10,
+        "extinctionSeconds": [],
+        "medianExtinctionSeconds": null,
+        "runsWithBothSexes": 10,
+        "runsWithMatureBothSexes": 10,
+        "births": 1786,
+        "deaths": 1220,
+        "deathsByCause": {
+          "injury": 79,
+          "age": 987,
+          "thirst": 106,
+          "starvation": 48
+        },
+        "populations": [116, 91, 80, 117, 109, 81, 61, 89, 108, 74],
+        "sampledMaximumPopulation": 120,
+        "sampledMaximumLivingGeneration": 7
+      },
+      "octagon": {
+        "extinctRuns": 10,
+        "totalRuns": 10,
+        "extinctionSeconds": [
+          525.6166666666667, 543.0833333333334, 571.15, 574.8333333333334, 589.6666666666666,
+          591.55, 608.5, 731.1833333333333, 1021.8166666666667, 1081.7833333333333
+        ],
+        "medianExtinctionSeconds": 590.6083333333333,
+        "runsWithBothSexes": 0,
+        "runsWithMatureBothSexes": 0,
+        "births": 6,
+        "deaths": 46,
+        "deathsByCause": {
+          "thirst": 8,
+          "age": 38
+        },
+        "populations": [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        "sampledMaximumPopulation": 5,
+        "sampledMaximumLivingGeneration": 1
+      }
+    },
+    "final": {
+      "square": {
+        "extinctRuns": 0,
+        "totalRuns": 10,
+        "extinctionSeconds": [],
+        "medianExtinctionSeconds": null,
+        "runsWithBothSexes": 10,
+        "runsWithMatureBothSexes": 10,
+        "births": 1495,
+        "deaths": 1192,
+        "deathsByCause": {
+          "predation": 135,
+          "age": 787,
+          "starvation": 112,
+          "thirst": 158
+        },
+        "populations": [91, 46, 34, 85, 111, 66, 49, 30, 73, 78],
+        "sampledMaximumPopulation": 131,
+        "sampledMaximumLivingGeneration": 7
+      },
+      "triangle": {
+        "extinctRuns": 5,
+        "totalRuns": 10,
+        "extinctionSeconds": [
+          923.85, 984.6333333333333, 1044.6166666666666, 1063.3, 1191.5333333333333
+        ],
+        "medianExtinctionSeconds": 1044.6166666666666,
+        "runsWithBothSexes": 2,
+        "runsWithMatureBothSexes": 2,
+        "births": 67,
+        "deaths": 91,
+        "deathsByCause": {
+          "age": 88,
+          "thirst": 2,
+          "starvation": 1
+        },
+        "populations": [1, 0, 5, 0, 5, 4, 0, 1, 0, 0],
+        "sampledMaximumPopulation": 10,
+        "sampledMaximumLivingGeneration": 4
+      },
+      "circle": {
+        "extinctRuns": 0,
+        "totalRuns": 10,
+        "extinctionSeconds": [],
+        "medianExtinctionSeconds": null,
+        "runsWithBothSexes": 10,
+        "runsWithMatureBothSexes": 10,
+        "births": 1785,
+        "deaths": 1235,
+        "deathsByCause": {
+          "predation": 151,
+          "age": 920,
+          "thirst": 94,
+          "starvation": 70
+        },
+        "populations": [100, 112, 86, 65, 161, 121, 71, 32, 117, 45],
+        "sampledMaximumPopulation": 161,
+        "sampledMaximumLivingGeneration": 7
+      },
+      "octagon": {
+        "extinctRuns": 3,
+        "totalRuns": 10,
+        "extinctionSeconds": [998.3166666666667, 1023.2833333333333, 1024.65],
+        "medianExtinctionSeconds": 1023.2833333333333,
+        "runsWithBothSexes": 1,
+        "runsWithMatureBothSexes": 1,
+        "births": 45,
+        "deaths": 74,
+        "deathsByCause": {
+          "age": 70,
+          "thirst": 4
+        },
+        "populations": [0, 1, 2, 2, 1, 1, 3, 0, 0, 1],
+        "sampledMaximumPopulation": 9,
+        "sampledMaximumLivingGeneration": 6
+      }
+    }
+  }
+}

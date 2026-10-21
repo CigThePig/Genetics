@@ -1,3 +1,4 @@
+import { updateMateMemories, rememberedMatePosition } from './mate-memory.js';
 import { canSeeCreature } from './visibility.js';
 import { resolveTicksPerSecond } from './life-stages.js';
 import {
@@ -50,6 +51,7 @@ export function updateCreatureIntent({
   if (!Array.isArray(creatures) || !world) {
     return;
   }
+  updateMateMemories({ creatures, config, world, spatialIndex, tick });
   const ticksPerSecond = resolveTicksPerSecond(config);
   const baseEnergy = resolveNeedMeterBase(config?.creatureBaseEnergy);
   const baseWater = resolveNeedMeterBase(config?.creatureBaseWater);
@@ -126,6 +128,20 @@ export function updateCreatureIntent({
     const waterRatio = normalizeNeedRatio(meters.water, baseWater);
     const energyRatio = normalizeNeedRatio(meters.energy, baseEnergy);
     const concernThreshold = Math.min(0.98, drinkThreshold + resolveDrinkConcernMargin(config));
+    const nearbyWater = hasNearbyWater(world, cell, config);
+    const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
+    const recovery = resolveRatio(config?.creatureResourceRecoveryRatio, 0.95);
+    const continuingDrink =
+      creature.intent?.type === 'drink' &&
+      nearbyWater &&
+      waterRatio < Math.max(drinkThreshold, recovery) &&
+      energyRatio > eatThreshold * 0.5;
+    const continuingMeal =
+      creature.intent?.type === 'eat' &&
+      creature.intent.foodType === FOOD_TYPES.MEAT &&
+      foodAvailability.meat > 0 &&
+      energyRatio < Math.max(eatThreshold, recovery) &&
+      waterRatio > drinkThreshold * 0.5;
     const urgentThirst = waterRatio < drinkThreshold;
     const concernedThirst = waterRatio < concernThreshold;
     const localHerdSize = creature.herding?.herdSize ?? 1;
@@ -144,10 +160,8 @@ export function updateCreatureIntent({
     if (creature.search?.goal === 'food' && energyRatio >= eatThreshold) {
       clearSearchState(creature);
     }
-    const nearbyWater = hasNearbyWater(world, cell, config);
-    const canDrink = waterRatio < drinkThreshold && nearbyWater;
-    const canEat = energyRatio < eatThreshold;
-    const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
+    const canDrink = (waterRatio < drinkThreshold || continuingDrink) && nearbyWater;
+    const canEat = energyRatio < eatThreshold || continuingMeal;
     const dietPreferences = getFeedingPreferences(creature, config);
     const canEatMeat = dietPreferences.includes(FOOD_TYPES.MEAT);
 
@@ -212,9 +226,22 @@ export function updateCreatureIntent({
       reproductionState.mate.targetId = null;
       reproductionState.mate.commitTicksRemaining = 0;
     }
-    if (creature.search?.goal === 'mate' && !canConsiderMate) {
+    if (['mate', 'mate-contact'].includes(creature.search?.goal) && !canConsiderMate) {
       clearSearchState(creature);
     }
+
+    // Eligible animals can court an observed mate when there is no immediate meal.
+    // Blind mate search still requires satiation; actual eating/drinking wins.
+    const canCourt =
+      canSeekMate &&
+      !canDrink &&
+      !herbivoreConcernedNoWater &&
+      !selectFoodChoice({
+        creature,
+        config,
+        availability: foodAvailability,
+        minimums: foodMinimums
+      });
 
     let intent = 'wander';
     let foodType = null;
@@ -223,7 +250,11 @@ export function updateCreatureIntent({
     let targeting = null;
     let mateTarget = null;
 
-    if (canConsiderMate && reproductionState.mate && (creaturesById || spatialIndex)) {
+    if (
+      (canConsiderMate || canCourt) &&
+      reproductionState.mate &&
+      (creaturesById || spatialIndex)
+    ) {
       const mateState = reproductionState.mate;
       let waitingOnCommittedMate = false;
       if (Number.isFinite(mateState.targetId)) {
@@ -314,6 +345,17 @@ export function updateCreatureIntent({
     );
     const maxRendezvousDistance = resolveWaterRendezvousMaxDistance(config);
     let handled = false;
+    const mateOverridesRecovery = mateSeekOverridesNeeds && canConsiderMate;
+    if (continuingDrink && !mateOverridesRecovery) {
+      intent = 'drink';
+      handled = true;
+      clearSearchState(creature);
+    } else if (continuingMeal && !mateOverridesRecovery) {
+      intent = 'eat';
+      foodType = FOOD_TYPES.MEAT;
+      handled = true;
+      clearSearchState(creature);
+    }
 
     if (herbivoreConcernedNoWater && waterTarget && isInHerd && !creature.herding?.isThreatened) {
       const search = ensureSearchState(creature);
@@ -336,7 +378,16 @@ export function updateCreatureIntent({
       intent = 'mate';
       target = mateTarget.position ? { ...mateTarget.position } : null;
     } else if (!handled && canConsiderMate) {
-      if (isHerbivoreSpecies(creature.species) && !creature.herding?.isThreatened) {
+      const contact = rememberedMatePosition(creature, world);
+      // A copied contact destination must not become a persistent random-search goal.
+      if (!contact && creature.search?.goal === 'mate-contact') clearSearchState(creature);
+      if (contact) {
+        const search = ensureSearchState(creature);
+        search.goal = 'mate-contact';
+        search.target = { ...contact };
+        intent = 'seek';
+        target = contact;
+      } else if (isHerbivoreSpecies(creature.species) && !creature.herding?.isThreatened) {
         if (isInHerd) {
           clearSearchState(creature);
           intent = 'wander';

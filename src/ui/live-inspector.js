@@ -420,6 +420,20 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       row('Sprinting', creature.sprinting ? '🏃 Yes' : 'No')
     );
 
+    if (intentType === 'drink' || (intentType === 'eat' && creature.intent?.foodType === 'meat')) {
+      const threshold =
+        intentType === 'drink'
+          ? (creature.traits?.drinkThreshold ?? currentConfig.creatureDrinkThreshold ?? 0.8)
+          : (creature.traits?.eatThreshold ?? currentConfig.creatureEatThreshold ?? 0.8);
+      behaviorBody.append(
+        row(
+          'Recovery target',
+          pct(Math.min(1, Math.max(threshold, currentConfig.creatureResourceRecoveryRatio ?? 0.95)))
+        )
+      );
+      behaviorBody.append(row('Recovery', 'Use available resource; emergency needs can interrupt'));
+    }
+
     if (creature.intent?.foodType) {
       behaviorBody.append(
         row('Seeking', FOOD_LABELS[creature.intent.foodType] || creature.intent.foodType)
@@ -437,7 +451,16 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       !creature.herding?.isThreatened
     )
       behaviorBody.append(row('Movement', goal.reason));
+    const contacts = creature.reproduction?.contacts?.entries ?? [];
+    if (contacts.length)
+      behaviorBody.append(row('Remembered mate contacts', String(contacts.length)));
     const destination = creature.intent?.target;
+    if (
+      creature.intent?.type === 'seek' &&
+      creature.search?.goal === 'mate-contact' &&
+      contacts.some((e) => e.position.x === destination?.x && e.position.y === destination?.y)
+    )
+      behaviorBody.append(row('Mate search', 'Revisiting a last observed contact location'));
     if (destination)
       behaviorBody.append(
         row('Destination', `${destination.x.toFixed(1)}, ${destination.y.toFixed(1)}`)

@@ -20,6 +20,7 @@ const createSpeciesDeathsByCause = () =>
       starvation: 0,
       thirst: 0,
       injury: 0,
+      predation: 0,
       other: 0
     };
     return acc;
@@ -52,6 +53,16 @@ export function createDefaultMetrics() {
     chaseAttemptsBySpecies: createSpeciesCounter(),
     chaseSuccessesBySpecies: createSpeciesCounter(),
     chaseLossesBySpecies: createSpeciesCounter(),
+
+    // Resource use is credited only on consumption, with actual capped meter gain.
+    feedingBySpecies: Object.fromEntries(
+      SPECIES_LIST.map((species) => [
+        species,
+        Object.fromEntries(
+          ['grass', 'berries', 'meat'].map((food) => [food, { consumed: 0, energy: 0, ticks: 0 }])
+        )
+      ])
+    ),
 
     // Hunting metrics
     killsTotal: 0,
@@ -95,6 +106,7 @@ export function createDefaultMetrics() {
       starvation: 0,
       thirst: 0,
       injury: 0,
+      predation: 0,
       other: 0
     }
   };

@@ -43,6 +43,7 @@ export function applyCreatureCombat({ creatures, world, config, metrics, tick })
       prey.meters = {};
     }
     prey.meters.hp = 0;
+    prey.deathCause = 'predation';
     spawnCarcass({
       world,
       x: cellX,
