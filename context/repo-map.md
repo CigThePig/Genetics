@@ -366,15 +366,6 @@ Rules:
 - tests/ecology.test.js
   - Causal recovery/urgency/finite-energy, observed contact, mating eligibility, accounting and ownership regressions.
 
-## Procedural world generation and map scale
-
-- `src/sim/regional-terrain.js`, `hydrology.js`: continuous warped relief/climate, suitability-based biomes, priority-flood basin storage and downhill runoff trees.
-- `src/render/terrain-cache.js`: one pixel per tile, shared ecological colour raster and bounded vegetation update slices; `terrain-view.js` adds sparse zoom-dependent cosmetic marks.
-- `src/sim/rng.js`: stable named initialization streams; terrain, initial vegetation, creatures, bushes and runtime cannot consume one another's random sequences.
-- `scripts/verify-world.mjs`, `world-atlas.py`, `verify-world-browser.cjs`: baseline-selectable seed/scale/ecology diagnostics, optional Pillow atlases and optional Playwright performance/visual evidence.
-- `tracks/2026-10-21-world-generation/`: scope, architecture, validation and default-size decision. Legacy generator implementation removed; public enhanced import path remains a facade.
-
-
 ## Geographical world generation (2026-10-21)
 
 - src/sim/regional-terrain.js, hydrology.js
