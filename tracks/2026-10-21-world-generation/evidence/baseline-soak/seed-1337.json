@@ -1,0 +1,1123 @@
+{
+  "seed": 1337,
+  "width": 120,
+  "height": 160,
+  "population": 80,
+  "ticks": 36000,
+  "generationMs": [
+    27.677589000028092,
+    20.56812999997055,
+    27.56680500000948
+  ],
+  "initMs": 29.218550999998115,
+  "resetMs": 27.838309000013396,
+  "analysis": {
+    "counts": {
+      "forest": 4127,
+      "plains": 7356,
+      "shore": 531,
+      "water": 1546,
+      "sand": 4091,
+      "rock": 1549
+    },
+    "sizes": {
+      "forest": [
+        1317,
+        1372,
+        1438
+      ],
+      "plains": [
+        2912,
+        2877,
+        1567
+      ],
+      "shore": [
+        2,
+        4,
+        2,
+        8,
+        1,
+        2,
+        1,
+        1,
+        1,
+        2,
+        1,
+        3,
+        1,
+        4,
+        1,
+        4,
+        5,
+        3,
+        1,
+        1,
+        2,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3,
+        4,
+        2,
+        1,
+        4,
+        2,
+        1,
+        1,
+        2,
+        2,
+        1,
+        3,
+        2,
+        2,
+        2,
+        2,
+        3,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        2,
+        1,
+        1,
+        4,
+        3,
+        2,
+        1,
+        1,
+        2,
+        1,
+        2,
+        1,
+        2,
+        1,
+        1,
+        7,
+        1,
+        5,
+        2,
+        3,
+        4,
+        1,
+        3,
+        2,
+        7,
+        1,
+        4,
+        2,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        5,
+        1,
+        1,
+        2,
+        2,
+        1,
+        1,
+        1,
+        3,
+        1,
+        1,
+        6,
+        2,
+        1,
+        1,
+        2,
+        2,
+        3,
+        1,
+        1,
+        2,
+        5,
+        2,
+        1,
+        2,
+        4,
+        1,
+        1,
+        4,
+        1,
+        2,
+        2,
+        1,
+        5,
+        4,
+        2,
+        1,
+        2,
+        1,
+        2,
+        1,
+        7,
+        1,
+        1,
+        2,
+        3,
+        5,
+        4,
+        2,
+        2,
+        2,
+        6,
+        6,
+        1,
+        1,
+        2,
+        3,
+        1,
+        1,
+        3,
+        4,
+        1,
+        1,
+        2,
+        1,
+        7,
+        1,
+        3,
+        1,
+        4,
+        2,
+        1,
+        4,
+        1,
+        1,
+        1,
+        1,
+        1,
+        3,
+        1,
+        3,
+        1,
+        2,
+        2,
+        6,
+        2,
+        3,
+        2,
+        3,
+        1,
+        2,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        8,
+        5,
+        2,
+        1,
+        1,
+        1,
+        5,
+        1,
+        1,
+        1,
+        3,
+        1,
+        2,
+        7,
+        1,
+        6,
+        3,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        2,
+        4,
+        1,
+        4,
+        2,
+        3,
+        4,
+        2,
+        2,
+        2,
+        5,
+        1,
+        1,
+        1,
+        3,
+        1,
+        1,
+        1,
+        4,
+        4,
+        1,
+        2,
+        1,
+        3,
+        3,
+        2,
+        2,
+        1,
+        1,
+        2,
+        1,
+        7
+      ],
+      "water": [
+        167,
+        114,
+        143,
+        145,
+        180,
+        96,
+        123,
+        84,
+        156,
+        83,
+        136,
+        119
+      ],
+      "sand": [
+        1354,
+        1196,
+        1541
+      ],
+      "rock": [
+        1549
+      ]
+    },
+    "boundaryDensity": 0.06369359916054565,
+    "tinyLand": 0,
+    "substantialFraction": 1,
+    "landConnectivity": 1,
+    "waterCoverage": 0.08052083333333333,
+    "waterReachableFraction": 1,
+    "waterDistanceP95": 25,
+    "maxWaterDistance": 40
+  },
+  "elapsedMs": 373323.879514,
+  "tickMs": {
+    "p50": 9.138512999983504,
+    "p95": 18.292608999996446,
+    "p99": 28.344209000002593
+  },
+  "samples": [
+    {
+      "tick": 600,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 1200,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 1800,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 2400,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 3000,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 3600,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 4200,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 4800,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0
+    },
+    {
+      "tick": 5400,
+      "population": 79,
+      "species": [
+        35,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 1,
+      "deaths": 1
+    },
+    {
+      "tick": 6000,
+      "population": 78,
+      "species": [
+        34,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 2,
+      "deaths": 2
+    },
+    {
+      "tick": 6600,
+      "population": 77,
+      "species": [
+        34,
+        4,
+        35,
+        4
+      ],
+      "births": 0,
+      "kills": 3,
+      "deaths": 3
+    },
+    {
+      "tick": 7200,
+      "population": 95,
+      "species": [
+        42,
+        4,
+        45,
+        4
+      ],
+      "births": 18,
+      "kills": 3,
+      "deaths": 3
+    },
+    {
+      "tick": 7800,
+      "population": 98,
+      "species": [
+        42,
+        4,
+        48,
+        4
+      ],
+      "births": 22,
+      "kills": 4,
+      "deaths": 4
+    },
+    {
+      "tick": 8400,
+      "population": 103,
+      "species": [
+        44,
+        4,
+        51,
+        4
+      ],
+      "births": 28,
+      "kills": 5,
+      "deaths": 5
+    },
+    {
+      "tick": 9000,
+      "population": 105,
+      "species": [
+        45,
+        4,
+        52,
+        4
+      ],
+      "births": 30,
+      "kills": 5,
+      "deaths": 5
+    },
+    {
+      "tick": 9600,
+      "population": 104,
+      "species": [
+        43,
+        5,
+        52,
+        4
+      ],
+      "births": 31,
+      "kills": 7,
+      "deaths": 7
+    },
+    {
+      "tick": 10200,
+      "population": 103,
+      "species": [
+        42,
+        5,
+        52,
+        4
+      ],
+      "births": 31,
+      "kills": 8,
+      "deaths": 8
+    },
+    {
+      "tick": 10800,
+      "population": 103,
+      "species": [
+        42,
+        5,
+        52,
+        4
+      ],
+      "births": 31,
+      "kills": 8,
+      "deaths": 8
+    },
+    {
+      "tick": 11400,
+      "population": 106,
+      "species": [
+        44,
+        5,
+        52,
+        5
+      ],
+      "births": 34,
+      "kills": 8,
+      "deaths": 8
+    },
+    {
+      "tick": 12000,
+      "population": 105,
+      "species": [
+        43,
+        5,
+        52,
+        5
+      ],
+      "births": 34,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 12600,
+      "population": 105,
+      "species": [
+        43,
+        5,
+        52,
+        5
+      ],
+      "births": 34,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 13200,
+      "population": 105,
+      "species": [
+        43,
+        5,
+        52,
+        5
+      ],
+      "births": 34,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 13800,
+      "population": 105,
+      "species": [
+        43,
+        5,
+        52,
+        5
+      ],
+      "births": 34,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 14400,
+      "population": 110,
+      "species": [
+        45,
+        5,
+        55,
+        5
+      ],
+      "births": 39,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 15000,
+      "population": 114,
+      "species": [
+        46,
+        5,
+        58,
+        5
+      ],
+      "births": 43,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 15600,
+      "population": 119,
+      "species": [
+        48,
+        5,
+        61,
+        5
+      ],
+      "births": 48,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 16200,
+      "population": 121,
+      "species": [
+        49,
+        5,
+        62,
+        5
+      ],
+      "births": 50,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 16800,
+      "population": 126,
+      "species": [
+        50,
+        5,
+        66,
+        5
+      ],
+      "births": 55,
+      "kills": 9,
+      "deaths": 9
+    },
+    {
+      "tick": 17400,
+      "population": 130,
+      "species": [
+        52,
+        6,
+        67,
+        5
+      ],
+      "births": 60,
+      "kills": 9,
+      "deaths": 10
+    },
+    {
+      "tick": 18000,
+      "population": 128,
+      "species": [
+        52,
+        6,
+        65,
+        5
+      ],
+      "births": 61,
+      "kills": 10,
+      "deaths": 13
+    },
+    {
+      "tick": 18600,
+      "population": 125,
+      "species": [
+        49,
+        6,
+        64,
+        6
+      ],
+      "births": 64,
+      "kills": 10,
+      "deaths": 19
+    },
+    {
+      "tick": 19200,
+      "population": 125,
+      "species": [
+        49,
+        6,
+        64,
+        6
+      ],
+      "births": 64,
+      "kills": 10,
+      "deaths": 19
+    },
+    {
+      "tick": 19800,
+      "population": 126,
+      "species": [
+        49,
+        6,
+        65,
+        6
+      ],
+      "births": 66,
+      "kills": 10,
+      "deaths": 20
+    },
+    {
+      "tick": 20400,
+      "population": 124,
+      "species": [
+        48,
+        6,
+        64,
+        6
+      ],
+      "births": 67,
+      "kills": 10,
+      "deaths": 23
+    },
+    {
+      "tick": 21000,
+      "population": 125,
+      "species": [
+        50,
+        6,
+        63,
+        6
+      ],
+      "births": 69,
+      "kills": 10,
+      "deaths": 24
+    },
+    {
+      "tick": 21600,
+      "population": 123,
+      "species": [
+        51,
+        6,
+        60,
+        6
+      ],
+      "births": 70,
+      "kills": 10,
+      "deaths": 27
+    },
+    {
+      "tick": 22200,
+      "population": 127,
+      "species": [
+        52,
+        7,
+        62,
+        6
+      ],
+      "births": 74,
+      "kills": 10,
+      "deaths": 27
+    },
+    {
+      "tick": 22800,
+      "population": 129,
+      "species": [
+        52,
+        7,
+        64,
+        6
+      ],
+      "births": 77,
+      "kills": 11,
+      "deaths": 28
+    },
+    {
+      "tick": 23400,
+      "population": 132,
+      "species": [
+        54,
+        7,
+        65,
+        6
+      ],
+      "births": 81,
+      "kills": 12,
+      "deaths": 29
+    },
+    {
+      "tick": 24000,
+      "population": 133,
+      "species": [
+        53,
+        7,
+        66,
+        7
+      ],
+      "births": 84,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 24600,
+      "population": 146,
+      "species": [
+        58,
+        7,
+        74,
+        7
+      ],
+      "births": 97,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 25200,
+      "population": 149,
+      "species": [
+        58,
+        7,
+        77,
+        7
+      ],
+      "births": 100,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 25800,
+      "population": 150,
+      "species": [
+        58,
+        7,
+        78,
+        7
+      ],
+      "births": 101,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 26400,
+      "population": 150,
+      "species": [
+        58,
+        7,
+        78,
+        7
+      ],
+      "births": 101,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 27000,
+      "population": 155,
+      "species": [
+        59,
+        8,
+        81,
+        7
+      ],
+      "births": 106,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 27600,
+      "population": 159,
+      "species": [
+        60,
+        9,
+        83,
+        7
+      ],
+      "births": 110,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 28200,
+      "population": 163,
+      "species": [
+        62,
+        9,
+        84,
+        8
+      ],
+      "births": 114,
+      "kills": 14,
+      "deaths": 31
+    },
+    {
+      "tick": 28800,
+      "population": 165,
+      "species": [
+        64,
+        9,
+        84,
+        8
+      ],
+      "births": 117,
+      "kills": 15,
+      "deaths": 32
+    },
+    {
+      "tick": 29400,
+      "population": 169,
+      "species": [
+        64,
+        10,
+        87,
+        8
+      ],
+      "births": 121,
+      "kills": 15,
+      "deaths": 32
+    },
+    {
+      "tick": 30000,
+      "population": 170,
+      "species": [
+        63,
+        10,
+        89,
+        8
+      ],
+      "births": 124,
+      "kills": 15,
+      "deaths": 34
+    },
+    {
+      "tick": 30600,
+      "population": 168,
+      "species": [
+        62,
+        10,
+        88,
+        8
+      ],
+      "births": 127,
+      "kills": 15,
+      "deaths": 39
+    },
+    {
+      "tick": 31200,
+      "population": 160,
+      "species": [
+        58,
+        9,
+        85,
+        8
+      ],
+      "births": 128,
+      "kills": 15,
+      "deaths": 48
+    },
+    {
+      "tick": 31800,
+      "population": 162,
+      "species": [
+        59,
+        7,
+        89,
+        7
+      ],
+      "births": 135,
+      "kills": 15,
+      "deaths": 53
+    },
+    {
+      "tick": 32400,
+      "population": 157,
+      "species": [
+        56,
+        6,
+        88,
+        7
+      ],
+      "births": 139,
+      "kills": 15,
+      "deaths": 62
+    },
+    {
+      "tick": 33000,
+      "population": 154,
+      "species": [
+        57,
+        6,
+        85,
+        6
+      ],
+      "births": 145,
+      "kills": 16,
+      "deaths": 71
+    },
+    {
+      "tick": 33600,
+      "population": 150,
+      "species": [
+        54,
+        6,
+        84,
+        6
+      ],
+      "births": 145,
+      "kills": 16,
+      "deaths": 75
+    },
+    {
+      "tick": 34200,
+      "population": 146,
+      "species": [
+        51,
+        6,
+        83,
+        6
+      ],
+      "births": 146,
+      "kills": 16,
+      "deaths": 80
+    },
+    {
+      "tick": 34800,
+      "population": 150,
+      "species": [
+        52,
+        6,
+        87,
+        5
+      ],
+      "births": 153,
+      "kills": 16,
+      "deaths": 83
+    },
+    {
+      "tick": 35400,
+      "population": 150,
+      "species": [
+        53,
+        6,
+        86,
+        5
+      ],
+      "births": 156,
+      "kills": 16,
+      "deaths": 86
+    },
+    {
+      "tick": 36000,
+      "population": 151,
+      "species": [
+        53,
+        6,
+        88,
+        4
+      ],
+      "births": 158,
+      "kills": 16,
+      "deaths": 87,
+      "deathsByCause": {
+        "age": 54,
+        "starvation": 6,
+        "thirst": 11,
+        "injury": 0,
+        "predation": 16,
+        "other": 0
+      }
+    }
+  ],
+  "finalVegetation": {
+    "grassCells": 17654,
+    "bushes": 96
+  },
+  "initialVegetation": {
+    "grassCells": 17654,
+    "bushes": 96
+  },
+  "_reviewCorrections": {
+    "originalSha256": "9cc6f1de6dc3d2964e042de7399126274191955d0434e0fa667570a134ef0dbe",
+    "notes": [
+      "Legacy runner labelled end-state vegetation as initial; initial counts are restored from the paired zero-tick deterministic run.",
+      "Intermediate cause-of-death dictionaries aliased the final mutable dictionary and are omitted. Endpoint cause totals and primitive population/birth/kill snapshots are retained."
+    ]
+  }
+}

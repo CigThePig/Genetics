@@ -1,0 +1,20 @@
+{
+  "comparisons": 90,
+  "seeds": 30,
+  "dimensions": [
+    [
+      120,
+      160
+    ],
+    [
+      180,
+      240
+    ],
+    [
+      240,
+      320
+    ]
+  ],
+  "generatorSha256": "61ee9c1c2d2016cda113baf9882bfb9f77295c3e25957c437b0c9d8d9fa04fd4",
+  "result": "Grid-clear correction leaves fresh default-grid geography and all ecological inputs byte-identical; reused and non-land-default grids are covered by regression tests."
+}
