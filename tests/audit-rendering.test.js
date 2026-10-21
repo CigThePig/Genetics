@@ -96,6 +96,28 @@ describe('repository audit: terrain caches', () => {
       cache.ensureTerrainCache(world, config, 20);
       expect(cache.terrainCache.base).not.toBe(grass);
     }));
+  it('flushes a changed painted row when pausing a sliced pass', () =>
+    withCanvas((ctx) => {
+      const world = createWorldGrid({ width: 4, height: 6, defaultGrass: 0.5 });
+      const config = { grassCap: 1 };
+      const cache = createTerrainCache({ ctx, texNoise: { simplex2: () => 0 } });
+      cache.ensureTerrainCache(world, config, 20);
+      world.setGrassAt(0, 0, 0.8);
+      let now = 0;
+      const spy = vi.spyOn(performance, 'now').mockImplementation(() => (now += 3));
+      try {
+        cache.maybeUpdateGrassCache(cache.terrainCache, world, config, 20, null, 1000);
+        expect(cache.terrainCache.nextRow).toBe(1);
+        world.setGrassAt(0, 0, 0.15);
+        cache.maybeUpdateGrassCache(cache.terrainCache, world, config, 20, null, 1010, true);
+        const expected = habitatRgbAt(world, 0, config).map((value) => Math.round(value * 255));
+        expect(Array.from(cache.terrainCache.image.data.slice(0, 3))).toEqual(expected);
+        expect(cache.terrainCache.lastGrassDirtyCounter).toBe(world.grassDirtyCounter);
+        expect(cache.terrainCache.updating).toBe(false);
+      } finally {
+        spy.mockRestore();
+      }
+    }));
   it('slices dirty grass work, throttles rebuilds, and retains edits made during a rebuild', () =>
     withCanvas(() => {
       const world = createWorldGrid({ width: 4, height: 6, defaultGrass: 0.5 });

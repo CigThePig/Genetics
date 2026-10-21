@@ -86,6 +86,11 @@ export function createTerrainCache({ ctx, texNoise }) {
   const maybeUpdateGrassCache = (cache, world, config, tileSize, perf, nowMs, flush = false) => {
     if (!cache?.base || !world) return;
     const dirty = world.grassDirtyCounter ?? 0;
+    // A paused full flush must repaint rows completed before the latest edit.
+    if (flush && cache.updating) {
+      cache.nextRow = 0;
+      cache.targetDirty = dirty;
+    }
     if (!cache.updating) {
       if (
         dirty === cache.lastGrassDirtyCounter ||
