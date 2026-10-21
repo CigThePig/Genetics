@@ -91,6 +91,15 @@ export function createCamera({
     }
   };
 
+  // Preserve the viewed world point before applying positional edge clamping.
+  const applyZoom = (nextZoom) => {
+    const oldZoom = state.zoom;
+    state.zoom = clampZoom(nextZoom);
+    state.x *= state.zoom / oldZoom;
+    state.y *= state.zoom / oldZoom;
+    clampToBounds();
+  };
+
   /**
    * Convert tile coordinates to world coordinates for camera positioning
    */
@@ -120,7 +129,7 @@ export function createCamera({
     setViewport(width, height) {
       state.viewport.width = width;
       state.viewport.height = height;
-      clampToBounds();
+      applyZoom(state.zoom);
     },
 
     /**
@@ -129,7 +138,7 @@ export function createCamera({
      */
     setBounds(bounds) {
       state.bounds = bounds;
-      clampToBounds();
+      applyZoom(state.zoom);
     },
 
     /**
@@ -138,6 +147,7 @@ export function createCamera({
     setBoundsFromWorld(world, tileSize) {
       if (!world || !world.width || !world.height) {
         state.bounds = null;
+        applyZoom(state.zoom);
         return;
       }
 
@@ -150,7 +160,7 @@ export function createCamera({
         minY: -halfHeight,
         maxY: halfHeight
       };
-      clampToBounds();
+      applyZoom(state.zoom);
     },
 
     /**
@@ -215,11 +225,7 @@ export function createCamera({
      * Zoom to specific level centered on viewport
      */
     zoomTo(nextZoom) {
-      const oldZoom = state.zoom;
-      state.zoom = clampZoom(nextZoom);
-      state.x *= state.zoom / oldZoom;
-      state.y *= state.zoom / oldZoom;
-      clampToBounds();
+      applyZoom(nextZoom);
     },
 
     /**
@@ -325,7 +331,7 @@ export function createCamera({
     setZoomLimits(min, max) {
       state.minZoom = min;
       state.maxZoom = max;
-      state.zoom = clampZoom(state.zoom);
+      applyZoom(state.zoom);
     }
   };
 }

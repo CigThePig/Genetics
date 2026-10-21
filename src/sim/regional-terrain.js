@@ -5,8 +5,13 @@ import { generateHydrology } from './hydrology.js';
 import { deriveSeed } from './rng.js';
 const clamp = (v, a, b) => Math.min(b, Math.max(a, Number.isFinite(v) ? v : a));
 
-export function generateTerrain({ world, rng, config = {} }) {
-  if (!world || !rng) return;
+/**
+ * Seed-only terrain API: generateTerrain({ world, config }).
+ * config.seed (default 1) owns geography/climate; no RNG argument is required
+ * or consumed. Callers use separate RNGs for stochastic initialization/runtime.
+ */
+export function generateTerrain({ world, config = {} }) {
+  if (!world) return;
   const biomes = ['forest', 'plains', 'sand', 'rock'];
   const weights = biomes.map((biome) => clamp(config.terrainBiomeWeights?.[biome] ?? 1, 0, 10));
   if (!weights.some((weight) => weight > 0)) {

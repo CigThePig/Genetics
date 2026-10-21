@@ -29,7 +29,11 @@ if (mode === 'maps') {
   for (let seed = 1; seed <= 32; seed++) {
     const world = createWorldGrid({ width: 120, height: 160 });
     const start = performance.now();
-    generate({ world, rng: createRng(seed), config: { ...defaults, seed } });
+    generate({
+      world,
+      config: { ...defaults, seed },
+      ...(baseline ? { rng: createRng(seed) } : {})
+    });
     const ms = performance.now() - start;
     const a = analyzeHabitats(world);
     results.push({

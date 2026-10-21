@@ -25,9 +25,9 @@ describe('world generation review regressions', () => {
   it('rejects disabled-all generation before mutating an existing grid', () => {
     const world = createWorldGrid({ width: 8, height: 8 });
     const before = [...world.cells];
-    expect(() =>
-      generateTerrain({ world, rng: createRng(1), config: { terrainBiomeWeights: emptyWeights } })
-    ).toThrow(/biome/i);
+    expect(() => generateTerrain({ world, config: { terrainBiomeWeights: emptyWeights } })).toThrow(
+      /biome/i
+    );
     expect(world.cells).toEqual(before);
   });
 

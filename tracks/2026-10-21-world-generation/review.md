@@ -30,3 +30,14 @@ The execution environment recovered during this follow-up. The original local ar
 - [Environmental fields](evidence/visuals/final-120-fields.webp), [population trajectories](evidence/visuals/population-trajectories.webp), [movement paths](evidence/visuals/movement-paths.webp)
 
 The four outage-regenerated PNG atlases and transcribed browser summary are retained as clearly labeled additional views. Raw motion recordings and intermediate PPM maps remain optional reproducible inputs rather than mandatory committed files; the corrected plotter handles a fresh checkout. Default remains 120 × 160 / 80 founders. No merge, deployment or additional review trigger is requested.
+
+## Latest review on b6a79f1
+
+Both new findings are valid and addressed:
+
+- [Re-clamp zoom when viewport or bounds change](https://github.com/CigThePig/Genetics/pull/140#discussion_r4342762657): viewport, direct bounds, rebuilt-world bounds and cleared bounds now reapply the current fit-dependent zoom limits before positional clamping. The shared zoom helper preserves the viewed world point when possible. Valid zoom choices remain unchanged; shrinking a viewport permits another zoom-out without forcing it.
+- [Unused terrain RNG API](https://github.com/CigThePig/Genetics/pull/140#discussion_r4342762665): took the review's explicit API-redefinition option. The public contract is now `generateTerrain({ world, config })`, with `config.seed` defaulting to 1. Removed the unused RNG parameter/guard and the ineffective terrain stream construction in createSim. Geography/climate retain their existing independently derived field seeds. Updated current callers, facades' API tests, architecture and design notes; historical diagnostic adapters pass RNG only when comparing older checkouts that require it. Callers migrating from an RNG-only invocation must supply their intended seed as config.seed.
+
+Four new regressions fail against the reviewed source and pass with the corrections: small-world rebuild, viewport expansion, direct/cleared bounds with valid-zoom retention, and seed-only terrain generation/replay/different seeds through both public facades. Full local verification covers **256 tests**, lint, formatting and production build.
+
+The seed-only cleanup does not change geographical or ecological outputs: 30 original-size seeds and all three canonical target-size seeds have byte-identical serialized world state versus the reviewed generator, including all environmental/drainage/access/colour fields. All three canonical full simulation states still match archived 600-tick hashes. See evidence/review-seed-api-equivalence.json. Existing soaks and visual evidence therefore retain their source attribution; no new 36,000-tick or browser-performance measurements are claimed for these API/camera corrections.

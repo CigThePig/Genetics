@@ -9,7 +9,7 @@ import { createRng, deriveSeed } from '../src/sim/rng.js';
 import { analyzeHabitats } from '../src/sim/habitat-analysis.js';
 const make = (seed, width = 120, height = 160, config = {}) => {
   const world = createWorldGrid({ width, height });
-  generateTerrain({ world, rng: createRng(seed), config: { ...simConfig, seed, ...config } });
+  generateTerrain({ world, config: { ...simConfig, seed, ...config } });
   return world;
 };
 describe('environmental geography', () => {
@@ -106,13 +106,13 @@ describe('geography integration invariants', () => {
   it('regenerates reused and non-land-default grids exactly like a fresh grid', () => {
     const reused = make(1);
     const config = { ...simConfig, seed: 42, terrainWaterCoverageMultiplier: 0.5 };
-    generateTerrain({ world: reused, rng: createRng(42), config });
+    generateTerrain({ world: reused, config });
     const fresh = make(42, 120, 160, { terrainWaterCoverageMultiplier: 0.5 });
     expect(reused.cells).toEqual(fresh.cells);
     expect(reused.heightMap).toEqual(fresh.heightMap);
     expect(reused.habitatAccess.waterDistance).toEqual(fresh.habitatAccess.waterDistance);
     const initialWater = createWorldGrid({ width: 120, height: 160, defaultTerrain: 'water' });
-    generateTerrain({ world: initialWater, rng: createRng(42), config });
+    generateTerrain({ world: initialWater, config });
     expect(initialWater.cells).toEqual(fresh.cells);
   });
   it('derives biomes from climate and relief rather than assigning climate to labels', () => {
@@ -141,9 +141,9 @@ describe('geography integration invariants', () => {
     a.setSeed(42);
     a.tick();
     expect(JSON.stringify(a.state)).toBe(expected);
-    const terrain = createRng(deriveSeed(42, 'terrain'));
+    const vegetation = createRng(deriveSeed(42, 'vegetation'));
     const spawn = createRng(deriveSeed(42, 'creatures'));
-    for (let i = 0; i < 100; i++) terrain.nextFloat();
+    for (let i = 0; i < 100; i++) vegetation.nextFloat();
     expect(spawn.nextFloat()).toBe(createRng(deriveSeed(42, 'creatures')).nextFloat());
   });
   it.each([

@@ -11,3 +11,5 @@
 Detailed outcomes, provenance, reproduction and limitations are in evidence.md and measurements.md.
 
 8. Completed all six Codex review corrections; added eight regressions (252 total), preserved canonical default state through 600 ticks, restored original evidence and documented dispositions in review.md.
+
+9. Completed the two newest review corrections: camera zoom-floor lifecycle and explicit config.seed terrain API, with four causal regressions and unchanged-world/replay evidence.

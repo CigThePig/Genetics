@@ -47,7 +47,7 @@ export function createSim(config = simConfig) {
       defaultGrass: 0,
       defaultGrassStress: 0
     });
-    generateTerrain({ world, rng: stream('terrain'), config: resolvedConfig });
+    generateTerrain({ world, config: resolvedConfig });
     seedInitialPlants({ world, rng: stream('vegetation'), config: resolvedConfig });
     return world;
   };

@@ -381,3 +381,6 @@ Rules:
 
 - scripts/world-provenance.mjs; tests/world-review.test.js, world-tooling-review.test.js
   - Full-source evidence hashing with commit/dirty metadata; disabled-biome spawning/validation and diagnostic cleanup regressions.
+
+- tests/world-latest-review.test.js
+  - Viewport/rebuild zoom-floor changes and the explicit seed-only terrain API through both public import paths.

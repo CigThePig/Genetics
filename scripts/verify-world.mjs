@@ -42,7 +42,9 @@ for (const seed of seeds) {
   for (let trial = 0; trial < 3; trial++) {
     world = createWorldGrid({ width, height });
     const t = performance.now();
-    generateTerrain({ world, config, rng: createRng(seed) });
+    // Only historical baseline checkouts require an RNG-based terrain API.
+    const legacyOptions = root === resolve('.') ? {} : { rng: createRng(seed) };
+    generateTerrain({ world, config, ...legacyOptions });
     times.push(performance.now() - t);
   }
   const analysis = analyzeHabitats(world);
