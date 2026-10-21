@@ -1,0 +1,257 @@
+{
+  "controlCommit": "b6a79f14d087ace37be68d6274597f3273df79c5",
+  "controlGeneratorBlob": "7529d4c02bc4a7ebb8b6ce6def77aa97941ed4cc",
+  "results": [
+    {
+      "seed": 1,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "005b5fe61dbc4bf8bc727a9a3dd9514f8c1fd4612d26de18c041f54b16a6d22c"
+    },
+    {
+      "seed": 42,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "54b4b8fce7cccaacf7ba28796775a35f598412824bc2fae45041c162249a9dbc"
+    },
+    {
+      "seed": 1337,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "9244386e15ae7c3ad199e06e959cdee8627dae230a6d7a9563caf579d49a9d1d"
+    },
+    {
+      "seed": 2,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "3259623cf21bb3e32214c6daf1eaa03733a0bd5a214b27e022e814392ba67bf1"
+    },
+    {
+      "seed": 3,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "3b997693cf8473048dee69a401abeb7574f6756ebf0e57d30797e02d6b53c480"
+    },
+    {
+      "seed": 4,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "f0f8ce42d5e33851b205fda795ce23e88453a7585e200f6282199c18f9b482a0"
+    },
+    {
+      "seed": 5,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "958107c81d4a1d8e30ebefe6801783e6ef5ae6ebcdf143e8651fe8d26d7126a4"
+    },
+    {
+      "seed": 6,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "cc449565383ec96236a21e82c082756a61d26cd510f8a541ad3262acbf7c30ae"
+    },
+    {
+      "seed": 7,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "c5a5ec5c6284adbd02b7f09d042c67a6b53b1e693719335d1bab1d7c6a7192b5"
+    },
+    {
+      "seed": 8,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "cea1c92b13d875b55dfde6fef0fa652c1842d929bdd6dcc8adf66a9772e68dca"
+    },
+    {
+      "seed": 9,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "63795c5581e4ca517a868ea24745768569522d880b3a3b14dafb318ec803f664"
+    },
+    {
+      "seed": 10,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "8bb7361dfb6894f9ea1b7a4921c6778c8ecdd076b99fb401b3a6286b59bd5e00"
+    },
+    {
+      "seed": 11,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "2412e407ae784cc6d2f742456262196f9d8273c8c9f44b44aaaf8ad6f1a46ccd"
+    },
+    {
+      "seed": 12,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "a1f10868eabe5c147816ca771366bd19e53e51d34743371f85611e6c6f74d3eb"
+    },
+    {
+      "seed": 13,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "eb62f88ebb2e6f4d163611f66e539d0228851b1256445ec1c189c375f78bdbb6"
+    },
+    {
+      "seed": 14,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "6ade730ca7f71db30f352df69d37f9ef7d64eebaf6df4242017b4f1001b41675"
+    },
+    {
+      "seed": 15,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "be7f5f8e440ea87f68eb05ffb67b44c5c11c4220e7f71b54d6ac41ff3bfcdad4"
+    },
+    {
+      "seed": 16,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "3ad776d0039bb73e34148877a879d3e16628d6581f16b992f12535e108c32b9d"
+    },
+    {
+      "seed": 17,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "d7e9471e31c112426ee2dbbd99bc8f41c0d865bb01e77f8f06cf31eb0a64a55e"
+    },
+    {
+      "seed": 18,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "3b0bc71f3f5f48a7468d888a9b51f1a0409c82acec0b1b839333663d0d55e539"
+    },
+    {
+      "seed": 19,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "fb9bdaa2c8c7ed429ee933249562ee32bc50f11a8149d5719d9678791311603d"
+    },
+    {
+      "seed": 20,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "24d7c9da85f796b18ace29c84c9cb893f2ee3cf39a4745bd024049d62b14b71c"
+    },
+    {
+      "seed": 21,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "47d97da9f2a66bc9a409c701c39a11226d7607173b300aa647506de32f02456d"
+    },
+    {
+      "seed": 22,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "8c1820ad2b7ce4a210c8cb4f5993a21e7dd5b6f37f1bca1e6aca4d20ead8d2aa"
+    },
+    {
+      "seed": 23,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "e2b1eb8b9dd44ed9ad4d0bfa33341f232157476e1fb62d301cdbc28f96bfd190"
+    },
+    {
+      "seed": 24,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "4b3ecabfbe1c95dea90582bbbd8e39505c13960b89a11a0fcfb38dd525bb7f73"
+    },
+    {
+      "seed": 25,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "795bcaa3dbd14d2c6a195e7f23c2ac2da5404f7894bf090697d28b0b9cc0eb4b"
+    },
+    {
+      "seed": 26,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "84fedfaa4149af4f4a6f419a9445e3cb93bc8b5c8032b446e7f3090c0b867d90"
+    },
+    {
+      "seed": 27,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "3ea1a55a6da0683ef66ea53d51d50dfa2aa871fd5f8c8e091985db9393f8ec7e"
+    },
+    {
+      "seed": 28,
+      "width": 120,
+      "height": 160,
+      "entireWorldIdentical": true,
+      "worldHash": "43dabb9b563507df8b147fa07624e375786cbdc329f4c17412184b99b505b040"
+    },
+    {
+      "seed": 1,
+      "width": 240,
+      "height": 320,
+      "entireWorldIdentical": true,
+      "worldHash": "3fdfe3ba7c9cc1d662a027670f9f127c7bc68b9af658b57a266444d7bbaa86bf"
+    },
+    {
+      "seed": 42,
+      "width": 240,
+      "height": 320,
+      "entireWorldIdentical": true,
+      "worldHash": "9cd29a0ebbe82e5616cd33bc4eaf757dd87cac57d88dc7a3ba9ef3549ae49b06"
+    },
+    {
+      "seed": 1337,
+      "width": 240,
+      "height": 320,
+      "entireWorldIdentical": true,
+      "worldHash": "e8ff052ab94c960f4bacba97995ab759c8b17b98b24e7bba156363e265f7bb05"
+    }
+  ],
+  "replay": [
+    {
+      "seed": 1,
+      "ticks": 600,
+      "matchesArchivedDefault": true,
+      "stateHash": "824e99f36bba8d36a4694f2cb684dc1e7e16294a6798d9c96d88f022146a7ae5"
+    },
+    {
+      "seed": 42,
+      "ticks": 600,
+      "matchesArchivedDefault": true,
+      "stateHash": "d8db8cc067a364cfeca5ea164b08321f0e5fde2120ce0d8048eab360def98721"
+    },
+    {
+      "seed": 1337,
+      "ticks": 600,
+      "matchesArchivedDefault": true,
+      "stateHash": "a1fbb45bba54876b71ca433fd664e799cb241cf6852022c67ddc6dc24d5c7f62"
+    }
+  ]
+}

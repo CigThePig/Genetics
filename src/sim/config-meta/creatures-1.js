@@ -71,7 +71,8 @@ export const metaCreatures1 = {
   },
   creatureSpawnPredatorAnchorDistance: {
     label: 'Predator Spawn Dist',
-    description: 'Min predator distance from herbivores.',
+    description:
+      'Initial cohort anchor separation, sampled from this distance to twice it in tiles. Difficult terrain may require the nearest suitable fallback.',
     min: 0,
     max: 200,
     step: 2,

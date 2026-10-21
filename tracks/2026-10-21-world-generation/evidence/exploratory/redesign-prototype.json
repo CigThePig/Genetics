@@ -1,0 +1,3820 @@
+{
+  "status": "incomplete prototype; excluded from final comparisons",
+  "limitations": [
+    "Compositor screenshot timed out.",
+    "Mobile prototype lacked device-width viewport metadata.",
+    "Prototype timer driver differed from the final production AppLoop driver.",
+    "Runs overlapped other work; the original log filename did not establish isolation."
+  ],
+  "partialResults": [
+    {
+      "mobile": false,
+      "width": 120,
+      "height": 160,
+      "trial": 0,
+      "rate": 60,
+      "initMs": 160.5999999998603,
+      "firstRenderMs": 11.699999999953434,
+      "resetMs": 122.29999999981374,
+      "allocatedBytes": 76800,
+      "sizes": [
+        [
+          120,
+          160
+        ]
+      ],
+      "frameCount": 151,
+      "elapsedMs": 3002.3000000000466,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 5.900000000139698,
+          "avgMs": 0.038311688312595446,
+          "maxMs": 2.800000000046566,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 10.099999999860302,
+          "avgMs": 5.049999999930151,
+          "maxMs": 7.199999999953434,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 3.000000000698492,
+          "avgMs": 0.019480519485055144,
+          "maxMs": 0.30000000004656613,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 213.69999999855645,
+          "avgMs": 1.387662337652964,
+          "maxMs": 10.099999999860302,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 1.3000000002793968,
+          "avgMs": 0.008441558443372707,
+          "maxMs": 0.10000000009313226,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0.09999999986030161,
+          "avgMs": 0.000649350648443517,
+          "maxMs": 0.09999999986030161,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 301.6999999994878,
+          "avgMs": 1.959090909087583,
+          "maxMs": 10.600000000093132,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 58.399999999208376,
+          "avgMs": 0.3792207792156388,
+          "maxMs": 7.900000000139698,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 363.6999999997206,
+          "avgMs": 2.3616883116864975,
+          "maxMs": 11.600000000093132,
+          "calls": 154,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 14.800000001909211,
+          "avgMs": 0.08268156425647603,
+          "maxMs": 1.5,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 2.399999999208376,
+          "avgMs": 0.013407821224627798,
+          "maxMs": 0.10000000009313226,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 485.1999999990221,
+          "avgMs": 2.7106145251342015,
+          "maxMs": 24.799999999813735,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 5.200000000651926,
+          "avgMs": 0.02905027933325098,
+          "maxMs": 0.7000000001862645,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 18.90000000060536,
+          "avgMs": 0.10558659218215284,
+          "maxMs": 4.699999999953434,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 2.9999999995343387,
+          "avgMs": 0.016759776533711388,
+          "maxMs": 0.39999999990686774,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 3.8999999999068677,
+          "avgMs": 0.021787709496686413,
+          "maxMs": 1,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 85.50000000186265,
+          "avgMs": 0.47765363129532207,
+          "maxMs": 13.199999999953434,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 383.5999999968335,
+          "avgMs": 2.1430167597588463,
+          "maxMs": 10.300000000046566,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 12.90000000060536,
+          "avgMs": 0.07206703910952715,
+          "maxMs": 3.699999999953434,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 1.699999999254942,
+          "avgMs": 0.00949720669974828,
+          "maxMs": 0.39999999990686774,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 90.89999999990687,
+          "avgMs": 0.507821229049759,
+          "maxMs": 22.300000000046566,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 6.399999999208376,
+          "avgMs": 0.0357541899397116,
+          "maxMs": 4.100000000093132,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 3.5000000002328306,
+          "avgMs": 0.019553072626999055,
+          "maxMs": 0.9000000001396984,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.900000000372529,
+          "avgMs": 0.005027932962975022,
+          "maxMs": 0.19999999995343387,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 9.900000000139698,
+          "avgMs": 0.05530726257061284,
+          "maxMs": 0.6000000000931323,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 24.700000001350418,
+          "avgMs": 0.1379888268231867,
+          "maxMs": 4.199999999953434,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 2.199999999953434,
+          "avgMs": 0.012290502793035944,
+          "maxMs": 0.2999999998137355,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 1.800000000745058,
+          "avgMs": 0.010055865925950045,
+          "maxMs": 0.20000000018626451,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 396.6000000005588,
+          "avgMs": 2.21564245810368,
+          "maxMs": 9.100000000093132,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 1577.3000000026077,
+          "avgMs": 8.811731843589987,
+          "maxMs": 75.69999999995343,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 43.199999999953434,
+          "avgMs": 2.0571428571406396,
+          "maxMs": 8.199999999953434,
+          "calls": 21,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 16.699999999953434,
+        "p95": 31.899999999906868,
+        "p99": 93
+      },
+      "renderMs": {
+        "p50": 1.7000000001862645,
+        "p95": 5.699999999953434,
+        "p99": 9.199999999953434
+      },
+      "tickBatchMs": {
+        "p50": 7.400000000139698,
+        "p95": 26.300000000046566,
+        "p99": 82.5
+      },
+      "fps": 50.29477400659417,
+      "tps": 59.62095726609507,
+      "longFrames": 5,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 120,
+      "height": 160,
+      "trial": 1,
+      "rate": 60,
+      "initMs": 158.30000000004657,
+      "firstRenderMs": 5.899999999906868,
+      "resetMs": 81.4000000001397,
+      "allocatedBytes": 76800,
+      "sizes": [
+        [
+          120,
+          160
+        ]
+      ],
+      "frameCount": 145,
+      "elapsedMs": 3000.2999999998137,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 2.5999999993946403,
+          "avgMs": 0.0175675675634773,
+          "maxMs": 0.39999999990686774,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 7,
+          "avgMs": 3.5,
+          "maxMs": 3.699999999953434,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 3.700000000419095,
+          "avgMs": 0.025000000002831722,
+          "maxMs": 0.30000000004656613,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 260.7999999979511,
+          "avgMs": 1.7621621621483181,
+          "maxMs": 9.599999999860302,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 2.200000000419095,
+          "avgMs": 0.014864864867696588,
+          "maxMs": 0.10000000009313226,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0.20000000018626451,
+          "avgMs": 0.0013513513526098955,
+          "maxMs": 0.10000000009313226,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 342.7999999995809,
+          "avgMs": 2.3162162162133844,
+          "maxMs": 10.199999999953434,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 44.30000000097789,
+          "avgMs": 0.2993243243309317,
+          "maxMs": 4.100000000093132,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 391.80000000144355,
+          "avgMs": 2.647297297307051,
+          "maxMs": 12.600000000093132,
+          "calls": 148,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 12.600000000325963,
+          "avgMs": 0.07039106145433499,
+          "maxMs": 0.7999999998137355,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 2.3999999999068677,
+          "avgMs": 0.013407821228529987,
+          "maxMs": 0.5999999998603016,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 534.4000000003725,
+          "avgMs": 2.9854748603372765,
+          "maxMs": 9.900000000139698,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 5.600000000325963,
+          "avgMs": 0.03128491620293834,
+          "maxMs": 0.5,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 18.90000000060536,
+          "avgMs": 0.10558659218215284,
+          "maxMs": 4.100000000093132,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 2.300000000745058,
+          "avgMs": 0.01284916201533552,
+          "maxMs": 0.30000000004656613,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.6999999994877726,
+          "avgMs": 0.009497206701049008,
+          "maxMs": 0.30000000004656613,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 71.69999999902211,
+          "avgMs": 0.400558659212414,
+          "maxMs": 16,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 456.09999999962747,
+          "avgMs": 2.548044692735349,
+          "maxMs": 10.5,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 12.600000000325963,
+          "avgMs": 0.07039106145433499,
+          "maxMs": 1,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 1.4000000006053597,
+          "avgMs": 0.007821229053661227,
+          "maxMs": 0.30000000004656613,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 140.50000000023283,
+          "avgMs": 0.7849162011186192,
+          "maxMs": 50.5,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 5.999999999068677,
+          "avgMs": 0.033519553067422776,
+          "maxMs": 3.5,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 3.700000000419095,
+          "avgMs": 0.020670391063793828,
+          "maxMs": 1.1999999999534339,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 1.3000000000465661,
+          "avgMs": 0.007262569832662381,
+          "maxMs": 0.10000000009313226,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 10.299999999580905,
+          "avgMs": 0.05754189943899947,
+          "maxMs": 0.7999999998137355,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 18.90000000107102,
+          "avgMs": 0.1055865921847543,
+          "maxMs": 0.6999999999534339,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 2,
+          "avgMs": 0.0111731843575419,
+          "maxMs": 0.10000000009313226,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 1.2999999995809048,
+          "avgMs": 0.007262569830060921,
+          "maxMs": 0.39999999990686774,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 525.0999999986961,
+          "avgMs": 2.9335195530653415,
+          "maxMs": 93.5,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 1852.7999999998137,
+          "avgMs": 10.350837988825775,
+          "maxMs": 99.60000000009313,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 41.8000000002794,
+          "avgMs": 1.8173913043599739,
+          "maxMs": 6.800000000046566,
+          "calls": 23,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 17.300000000046566,
+        "p95": 47.89999999990687,
+        "p99": 86.19999999995343
+      },
+      "renderMs": {
+        "p50": 2,
+        "p95": 5.899999999906868,
+        "p99": 10.5
+      },
+      "tickBatchMs": {
+        "p50": 8.800000000046566,
+        "p95": 38.800000000046566,
+        "p99": 79.30000000004657
+      },
+      "fps": 48.328500483288,
+      "tps": 59.66070059661071,
+      "longFrames": 4,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 120,
+      "height": 160,
+      "trial": 2,
+      "rate": 60,
+      "initMs": 208.80000000004657,
+      "firstRenderMs": 4.600000000093132,
+      "resetMs": 81.5999999998603,
+      "allocatedBytes": 76800,
+      "sizes": [
+        [
+          120,
+          160
+        ]
+      ],
+      "frameCount": 39,
+      "elapsedMs": 4254.299999999814,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 1.100000000325963,
+          "avgMs": 0.026190476198237212,
+          "maxMs": 0.10000000009313226,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 6,
+          "avgMs": 3,
+          "maxMs": 3.6000000000931323,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 1.3999999994412065,
+          "avgMs": 0.033333333320028725,
+          "maxMs": 0.10000000009313226,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 66.10000000032596,
+          "avgMs": 1.573809523817285,
+          "maxMs": 5.399999999906868,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.8000000000465661,
+          "avgMs": 0.019047619048727767,
+          "maxMs": 0.30000000004656613,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0.09999999986030161,
+          "avgMs": 0.002380952377626229,
+          "maxMs": 0.09999999986030161,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 100.3000000002794,
+          "avgMs": 2.3880952381018905,
+          "maxMs": 6.300000000046566,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 15.99999999976717,
+          "avgMs": 0.38095238094683737,
+          "maxMs": 4.199999999953434,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 118.19999999925494,
+          "avgMs": 2.814285714267975,
+          "maxMs": 10.5,
+          "calls": 42,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 8.199999998090789,
+          "avgMs": 0.09010989008890977,
+          "maxMs": 0.6999999999534339,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 0.4000000001396984,
+          "avgMs": 0.004395604397139543,
+          "maxMs": 0.10000000009313226,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 415.599999998929,
+          "avgMs": 4.5670329670211975,
+          "maxMs": 19.299999999813735,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 6.599999999627471,
+          "avgMs": 0.07252747252337881,
+          "maxMs": 3.9000000001396984,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 5.200000000651926,
+          "avgMs": 0.05714285715002116,
+          "maxMs": 0.30000000004656613,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 1.600000000325963,
+          "avgMs": 0.017582417585999592,
+          "maxMs": 0.10000000009313226,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1,
+          "avgMs": 0.01098901098901099,
+          "maxMs": 0.10000000009313226,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 66.59999999916181,
+          "avgMs": 0.731868131858921,
+          "maxMs": 12.800000000046566,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 224.00000000139698,
+          "avgMs": 2.461538461553813,
+          "maxMs": 9.399999999906868,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 5.199999999720603,
+          "avgMs": 0.05714285713978685,
+          "maxMs": 0.30000000004656613,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 0.39999999990686774,
+          "avgMs": 0.004395604394580964,
+          "maxMs": 0.10000000009313226,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 76.39999999967404,
+          "avgMs": 0.8395604395568576,
+          "maxMs": 27.300000000046566,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 5.300000000046566,
+          "avgMs": 0.05824175824226996,
+          "maxMs": 4.400000000139698,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 12.800000000279397,
+          "avgMs": 0.14065934066241095,
+          "maxMs": 10.5,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.5999999998603016,
+          "avgMs": 0.006593406591871446,
+          "maxMs": 0.10000000009313226,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 12.199999999487773,
+          "avgMs": 0.1340659340603052,
+          "maxMs": 6.699999999953434,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 22.700000000186265,
+          "avgMs": 0.24945054945259632,
+          "maxMs": 4.199999999953434,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 0.4000000001396984,
+          "avgMs": 0.004395604397139543,
+          "maxMs": 0.10000000009313226,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 0.19999999972060323,
+          "avgMs": 0.0021978021947319038,
+          "maxMs": 0.09999999986030161,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 250.60000000172295,
+          "avgMs": 2.753846153865087,
+          "maxMs": 11.5,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 1140.3999999992084,
+          "avgMs": 12.531868131859433,
+          "maxMs": 59,
+          "calls": 91,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 19.9000000001397,
+          "avgMs": 1.99000000001397,
+          "maxMs": 4.7999999998137355,
+          "calls": 10,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 21.199999999953434,
+        "p95": 1254.6999999999534,
+        "p99": 1799.2000000001863
+      },
+      "renderMs": {
+        "p50": 2,
+        "p95": 6.300000000046566,
+        "p99": 10.5
+      },
+      "tickBatchMs": {
+        "p50": 17.199999999953434,
+        "p95": 162.5,
+        "p99": 179.19999999995343
+      },
+      "fps": 9.16719554333303,
+      "tps": 21.390122934443735,
+      "longFrames": 7,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 120,
+      "height": 160,
+      "trial": 0,
+      "rate": 120,
+      "initMs": 103.30000000004657,
+      "firstRenderMs": 5.399999999906868,
+      "resetMs": 125.5,
+      "allocatedBytes": 76800,
+      "sizes": [
+        [
+          120,
+          160
+        ]
+      ],
+      "frameCount": 4,
+      "elapsedMs": 3100.100000000093,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.19999999995343387,
+          "avgMs": 0.028571428564776267,
+          "maxMs": 0.10000000009313226,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 5.899999999906868,
+          "avgMs": 2.949999999953434,
+          "maxMs": 3.3999999999068677,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.20000000018626451,
+          "avgMs": 0.02857142859803779,
+          "maxMs": 0.10000000009313226,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 11.099999999860302,
+          "avgMs": 1.5857142856943287,
+          "maxMs": 2.199999999953434,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 24.800000000279397,
+          "avgMs": 3.5428571428970566,
+          "maxMs": 5.5,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 2.699999999953434,
+          "avgMs": 0.3857142857076334,
+          "maxMs": 0.6000000000931323,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 27.700000000186265,
+          "avgMs": 3.9571428571694662,
+          "maxMs": 5.899999999906868,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 9.099999998928979,
+          "avgMs": 0.13382352939601438,
+          "maxMs": 4,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 0.7000000001862645,
+          "avgMs": 0.010294117649798007,
+          "maxMs": 0.10000000009313226,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 256.40000000060536,
+          "avgMs": 3.77058823530302,
+          "maxMs": 23.4000000001397,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 3.499999999301508,
+          "avgMs": 0.05147058822502218,
+          "maxMs": 1.1999999999534339,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 4.09999999939464,
+          "avgMs": 0.06029411763815647,
+          "maxMs": 0.5,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 1.0000000002328306,
+          "avgMs": 0.014705882356365156,
+          "maxMs": 0.8000000000465661,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 0.8000000000465661,
+          "avgMs": 0.011764705883037737,
+          "maxMs": 0.10000000009313226,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 42.1999999997206,
+          "avgMs": 0.6205882352900088,
+          "maxMs": 11.600000000093132,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 170.7000000004191,
+          "avgMs": 2.510294117653222,
+          "maxMs": 8.800000000046566,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 4.000000000232831,
+          "avgMs": 0.05882352941518869,
+          "maxMs": 0.30000000004656613,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 0.4000000001396984,
+          "avgMs": 0.005882352943230858,
+          "maxMs": 0.10000000009313226,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 25.800000000279397,
+          "avgMs": 0.3794117647099911,
+          "maxMs": 4.800000000046566,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 1.8000000009778887,
+          "avgMs": 0.026470588249674833,
+          "maxMs": 0.10000000009313226,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 0.5999999998603016,
+          "avgMs": 0.008823529409710318,
+          "maxMs": 0.10000000009313226,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 1.3000000002793968,
+          "avgMs": 0.019117647062932307,
+          "maxMs": 0.8999999999068677,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 4.700000000419095,
+          "avgMs": 0.06911764706498669,
+          "maxMs": 0.9000000001396984,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 14.999999998603016,
+          "avgMs": 0.22058823527357377,
+          "maxMs": 4.199999999953434,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 0.5,
+          "avgMs": 0.007352941176470588,
+          "maxMs": 0.10000000009313226,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 0.7000000001862645,
+          "avgMs": 0.010294117649798007,
+          "maxMs": 0.19999999995343387,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 170.30000000004657,
+          "avgMs": 2.504411764706567,
+          "maxMs": 8.100000000093132,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 721.3999999994412,
+          "avgMs": 10.608823529403548,
+          "maxMs": 46.799999999813735,
+          "calls": 68,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 6.900000000372529,
+          "avgMs": 1.7250000000931323,
+          "maxMs": 2.7000000001862645,
+          "calls": 4,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 1047.5,
+        "p95": 1690.3999999999069,
+        "p99": 1690.3999999999069
+      },
+      "renderMs": {
+        "p50": 3.9000000001396984,
+        "p95": 4.100000000093132,
+        "p99": 4.100000000093132
+      },
+      "tickBatchMs": {
+        "p50": 291.89999999990687,
+        "p95": 295.79999999981374,
+        "p99": 295.79999999981374
+      },
+      "fps": 1.2902809586787136,
+      "tps": 21.93477629753813,
+      "longFrames": 3,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 120,
+      "height": 160,
+      "trial": 1,
+      "rate": 120,
+      "initMs": 79.39999999990687,
+      "firstRenderMs": 7.600000000093132,
+      "resetMs": 92.79999999981374,
+      "allocatedBytes": 76800,
+      "sizes": [
+        [
+          120,
+          160
+        ]
+      ],
+      "frameCount": 4,
+      "elapsedMs": 4615.100000000093,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.7999999995809048,
+          "avgMs": 0.11428571422584355,
+          "maxMs": 0.30000000004656613,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 6.300000000046566,
+          "avgMs": 3.150000000023283,
+          "maxMs": 3.699999999953434,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.19999999972060323,
+          "avgMs": 0.02857142853151475,
+          "maxMs": 0.09999999986030161,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 11.799999999813735,
+          "avgMs": 1.6857142856876766,
+          "maxMs": 3.0999999998603016,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.09999999986030161,
+          "avgMs": 0.014285714265757374,
+          "maxMs": 0.09999999986030161,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 29.399999999441206,
+          "avgMs": 4.1999999999201725,
+          "maxMs": 6.899999999906868,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 2.6000000005587935,
+          "avgMs": 0.3714285715083991,
+          "maxMs": 0.7000000001862645,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 32.199999999953434,
+          "avgMs": 4.599999999993348,
+          "maxMs": 7.600000000093132,
+          "calls": 7,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 3.8999999994412065,
+          "avgMs": 0.05652173912233632,
+          "maxMs": 0.5,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 0.5,
+          "avgMs": 0.007246376811594203,
+          "maxMs": 0.19999999995343387,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 189.39999999990687,
+          "avgMs": 2.7449275362305343,
+          "maxMs": 23.4000000001397,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 5.300000000512227,
+          "avgMs": 0.07681159421032213,
+          "maxMs": 4.100000000093132,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 9.399999999906868,
+          "avgMs": 0.13623188405662126,
+          "maxMs": 8.100000000093132,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 0.6000000000931323,
+          "avgMs": 0.008695652175262787,
+          "maxMs": 0.10000000009313226,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 0.5,
+          "avgMs": 0.007246376811594203,
+          "maxMs": 0.10000000009313226,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 26.899999999441206,
+          "avgMs": 0.38985507245566964,
+          "maxMs": 10.199999999953434,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 95.80000000074506,
+          "avgMs": 1.3884057971122472,
+          "maxMs": 6.600000000093132,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 3.4999999997671694,
+          "avgMs": 0.05072463767778506,
+          "maxMs": 0.5999999998603016,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 22.99999999976717,
+          "avgMs": 0.33333333332995896,
+          "maxMs": 6.300000000046566,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 0.5000000002328306,
+          "avgMs": 0.00724637681496856,
+          "maxMs": 0.10000000009313226,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 0.8999999999068677,
+          "avgMs": 0.013043478259519823,
+          "maxMs": 0.2999999998137355,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.4999999995343387,
+          "avgMs": 0.0072463768048454886,
+          "maxMs": 0.19999999995343387,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 1.6000000000931323,
+          "avgMs": 0.023188405798451193,
+          "maxMs": 0.8000000000465661,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 4.500000000698492,
+          "avgMs": 0.0652173913144709,
+          "maxMs": 0.30000000004656613,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 0.19999999972060323,
+          "avgMs": 0.0028985507205884524,
+          "maxMs": 0.09999999986030161,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 0.19999999995343387,
+          "avgMs": 0.0028985507239628096,
+          "maxMs": 0.10000000009313226,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 112.0999999998603,
+          "avgMs": 1.6246376811573957,
+          "maxMs": 9.199999999953434,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 488.50000000023283,
+          "avgMs": 7.07971014493091,
+          "maxMs": 51.10000000009313,
+          "calls": 69,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 6.000000000232831,
+          "avgMs": 1.200000000046566,
+          "maxMs": 2.1000000000931323,
+          "calls": 5,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 1328.1000000000931,
+        "p95": 3015.399999999907,
+        "p99": 3015.399999999907
+      },
+      "renderMs": {
+        "p50": 4.399999999906868,
+        "p95": 7.600000000093132,
+        "p99": 7.600000000093132
+      },
+      "tickBatchMs": {
+        "p50": 175.5,
+        "p95": 194.60000000009313,
+        "p99": 194.60000000009313
+      },
+      "fps": 0.8667201144070376,
+      "tps": 14.9509219735214,
+      "longFrames": 3,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 120,
+      "height": 160,
+      "trial": 2,
+      "rate": 120,
+      "initMs": 52.89999999990687,
+      "firstRenderMs": 3.800000000046566,
+      "resetMs": 52.10000000009313,
+      "allocatedBytes": 76800,
+      "sizes": [
+        [
+          120,
+          160
+        ]
+      ],
+      "frameCount": 9,
+      "elapsedMs": 3025.1999999999534,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.30000000004656613,
+          "avgMs": 0.025000000003880512,
+          "maxMs": 0.10000000009313226,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 5.5,
+          "avgMs": 2.75,
+          "maxMs": 3.5,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.5000000004656613,
+          "avgMs": 0.041666666705471776,
+          "maxMs": 0.10000000009313226,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 18.800000000279397,
+          "avgMs": 1.5666666666899498,
+          "maxMs": 6.5,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.2999999998137355,
+          "avgMs": 0.024999999984477956,
+          "maxMs": 0.10000000009313226,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 42.9000000001397,
+          "avgMs": 3.5750000000116415,
+          "maxMs": 8.5,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 4.199999999953434,
+          "avgMs": 0.34999999999611947,
+          "maxMs": 1,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 47.8000000002794,
+          "avgMs": 3.9833333333566165,
+          "maxMs": 8.600000000093132,
+          "calls": 12,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 10.899999999674037,
+          "avgMs": 0.058288770051732816,
+          "maxMs": 1.5,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 1.2000000001862645,
+          "avgMs": 0.006417112300461308,
+          "maxMs": 0.19999999995343387,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 490.0999999991618,
+          "avgMs": 2.6208556149687796,
+          "maxMs": 16.399999999906868,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 9.500000000698492,
+          "avgMs": 0.050802139041168405,
+          "maxMs": 6.300000000046566,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 5.800000000046566,
+          "avgMs": 0.03101604278099768,
+          "maxMs": 0.30000000004656613,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 1.0000000002328306,
+          "avgMs": 0.005347593584132784,
+          "maxMs": 0.10000000009313226,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.0999999998603016,
+          "avgMs": 0.0058823529404294205,
+          "maxMs": 0.10000000009313226,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 43.80000000051223,
+          "avgMs": 0.23422459893322048,
+          "maxMs": 2.800000000046566,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 339.5000000006985,
+          "avgMs": 1.8155080213941095,
+          "maxMs": 9.900000000139698,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 16.499999997671694,
+          "avgMs": 0.08823529410519622,
+          "maxMs": 6.800000000046566,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 0.6999999999534339,
+          "avgMs": 0.0037433155077723737,
+          "maxMs": 0.10000000009313226,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 56.60000000218861,
+          "avgMs": 0.30267379680314765,
+          "maxMs": 4.2000000001862645,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 1.499999999301508,
+          "avgMs": 0.0080213903705963,
+          "maxMs": 0.10000000009313226,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 3.400000000372529,
+          "avgMs": 0.018181818183810317,
+          "maxMs": 2.300000000046566,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.30000000004656613,
+          "avgMs": 0.001604278075115327,
+          "maxMs": 0.10000000009313226,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 5.800000000046566,
+          "avgMs": 0.03101604278099768,
+          "maxMs": 0.30000000004656613,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 22.09999999916181,
+          "avgMs": 0.11818181817733588,
+          "maxMs": 2.6000000000931323,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 0.7000000004190952,
+          "avgMs": 0.003743315510262541,
+          "maxMs": 0.10000000009313226,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 0.4999999995343387,
+          "avgMs": 0.0026737967889536828,
+          "maxMs": 0.10000000009313226,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 369.8000000009779,
+          "avgMs": 1.977540106957101,
+          "maxMs": 8.099999999860302,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 1406,
+          "avgMs": 7.518716577540107,
+          "maxMs": 20.100000000093132,
+          "calls": 187,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 16.299999999813735,
+          "avgMs": 2.3285714285448194,
+          "maxMs": 7.199999999953434,
+          "calls": 7,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 289.69999999995343,
+        "p95": 1273.6000000000931,
+        "p99": 1273.6000000000931
+      },
+      "renderMs": {
+        "p50": 2.8999999999068677,
+        "p95": 8.399999999906868,
+        "p99": 8.399999999906868
+      },
+      "tickBatchMs": {
+        "p50": 190.10000000009313,
+        "p95": 262,
+        "p99": 262
+      },
+      "fps": 2.975009916699768,
+      "tps": 61.81409493587296,
+      "longFrames": 6,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 240,
+      "height": 320,
+      "trial": 0,
+      "rate": 60,
+      "initMs": 320.19999999995343,
+      "firstRenderMs": 12.399999999906868,
+      "resetMs": 353.69999999995343,
+      "allocatedBytes": 307200,
+      "sizes": [
+        [
+          240,
+          320
+        ]
+      ],
+      "frameCount": 14,
+      "elapsedMs": 3043.2000000001863,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.599999999627471,
+          "avgMs": 0.03529411762514535,
+          "maxMs": 0.10000000009313226,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 25.199999999720603,
+          "avgMs": 12.599999999860302,
+          "maxMs": 15.899999999906868,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 1.0000000002328306,
+          "avgMs": 0.058823529425460624,
+          "maxMs": 0.4000000001396984,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 40.39999999967404,
+          "avgMs": 2.3764705882161197,
+          "maxMs": 12.199999999953434,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0.10000000009313226,
+          "avgMs": 0.005882352946654838,
+          "maxMs": 0.10000000009313226,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 110.99999999976717,
+          "avgMs": 6.5294117646921865,
+          "maxMs": 17.800000000046566,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 7.099999999860302,
+          "avgMs": 0.41764705881531183,
+          "maxMs": 0.8000000000465661,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 119.09999999916181,
+          "avgMs": 7.005882352891871,
+          "maxMs": 18.300000000046566,
+          "calls": 17,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 16.899999999441206,
+          "avgMs": 0.1030487804843976,
+          "maxMs": 4.399999999906868,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 0.8999999999068677,
+          "avgMs": 0.005487804877480901,
+          "maxMs": 0.10000000009313226,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 798.3000000012107,
+          "avgMs": 4.86768292683665,
+          "maxMs": 16.899999999906868,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 5.800000000046566,
+          "avgMs": 0.03536585365882053,
+          "maxMs": 0.4000000001396984,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 5.100000000325963,
+          "avgMs": 0.031097560977597336,
+          "maxMs": 0.19999999995343387,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 0.8999999996740371,
+          "avgMs": 0.005487804876061202,
+          "maxMs": 0.30000000004656613,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.0999999998603016,
+          "avgMs": 0.006707317072318912,
+          "maxMs": 0.10000000009313226,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 47.69999999925494,
+          "avgMs": 0.2908536585320423,
+          "maxMs": 4.899999999906868,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 297.8000000009779,
+          "avgMs": 1.8158536585425482,
+          "maxMs": 12.199999999953434,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 29.699999999720603,
+          "avgMs": 0.1810975609739061,
+          "maxMs": 16.300000000046566,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 0.7999999993480742,
+          "avgMs": 0.004878048776512648,
+          "maxMs": 0.10000000009313226,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 139.7999999995809,
+          "avgMs": 0.8524390243876885,
+          "maxMs": 67.9000000001397,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 1.699999999254942,
+          "avgMs": 0.010365853653993548,
+          "maxMs": 0.19999999995343387,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 1.300000000745058,
+          "avgMs": 0.007926829272835719,
+          "maxMs": 0.20000000018626451,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 1.4000000006053597,
+          "avgMs": 0.008536585369544877,
+          "maxMs": 0.6999999999534339,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 5.700000001350418,
+          "avgMs": 0.034756097569209866,
+          "maxMs": 0.2999999998137355,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 17.19999999809079,
+          "avgMs": 0.10487804876884627,
+          "maxMs": 1.5999999998603016,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 0.599999999627471,
+          "avgMs": 0.0036585365830943354,
+          "maxMs": 0.10000000009313226,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 1.1000000005587935,
+          "avgMs": 0.0067073170765780095,
+          "maxMs": 0.20000000018626451,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 1443.2999999986496,
+          "avgMs": 8.800609756089326,
+          "maxMs": 26.899999999906868,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 2829.000000000233,
+          "avgMs": 17.25000000000142,
+          "maxMs": 116.5999999998603,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 43.00000000046566,
+          "avgMs": 3.3076923077281277,
+          "maxMs": 11,
+          "calls": 13,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 219.60000000009313,
+        "p95": 298.69999999995343,
+        "p99": 298.69999999995343
+      },
+      "renderMs": {
+        "p50": 4.399999999906868,
+        "p95": 13.599999999860302,
+        "p99": 13.599999999860302
+      },
+      "tickBatchMs": {
+        "p50": 211.30000000004657,
+        "p95": 291.5999999998603,
+        "p99": 291.5999999998603
+      },
+      "fps": 4.6004206098840505,
+      "tps": 53.89064143007031,
+      "longFrames": 12,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 240,
+      "height": 320,
+      "trial": 1,
+      "rate": 60,
+      "initMs": 340.9000000001397,
+      "firstRenderMs": 14.799999999813735,
+      "resetMs": 305.20000000018626,
+      "allocatedBytes": 307200,
+      "sizes": [
+        [
+          240,
+          320
+        ]
+      ],
+      "frameCount": 13,
+      "elapsedMs": 3245.600000000093,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.8000000000465661,
+          "avgMs": 0.05000000000291038,
+          "maxMs": 0.19999999995343387,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 19.5,
+          "avgMs": 9.75,
+          "maxMs": 12.300000000046566,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.6999999994877726,
+          "avgMs": 0.043749999967985786,
+          "maxMs": 0.10000000009313226,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 25.399999999906868,
+          "avgMs": 1.5874999999941792,
+          "maxMs": 3.6000000000931323,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.49999999976716936,
+          "avgMs": 0.031249999985448085,
+          "maxMs": 0.10000000009313226,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0.10000000009313226,
+          "avgMs": 0.006250000005820766,
+          "maxMs": 0.10000000009313226,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 77.59999999962747,
+          "avgMs": 4.849999999976717,
+          "maxMs": 14.299999999813735,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 6.200000000651926,
+          "avgMs": 0.38750000004074536,
+          "maxMs": 0.6999999999534339,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 84.3000000002794,
+          "avgMs": 5.268750000017462,
+          "maxMs": 14.799999999813735,
+          "calls": 16,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 12.100000000791624,
+          "avgMs": 0.07378048780970503,
+          "maxMs": 0.4000000001396984,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 2.0999999998603016,
+          "avgMs": 0.012804878047928668,
+          "maxMs": 0.5,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 824.5000000016298,
+          "avgMs": 5.027439024400182,
+          "maxMs": 15.699999999953434,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 12.799999999348074,
+          "avgMs": 0.07804878048382972,
+          "maxMs": 6.699999999953434,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 6.599999998463318,
+          "avgMs": 0.04024390242965438,
+          "maxMs": 0.39999999990686774,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 2.5000000004656613,
+          "avgMs": 0.015243902441863789,
+          "maxMs": 0.20000000018626451,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 2.199999999254942,
+          "avgMs": 0.013414634141798427,
+          "maxMs": 0.30000000004656613,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 78.8000000002794,
+          "avgMs": 0.4804878048797524,
+          "maxMs": 15,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 356.2000000011176,
+          "avgMs": 2.1719512195190096,
+          "maxMs": 11.599999999860302,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 120.3999999994412,
+          "avgMs": 0.7341463414600073,
+          "maxMs": 103.30000000004657,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 1.6999999997206032,
+          "avgMs": 0.010365853656832947,
+          "maxMs": 0.5,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 147.8000000002794,
+          "avgMs": 0.9012195121968256,
+          "maxMs": 71.19999999995343,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 2.5000000009313226,
+          "avgMs": 0.015243902444703186,
+          "maxMs": 0.20000000018626451,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 3.1000000000931323,
+          "avgMs": 0.018902439024958122,
+          "maxMs": 0.30000000004656613,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 1.1999999997206032,
+          "avgMs": 0.007317073169028069,
+          "maxMs": 0.4000000001396984,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 5.499999999767169,
+          "avgMs": 0.03353658536443396,
+          "maxMs": 0.19999999995343387,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 24.499999997904524,
+          "avgMs": 0.14939024388966174,
+          "maxMs": 2,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 1.8000000002793968,
+          "avgMs": 0.0109756097578012,
+          "maxMs": 0.2999999998137355,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 1.3000000000465661,
+          "avgMs": 0.007926829268576623,
+          "maxMs": 0.10000000009313226,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 1506.3000000000466,
+          "avgMs": 9.184756097561259,
+          "maxMs": 25.0999999998603,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 3132.9999999995343,
+          "avgMs": 19.103658536582525,
+          "maxMs": 227.69999999995343,
+          "calls": 164,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 30.200000000186265,
+          "avgMs": 2.516666666682189,
+          "maxMs": 9.5,
+          "calls": 12,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 255.39999999990687,
+        "p95": 342.10000000009313,
+        "p99": 342.10000000009313
+      },
+      "renderMs": {
+        "p50": 3.9000000001396984,
+        "p95": 5.199999999953434,
+        "p99": 5.199999999953434
+      },
+      "tickBatchMs": {
+        "p50": 248.79999999981374,
+        "p95": 335.30000000004657,
+        "p99": 335.30000000004657
+      },
+      "fps": 4.005422726152214,
+      "tps": 50.52994823761255,
+      "longFrames": 11,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 240,
+      "height": 320,
+      "trial": 2,
+      "rate": 60,
+      "initMs": 464.89999999990687,
+      "firstRenderMs": 19.300000000046566,
+      "resetMs": 379.80000000004657,
+      "allocatedBytes": 307200,
+      "sizes": [
+        [
+          240,
+          320
+        ]
+      ],
+      "frameCount": 12,
+      "elapsedMs": 3039.3000000000466,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.5999999998603016,
+          "avgMs": 0.03999999999068678,
+          "maxMs": 0.10000000009313226,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 27.700000000186265,
+          "avgMs": 13.850000000093132,
+          "maxMs": 15.400000000139698,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.3999999996740371,
+          "avgMs": 0.026666666644935808,
+          "maxMs": 0.10000000009313226,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 29.30000000097789,
+          "avgMs": 1.9533333333985259,
+          "maxMs": 3.2000000001862645,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.19999999972060323,
+          "avgMs": 0.013333333314706881,
+          "maxMs": 0.09999999986030161,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0.30000000004656613,
+          "avgMs": 0.02000000000310441,
+          "maxMs": 0.10000000009313226,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 124.20000000018626,
+          "avgMs": 8.280000000012418,
+          "maxMs": 37,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 6.199999999487773,
+          "avgMs": 0.4133333332991848,
+          "maxMs": 0.7999999998137355,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 131.10000000009313,
+          "avgMs": 8.740000000006209,
+          "maxMs": 37,
+          "calls": 15,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 10.700000001350418,
+          "avgMs": 0.07133333334233612,
+          "maxMs": 0.6000000000931323,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 0.8000000002793968,
+          "avgMs": 0.005333333335195979,
+          "maxMs": 0.10000000009313226,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 832.7000000006519,
+          "avgMs": 5.55133333333768,
+          "maxMs": 20.300000000046566,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 3.700000000651926,
+          "avgMs": 0.02466666667101284,
+          "maxMs": 0.30000000004656613,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 6.59999999916181,
+          "avgMs": 0.043999999994412065,
+          "maxMs": 0.30000000004656613,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 1.899999999674037,
+          "avgMs": 0.01266666666449358,
+          "maxMs": 0.19999999995343387,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.4999999997671694,
+          "avgMs": 0.009999999998447796,
+          "maxMs": 0.19999999995343387,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 50.39999999967404,
+          "avgMs": 0.3359999999978269,
+          "maxMs": 3.699999999953434,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 303.70000000158325,
+          "avgMs": 2.0246666666772217,
+          "maxMs": 13.899999999906868,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 55.19999999925494,
+          "avgMs": 0.36799999999503297,
+          "maxMs": 47.5,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 0.7999999995809048,
+          "avgMs": 0.005333333330539366,
+          "maxMs": 0.20000000018626451,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 94.20000000065193,
+          "avgMs": 0.6280000000043462,
+          "maxMs": 41,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 3.100000000325963,
+          "avgMs": 0.02066666666883975,
+          "maxMs": 0.39999999990686774,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 2,
+          "avgMs": 0.013333333333333334,
+          "maxMs": 0.5,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.39999999990686774,
+          "avgMs": 0.0026666666660457848,
+          "maxMs": 0.10000000009313226,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 6.399999998509884,
+          "avgMs": 0.042666666656732556,
+          "maxMs": 0.5,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 17.000000001164153,
+          "avgMs": 0.11333333334109436,
+          "maxMs": 1.3000000000465661,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 1.5000000004656613,
+          "avgMs": 0.01000000000310441,
+          "maxMs": 0.19999999995343387,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 1.900000000372529,
+          "avgMs": 0.012666666669150194,
+          "maxMs": 0.4000000001396984,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 1526.5999999984633,
+          "avgMs": 10.177333333323089,
+          "maxMs": 32.89999999990687,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 2938.3000000005122,
+          "avgMs": 19.588666666670083,
+          "maxMs": 116,
+          "calls": 150,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 65.39999999990687,
+          "avgMs": 5.030769230762067,
+          "maxMs": 34.699999999953434,
+          "calls": 13,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 273.39999999990687,
+        "p95": 326.5999999998603,
+        "p99": 326.5999999998603
+      },
+      "renderMs": {
+        "p50": 4.5,
+        "p95": 9.100000000093132,
+        "p99": 9.100000000093132
+      },
+      "tickBatchMs": {
+        "p50": 267.60000000009313,
+        "p95": 321,
+        "p99": 321
+      },
+      "fps": 3.9482775639126824,
+      "tps": 49.353469548908535,
+      "longFrames": 11,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 240,
+      "height": 320,
+      "trial": 0,
+      "rate": 120,
+      "initMs": 340.5999999998603,
+      "firstRenderMs": 15.400000000139698,
+      "resetMs": 330.0999999998603,
+      "allocatedBytes": 307200,
+      "sizes": [
+        [
+          240,
+          320
+        ]
+      ],
+      "frameCount": 7,
+      "elapsedMs": 3154.5,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.49999999976716936,
+          "avgMs": 0.04999999997671693,
+          "maxMs": 0.19999999995343387,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 24.5,
+          "avgMs": 12.25,
+          "maxMs": 12.699999999953434,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.39999999990686774,
+          "avgMs": 0.03999999999068678,
+          "maxMs": 0.10000000009313226,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 18.399999999674037,
+          "avgMs": 1.8399999999674037,
+          "maxMs": 3.9000000001396984,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.10000000009313226,
+          "avgMs": 0.010000000009313226,
+          "maxMs": 0.10000000009313226,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 61.99999999953434,
+          "avgMs": 6.199999999953434,
+          "maxMs": 14.900000000139698,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 4.800000000279397,
+          "avgMs": 0.4800000000279397,
+          "maxMs": 1.0999999998603016,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 67.59999999962747,
+          "avgMs": 6.759999999962747,
+          "maxMs": 15.400000000139698,
+          "calls": 10,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 10.400000001303852,
+          "avgMs": 0.05875706215425905,
+          "maxMs": 0.5,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 1.1000000007916242,
+          "avgMs": 0.006214689270009176,
+          "maxMs": 0.10000000009313226,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 864.4999999981374,
+          "avgMs": 4.884180790949928,
+          "maxMs": 31.300000000046566,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 5.899999999906868,
+          "avgMs": 0.033333333332807163,
+          "maxMs": 0.20000000018626451,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 7.600000000325963,
+          "avgMs": 0.042937853109186234,
+          "maxMs": 0.5999999998603016,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 1.3999999999068677,
+          "avgMs": 0.00790960451924784,
+          "maxMs": 0.19999999995343387,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.9000000001396984,
+          "avgMs": 0.010734463277625415,
+          "maxMs": 0.10000000009313226,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 69.69999999878928,
+          "avgMs": 0.3937853107276231,
+          "maxMs": 13.399999999906868,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 335.3000000005122,
+          "avgMs": 1.8943502824887697,
+          "maxMs": 12.300000000046566,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 81.99999999930151,
+          "avgMs": 0.4632768361542458,
+          "maxMs": 70.39999999990687,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 1.0999999991618097,
+          "avgMs": 0.006214689260801184,
+          "maxMs": 0.10000000009313226,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 144.29999999911524,
+          "avgMs": 0.815254237283137,
+          "maxMs": 65.80000000004657,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 2.9000000006053597,
+          "avgMs": 0.016384180794380563,
+          "maxMs": 0.19999999995343387,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 2.300000000745058,
+          "avgMs": 0.012994350286695244,
+          "maxMs": 0.19999999995343387,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 9.100000000325963,
+          "avgMs": 0.05141242938037267,
+          "maxMs": 8.400000000139698,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 6.800000000279397,
+          "avgMs": 0.03841807909762371,
+          "maxMs": 0.6999999999534339,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 27.39999999757856,
+          "avgMs": 0.15480225987332522,
+          "maxMs": 6.400000000139698,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 3.4999999997671694,
+          "avgMs": 0.0197740112981196,
+          "maxMs": 2.1000000000931323,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 2.099999999627471,
+          "avgMs": 0.011864406777556333,
+          "maxMs": 0.39999999990686774,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 1495.5000000002328,
+          "avgMs": 8.449152542374197,
+          "maxMs": 27.699999999953434,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 3094.8000000005122,
+          "avgMs": 17.48474576271476,
+          "maxMs": 205.89999999990687,
+          "calls": 177,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 17.800000000046566,
+          "avgMs": 2.2250000000058208,
+          "maxMs": 5,
+          "calls": 8,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 468.10000000009313,
+        "p95": 554.4000000001397,
+        "p99": 554.4000000001397
+      },
+      "renderMs": {
+        "p50": 4.300000000046566,
+        "p95": 6.7999999998137355,
+        "p99": 6.7999999998137355
+      },
+      "tickBatchMs": {
+        "p50": 463.9000000001397,
+        "p95": 546.9000000001397,
+        "p99": 546.9000000001397
+      },
+      "fps": 2.2190521477254714,
+      "tps": 56.11031859248693,
+      "longFrames": 6,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 240,
+      "height": 320,
+      "trial": 1,
+      "rate": 120,
+      "initMs": 275.80000000004657,
+      "firstRenderMs": 12.699999999953434,
+      "resetMs": 285.19999999995343,
+      "allocatedBytes": 307200,
+      "sizes": [
+        [
+          240,
+          320
+        ]
+      ],
+      "frameCount": 11,
+      "elapsedMs": 3157.6999999999534,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.10000000009313226,
+          "avgMs": 0.007142857149509447,
+          "maxMs": 0.10000000009313226,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 19.100000000093132,
+          "avgMs": 9.550000000046566,
+          "maxMs": 10,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.5,
+          "avgMs": 0.03571428571428571,
+          "maxMs": 0.10000000009313226,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 15.900000000139698,
+          "avgMs": 1.1357142857242641,
+          "maxMs": 2.199999999953434,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.09999999986030161,
+          "avgMs": 0.007142857132878687,
+          "maxMs": 0.09999999986030161,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 59.800000000046566,
+          "avgMs": 4.271428571431898,
+          "maxMs": 12.099999999860302,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 4.300000000046566,
+          "avgMs": 0.3071428571461833,
+          "maxMs": 0.5,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 64.60000000009313,
+          "avgMs": 4.614285714292366,
+          "maxMs": 12.699999999953434,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 15.399999998509884,
+          "avgMs": 0.06497890294729909,
+          "maxMs": 1,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 0.900000000372529,
+          "avgMs": 0.003797468356002232,
+          "maxMs": 0.10000000009313226,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 766.7000000011176,
+          "avgMs": 3.235021097051129,
+          "maxMs": 83.60000000009313,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 3.9999999997671694,
+          "avgMs": 0.01687763712981928,
+          "maxMs": 0.4000000001396984,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 7.1000000005587935,
+          "avgMs": 0.029957805909530774,
+          "maxMs": 1,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 2.8000000005122274,
+          "avgMs": 0.011814345993722478,
+          "maxMs": 0.30000000004656613,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.3000000002793968,
+          "avgMs": 0.005485232068689437,
+          "maxMs": 0.10000000009313226,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 48.9999999969732,
+          "avgMs": 0.20675105483954936,
+          "maxMs": 2.8999999999068677,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 352.50000000256114,
+          "avgMs": 1.4873417721627051,
+          "maxMs": 22.100000000093132,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 17.699999999254942,
+          "avgMs": 0.07468354430065377,
+          "maxMs": 7.2999999998137355,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 1.0000000002328306,
+          "avgMs": 0.004219409283682829,
+          "maxMs": 0.39999999990686774,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 85.6999999997206,
+          "avgMs": 0.3616033755262473,
+          "maxMs": 20.5999999998603,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 2.4000000001396984,
+          "avgMs": 0.010126582279070458,
+          "maxMs": 0.19999999995343387,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 3.299999999348074,
+          "avgMs": 0.013924050630160651,
+          "maxMs": 0.5999999998603016,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.3999999996740371,
+          "avgMs": 0.0016877637117047979,
+          "maxMs": 0.10000000009313226,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 7,
+          "avgMs": 0.029535864978902954,
+          "maxMs": 0.19999999995343387,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 21.70000000251457,
+          "avgMs": 0.09156118144520917,
+          "maxMs": 1.1999999999534339,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 1.2000000001862645,
+          "avgMs": 0.0050632911400264324,
+          "maxMs": 0.19999999995343387,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 1.499999999301508,
+          "avgMs": 0.00632911392110341,
+          "maxMs": 0.30000000004656613,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 1725.3999999999069,
+          "avgMs": 7.280168776370915,
+          "maxMs": 101.29999999981374,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 3087.7999999998137,
+          "avgMs": 13.028691983121577,
+          "maxMs": 208.5,
+          "calls": 237,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 23.899999999906868,
+          "avgMs": 1.9916666666589056,
+          "maxMs": 3.199999999953434,
+          "calls": 12,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 290.39999999990687,
+        "p95": 561.8999999999069,
+        "p99": 561.8999999999069
+      },
+      "renderMs": {
+        "p50": 3.199999999953434,
+        "p95": 4.699999999953434,
+        "p99": 4.699999999953434
+      },
+      "tickBatchMs": {
+        "p50": 285.89999999990687,
+        "p95": 557.8000000000466,
+        "p99": 557.8000000000466
+      },
+      "fps": 3.4835481521360996,
+      "tps": 75.05462836875051,
+      "longFrames": 9,
+      "heap": 24500000
+    },
+    {
+      "mobile": false,
+      "width": 240,
+      "height": 320,
+      "trial": 2,
+      "rate": 120,
+      "initMs": 250.4000000001397,
+      "firstRenderMs": 9.799999999813735,
+      "resetMs": 210.30000000004657,
+      "allocatedBytes": 307200,
+      "sizes": [
+        [
+          240,
+          320
+        ]
+      ],
+      "frameCount": 11,
+      "elapsedMs": 3128.3000000000466,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 0.30000000004656613,
+          "avgMs": 0.02142857143189758,
+          "maxMs": 0.10000000009313226,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 14.100000000093132,
+          "avgMs": 7.050000000046566,
+          "maxMs": 8.100000000093132,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 0.30000000004656613,
+          "avgMs": 0.02142857143189758,
+          "maxMs": 0.10000000009313226,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 19.399999999441206,
+          "avgMs": 1.3857142856743718,
+          "maxMs": 4.800000000046566,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.10000000009313226,
+          "avgMs": 0.007142857149509447,
+          "maxMs": 0.10000000009313226,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0,
+          "avgMs": 0,
+          "maxMs": 0,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 55.300000000046566,
+          "avgMs": 3.950000000003326,
+          "maxMs": 9.399999999906868,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 3.1999999997206032,
+          "avgMs": 0.22857142855147167,
+          "maxMs": 0.39999999990686774,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 58.89999999967404,
+          "avgMs": 4.207142857119574,
+          "maxMs": 9.699999999953434,
+          "calls": 14,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 33.90000000060536,
+          "avgMs": 0.11375838926377638,
+          "maxMs": 13.100000000093132,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 1,
+          "avgMs": 0.003355704697986577,
+          "maxMs": 0.39999999990686774,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 536.6999999992549,
+          "avgMs": 1.8010067114068957,
+          "maxMs": 14.699999999953434,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 4.600000000325963,
+          "avgMs": 0.01543624161183209,
+          "maxMs": 0.39999999990686774,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 5.2999999991152436,
+          "avgMs": 0.01778523489635988,
+          "maxMs": 0.10000000009313226,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 0.6000000000931323,
+          "avgMs": 0.002013422819104471,
+          "maxMs": 0.10000000009313226,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.6999999999534339,
+          "avgMs": 0.005704697986420919,
+          "maxMs": 0.2999999998137355,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 41.19999999809079,
+          "avgMs": 0.13825503355064023,
+          "maxMs": 2.699999999953434,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 353.20000000158325,
+          "avgMs": 1.185234899334172,
+          "maxMs": 12.900000000139698,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 130.19999999995343,
+          "avgMs": 0.4369127516776961,
+          "maxMs": 122.30000000004657,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 1.900000000372529,
+          "avgMs": 0.006375838927424594,
+          "maxMs": 0.8000000000465661,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 126.20000000251457,
+          "avgMs": 0.4234899328943442,
+          "maxMs": 51.199999999953434,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 2.399999999208376,
+          "avgMs": 0.008053691272511328,
+          "maxMs": 1.3000000000465661,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 0.8999999999068677,
+          "avgMs": 0.003020134227875395,
+          "maxMs": 0.19999999995343387,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.20000000018626451,
+          "avgMs": 0.0006711409402223641,
+          "maxMs": 0.10000000009313226,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 4.799999999580905,
+          "avgMs": 0.01610738254892921,
+          "maxMs": 0.2999999998137355,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 15.699999999254942,
+          "avgMs": 0.05268456375588907,
+          "maxMs": 0.39999999990686774,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 0.3999999996740371,
+          "avgMs": 0.0013422818781007957,
+          "maxMs": 0.10000000009313226,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 1.3000000000465661,
+          "avgMs": 0.004362416107538812,
+          "maxMs": 0.4000000001396984,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 1724.800000000745,
+          "avgMs": 5.787919463089748,
+          "maxMs": 17.399999999906868,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 3004.4999999995343,
+          "avgMs": 10.082214765099108,
+          "maxMs": 199.39999999990687,
+          "calls": 298,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 20.800000000279397,
+          "avgMs": 1.8909090909344906,
+          "maxMs": 3.6000000000931323,
+          "calls": 11,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 1,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 287.19999999995343,
+        "p95": 343.10000000009313,
+        "p99": 343.10000000009313
+      },
+      "renderMs": {
+        "p50": 3.199999999953434,
+        "p95": 7.100000000093132,
+        "p99": 7.100000000093132
+      },
+      "tickBatchMs": {
+        "p50": 282.29999999981374,
+        "p95": 337,
+        "p99": 337
+      },
+      "fps": 3.516286801137946,
+      "tps": 95.25940606719162,
+      "longFrames": 11,
+      "heap": 24500000
+    },
+    {
+      "mobile": true,
+      "width": 120,
+      "height": 160,
+      "trial": 0,
+      "rate": 60,
+      "initMs": 163.5999999998603,
+      "firstRenderMs": 18.899999999906868,
+      "resetMs": 129.5,
+      "allocatedBytes": 76800,
+      "sizes": [
+        [
+          120,
+          160
+        ]
+      ],
+      "frameCount": 97,
+      "elapsedMs": 3007.399999999907,
+      "timers": [
+        {
+          "name": "render.terrain.bg",
+          "totalMs": 2.700000000419095,
+          "avgMs": 0.027000000004190953,
+          "maxMs": 0.19999999995343387,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.cacheBuild.base",
+          "totalMs": 12.600000000093132,
+          "avgMs": 6.300000000046566,
+          "maxMs": 8.699999999953434,
+          "calls": 2,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass1",
+          "totalMs": 3.300000000046566,
+          "avgMs": 0.033000000000465664,
+          "maxMs": 0.19999999995343387,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass6",
+          "totalMs": 169.60000000102445,
+          "avgMs": 1.6960000000102446,
+          "maxMs": 17.199999999953434,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.pass7",
+          "totalMs": 0.6000000000931323,
+          "avgMs": 0.006000000000931323,
+          "maxMs": 0.10000000009313226,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain.restore",
+          "totalMs": 0.10000000009313226,
+          "avgMs": 0.0010000000009313225,
+          "maxMs": 0.10000000009313226,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "render.terrain",
+          "totalMs": 258.60000000009313,
+          "avgMs": 2.586000000000931,
+          "maxMs": 17.300000000046566,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "render.creatures",
+          "totalMs": 46.39999999967404,
+          "avgMs": 0.46399999999674035,
+          "maxMs": 4.600000000093132,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "render.total",
+          "totalMs": 310.49999999883585,
+          "avgMs": 3.1049999999883586,
+          "maxMs": 18.799999999813735,
+          "calls": 100,
+          "group": "render"
+        },
+        {
+          "name": "tick.spatialIndex",
+          "totalMs": 21.500000001164153,
+          "avgMs": 0.12011173185007906,
+          "maxMs": 4.100000000093132,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.priority",
+          "totalMs": 2.6000000000931323,
+          "avgMs": 0.014525139665324762,
+          "maxMs": 0.19999999995343387,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.perception",
+          "totalMs": 679.4999999983702,
+          "avgMs": 3.796089385465755,
+          "maxMs": 18,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.alertness",
+          "totalMs": 13.900000000372529,
+          "avgMs": 0.07765363128699737,
+          "maxMs": 7.699999999953434,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.memory",
+          "totalMs": 23.59999999939464,
+          "avgMs": 0.1318435754156125,
+          "maxMs": 4.100000000093132,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.chase",
+          "totalMs": 8.200000000651926,
+          "avgMs": 0.04581005586956383,
+          "maxMs": 4.300000000046566,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.combat",
+          "totalMs": 1.5000000002328306,
+          "avgMs": 0.008379888269457155,
+          "maxMs": 0.19999999995343387,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.intent",
+          "totalMs": 110.99999999953434,
+          "avgMs": 0.620111731840974,
+          "maxMs": 12.399999999906868,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.herding",
+          "totalMs": 558.5999999984633,
+          "avgMs": 3.1206703910528675,
+          "maxMs": 71.69999999995343,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.pack",
+          "totalMs": 15.900000001769513,
+          "avgMs": 0.08882681565234364,
+          "maxMs": 2.7999999998137355,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintDecision",
+          "totalMs": 2.5000000002328306,
+          "avgMs": 0.013966480448228104,
+          "maxMs": 0.6999999999534339,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.movement",
+          "totalMs": 87.09999999799766,
+          "avgMs": 0.48659217875976346,
+          "maxMs": 13.800000000046566,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.actions",
+          "totalMs": 4.7000000008847564,
+          "avgMs": 0.026256983245166236,
+          "maxMs": 0.4000000001396984,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.basalMetabolism",
+          "totalMs": 7.200000001117587,
+          "avgMs": 0.04022346369339434,
+          "maxMs": 4.100000000093132,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.sprintCosts",
+          "totalMs": 0.6999999999534339,
+          "avgMs": 0.003910614524879519,
+          "maxMs": 0.10000000009313226,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.lifeStages",
+          "totalMs": 22.999999999301508,
+          "avgMs": 0.12849162010782966,
+          "maxMs": 4.300000000046566,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.reproduction",
+          "totalMs": 25.00000000023283,
+          "avgMs": 0.13966480447057447,
+          "maxMs": 3.5999999998603016,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.deaths",
+          "totalMs": 3.5999999993946403,
+          "avgMs": 0.02011173184019352,
+          "maxMs": 0.8000000000465661,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.staminaRegen",
+          "totalMs": 2.7000000001862645,
+          "avgMs": 0.015083798883722148,
+          "maxMs": 0.39999999990686774,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.plants",
+          "totalMs": 519.3999999992084,
+          "avgMs": 2.9016759776492087,
+          "maxMs": 13.5,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "tick.total",
+          "totalMs": 2136.200000000652,
+          "avgMs": 11.934078212294144,
+          "maxMs": 83.60000000009313,
+          "calls": 179,
+          "group": "tick"
+        },
+        {
+          "name": "render.terrain.cacheUpdate.grass",
+          "totalMs": 34.69999999948777,
+          "avgMs": 1.6523809523565607,
+          "maxMs": 2.4000000001396984,
+          "calls": 21,
+          "group": "render"
+        }
+      ],
+      "environment": {
+        "hardwareConcurrency": 9,
+        "dpr": 2,
+        "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/153.0.8010.0 Safari/537.36"
+      },
+      "frames": {
+        "p50": 21,
+        "p95": 84.30000000004657,
+        "p99": 149
+      },
+      "renderMs": {
+        "p50": 1.9000000001396984,
+        "p95": 9.899999999906868,
+        "p99": 17.600000000093132
+      },
+      "tickBatchMs": {
+        "p50": 13.699999999953434,
+        "p95": 70.69999999995343,
+        "p99": 88
+      },
+      "fps": 32.25377402407495,
+      "tps": 59.51985103411769,
+      "longFrames": 16,
+      "heap": 24500000
+    }
+  ]
+}

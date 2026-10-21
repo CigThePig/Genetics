@@ -2,7 +2,7 @@ import { updateLocomotionGoals } from './creatures/locomotion.js';
 import { recordColourHistory } from './colour-metrics.js';
 import { updateBehaviorIntegration } from './creatures/behavior-integration.js';
 import { simConfig } from './config.js';
-import { createRng } from './rng.js';
+import { createRng, deriveSeed } from './rng.js';
 import { createWorldGrid } from './world-grid.js';
 import { generateTerrain } from './terrain-generator.js';
 import { seedInitialPlants } from './plant-generator.js';
@@ -36,7 +36,8 @@ import {
 
 export function createSim(config = simConfig) {
   const resolvedConfig = mergeSimConfig(simConfig, config);
-  const rng = createRng(resolvedConfig.seed);
+  const stream = (label) => createRng(deriveSeed(resolvedConfig.seed, label));
+  const rng = stream('runtime');
   const spatialIndex = createSpatialIndex();
   const buildWorld = () => {
     const world = createWorldGrid({
@@ -46,12 +47,13 @@ export function createSim(config = simConfig) {
       defaultGrass: 0,
       defaultGrassStress: 0
     });
-    generateTerrain({ world, rng, config: resolvedConfig });
-    seedInitialPlants({ world, rng, config: resolvedConfig });
+    generateTerrain({ world, config: resolvedConfig });
+    seedInitialPlants({ world, rng: stream('vegetation'), config: resolvedConfig });
     return world;
   };
 
-  const spawnCreatures = (world) => createCreatures({ world, rng, config: resolvedConfig });
+  const spawnCreatures = (world) =>
+    createCreatures({ world, rng: stream('creatures'), config: resolvedConfig });
 
   const state = {
     tick: 0,
@@ -62,7 +64,7 @@ export function createSim(config = simConfig) {
   };
   state.creatures = spawnCreatures(state.world);
   state.world.nextCreatureId = state.creatures.length;
-  initializePlants({ state, config: resolvedConfig, rng });
+  initializePlants({ state, config: resolvedConfig, rng: stream('bushes') });
   recordColourHistory(state, resolvedConfig);
 
   return {
@@ -74,7 +76,7 @@ export function createSim(config = simConfig) {
     setSeed(nextSeed) {
       const seedValue = Number.isFinite(nextSeed) ? Math.trunc(nextSeed) : 0;
       resolvedConfig.seed = seedValue;
-      rng.setSeed(seedValue);
+      rng.setSeed(deriveSeed(seedValue, 'runtime'));
       state.tick = 0;
       state.lastRoll = 0;
       state.world = buildWorld();
@@ -83,7 +85,7 @@ export function createSim(config = simConfig) {
       state.colourBaseline = null;
       state.colourHistory = [];
       state.world.nextCreatureId = state.creatures.length;
-      initializePlants({ state, config: resolvedConfig, rng });
+      initializePlants({ state, config: resolvedConfig, rng: stream('bushes') });
       recordColourHistory(state, resolvedConfig);
       spatialIndex.clear();
     },

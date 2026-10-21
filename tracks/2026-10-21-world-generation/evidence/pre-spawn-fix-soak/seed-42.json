@@ -1,0 +1,2176 @@
+{
+  "fingerprint": "db8c7255055c7870a45c02fa372523c8a41242f439bd782f22b00226aa8f1df7",
+  "replayHash": "8700eec0005509f3b29f021e6267ab3cda680cb8ace5791918b789879c368a8d",
+  "seed": 42,
+  "width": 120,
+  "height": 160,
+  "population": 80,
+  "ticks": 36000,
+  "generationMs": [
+    141.9364470000146,
+    92.834440000006,
+    68.63647899997886
+  ],
+  "initMs": 95.90997499995865,
+  "resetMs": 96.05187200004002,
+  "analysis": {
+    "counts": {
+      "plains": 4393,
+      "forest": 6839,
+      "shore": 904,
+      "rock": 1854,
+      "water": 2086,
+      "sand": 3124
+    },
+    "sizes": {
+      "plains": [
+        1,
+        3000,
+        217,
+        27,
+        44,
+        12,
+        1090,
+        2
+      ],
+      "forest": [
+        4989,
+        1410,
+        38,
+        1,
+        71,
+        2,
+        1,
+        30,
+        10,
+        287
+      ],
+      "shore": [
+        1,
+        2,
+        14,
+        5,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        2,
+        5,
+        3,
+        5,
+        2,
+        1,
+        1,
+        1,
+        1,
+        1,
+        4,
+        2,
+        21,
+        1,
+        1,
+        9,
+        2,
+        6,
+        1,
+        1,
+        1,
+        1,
+        2,
+        16,
+        2,
+        3,
+        3,
+        2,
+        9,
+        1,
+        1,
+        1,
+        1,
+        14,
+        2,
+        2,
+        3,
+        7,
+        3,
+        2,
+        2,
+        9,
+        2,
+        3,
+        3,
+        13,
+        2,
+        3,
+        2,
+        1,
+        5,
+        1,
+        2,
+        12,
+        1,
+        3,
+        1,
+        6,
+        1,
+        1,
+        10,
+        2,
+        4,
+        10,
+        2,
+        2,
+        4,
+        1,
+        2,
+        1,
+        2,
+        2,
+        2,
+        1,
+        2,
+        6,
+        1,
+        2,
+        1,
+        2,
+        1,
+        2,
+        2,
+        2,
+        4,
+        6,
+        4,
+        2,
+        1,
+        2,
+        1,
+        1,
+        3,
+        9,
+        1,
+        6,
+        6,
+        1,
+        1,
+        1,
+        1,
+        1,
+        6,
+        2,
+        2,
+        1,
+        2,
+        6,
+        2,
+        4,
+        1,
+        1,
+        1,
+        3,
+        1,
+        15,
+        3,
+        1,
+        2,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        3,
+        1,
+        4,
+        3,
+        13,
+        13,
+        1,
+        4,
+        1,
+        9,
+        7,
+        3,
+        1,
+        14,
+        3,
+        3,
+        1,
+        3,
+        2,
+        2,
+        1,
+        2,
+        2,
+        3,
+        1,
+        1,
+        2,
+        15,
+        2,
+        1,
+        5,
+        4,
+        2,
+        1,
+        3,
+        2,
+        1,
+        2,
+        1,
+        1,
+        9,
+        1,
+        1,
+        1,
+        1,
+        9,
+        5,
+        1,
+        1,
+        4,
+        6,
+        3,
+        2,
+        5,
+        2,
+        1,
+        3,
+        2,
+        6,
+        3,
+        1,
+        1,
+        1,
+        2,
+        2,
+        1,
+        2,
+        1,
+        2,
+        1,
+        5,
+        2,
+        1,
+        3,
+        1,
+        1,
+        3,
+        2,
+        2,
+        1,
+        2,
+        1,
+        3,
+        1,
+        1,
+        4,
+        2,
+        3,
+        1,
+        1,
+        2,
+        1,
+        2,
+        4,
+        1,
+        1,
+        2,
+        1,
+        2,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        1,
+        2,
+        1,
+        1,
+        3,
+        2,
+        1,
+        8,
+        1,
+        2,
+        1,
+        1,
+        2,
+        5,
+        1,
+        1,
+        2,
+        1,
+        1,
+        3,
+        1,
+        2,
+        1,
+        1,
+        3,
+        4,
+        8,
+        1,
+        1,
+        2,
+        8,
+        1,
+        2,
+        1,
+        2,
+        2,
+        2,
+        2,
+        3,
+        2,
+        1,
+        2,
+        2,
+        1,
+        7,
+        2,
+        2,
+        1,
+        1,
+        1,
+        3,
+        13,
+        2,
+        8,
+        8,
+        1,
+        2,
+        5,
+        1,
+        2,
+        1,
+        2,
+        1,
+        6,
+        12,
+        3,
+        1,
+        6,
+        1,
+        1
+      ],
+      "rock": [
+        344,
+        24,
+        157,
+        15,
+        98,
+        39,
+        36,
+        87,
+        37,
+        863,
+        154
+      ],
+      "water": [
+        36,
+        5,
+        3,
+        1,
+        13,
+        89,
+        4,
+        16,
+        14,
+        23,
+        7,
+        8,
+        926,
+        4,
+        38,
+        650,
+        41,
+        2,
+        199,
+        2,
+        3,
+        1,
+        1
+      ],
+      "sand": [
+        700,
+        423,
+        1731,
+        34,
+        27,
+        209
+      ]
+    },
+    "boundaryDensity": 0.11046694648478489,
+    "tinyLand": 7,
+    "substantialFraction": 0.9765576804441702,
+    "landConnectivity": 0.9999415683066495,
+    "waterCoverage": 0.10864583333333333,
+    "waterReachableFraction": 1,
+    "waterDistanceP95": 26,
+    "maxWaterDistance": 40
+  },
+  "initialVegetation": {
+    "grassCells": 17114,
+    "bushes": 96
+  },
+  "finalVegetation": {
+    "grassCells": 17114,
+    "bushes": 96
+  },
+  "elapsedMs": 180308.49627200002,
+  "tickMs": {
+    "p50": 4.69906000001356,
+    "p95": 7.782089000043925,
+    "p99": 11.845483000040986
+  },
+  "samples": [
+    {
+      "tick": 600,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0,
+      "chases": 0,
+      "pregnancies": 0,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 0,
+        "other": 0
+      }
+    },
+    {
+      "tick": 1200,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0,
+      "chases": 0,
+      "pregnancies": 0,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 0,
+        "other": 0
+      }
+    },
+    {
+      "tick": 1800,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0,
+      "chases": 0,
+      "pregnancies": 0,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 0,
+        "other": 0
+      }
+    },
+    {
+      "tick": 2400,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0,
+      "chases": 0,
+      "pregnancies": 0,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 0,
+        "other": 0
+      }
+    },
+    {
+      "tick": 3000,
+      "population": 80,
+      "species": [
+        36,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 0,
+      "deaths": 0,
+      "chases": 2,
+      "pregnancies": 0,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 0,
+        "other": 0
+      }
+    },
+    {
+      "tick": 3600,
+      "population": 79,
+      "species": [
+        35,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 1,
+      "deaths": 1,
+      "chases": 7,
+      "pregnancies": 0,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 1,
+        "other": 0
+      }
+    },
+    {
+      "tick": 4200,
+      "population": 78,
+      "species": [
+        34,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 2,
+      "deaths": 2,
+      "chases": 7,
+      "pregnancies": 3,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 2,
+        "other": 0
+      }
+    },
+    {
+      "tick": 4800,
+      "population": 78,
+      "species": [
+        34,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 2,
+      "deaths": 2,
+      "chases": 13,
+      "pregnancies": 15,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 2,
+        "other": 0
+      }
+    },
+    {
+      "tick": 5400,
+      "population": 78,
+      "species": [
+        34,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 2,
+      "deaths": 2,
+      "chases": 13,
+      "pregnancies": 20,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 2,
+        "other": 0
+      }
+    },
+    {
+      "tick": 6000,
+      "population": 78,
+      "species": [
+        34,
+        4,
+        36,
+        4
+      ],
+      "births": 0,
+      "kills": 2,
+      "deaths": 2,
+      "chases": 15,
+      "pregnancies": 23,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 2,
+        "other": 0
+      }
+    },
+    {
+      "tick": 6600,
+      "population": 76,
+      "species": [
+        33,
+        4,
+        35,
+        4
+      ],
+      "births": 0,
+      "kills": 4,
+      "deaths": 4,
+      "chases": 17,
+      "pregnancies": 24,
+      "generations": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 4,
+        "other": 0
+      }
+    },
+    {
+      "tick": 7200,
+      "population": 85,
+      "species": [
+        38,
+        4,
+        39,
+        4
+      ],
+      "births": 10,
+      "kills": 5,
+      "deaths": 5,
+      "chases": 20,
+      "pregnancies": 24,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 5,
+        "other": 0
+      }
+    },
+    {
+      "tick": 7800,
+      "population": 91,
+      "species": [
+        39,
+        4,
+        44,
+        4
+      ],
+      "births": 16,
+      "kills": 5,
+      "deaths": 5,
+      "chases": 24,
+      "pregnancies": 27,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 5,
+        "other": 0
+      }
+    },
+    {
+      "tick": 8400,
+      "population": 94,
+      "species": [
+        40,
+        4,
+        46,
+        4
+      ],
+      "births": 21,
+      "kills": 7,
+      "deaths": 7,
+      "chases": 27,
+      "pregnancies": 27,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 7,
+        "other": 0
+      }
+    },
+    {
+      "tick": 9000,
+      "population": 95,
+      "species": [
+        40,
+        4,
+        47,
+        4
+      ],
+      "births": 23,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 29,
+      "pregnancies": 27,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 9600,
+      "population": 95,
+      "species": [
+        40,
+        4,
+        47,
+        4
+      ],
+      "births": 23,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 29,
+      "pregnancies": 27,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 10200,
+      "population": 97,
+      "species": [
+        41,
+        4,
+        48,
+        4
+      ],
+      "births": 25,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 30,
+      "pregnancies": 28,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 0
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 10800,
+      "population": 98,
+      "species": [
+        41,
+        4,
+        48,
+        5
+      ],
+      "births": 26,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 30,
+      "pregnancies": 28,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 11400,
+      "population": 98,
+      "species": [
+        41,
+        4,
+        48,
+        5
+      ],
+      "births": 26,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 30,
+      "pregnancies": 28,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 12000,
+      "population": 98,
+      "species": [
+        41,
+        4,
+        48,
+        5
+      ],
+      "births": 26,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 30,
+      "pregnancies": 38,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 12600,
+      "population": 99,
+      "species": [
+        41,
+        4,
+        48,
+        6
+      ],
+      "births": 27,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 31,
+      "pregnancies": 40,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 13200,
+      "population": 99,
+      "species": [
+        41,
+        4,
+        48,
+        6
+      ],
+      "births": 27,
+      "kills": 8,
+      "deaths": 8,
+      "chases": 31,
+      "pregnancies": 42,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 0,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 13800,
+      "population": 97,
+      "species": [
+        39,
+        4,
+        48,
+        6
+      ],
+      "births": 27,
+      "kills": 8,
+      "deaths": 10,
+      "chases": 31,
+      "pregnancies": 44,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 2,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 14400,
+      "population": 102,
+      "species": [
+        40,
+        4,
+        52,
+        6
+      ],
+      "births": 33,
+      "kills": 8,
+      "deaths": 11,
+      "chases": 31,
+      "pregnancies": 47,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 0,
+        "thirst": 3,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 15000,
+      "population": 105,
+      "species": [
+        39,
+        4,
+        56,
+        6
+      ],
+      "births": 37,
+      "kills": 8,
+      "deaths": 12,
+      "chases": 31,
+      "pregnancies": 52,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 1,
+        "thirst": 3,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 15600,
+      "population": 108,
+      "species": [
+        40,
+        4,
+        58,
+        6
+      ],
+      "births": 40,
+      "kills": 8,
+      "deaths": 12,
+      "chases": 31,
+      "pregnancies": 55,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 1,
+        "thirst": 3,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 16200,
+      "population": 109,
+      "species": [
+        39,
+        4,
+        60,
+        6
+      ],
+      "births": 42,
+      "kills": 8,
+      "deaths": 13,
+      "chases": 31,
+      "pregnancies": 55,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 1,
+        "thirst": 4,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 16800,
+      "population": 109,
+      "species": [
+        39,
+        4,
+        60,
+        6
+      ],
+      "births": 43,
+      "kills": 8,
+      "deaths": 14,
+      "chases": 31,
+      "pregnancies": 55,
+      "generations": {
+        "square": 1,
+        "triangle": 0,
+        "circle": 1,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 2,
+        "thirst": 4,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 17400,
+      "population": 115,
+      "species": [
+        40,
+        4,
+        65,
+        6
+      ],
+      "births": 49,
+      "kills": 8,
+      "deaths": 14,
+      "chases": 31,
+      "pregnancies": 59,
+      "generations": {
+        "square": 2,
+        "triangle": 0,
+        "circle": 2,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 2,
+        "thirst": 4,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 18000,
+      "population": 117,
+      "species": [
+        41,
+        4,
+        66,
+        6
+      ],
+      "births": 52,
+      "kills": 8,
+      "deaths": 15,
+      "chases": 31,
+      "pregnancies": 60,
+      "generations": {
+        "square": 2,
+        "triangle": 0,
+        "circle": 2,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 2,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 18600,
+      "population": 118,
+      "species": [
+        41,
+        4,
+        67,
+        6
+      ],
+      "births": 54,
+      "kills": 8,
+      "deaths": 16,
+      "chases": 31,
+      "pregnancies": 61,
+      "generations": {
+        "square": 2,
+        "triangle": 0,
+        "circle": 2,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 19200,
+      "population": 118,
+      "species": [
+        41,
+        4,
+        67,
+        6
+      ],
+      "births": 54,
+      "kills": 8,
+      "deaths": 16,
+      "chases": 31,
+      "pregnancies": 68,
+      "generations": {
+        "square": 2,
+        "triangle": 0,
+        "circle": 2,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 19800,
+      "population": 119,
+      "species": [
+        42,
+        4,
+        67,
+        6
+      ],
+      "births": 55,
+      "kills": 8,
+      "deaths": 16,
+      "chases": 32,
+      "pregnancies": 70,
+      "generations": {
+        "square": 2,
+        "triangle": 0,
+        "circle": 2,
+        "octagon": 1
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 20400,
+      "population": 123,
+      "species": [
+        42,
+        5,
+        68,
+        8
+      ],
+      "births": 59,
+      "kills": 8,
+      "deaths": 16,
+      "chases": 32,
+      "pregnancies": 71,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 21000,
+      "population": 123,
+      "species": [
+        42,
+        5,
+        68,
+        8
+      ],
+      "births": 59,
+      "kills": 8,
+      "deaths": 16,
+      "chases": 34,
+      "pregnancies": 73,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 8,
+        "other": 0
+      }
+    },
+    {
+      "tick": 21600,
+      "population": 126,
+      "species": [
+        45,
+        5,
+        68,
+        8
+      ],
+      "births": 64,
+      "kills": 10,
+      "deaths": 18,
+      "chases": 40,
+      "pregnancies": 76,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 10,
+        "other": 0
+      }
+    },
+    {
+      "tick": 22200,
+      "population": 128,
+      "species": [
+        45,
+        5,
+        70,
+        8
+      ],
+      "births": 66,
+      "kills": 10,
+      "deaths": 18,
+      "chases": 43,
+      "pregnancies": 82,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 10,
+        "other": 0
+      }
+    },
+    {
+      "tick": 22800,
+      "population": 130,
+      "species": [
+        46,
+        5,
+        71,
+        8
+      ],
+      "births": 69,
+      "kills": 11,
+      "deaths": 19,
+      "chases": 47,
+      "pregnancies": 90,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 11,
+        "other": 0
+      }
+    },
+    {
+      "tick": 23400,
+      "population": 131,
+      "species": [
+        46,
+        5,
+        72,
+        8
+      ],
+      "births": 70,
+      "kills": 11,
+      "deaths": 19,
+      "chases": 49,
+      "pregnancies": 90,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 11,
+        "other": 0
+      }
+    },
+    {
+      "tick": 24000,
+      "population": 131,
+      "species": [
+        47,
+        5,
+        71,
+        8
+      ],
+      "births": 71,
+      "kills": 12,
+      "deaths": 20,
+      "chases": 53,
+      "pregnancies": 94,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 12,
+        "other": 0
+      }
+    },
+    {
+      "tick": 24600,
+      "population": 137,
+      "species": [
+        48,
+        5,
+        76,
+        8
+      ],
+      "births": 77,
+      "kills": 12,
+      "deaths": 20,
+      "chases": 55,
+      "pregnancies": 96,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 12,
+        "other": 0
+      }
+    },
+    {
+      "tick": 25200,
+      "population": 144,
+      "species": [
+        50,
+        5,
+        81,
+        8
+      ],
+      "births": 84,
+      "kills": 12,
+      "deaths": 20,
+      "chases": 56,
+      "pregnancies": 98,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 12,
+        "other": 0
+      }
+    },
+    {
+      "tick": 25800,
+      "population": 148,
+      "species": [
+        50,
+        5,
+        85,
+        8
+      ],
+      "births": 88,
+      "kills": 12,
+      "deaths": 20,
+      "chases": 56,
+      "pregnancies": 102,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 3,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 12,
+        "other": 0
+      }
+    },
+    {
+      "tick": 26400,
+      "population": 150,
+      "species": [
+        52,
+        4,
+        86,
+        8
+      ],
+      "births": 91,
+      "kills": 12,
+      "deaths": 21,
+      "chases": 57,
+      "pregnancies": 108,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 4,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 12,
+        "other": 0
+      }
+    },
+    {
+      "tick": 27000,
+      "population": 152,
+      "species": [
+        54,
+        4,
+        86,
+        8
+      ],
+      "births": 93,
+      "kills": 12,
+      "deaths": 21,
+      "chases": 57,
+      "pregnancies": 112,
+      "generations": {
+        "square": 2,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 4,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 12,
+        "other": 0
+      }
+    },
+    {
+      "tick": 27600,
+      "population": 153,
+      "species": [
+        55,
+        3,
+        87,
+        8
+      ],
+      "births": 95,
+      "kills": 12,
+      "deaths": 22,
+      "chases": 59,
+      "pregnancies": 113,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 2,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 12,
+        "other": 0
+      }
+    },
+    {
+      "tick": 28200,
+      "population": 155,
+      "species": [
+        56,
+        3,
+        88,
+        8
+      ],
+      "births": 98,
+      "kills": 13,
+      "deaths": 23,
+      "chases": 60,
+      "pregnancies": 116,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 13,
+        "other": 0
+      }
+    },
+    {
+      "tick": 28800,
+      "population": 160,
+      "species": [
+        58,
+        3,
+        90,
+        9
+      ],
+      "births": 103,
+      "kills": 13,
+      "deaths": 23,
+      "chases": 61,
+      "pregnancies": 119,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 13,
+        "other": 0
+      }
+    },
+    {
+      "tick": 29400,
+      "population": 162,
+      "species": [
+        57,
+        3,
+        92,
+        10
+      ],
+      "births": 107,
+      "kills": 15,
+      "deaths": 25,
+      "chases": 62,
+      "pregnancies": 122,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 0,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 15,
+        "other": 0
+      }
+    },
+    {
+      "tick": 30000,
+      "population": 163,
+      "species": [
+        59,
+        3,
+        92,
+        9
+      ],
+      "births": 111,
+      "kills": 15,
+      "deaths": 28,
+      "chases": 63,
+      "pregnancies": 131,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 3,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 15,
+        "other": 0
+      }
+    },
+    {
+      "tick": 30600,
+      "population": 161,
+      "species": [
+        58,
+        3,
+        91,
+        9
+      ],
+      "births": 111,
+      "kills": 16,
+      "deaths": 30,
+      "chases": 65,
+      "pregnancies": 134,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 4,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 16,
+        "other": 0
+      }
+    },
+    {
+      "tick": 31200,
+      "population": 160,
+      "species": [
+        57,
+        3,
+        92,
+        8
+      ],
+      "births": 114,
+      "kills": 17,
+      "deaths": 34,
+      "chases": 66,
+      "pregnancies": 137,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 7,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 17,
+        "other": 0
+      }
+    },
+    {
+      "tick": 31800,
+      "population": 154,
+      "species": [
+        51,
+        2,
+        93,
+        8
+      ],
+      "births": 118,
+      "kills": 17,
+      "deaths": 44,
+      "chases": 66,
+      "pregnancies": 143,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 17,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 17,
+        "other": 0
+      }
+    },
+    {
+      "tick": 32400,
+      "population": 152,
+      "species": [
+        48,
+        2,
+        95,
+        7
+      ],
+      "births": 127,
+      "kills": 17,
+      "deaths": 55,
+      "chases": 66,
+      "pregnancies": 145,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 28,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 17,
+        "other": 0
+      }
+    },
+    {
+      "tick": 33000,
+      "population": 152,
+      "species": [
+        48,
+        2,
+        95,
+        7
+      ],
+      "births": 130,
+      "kills": 17,
+      "deaths": 58,
+      "chases": 66,
+      "pregnancies": 152,
+      "generations": {
+        "square": 3,
+        "triangle": 1,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 31,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 17,
+        "other": 0
+      }
+    },
+    {
+      "tick": 33600,
+      "population": 148,
+      "species": [
+        48,
+        3,
+        90,
+        7
+      ],
+      "births": 134,
+      "kills": 17,
+      "deaths": 66,
+      "chases": 67,
+      "pregnancies": 157,
+      "generations": {
+        "square": 3,
+        "triangle": 2,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 39,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 17,
+        "other": 0
+      }
+    },
+    {
+      "tick": 34200,
+      "population": 141,
+      "species": [
+        46,
+        3,
+        85,
+        7
+      ],
+      "births": 136,
+      "kills": 17,
+      "deaths": 75,
+      "chases": 69,
+      "pregnancies": 162,
+      "generations": {
+        "square": 3,
+        "triangle": 2,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 48,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 17,
+        "other": 0
+      }
+    },
+    {
+      "tick": 34800,
+      "population": 136,
+      "species": [
+        44,
+        2,
+        84,
+        6
+      ],
+      "births": 138,
+      "kills": 18,
+      "deaths": 82,
+      "chases": 70,
+      "pregnancies": 164,
+      "generations": {
+        "square": 3,
+        "triangle": 2,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 54,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 18,
+        "other": 0
+      }
+    },
+    {
+      "tick": 35400,
+      "population": 136,
+      "species": [
+        44,
+        2,
+        84,
+        6
+      ],
+      "births": 140,
+      "kills": 18,
+      "deaths": 84,
+      "chases": 70,
+      "pregnancies": 167,
+      "generations": {
+        "square": 3,
+        "triangle": 2,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 56,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 18,
+        "other": 0
+      }
+    },
+    {
+      "tick": 36000,
+      "population": 136,
+      "species": [
+        44,
+        2,
+        84,
+        6
+      ],
+      "births": 143,
+      "kills": 18,
+      "deaths": 87,
+      "chases": 70,
+      "pregnancies": 169,
+      "generations": {
+        "square": 3,
+        "triangle": 2,
+        "circle": 3,
+        "octagon": 2
+      },
+      "deathsByCause": {
+        "age": 59,
+        "starvation": 5,
+        "thirst": 5,
+        "injury": 0,
+        "predation": 18,
+        "other": 0
+      }
+    }
+  ]
+}

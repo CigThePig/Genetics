@@ -1,0 +1,4332 @@
+{
+  "name": "default",
+  "seed": 42,
+  "ticks": 3600,
+  "source": "/workspace/scratch/b715b106d5db/Genetics",
+  "configuration": {
+    "worldWidth": 120,
+    "worldHeight": 160,
+    "population": 80,
+    "grassRegrowthRate": 0.01
+  },
+  "msPerTick": 4.30546282472221,
+  "p95": 6.947205000000395,
+  "hash": "92ea5cf782b813c6b58fb91b0e9eea89c1c9d8503d3d143b2a5f97cd3997e4bb",
+  "summary": {
+    "colourHistory": [
+      {
+        "tick": 0,
+        "species": {
+          "square": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                3,
+                7,
+                7,
+                5,
+                7,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                4
+              ],
+              "mean": 0.17969483103213424,
+              "concentration": 0.5998853025830799
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                4,
+                5,
+                4,
+                7,
+                6,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+              ],
+              "mean": 0.1519802129758474,
+              "concentration": 0.5218194179172237
+            },
+            "saturation": 0.4597768768732851,
+            "lightness": 0.45269731731774915,
+            "choosiness": 0.41159710559683543,
+            "discrimination": 0.6489252326169258,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 36,
+                "body": {
+                  "count": 36,
+                  "histogram": [
+                    3,
+                    7,
+                    7,
+                    5,
+                    7,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    3,
+                    4
+                  ],
+                  "mean": 0.17969483103213424,
+                  "concentration": 0.5998853025830799
+                }
+              }
+            }
+          },
+          "triangle": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                2
+              ],
+              "mean": 0.9601952175747084,
+              "concentration": 0.8314925648131479
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "mean": 0.8326076532090344,
+              "concentration": 0.8544775766771385
+            },
+            "saturation": 0.4195219443412498,
+            "lightness": 0.5081549162743613,
+            "choosiness": 0.41610880857333543,
+            "discrimination": 0.7380578984622843,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    2
+                  ],
+                  "mean": 0.9601952175747084,
+                  "concentration": 0.8314925648131479
+                }
+              }
+            }
+          },
+          "circle": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                1,
+                1,
+                5,
+                5,
+                5,
+                4,
+                9,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5902619311626975,
+              "concentration": 0.5700591827072147
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                0,
+                8,
+                7,
+                3,
+                3,
+                3,
+                6,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5161746044261284,
+              "concentration": 0.41098595163408413
+            },
+            "saturation": 0.45196885288718885,
+            "lightness": 0.44502847182642047,
+            "choosiness": 0.4173103448184621,
+            "discrimination": 0.49986504027231926,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 36,
+                "body": {
+                  "count": 36,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    5,
+                    5,
+                    5,
+                    4,
+                    9,
+                    6,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5902619311626975,
+                  "concentration": 0.5700591827072147
+                }
+              }
+            }
+          },
+          "octagon": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "mean": 0.7874824634288278,
+              "concentration": 0.600918285728218
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "mean": 0.7039622645395617,
+              "concentration": 0.6552047116227445
+            },
+            "saturation": 0.43979923491133377,
+            "lightness": 0.4604233575286344,
+            "choosiness": 0.40676794326864185,
+            "discrimination": 0.6350161014124751,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    2,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7874824634288278,
+                  "concentration": 0.600918285728218
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "tick": 600,
+        "species": {
+          "square": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                3,
+                7,
+                7,
+                5,
+                7,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                4
+              ],
+              "mean": 0.17969483103213424,
+              "concentration": 0.5998853025830799
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                4,
+                5,
+                4,
+                7,
+                6,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+              ],
+              "mean": 0.1519802129758474,
+              "concentration": 0.5218194179172237
+            },
+            "saturation": 0.4597768768732851,
+            "lightness": 0.45269731731774915,
+            "choosiness": 0.41159710559683543,
+            "discrimination": 0.6489252326169258,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 8,
+                "body": {
+                  "count": 8,
+                  "histogram": [
+                    0,
+                    3,
+                    1,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    2
+                  ],
+                  "mean": 0.14773805902722104,
+                  "concentration": 0.727117302588897
+                }
+              },
+              "forest": {
+                "count": 20,
+                "body": {
+                  "count": 20,
+                  "histogram": [
+                    3,
+                    2,
+                    4,
+                    2,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    2,
+                    2
+                  ],
+                  "mean": 0.18404563467923407,
+                  "concentration": 0.5392486628621758
+                }
+              },
+              "rock": {
+                "count": 8,
+                "body": {
+                  "count": 8,
+                  "histogram": [
+                    0,
+                    2,
+                    2,
+                    1,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ],
+                  "mean": 0.20636901181567424,
+                  "concentration": 0.6484428008456762
+                }
+              }
+            }
+          },
+          "triangle": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                2
+              ],
+              "mean": 0.9601952175747084,
+              "concentration": 0.8314925648131479
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "mean": 0.8326076532090344,
+              "concentration": 0.8544775766771385
+            },
+            "saturation": 0.4195219443412498,
+            "lightness": 0.5081549162743613,
+            "choosiness": 0.41610880857333543,
+            "discrimination": 0.7380578984622843,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 3,
+                "body": {
+                  "count": 3,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    2
+                  ],
+                  "mean": 0.9195555448229042,
+                  "concentration": 0.8918866338976433
+                }
+              },
+              "shore": {
+                "count": 1,
+                "body": {
+                  "count": 1,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mean": 0.07830044263973823,
+                  "concentration": 1
+                }
+              }
+            }
+          },
+          "circle": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                1,
+                1,
+                5,
+                5,
+                5,
+                4,
+                9,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5902619311626975,
+              "concentration": 0.5700591827072147
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                0,
+                8,
+                7,
+                3,
+                3,
+                3,
+                6,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5161746044261284,
+              "concentration": 0.41098595163408413
+            },
+            "saturation": 0.45196885288718885,
+            "lightness": 0.44502847182642047,
+            "choosiness": 0.4173103448184621,
+            "discrimination": 0.49986504027231926,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 29,
+                "body": {
+                  "count": 29,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    4,
+                    4,
+                    4,
+                    3,
+                    7,
+                    5,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5894218876108035,
+                  "concentration": 0.5594689555816043
+                }
+              },
+              "shore": {
+                "count": 6,
+                "body": {
+                  "count": 6,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    1,
+                    1,
+                    2,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.6293385730877565,
+                  "concentration": 0.7440383918231329
+                }
+              },
+              "rock": {
+                "count": 1,
+                "body": {
+                  "count": 1,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mean": 0.33507420135661947,
+                  "concentration": 1
+                }
+              }
+            }
+          },
+          "octagon": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "mean": 0.7874824634288278,
+              "concentration": 0.600918285728218
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "mean": 0.7039622645395617,
+              "concentration": 0.6552047116227445
+            },
+            "saturation": 0.43979923491133377,
+            "lightness": 0.4604233575286344,
+            "choosiness": 0.40676794326864185,
+            "discrimination": 0.6350161014124751,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7889991496037692,
+                  "concentration": 0.20236391981663948
+                }
+              },
+              "shore": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    2,
+                    0,
+                    0
+                  ],
+                  "mean": 0.787175386780873,
+                  "concentration": 0.9994837006428436
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "tick": 1200,
+        "species": {
+          "square": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                3,
+                7,
+                7,
+                5,
+                7,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                4
+              ],
+              "mean": 0.17969483103213424,
+              "concentration": 0.5998853025830799
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                4,
+                5,
+                4,
+                7,
+                6,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+              ],
+              "mean": 0.1519802129758474,
+              "concentration": 0.5218194179172237
+            },
+            "saturation": 0.4597768768732851,
+            "lightness": 0.45269731731774915,
+            "choosiness": 0.41159710559683543,
+            "discrimination": 0.6489252326169258,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 36,
+                "body": {
+                  "count": 36,
+                  "histogram": [
+                    3,
+                    7,
+                    7,
+                    5,
+                    7,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    3,
+                    4
+                  ],
+                  "mean": 0.17969483103213424,
+                  "concentration": 0.5998853025830799
+                }
+              }
+            }
+          },
+          "triangle": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                2
+              ],
+              "mean": 0.9601952175747084,
+              "concentration": 0.8314925648131479
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "mean": 0.8326076532090344,
+              "concentration": 0.8544775766771385
+            },
+            "saturation": 0.4195219443412498,
+            "lightness": 0.5081549162743613,
+            "choosiness": 0.41610880857333543,
+            "discrimination": 0.7380578984622843,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    2
+                  ],
+                  "mean": 0.9601952175747084,
+                  "concentration": 0.8314925648131479
+                }
+              }
+            }
+          },
+          "circle": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                1,
+                1,
+                5,
+                5,
+                5,
+                4,
+                9,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5902619311626975,
+              "concentration": 0.5700591827072147
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                0,
+                8,
+                7,
+                3,
+                3,
+                3,
+                6,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5161746044261284,
+              "concentration": 0.41098595163408413
+            },
+            "saturation": 0.45196885288718885,
+            "lightness": 0.44502847182642047,
+            "choosiness": 0.4173103448184621,
+            "discrimination": 0.49986504027231926,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 36,
+                "body": {
+                  "count": 36,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    5,
+                    5,
+                    5,
+                    4,
+                    9,
+                    6,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5902619311626975,
+                  "concentration": 0.5700591827072147
+                }
+              }
+            }
+          },
+          "octagon": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "mean": 0.7874824634288278,
+              "concentration": 0.600918285728218
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "mean": 0.7039622645395617,
+              "concentration": 0.6552047116227445
+            },
+            "saturation": 0.43979923491133377,
+            "lightness": 0.4604233575286344,
+            "choosiness": 0.40676794326864185,
+            "discrimination": 0.6350161014124751,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    2,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7874824634288278,
+                  "concentration": 0.600918285728218
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "tick": 1800,
+        "species": {
+          "square": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                3,
+                7,
+                7,
+                5,
+                7,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                4
+              ],
+              "mean": 0.17969483103213424,
+              "concentration": 0.5998853025830799
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                4,
+                5,
+                4,
+                7,
+                6,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+              ],
+              "mean": 0.1519802129758474,
+              "concentration": 0.5218194179172237
+            },
+            "saturation": 0.4597768768732851,
+            "lightness": 0.45269731731774915,
+            "choosiness": 0.41159710559683543,
+            "discrimination": 0.6489252326169258,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 33,
+                "body": {
+                  "count": 33,
+                  "histogram": [
+                    3,
+                    6,
+                    7,
+                    5,
+                    6,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    3,
+                    3
+                  ],
+                  "mean": 0.18345465056631394,
+                  "concentration": 0.6013809911899926
+                }
+              },
+              "forest": {
+                "count": 3,
+                "body": {
+                  "count": 3,
+                  "histogram": [
+                    0,
+                    1,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "mean": 0.13817143033758894,
+                  "concentration": 0.6057790566871866
+                }
+              }
+            }
+          },
+          "triangle": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                2
+              ],
+              "mean": 0.9601952175747084,
+              "concentration": 0.8314925648131479
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "mean": 0.8326076532090344,
+              "concentration": 0.8544775766771385
+            },
+            "saturation": 0.4195219443412498,
+            "lightness": 0.5081549162743613,
+            "choosiness": 0.41610880857333543,
+            "discrimination": 0.7380578984622843,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    2
+                  ],
+                  "mean": 0.9601952175747084,
+                  "concentration": 0.8314925648131479
+                }
+              }
+            }
+          },
+          "circle": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                1,
+                1,
+                5,
+                5,
+                5,
+                4,
+                9,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5902619311626975,
+              "concentration": 0.5700591827072147
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                0,
+                8,
+                7,
+                3,
+                3,
+                3,
+                6,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5161746044261284,
+              "concentration": 0.41098595163408413
+            },
+            "saturation": 0.45196885288718885,
+            "lightness": 0.44502847182642047,
+            "choosiness": 0.4173103448184621,
+            "discrimination": 0.49986504027231926,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 32,
+                "body": {
+                  "count": 32,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    4,
+                    5,
+                    4,
+                    4,
+                    8,
+                    5,
+                    0,
+                    0
+                  ],
+                  "mean": 0.589215854376676,
+                  "concentration": 0.5779881935043218
+                }
+              },
+              "forest": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    1,
+                    0,
+                    1,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5997959377629496,
+                  "concentration": 0.5076375244759094
+                }
+              }
+            }
+          },
+          "octagon": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "mean": 0.7874824634288278,
+              "concentration": 0.600918285728218
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "mean": 0.7039622645395617,
+              "concentration": 0.6552047116227445
+            },
+            "saturation": 0.43979923491133377,
+            "lightness": 0.4604233575286344,
+            "choosiness": 0.40676794326864185,
+            "discrimination": 0.6350161014124751,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    2,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7874824634288278,
+                  "concentration": 0.600918285728218
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "tick": 2400,
+        "species": {
+          "square": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                3,
+                7,
+                7,
+                5,
+                7,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                4
+              ],
+              "mean": 0.17969483103213424,
+              "concentration": 0.5998853025830799
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                4,
+                5,
+                4,
+                7,
+                6,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+              ],
+              "mean": 0.1519802129758474,
+              "concentration": 0.5218194179172237
+            },
+            "saturation": 0.4597768768732851,
+            "lightness": 0.45269731731774915,
+            "choosiness": 0.41159710559683543,
+            "discrimination": 0.6489252326169258,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 30,
+                "body": {
+                  "count": 30,
+                  "histogram": [
+                    3,
+                    6,
+                    7,
+                    4,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    2,
+                    3
+                  ],
+                  "mean": 0.1742102567595416,
+                  "concentration": 0.6444184752599228
+                }
+              },
+              "rock": {
+                "count": 1,
+                "body": {
+                  "count": 1,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ],
+                  "mean": 0.8874783917888996,
+                  "concentration": 1
+                }
+              },
+              "shore": {
+                "count": 5,
+                "body": {
+                  "count": 5,
+                  "histogram": [
+                    0,
+                    1,
+                    0,
+                    1,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "mean": 0.27063533540215934,
+                  "concentration": 0.6032118564113839
+                }
+              }
+            }
+          },
+          "triangle": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                2
+              ],
+              "mean": 0.9601952175747084,
+              "concentration": 0.8314925648131479
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "mean": 0.8326076532090344,
+              "concentration": 0.8544775766771385
+            },
+            "saturation": 0.4195219443412498,
+            "lightness": 0.5081549162743613,
+            "choosiness": 0.41610880857333543,
+            "discrimination": 0.7380578984622843,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    1
+                  ],
+                  "mean": 0.8806363090779631,
+                  "concentration": 0.9171219084118937
+                }
+              },
+              "shore": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "mean": 0.03554561865515993,
+                  "concentration": 0.9641336934902454
+                }
+              }
+            }
+          },
+          "circle": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                1,
+                1,
+                5,
+                5,
+                5,
+                4,
+                9,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5902619311626975,
+              "concentration": 0.5700591827072147
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                0,
+                8,
+                7,
+                3,
+                3,
+                3,
+                6,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5161746044261284,
+              "concentration": 0.41098595163408413
+            },
+            "saturation": 0.45196885288718885,
+            "lightness": 0.44502847182642047,
+            "choosiness": 0.4173103448184621,
+            "discrimination": 0.49986504027231926,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 29,
+                "body": {
+                  "count": 29,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    4,
+                    4,
+                    4,
+                    3,
+                    8,
+                    4,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5886391966720161,
+                  "concentration": 0.5654234539893147
+                }
+              },
+              "shore": {
+                "count": 7,
+                "body": {
+                  "count": 7,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5967077231494876,
+                  "concentration": 0.5898698051215059
+                }
+              }
+            }
+          },
+          "octagon": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "mean": 0.7874824634288278,
+              "concentration": 0.600918285728218
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "mean": 0.7039622645395617,
+              "concentration": 0.6552047116227445
+            },
+            "saturation": 0.43979923491133377,
+            "lightness": 0.4604233575286344,
+            "choosiness": 0.40676794326864185,
+            "discrimination": 0.6350161014124751,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    2,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7874824634288278,
+                  "concentration": 0.600918285728218
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "tick": 3000,
+        "species": {
+          "square": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                3,
+                7,
+                7,
+                5,
+                7,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                4
+              ],
+              "mean": 0.17969483103213424,
+              "concentration": 0.5998853025830799
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                4,
+                5,
+                4,
+                7,
+                6,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+              ],
+              "mean": 0.1519802129758474,
+              "concentration": 0.5218194179172237
+            },
+            "saturation": 0.4597768768732851,
+            "lightness": 0.45269731731774915,
+            "choosiness": 0.41159710559683543,
+            "discrimination": 0.6489252326169258,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 32,
+                "body": {
+                  "count": 32,
+                  "histogram": [
+                    2,
+                    7,
+                    7,
+                    5,
+                    5,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    3,
+                    3
+                  ],
+                  "mean": 0.17815428521732324,
+                  "concentration": 0.620195170916273
+                }
+              },
+              "shore": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    2,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "mean": 0.197090300861112,
+                  "concentration": 0.4402659361959906
+                }
+              }
+            }
+          },
+          "triangle": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                2
+              ],
+              "mean": 0.9601952175747084,
+              "concentration": 0.8314925648131479
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "mean": 0.8326076532090344,
+              "concentration": 0.8544775766771385
+            },
+            "saturation": 0.4195219443412498,
+            "lightness": 0.5081549162743613,
+            "choosiness": 0.41610880857333543,
+            "discrimination": 0.7380578984622843,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    1
+                  ],
+                  "mean": 0.8806363090779631,
+                  "concentration": 0.9171219084118937
+                }
+              },
+              "sand": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "mean": 0.03554561865515993,
+                  "concentration": 0.9641336934902454
+                }
+              }
+            }
+          },
+          "circle": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                1,
+                1,
+                5,
+                5,
+                5,
+                4,
+                9,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5902619311626975,
+              "concentration": 0.5700591827072147
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                0,
+                8,
+                7,
+                3,
+                3,
+                3,
+                6,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5161746044261284,
+              "concentration": 0.41098595163408413
+            },
+            "saturation": 0.45196885288718885,
+            "lightness": 0.44502847182642047,
+            "choosiness": 0.4173103448184621,
+            "discrimination": 0.49986504027231926,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 31,
+                "body": {
+                  "count": 31,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    5,
+                    4,
+                    4,
+                    4,
+                    7,
+                    5,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5761001907501289,
+                  "concentration": 0.552977346073016
+                }
+              },
+              "shore": {
+                "count": 4,
+                "body": {
+                  "count": 4,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    2,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.6840886481639006,
+                  "concentration": 0.7383000832986355
+                }
+              },
+              "rock": {
+                "count": 1,
+                "body": {
+                  "count": 1,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5713464913517237,
+                  "concentration": 1
+                }
+              }
+            }
+          },
+          "octagon": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "mean": 0.7874824634288278,
+              "concentration": 0.600918285728218
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "mean": 0.7039622645395617,
+              "concentration": 0.6552047116227445
+            },
+            "saturation": 0.43979923491133377,
+            "lightness": 0.4604233575286344,
+            "choosiness": 0.40676794326864185,
+            "discrimination": 0.6350161014124751,
+            "maxGeneration": 0,
+            "habitats": {
+              "shore": {
+                "count": 3,
+                "body": {
+                  "count": 3,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7840597244849898,
+                  "concentration": 0.468151358244268
+                }
+              },
+              "plains": {
+                "count": 1,
+                "body": {
+                  "count": 1,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7922899035736919,
+                  "concentration": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      {
+        "tick": 3600,
+        "species": {
+          "square": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                3,
+                7,
+                7,
+                5,
+                7,
+                0,
+                0,
+                0,
+                0,
+                0,
+                3,
+                4
+              ],
+              "mean": 0.17969483103213424,
+              "concentration": 0.5998853025830799
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                4,
+                5,
+                4,
+                7,
+                6,
+                0,
+                0,
+                0,
+                0,
+                0,
+                6,
+                4
+              ],
+              "mean": 0.1519802129758474,
+              "concentration": 0.5218194179172237
+            },
+            "saturation": 0.4597768768732851,
+            "lightness": 0.45269731731774915,
+            "choosiness": 0.41159710559683543,
+            "discrimination": 0.6489252326169258,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 34,
+                "body": {
+                  "count": 34,
+                  "histogram": [
+                    3,
+                    7,
+                    6,
+                    5,
+                    7,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    2,
+                    4
+                  ],
+                  "mean": 0.18642995928730044,
+                  "concentration": 0.6090684913240759
+                }
+              },
+              "shore": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0
+                  ],
+                  "mean": 0.057374353399500366,
+                  "concentration": 0.6301768119072756
+                }
+              }
+            }
+          },
+          "triangle": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                2
+              ],
+              "mean": 0.9601952175747084,
+              "concentration": 0.8314925648131479
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                1,
+                1
+              ],
+              "mean": 0.8326076532090344,
+              "concentration": 0.8544775766771385
+            },
+            "saturation": 0.4195219443412498,
+            "lightness": 0.5081549162743613,
+            "choosiness": 0.41610880857333543,
+            "discrimination": 0.7380578984622843,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    1
+                  ],
+                  "mean": 0.8806363090779631,
+                  "concentration": 0.9171219084118937
+                }
+              },
+              "plains": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1
+                  ],
+                  "mean": 0.03554561865515993,
+                  "concentration": 0.9641336934902454
+                }
+              }
+            }
+          },
+          "circle": {
+            "count": 36,
+            "body": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                1,
+                1,
+                5,
+                5,
+                5,
+                4,
+                9,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5902619311626975,
+              "concentration": 0.5700591827072147
+            },
+            "preference": {
+              "count": 36,
+              "histogram": [
+                0,
+                0,
+                0,
+                8,
+                7,
+                3,
+                3,
+                3,
+                6,
+                6,
+                0,
+                0
+              ],
+              "mean": 0.5161746044261284,
+              "concentration": 0.41098595163408413
+            },
+            "saturation": 0.45196885288718885,
+            "lightness": 0.44502847182642047,
+            "choosiness": 0.4173103448184621,
+            "discrimination": 0.49986504027231926,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 33,
+                "body": {
+                  "count": 33,
+                  "histogram": [
+                    0,
+                    0,
+                    1,
+                    1,
+                    5,
+                    5,
+                    5,
+                    3,
+                    8,
+                    5,
+                    0,
+                    0
+                  ],
+                  "mean": 0.577901168965034,
+                  "concentration": 0.5553191417830113
+                }
+              },
+              "shore": {
+                "count": 3,
+                "body": {
+                  "count": 3,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    1,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.6798966345687966,
+                  "concentration": 0.8877159837837288
+                }
+              }
+            }
+          },
+          "octagon": {
+            "count": 4,
+            "body": {
+              "count": 4,
+              "histogram": [
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                2,
+                0,
+                0
+              ],
+              "mean": 0.7874824634288278,
+              "concentration": 0.600918285728218
+            },
+            "preference": {
+              "count": 4,
+              "histogram": [
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                1,
+                1,
+                0,
+                0,
+                1
+              ],
+              "mean": 0.7039622645395617,
+              "concentration": 0.6552047116227445
+            },
+            "saturation": 0.43979923491133377,
+            "lightness": 0.4604233575286344,
+            "choosiness": 0.40676794326864185,
+            "discrimination": 0.6350161014124751,
+            "maxGeneration": 0,
+            "habitats": {
+              "forest": {
+                "count": 2,
+                "body": {
+                  "count": 2,
+                  "histogram": [
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.8994289310649037,
+                  "concentration": 0.7818464849095234
+                }
+              },
+              "shore": {
+                "count": 1,
+                "body": {
+                  "count": 1,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0
+                  ],
+                  "mean": 0.7820608699880539,
+                  "concentration": 1
+                }
+              },
+              "plains": {
+                "count": 1,
+                "body": {
+                  "count": 1,
+                  "histogram": [
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0
+                  ],
+                  "mean": 0.5714303406514227,
+                  "concentration": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    ],
+    "colourBaseline": {
+      "tick": 0,
+      "species": {
+        "square": {
+          "count": 36,
+          "body": {
+            "count": 36,
+            "histogram": [
+              3,
+              7,
+              7,
+              5,
+              7,
+              0,
+              0,
+              0,
+              0,
+              0,
+              3,
+              4
+            ],
+            "mean": 0.17969483103213424,
+            "concentration": 0.5998853025830799
+          },
+          "preference": {
+            "count": 36,
+            "histogram": [
+              4,
+              5,
+              4,
+              7,
+              6,
+              0,
+              0,
+              0,
+              0,
+              0,
+              6,
+              4
+            ],
+            "mean": 0.1519802129758474,
+            "concentration": 0.5218194179172237
+          },
+          "saturation": 0.4597768768732851,
+          "lightness": 0.45269731731774915,
+          "choosiness": 0.41159710559683543,
+          "discrimination": 0.6489252326169258,
+          "maxGeneration": 0,
+          "habitats": {
+            "forest": {
+              "count": 36,
+              "body": {
+                "count": 36,
+                "histogram": [
+                  3,
+                  7,
+                  7,
+                  5,
+                  7,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  3,
+                  4
+                ],
+                "mean": 0.17969483103213424,
+                "concentration": 0.5998853025830799
+              }
+            }
+          }
+        },
+        "triangle": {
+          "count": 4,
+          "body": {
+            "count": 4,
+            "histogram": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              2
+            ],
+            "mean": 0.9601952175747084,
+            "concentration": 0.8314925648131479
+          },
+          "preference": {
+            "count": 4,
+            "histogram": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              2,
+              1,
+              1
+            ],
+            "mean": 0.8326076532090344,
+            "concentration": 0.8544775766771385
+          },
+          "saturation": 0.4195219443412498,
+          "lightness": 0.5081549162743613,
+          "choosiness": 0.41610880857333543,
+          "discrimination": 0.7380578984622843,
+          "maxGeneration": 0,
+          "habitats": {
+            "forest": {
+              "count": 4,
+              "body": {
+                "count": 4,
+                "histogram": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  2
+                ],
+                "mean": 0.9601952175747084,
+                "concentration": 0.8314925648131479
+              }
+            }
+          }
+        },
+        "circle": {
+          "count": 36,
+          "body": {
+            "count": 36,
+            "histogram": [
+              0,
+              0,
+              1,
+              1,
+              5,
+              5,
+              5,
+              4,
+              9,
+              6,
+              0,
+              0
+            ],
+            "mean": 0.5902619311626975,
+            "concentration": 0.5700591827072147
+          },
+          "preference": {
+            "count": 36,
+            "histogram": [
+              0,
+              0,
+              0,
+              8,
+              7,
+              3,
+              3,
+              3,
+              6,
+              6,
+              0,
+              0
+            ],
+            "mean": 0.5161746044261284,
+            "concentration": 0.41098595163408413
+          },
+          "saturation": 0.45196885288718885,
+          "lightness": 0.44502847182642047,
+          "choosiness": 0.4173103448184621,
+          "discrimination": 0.49986504027231926,
+          "maxGeneration": 0,
+          "habitats": {
+            "forest": {
+              "count": 36,
+              "body": {
+                "count": 36,
+                "histogram": [
+                  0,
+                  0,
+                  1,
+                  1,
+                  5,
+                  5,
+                  5,
+                  4,
+                  9,
+                  6,
+                  0,
+                  0
+                ],
+                "mean": 0.5902619311626975,
+                "concentration": 0.5700591827072147
+              }
+            }
+          }
+        },
+        "octagon": {
+          "count": 4,
+          "body": {
+            "count": 4,
+            "histogram": [
+              1,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              0,
+              0,
+              2,
+              0,
+              0
+            ],
+            "mean": 0.7874824634288278,
+            "concentration": 0.600918285728218
+          },
+          "preference": {
+            "count": 4,
+            "histogram": [
+              0,
+              0,
+              0,
+              0,
+              0,
+              0,
+              1,
+              1,
+              1,
+              0,
+              0,
+              1
+            ],
+            "mean": 0.7039622645395617,
+            "concentration": 0.6552047116227445
+          },
+          "saturation": 0.43979923491133377,
+          "lightness": 0.4604233575286344,
+          "choosiness": 0.40676794326864185,
+          "discrimination": 0.6350161014124751,
+          "maxGeneration": 0,
+          "habitats": {
+            "forest": {
+              "count": 4,
+              "body": {
+                "count": 4,
+                "histogram": [
+                  1,
+                  0,
+                  0,
+                  0,
+                  0,
+                  0,
+                  1,
+                  0,
+                  0,
+                  2,
+                  0,
+                  0
+                ],
+                "mean": 0.7874824634288278,
+                "concentration": 0.600918285728218
+              }
+            }
+          }
+        }
+      }
+    },
+    "seed": 42,
+    "tick": 3600,
+    "lastRoll": 0.5691393385641277,
+    "grassAverage": 0.34182416931846454,
+    "grassTotal": 6563.024050914519,
+    "grassCoverage": 0.8907291666666667,
+    "grassCoverageCells": 17102,
+    "grassHotspotCells": 1854,
+    "stressedCells": 5817,
+    "bushCount": 96,
+    "berryTotal": 979.2128000000969,
+    "berryAverage": 10.200133333334342,
+    "bushAverageHealth": 1,
+    "chaseAttempts": 0,
+    "chaseSuccesses": 0,
+    "chaseLosses": 0,
+    "killsTotal": 0,
+    "carcassCount": 0,
+    "carcassMeatTotal": 0,
+    "birthsTotal": 0,
+    "birthsLastTick": 0,
+    "pregnanciesTotal": 0,
+    "pregnanciesLastTick": 0,
+    "miscarriagesTotal": 0,
+    "miscarriagesLastTick": 0,
+    "birthsSquaresLastTick": 0,
+    "birthsSquaresTotal": 0,
+    "birthsTrianglesLastTick": 0,
+    "birthsTrianglesTotal": 0,
+    "birthsCirclesLastTick": 0,
+    "birthsCirclesTotal": 0,
+    "birthsOctagonsLastTick": 0,
+    "birthsOctagonsTotal": 0,
+    "pregnanciesSquaresLastTick": 0,
+    "pregnanciesSquaresTotal": 0,
+    "pregnanciesTrianglesLastTick": 0,
+    "pregnanciesTrianglesTotal": 0,
+    "pregnanciesCirclesLastTick": 0,
+    "pregnanciesCirclesTotal": 0,
+    "pregnanciesOctagonsLastTick": 0,
+    "pregnanciesOctagonsTotal": 0,
+    "miscarriagesSquaresLastTick": 0,
+    "miscarriagesSquaresTotal": 0,
+    "miscarriagesTrianglesLastTick": 0,
+    "miscarriagesTrianglesTotal": 0,
+    "miscarriagesCirclesLastTick": 0,
+    "miscarriagesCirclesTotal": 0,
+    "miscarriagesOctagonsLastTick": 0,
+    "miscarriagesOctagonsTotal": 0,
+    "mutationsLastTick": 0,
+    "mutationStrengthLastTick": 0,
+    "mutationTotal": 0,
+    "mutationStrengthTotal": 0,
+    "pleiotropyStrengthLastTick": 0,
+    "pleiotropyStrengthTotal": 0,
+    "mutationsSquaresLastTick": 0,
+    "mutationsSquaresTotal": 0,
+    "mutationStrengthSquaresLastTick": 0,
+    "mutationStrengthSquaresTotal": 0,
+    "pleiotropyStrengthSquaresLastTick": 0,
+    "pleiotropyStrengthSquaresTotal": 0,
+    "mutationsTrianglesLastTick": 0,
+    "mutationsTrianglesTotal": 0,
+    "mutationStrengthTrianglesLastTick": 0,
+    "mutationStrengthTrianglesTotal": 0,
+    "pleiotropyStrengthTrianglesLastTick": 0,
+    "pleiotropyStrengthTrianglesTotal": 0,
+    "mutationsCirclesLastTick": 0,
+    "mutationsCirclesTotal": 0,
+    "mutationStrengthCirclesLastTick": 0,
+    "mutationStrengthCirclesTotal": 0,
+    "pleiotropyStrengthCirclesLastTick": 0,
+    "pleiotropyStrengthCirclesTotal": 0,
+    "mutationsOctagonsLastTick": 0,
+    "mutationsOctagonsTotal": 0,
+    "mutationStrengthOctagonsLastTick": 0,
+    "mutationStrengthOctagonsTotal": 0,
+    "pleiotropyStrengthOctagonsLastTick": 0,
+    "pleiotropyStrengthOctagonsTotal": 0,
+    "deathsTotal": 0,
+    "deathsAge": 0,
+    "deathsStarvation": 0,
+    "deathsThirst": 0,
+    "deathsInjury": 0,
+    "deathsPredation": 0,
+    "deathsOther": 0,
+    "deathsSquaresTotal": 0,
+    "deathsSquaresAge": 0,
+    "deathsSquaresStarvation": 0,
+    "deathsSquaresThirst": 0,
+    "deathsSquaresInjury": 0,
+    "deathsSquaresPredation": 0,
+    "deathsSquaresOther": 0,
+    "deathsTrianglesTotal": 0,
+    "deathsTrianglesAge": 0,
+    "deathsTrianglesStarvation": 0,
+    "deathsTrianglesThirst": 0,
+    "deathsTrianglesInjury": 0,
+    "deathsTrianglesPredation": 0,
+    "deathsTrianglesOther": 0,
+    "deathsCirclesTotal": 0,
+    "deathsCirclesAge": 0,
+    "deathsCirclesStarvation": 0,
+    "deathsCirclesThirst": 0,
+    "deathsCirclesInjury": 0,
+    "deathsCirclesPredation": 0,
+    "deathsCirclesOther": 0,
+    "deathsOctagonsTotal": 0,
+    "deathsOctagonsAge": 0,
+    "deathsOctagonsStarvation": 0,
+    "deathsOctagonsThirst": 0,
+    "deathsOctagonsInjury": 0,
+    "deathsOctagonsPredation": 0,
+    "deathsOctagonsOther": 0,
+    "chaseSquaresAttempts": 0,
+    "chaseSquaresSuccesses": 0,
+    "chaseSquaresLosses": 0,
+    "chaseTrianglesAttempts": 0,
+    "chaseTrianglesSuccesses": 0,
+    "chaseTrianglesLosses": 0,
+    "chaseCirclesAttempts": 0,
+    "chaseCirclesSuccesses": 0,
+    "chaseCirclesLosses": 0,
+    "chaseOctagonsAttempts": 0,
+    "chaseOctagonsSuccesses": 0,
+    "chaseOctagonsLosses": 0,
+    "killsPredatorSquares": 0,
+    "killsPredatorTriangles": 0,
+    "killsPredatorCircles": 0,
+    "killsPredatorOctagons": 0,
+    "killsPreySquares": 0,
+    "killsPreyTriangles": 0,
+    "killsPreyCircles": 0,
+    "killsPreyOctagons": 0,
+    "creatureCount": 80,
+    "squaresCount": 36,
+    "trianglesCount": 4,
+    "circlesCount": 36,
+    "octagonsCount": 4,
+    "avgGenomeSpeedSquares": -0.4523439889049574,
+    "avgGenomeSpeedTriangles": -7.42247358430177,
+    "avgGenomeSpeedCircles": -1.1559039256017978,
+    "avgGenomeSpeedOctagons": 4.632168873213249,
+    "avgGenomePerceptionRangeSquares": -0.27926887799467615,
+    "avgGenomePerceptionRangeTriangles": 1.2846701382659198,
+    "avgGenomePerceptionRangeCircles": 0.12318785923222109,
+    "avgGenomePerceptionRangeOctagons": 0.6128364102914841,
+    "avgGenomeAlertnessSquares": -1.0622486024577493,
+    "avgGenomeAlertnessTriangles": -7.379633579403155,
+    "avgGenomeAlertnessCircles": -0.8711880093647206,
+    "avgGenomeAlertnessOctagons": -6.5417643357068345,
+    "avgGenomeReactionDelaySquares": 0.9252601750712408,
+    "avgGenomeReactionDelayTriangles": -3.552162249106905,
+    "avgGenomeReactionDelayCircles": 0.11142200660991808,
+    "avgGenomeReactionDelayOctagons": 2.7498613786883563,
+    "avgGenomeBasalEnergyDrainSquares": 0.380899267167667,
+    "avgGenomeBasalEnergyDrainTriangles": -4.1606094245798975,
+    "avgGenomeBasalEnergyDrainCircles": -0.1745604229573483,
+    "avgGenomeBasalEnergyDrainOctagons": 2.1747189573943615,
+    "avgGenomeBasalWaterDrainSquares": -2.7709931797451626,
+    "avgGenomeBasalWaterDrainTriangles": -1.35433294111863,
+    "avgGenomeBasalWaterDrainCircles": 0.5750205799833985,
+    "avgGenomeBasalWaterDrainOctagons": -8.66181619698182,
+    "avgGenomeBasalStaminaDrainSquares": -1.2647211693951665,
+    "avgGenomeBasalStaminaDrainTriangles": 2.079437903594239,
+    "avgGenomeBasalStaminaDrainCircles": 0.3078550534943547,
+    "avgGenomeBasalStaminaDrainOctagons": 8.33762955153361,
+    "avgGenomeSprintStartThresholdSquares": -0.8058934407826346,
+    "avgGenomeSprintStartThresholdTriangles": 0.5450288997963071,
+    "avgGenomeSprintStartThresholdCircles": 0.4665687168017296,
+    "avgGenomeSprintStartThresholdOctagons": 5.458380938507612,
+    "avgGenomeSprintStopThresholdSquares": -0.19346993183716465,
+    "avgGenomeSprintStopThresholdTriangles": 1.1248129745945246,
+    "avgGenomeSprintStopThresholdCircles": 3.7988423747527866,
+    "avgGenomeSprintStopThresholdOctagons": 3.5749105759896205,
+    "avgGenomeSprintSpeedMultiplierSquares": 0.7398755794080891,
+    "avgGenomeSprintSpeedMultiplierTriangles": -9.416339443996547,
+    "avgGenomeSprintSpeedMultiplierCircles": -2.7902372116740404,
+    "avgGenomeSprintSpeedMultiplierOctagons": -4.341605426743622,
+    "avgGenomeSprintStaminaDrainSquares": -1.9841296114544993,
+    "avgGenomeSprintStaminaDrainTriangles": -5.6997995683923275,
+    "avgGenomeSprintStaminaDrainCircles": -1.7930581384441813,
+    "avgGenomeSprintStaminaDrainOctagons": 0.164244389161472,
+    "avgGenomeStaminaRegenSquares": -0.1186101862953759,
+    "avgGenomeStaminaRegenTriangles": -2.9095979430712737,
+    "avgGenomeStaminaRegenCircles": -3.5617363936681468,
+    "avgGenomeStaminaRegenOctagons": -2.620648997835817,
+    "avgGenomeDrinkThresholdSquares": -0.6821927836992425,
+    "avgGenomeDrinkThresholdTriangles": -6.321311788633466,
+    "avgGenomeDrinkThresholdCircles": -1.7181717606985725,
+    "avgGenomeDrinkThresholdOctagons": 0.9726630896329969,
+    "avgGenomeDrinkAmountSquares": 2.566516173796507,
+    "avgGenomeDrinkAmountTriangles": -5.556550761684775,
+    "avgGenomeDrinkAmountCircles": 1.5803385727728436,
+    "avgGenomeDrinkAmountOctagons": 2.0766824623569935
+  },
+  "animals": [
+    {
+      "id": 0,
+      "species": "triangle",
+      "distance": 76.72473545838314,
+      "displacement": 49.48059936342058,
+      "cells": 20,
+      "stationaryTicks": 2244,
+      "turningTicks": 0,
+      "goalChanges": 11,
+      "intents": {
+        "wander": 1,
+        "rest": 987,
+        "seek": 2593,
+        "drink": 19
+      }
+    },
+    {
+      "id": 1,
+      "species": "triangle",
+      "distance": 64.23724206711526,
+      "displacement": 57.54023294343988,
+      "cells": 18,
+      "stationaryTicks": 2485,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 1,
+        "rest": 821,
+        "seek": 2759,
+        "drink": 19
+      }
+    },
+    {
+      "id": 2,
+      "species": "triangle",
+      "distance": 58.01531190220794,
+      "displacement": 42.4031627777335,
+      "cells": 16,
+      "stationaryTicks": 2506,
+      "turningTicks": 0,
+      "goalChanges": 11,
+      "intents": {
+        "wander": 1,
+        "rest": 1215,
+        "seek": 2368,
+        "drink": 16
+      }
+    },
+    {
+      "id": 3,
+      "species": "triangle",
+      "distance": 52.62505199872225,
+      "displacement": 47.39943661616982,
+      "cells": 17,
+      "stationaryTicks": 2692,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 1,
+        "rest": 1163,
+        "seek": 2417,
+        "drink": 19
+      }
+    },
+    {
+      "id": 4,
+      "species": "octagon",
+      "distance": 10.898057169324337,
+      "displacement": 4.4394606740103475,
+      "cells": 3,
+      "stationaryTicks": 3268,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 1,
+        "rest": 929,
+        "seek": 2652,
+        "drink": 18
+      }
+    },
+    {
+      "id": 5,
+      "species": "octagon",
+      "distance": 49.81309471800282,
+      "displacement": 8.870999560513361,
+      "cells": 10,
+      "stationaryTicks": 2200,
+      "turningTicks": 0,
+      "goalChanges": 78,
+      "intents": {
+        "wander": 1,
+        "rest": 1005,
+        "seek": 2578,
+        "drink": 16
+      }
+    },
+    {
+      "id": 6,
+      "species": "octagon",
+      "distance": 2.8786023373244767,
+      "displacement": 1.3161633576009792,
+      "cells": 2,
+      "stationaryTicks": 3441,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 1,
+        "rest": 1167,
+        "seek": 2415,
+        "drink": 17
+      }
+    },
+    {
+      "id": 7,
+      "species": "octagon",
+      "distance": 12.660735161358314,
+      "displacement": 10.815944907772778,
+      "cells": 5,
+      "stationaryTicks": 3296,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 1,
+        "rest": 1159,
+        "seek": 2422,
+        "drink": 18
+      }
+    },
+    {
+      "id": 8,
+      "species": "square",
+      "distance": 46.52536905011589,
+      "displacement": 13.715988782101302,
+      "cells": 10,
+      "stationaryTicks": 1526,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 145,
+        "graze": 1565,
+        "seek": 1830,
+        "drink": 36,
+        "eat": 24
+      }
+    },
+    {
+      "id": 9,
+      "species": "square",
+      "distance": 51.005804690078314,
+      "displacement": 13.35097847250352,
+      "cells": 16,
+      "stationaryTicks": 1727,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 88,
+        "graze": 1553,
+        "seek": 1927,
+        "drink": 17,
+        "eat": 15
+      }
+    },
+    {
+      "id": 10,
+      "species": "square",
+      "distance": 54.69331280948004,
+      "displacement": 13.24387970828591,
+      "cells": 10,
+      "stationaryTicks": 1230,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 834,
+        "graze": 755,
+        "seek": 1969,
+        "drink": 18,
+        "eat": 24
+      }
+    },
+    {
+      "id": 11,
+      "species": "square",
+      "distance": 48.049826725575564,
+      "displacement": 12.783562010607366,
+      "cells": 8,
+      "stationaryTicks": 1560,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 482,
+        "graze": 1187,
+        "seek": 1905,
+        "drink": 18,
+        "eat": 8
+      }
+    },
+    {
+      "id": 12,
+      "species": "square",
+      "distance": 32.66269909204848,
+      "displacement": 12.907260458553699,
+      "cells": 7,
+      "stationaryTicks": 1796,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 71,
+        "graze": 1640,
+        "seek": 1851,
+        "drink": 17,
+        "eat": 21
+      }
+    },
+    {
+      "id": 13,
+      "species": "square",
+      "distance": 43.57998651520812,
+      "displacement": 13.853633286099774,
+      "cells": 12,
+      "stationaryTicks": 1570,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 38,
+        "graze": 1824,
+        "seek": 1702,
+        "drink": 17,
+        "eat": 19
+      }
+    },
+    {
+      "id": 14,
+      "species": "square",
+      "distance": 47.846737312558524,
+      "displacement": 10.161710320654104,
+      "cells": 9,
+      "stationaryTicks": 1310,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 92,
+        "graze": 1534,
+        "seek": 1943,
+        "drink": 16,
+        "eat": 15
+      }
+    },
+    {
+      "id": 15,
+      "species": "square",
+      "distance": 60.21649537504292,
+      "displacement": 8.575524042094258,
+      "cells": 16,
+      "stationaryTicks": 1123,
+      "turningTicks": 0,
+      "goalChanges": 10,
+      "intents": {
+        "wander": 75,
+        "graze": 1688,
+        "seek": 1798,
+        "drink": 19,
+        "eat": 20
+      }
+    },
+    {
+      "id": 16,
+      "species": "square",
+      "distance": 47.460991484044996,
+      "displacement": 16.789674531805083,
+      "cells": 11,
+      "stationaryTicks": 1640,
+      "turningTicks": 0,
+      "goalChanges": 10,
+      "intents": {
+        "wander": 145,
+        "graze": 1832,
+        "seek": 1571,
+        "drink": 30,
+        "eat": 22
+      }
+    },
+    {
+      "id": 17,
+      "species": "square",
+      "distance": 54.41343522613457,
+      "displacement": 11.17033136118707,
+      "cells": 13,
+      "stationaryTicks": 1408,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 805,
+        "graze": 847,
+        "seek": 1906,
+        "drink": 18,
+        "eat": 24
+      }
+    },
+    {
+      "id": 18,
+      "species": "square",
+      "distance": 45.0952048269723,
+      "displacement": 12.987307510449858,
+      "cells": 12,
+      "stationaryTicks": 1482,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 122,
+        "graze": 1422,
+        "seek": 2023,
+        "drink": 16,
+        "eat": 17
+      }
+    },
+    {
+      "id": 19,
+      "species": "square",
+      "distance": 60.529366222118774,
+      "displacement": 11.857647474209967,
+      "cells": 12,
+      "stationaryTicks": 1104,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 603,
+        "graze": 1008,
+        "seek": 1947,
+        "drink": 19,
+        "eat": 23
+      }
+    },
+    {
+      "id": 20,
+      "species": "square",
+      "distance": 37.08578038747813,
+      "displacement": 8.151804529882458,
+      "cells": 6,
+      "stationaryTicks": 1736,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 371,
+        "graze": 1150,
+        "seek": 2052,
+        "drink": 17,
+        "eat": 10
+      }
+    },
+    {
+      "id": 21,
+      "species": "square",
+      "distance": 50.62245642439844,
+      "displacement": 10.311693144281112,
+      "cells": 12,
+      "stationaryTicks": 1210,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 709,
+        "graze": 903,
+        "seek": 1947,
+        "drink": 19,
+        "eat": 22
+      }
+    },
+    {
+      "id": 22,
+      "species": "square",
+      "distance": 47.290347071910475,
+      "displacement": 9.50644496903072,
+      "cells": 11,
+      "stationaryTicks": 1531,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 78,
+        "graze": 1524,
+        "seek": 1964,
+        "drink": 17,
+        "eat": 17
+      }
+    },
+    {
+      "id": 23,
+      "species": "square",
+      "distance": 49.686386795491,
+      "displacement": 10.70121214804476,
+      "cells": 12,
+      "stationaryTicks": 1430,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 647,
+        "graze": 951,
+        "seek": 1967,
+        "drink": 19,
+        "eat": 16
+      }
+    },
+    {
+      "id": 24,
+      "species": "square",
+      "distance": 50.94714998271161,
+      "displacement": 9.216698208906136,
+      "cells": 10,
+      "stationaryTicks": 1428,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 593,
+        "graze": 944,
+        "seek": 2009,
+        "drink": 36,
+        "eat": 18
+      }
+    },
+    {
+      "id": 25,
+      "species": "square",
+      "distance": 51.84309626466041,
+      "displacement": 11.048932121528772,
+      "cells": 10,
+      "stationaryTicks": 1487,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 439,
+        "graze": 1174,
+        "seek": 1959,
+        "drink": 18,
+        "eat": 10
+      }
+    },
+    {
+      "id": 26,
+      "species": "square",
+      "distance": 50.279309925005485,
+      "displacement": 13.379469172076877,
+      "cells": 11,
+      "stationaryTicks": 1417,
+      "turningTicks": 0,
+      "goalChanges": 11,
+      "intents": {
+        "wander": 88,
+        "graze": 1865,
+        "seek": 1607,
+        "drink": 18,
+        "eat": 22
+      }
+    },
+    {
+      "id": 27,
+      "species": "square",
+      "distance": 47.65836038341541,
+      "displacement": 11.799705378958423,
+      "cells": 10,
+      "stationaryTicks": 1312,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 641,
+        "graze": 923,
+        "seek": 2005,
+        "drink": 16,
+        "eat": 15
+      }
+    },
+    {
+      "id": 28,
+      "species": "square",
+      "distance": 42.47947179878539,
+      "displacement": 15.384922643825984,
+      "cells": 8,
+      "stationaryTicks": 1606,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 114,
+        "graze": 1318,
+        "seek": 2104,
+        "drink": 36,
+        "eat": 28
+      }
+    },
+    {
+      "id": 29,
+      "species": "square",
+      "distance": 52.32514991712681,
+      "displacement": 13.904022964234684,
+      "cells": 11,
+      "stationaryTicks": 1198,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 1,
+        "graze": 1502,
+        "seek": 2032,
+        "drink": 37,
+        "eat": 28
+      }
+    },
+    {
+      "id": 30,
+      "species": "square",
+      "distance": 41.18480987716807,
+      "displacement": 15.946753652029793,
+      "cells": 8,
+      "stationaryTicks": 1546,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 285,
+        "graze": 1061,
+        "seek": 2220,
+        "drink": 18,
+        "eat": 16
+      }
+    },
+    {
+      "id": 31,
+      "species": "square",
+      "distance": 40.292172689911936,
+      "displacement": 12.912435910754274,
+      "cells": 10,
+      "stationaryTicks": 1622,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 1,
+        "graze": 1646,
+        "seek": 1919,
+        "drink": 17,
+        "eat": 17
+      }
+    },
+    {
+      "id": 32,
+      "species": "square",
+      "distance": 36.28712841317764,
+      "displacement": 11.104343194501519,
+      "cells": 11,
+      "stationaryTicks": 1715,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 124,
+        "graze": 1669,
+        "seek": 1774,
+        "drink": 16,
+        "eat": 17
+      }
+    },
+    {
+      "id": 33,
+      "species": "square",
+      "distance": 50.480187167342315,
+      "displacement": 12.509474318053737,
+      "cells": 15,
+      "stationaryTicks": 1606,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 38,
+        "graze": 1529,
+        "seek": 1996,
+        "drink": 18,
+        "eat": 19
+      }
+    },
+    {
+      "id": 34,
+      "species": "square",
+      "distance": 48.43313918723828,
+      "displacement": 14.963543090874165,
+      "cells": 8,
+      "stationaryTicks": 1383,
+      "turningTicks": 0,
+      "goalChanges": 10,
+      "intents": {
+        "wander": 112,
+        "graze": 1427,
+        "seek": 2021,
+        "drink": 18,
+        "eat": 22
+      }
+    },
+    {
+      "id": 35,
+      "species": "square",
+      "distance": 49.52938132522554,
+      "displacement": 9.886837801278388,
+      "cells": 12,
+      "stationaryTicks": 1708,
+      "turningTicks": 0,
+      "goalChanges": 4,
+      "intents": {
+        "wander": 750,
+        "graze": 830,
+        "seek": 1969,
+        "drink": 28,
+        "eat": 23
+      }
+    },
+    {
+      "id": 36,
+      "species": "square",
+      "distance": 51.31022679728321,
+      "displacement": 12.780706260124623,
+      "cells": 11,
+      "stationaryTicks": 1230,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 581,
+        "graze": 785,
+        "seek": 2195,
+        "drink": 17,
+        "eat": 22
+      }
+    },
+    {
+      "id": 37,
+      "species": "square",
+      "distance": 44.850550191798284,
+      "displacement": 12.633079364518904,
+      "cells": 9,
+      "stationaryTicks": 1369,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 85,
+        "graze": 1479,
+        "seek": 1993,
+        "drink": 19,
+        "eat": 24
+      }
+    },
+    {
+      "id": 38,
+      "species": "square",
+      "distance": 47.9340465674509,
+      "displacement": 8.190879065911961,
+      "cells": 12,
+      "stationaryTicks": 1608,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 1,
+        "graze": 1762,
+        "seek": 1800,
+        "drink": 18,
+        "eat": 19
+      }
+    },
+    {
+      "id": 39,
+      "species": "square",
+      "distance": 56.74518150277289,
+      "displacement": 12.459716075370066,
+      "cells": 15,
+      "stationaryTicks": 1583,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 516,
+        "graze": 1049,
+        "seek": 2005,
+        "drink": 18,
+        "eat": 12
+      }
+    },
+    {
+      "id": 40,
+      "species": "square",
+      "distance": 56.289341447872616,
+      "displacement": 7.369625532674008,
+      "cells": 15,
+      "stationaryTicks": 1410,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 2,
+        "graze": 1572,
+        "seek": 1992,
+        "drink": 16,
+        "eat": 18
+      }
+    },
+    {
+      "id": 41,
+      "species": "square",
+      "distance": 52.83896843189574,
+      "displacement": 14.702157555496225,
+      "cells": 12,
+      "stationaryTicks": 1281,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 801,
+        "graze": 905,
+        "seek": 1857,
+        "drink": 19,
+        "eat": 18
+      }
+    },
+    {
+      "id": 42,
+      "species": "square",
+      "distance": 66.11039371014232,
+      "displacement": 10.269775289998643,
+      "cells": 11,
+      "stationaryTicks": 1163,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 601,
+        "graze": 1052,
+        "seek": 1914,
+        "drink": 19,
+        "eat": 14
+      }
+    },
+    {
+      "id": 43,
+      "species": "square",
+      "distance": 62.22224310436575,
+      "displacement": 12.935020863200958,
+      "cells": 17,
+      "stationaryTicks": 1257,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 787,
+        "graze": 1006,
+        "seek": 1771,
+        "drink": 19,
+        "eat": 17
+      }
+    },
+    {
+      "id": 44,
+      "species": "circle",
+      "distance": 43.140050942210436,
+      "displacement": 11.213012766495437,
+      "cells": 8,
+      "stationaryTicks": 1476,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 546,
+        "graze": 937,
+        "seek": 2088,
+        "drink": 17,
+        "eat": 12
+      }
+    },
+    {
+      "id": 45,
+      "species": "circle",
+      "distance": 59.31576087807218,
+      "displacement": 11.418199804417299,
+      "cells": 12,
+      "stationaryTicks": 1305,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 743,
+        "graze": 863,
+        "seek": 1962,
+        "drink": 18,
+        "eat": 14
+      }
+    },
+    {
+      "id": 46,
+      "species": "circle",
+      "distance": 43.235856043055655,
+      "displacement": 11.71806715250758,
+      "cells": 11,
+      "stationaryTicks": 1285,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 332,
+        "graze": 1294,
+        "seek": 1944,
+        "drink": 19,
+        "eat": 11
+      }
+    },
+    {
+      "id": 47,
+      "species": "circle",
+      "distance": 44.73334101632665,
+      "displacement": 8.491680231426654,
+      "cells": 9,
+      "stationaryTicks": 1349,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 146,
+        "graze": 1467,
+        "seek": 1936,
+        "drink": 36,
+        "eat": 15
+      }
+    },
+    {
+      "id": 48,
+      "species": "circle",
+      "distance": 58.497274937647056,
+      "displacement": 7.363071878955635,
+      "cells": 14,
+      "stationaryTicks": 1314,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 111,
+        "graze": 1696,
+        "seek": 1761,
+        "drink": 20,
+        "eat": 12
+      }
+    },
+    {
+      "id": 49,
+      "species": "circle",
+      "distance": 36.41766148698156,
+      "displacement": 12.230236648961423,
+      "cells": 7,
+      "stationaryTicks": 1715,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 10,
+        "graze": 1474,
+        "seek": 2090,
+        "drink": 17,
+        "eat": 9
+      }
+    },
+    {
+      "id": 50,
+      "species": "circle",
+      "distance": 56.59640528933755,
+      "displacement": 10.49569468138393,
+      "cells": 12,
+      "stationaryTicks": 1431,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 51,
+        "graze": 1541,
+        "seek": 1959,
+        "drink": 36,
+        "eat": 13
+      }
+    },
+    {
+      "id": 51,
+      "species": "circle",
+      "distance": 55.56788252538826,
+      "displacement": 21.11575373610242,
+      "cells": 15,
+      "stationaryTicks": 1402,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 25,
+        "graze": 1821,
+        "seek": 1727,
+        "drink": 17,
+        "eat": 10
+      }
+    },
+    {
+      "id": 52,
+      "species": "circle",
+      "distance": 50.04926612244481,
+      "displacement": 9.213497253025638,
+      "cells": 11,
+      "stationaryTicks": 1442,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 680,
+        "graze": 911,
+        "seek": 1980,
+        "drink": 17,
+        "eat": 12
+      }
+    },
+    {
+      "id": 53,
+      "species": "circle",
+      "distance": 54.97635733996232,
+      "displacement": 9.310047228136998,
+      "cells": 9,
+      "stationaryTicks": 1313,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 396,
+        "graze": 985,
+        "seek": 2190,
+        "drink": 17,
+        "eat": 12
+      }
+    },
+    {
+      "id": 54,
+      "species": "circle",
+      "distance": 52.22464049470499,
+      "displacement": 14.624034857322101,
+      "cells": 17,
+      "stationaryTicks": 1406,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 140,
+        "graze": 1517,
+        "seek": 1917,
+        "drink": 17,
+        "eat": 9
+      }
+    },
+    {
+      "id": 55,
+      "species": "circle",
+      "distance": 52.165335978570525,
+      "displacement": 10.917049524749114,
+      "cells": 11,
+      "stationaryTicks": 1416,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 128,
+        "graze": 1579,
+        "seek": 1837,
+        "drink": 40,
+        "eat": 16
+      }
+    },
+    {
+      "id": 56,
+      "species": "circle",
+      "distance": 46.195881965855996,
+      "displacement": 7.056933046702678,
+      "cells": 9,
+      "stationaryTicks": 1538,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 144,
+        "graze": 1404,
+        "seek": 2001,
+        "drink": 38,
+        "eat": 13
+      }
+    },
+    {
+      "id": 57,
+      "species": "circle",
+      "distance": 55.42450312691385,
+      "displacement": 22.985653704063807,
+      "cells": 16,
+      "stationaryTicks": 1443,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 676,
+        "graze": 1155,
+        "seek": 1739,
+        "drink": 18,
+        "eat": 12
+      }
+    },
+    {
+      "id": 58,
+      "species": "circle",
+      "distance": 65.42736353321855,
+      "displacement": 14.60235139186305,
+      "cells": 15,
+      "stationaryTicks": 1244,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 563,
+        "graze": 1234,
+        "seek": 1772,
+        "drink": 19,
+        "eat": 12
+      }
+    },
+    {
+      "id": 59,
+      "species": "circle",
+      "distance": 42.86305090768423,
+      "displacement": 13.234828746812239,
+      "cells": 10,
+      "stationaryTicks": 1556,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 1,
+        "graze": 1732,
+        "seek": 1839,
+        "drink": 18,
+        "eat": 10
+      }
+    },
+    {
+      "id": 60,
+      "species": "circle",
+      "distance": 45.52196438875349,
+      "displacement": 11.649356413470954,
+      "cells": 9,
+      "stationaryTicks": 1480,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 1,
+        "graze": 1690,
+        "seek": 1881,
+        "drink": 19,
+        "eat": 9
+      }
+    },
+    {
+      "id": 61,
+      "species": "circle",
+      "distance": 48.88649511572088,
+      "displacement": 8.602983559572603,
+      "cells": 10,
+      "stationaryTicks": 1384,
+      "turningTicks": 0,
+      "goalChanges": 10,
+      "intents": {
+        "wander": 169,
+        "graze": 1538,
+        "seek": 1839,
+        "drink": 38,
+        "eat": 16
+      }
+    },
+    {
+      "id": 62,
+      "species": "circle",
+      "distance": 45.00801940390015,
+      "displacement": 11.100999873335883,
+      "cells": 9,
+      "stationaryTicks": 1423,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 143,
+        "graze": 1507,
+        "seek": 1921,
+        "drink": 18,
+        "eat": 11
+      }
+    },
+    {
+      "id": 63,
+      "species": "circle",
+      "distance": 37.06941743903242,
+      "displacement": 12.237775268944558,
+      "cells": 7,
+      "stationaryTicks": 1583,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 1,
+        "graze": 1626,
+        "seek": 1947,
+        "drink": 19,
+        "eat": 7
+      }
+    },
+    {
+      "id": 64,
+      "species": "circle",
+      "distance": 56.05198839158516,
+      "displacement": 12.835579147483804,
+      "cells": 11,
+      "stationaryTicks": 1346,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 1,
+        "graze": 1445,
+        "seek": 2130,
+        "drink": 17,
+        "eat": 7
+      }
+    },
+    {
+      "id": 65,
+      "species": "circle",
+      "distance": 43.073731855396716,
+      "displacement": 11.12200318451908,
+      "cells": 9,
+      "stationaryTicks": 1581,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 144,
+        "graze": 1415,
+        "seek": 1993,
+        "drink": 36,
+        "eat": 12
+      }
+    },
+    {
+      "id": 66,
+      "species": "circle",
+      "distance": 43.6721826905107,
+      "displacement": 9.301684384280561,
+      "cells": 10,
+      "stationaryTicks": 1590,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 1,
+        "graze": 1741,
+        "seek": 1827,
+        "drink": 19,
+        "eat": 12
+      }
+    },
+    {
+      "id": 67,
+      "species": "circle",
+      "distance": 59.779027054389864,
+      "displacement": 9.120135050162013,
+      "cells": 11,
+      "stationaryTicks": 1156,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 586,
+        "graze": 754,
+        "seek": 2235,
+        "drink": 15,
+        "eat": 10
+      }
+    },
+    {
+      "id": 68,
+      "species": "circle",
+      "distance": 56.74567066360088,
+      "displacement": 9.303011350417227,
+      "cells": 12,
+      "stationaryTicks": 1298,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 496,
+        "graze": 948,
+        "seek": 2111,
+        "drink": 33,
+        "eat": 12
+      }
+    },
+    {
+      "id": 69,
+      "species": "circle",
+      "distance": 53.90741022845006,
+      "displacement": 11.645453291646117,
+      "cells": 14,
+      "stationaryTicks": 1519,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 157,
+        "graze": 1356,
+        "seek": 2060,
+        "drink": 19,
+        "eat": 8
+      }
+    },
+    {
+      "id": 70,
+      "species": "circle",
+      "distance": 49.877979080245716,
+      "displacement": 10.68381813099061,
+      "cells": 11,
+      "stationaryTicks": 1437,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 708,
+        "graze": 765,
+        "seek": 2099,
+        "drink": 17,
+        "eat": 11
+      }
+    },
+    {
+      "id": 71,
+      "species": "circle",
+      "distance": 57.55550539142038,
+      "displacement": 9.70369189053124,
+      "cells": 11,
+      "stationaryTicks": 1300,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 782,
+        "graze": 762,
+        "seek": 2005,
+        "drink": 39,
+        "eat": 12
+      }
+    },
+    {
+      "id": 72,
+      "species": "circle",
+      "distance": 40.3487677906405,
+      "displacement": 9.023262394835953,
+      "cells": 8,
+      "stationaryTicks": 1520,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 217,
+        "graze": 1365,
+        "seek": 1993,
+        "drink": 18,
+        "eat": 7
+      }
+    },
+    {
+      "id": 73,
+      "species": "circle",
+      "distance": 52.472702981751375,
+      "displacement": 12.546816789216804,
+      "cells": 11,
+      "stationaryTicks": 1286,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 9,
+        "graze": 1461,
+        "seek": 2103,
+        "drink": 18,
+        "eat": 9
+      }
+    },
+    {
+      "id": 74,
+      "species": "circle",
+      "distance": 51.64243238812409,
+      "displacement": 16.921661175179363,
+      "cells": 11,
+      "stationaryTicks": 1310,
+      "turningTicks": 0,
+      "goalChanges": 9,
+      "intents": {
+        "wander": 146,
+        "graze": 1542,
+        "seek": 1880,
+        "drink": 19,
+        "eat": 13
+      }
+    },
+    {
+      "id": 75,
+      "species": "circle",
+      "distance": 75.06593722159037,
+      "displacement": 11.484091845255245,
+      "cells": 19,
+      "stationaryTicks": 1288,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 779,
+        "graze": 1079,
+        "seek": 1716,
+        "drink": 18,
+        "eat": 8
+      }
+    },
+    {
+      "id": 76,
+      "species": "circle",
+      "distance": 77.69287608388828,
+      "displacement": 7.791330694427089,
+      "cells": 15,
+      "stationaryTicks": 889,
+      "turningTicks": 0,
+      "goalChanges": 7,
+      "intents": {
+        "wander": 824,
+        "graze": 888,
+        "seek": 1860,
+        "drink": 16,
+        "eat": 12
+      }
+    },
+    {
+      "id": 77,
+      "species": "circle",
+      "distance": 41.97776055554217,
+      "displacement": 17.39495016240969,
+      "cells": 10,
+      "stationaryTicks": 1534,
+      "turningTicks": 0,
+      "goalChanges": 5,
+      "intents": {
+        "wander": 945,
+        "graze": 529,
+        "seek": 2098,
+        "drink": 17,
+        "eat": 11
+      }
+    },
+    {
+      "id": 78,
+      "species": "circle",
+      "distance": 48.752493662372856,
+      "displacement": 10.213305701881508,
+      "cells": 12,
+      "stationaryTicks": 1399,
+      "turningTicks": 0,
+      "goalChanges": 8,
+      "intents": {
+        "wander": 567,
+        "graze": 961,
+        "seek": 2044,
+        "drink": 19,
+        "eat": 9
+      }
+    },
+    {
+      "id": 79,
+      "species": "circle",
+      "distance": 43.16291816939631,
+      "displacement": 14.064062658022985,
+      "cells": 11,
+      "stationaryTicks": 1593,
+      "turningTicks": 0,
+      "goalChanges": 6,
+      "intents": {
+        "wander": 514,
+        "graze": 1163,
+        "seek": 1894,
+        "drink": 18,
+        "eat": 11
+      }
+    }
+  ]
+}

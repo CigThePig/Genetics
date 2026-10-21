@@ -18,12 +18,47 @@ function tileHash(x, y) {
   n = Math.imul(n ^ (n >>> 13), 1274126177);
   return ((n ^ (n >>> 16)) >>> 0) / 4294967296;
 }
-export function substrateRgb(world, i) {
+function rawSubstrateRgb(world, i) {
   const type = world.cells[i];
   const habitat = HABITATS[type] ?? HABITATS.plains;
-  const h = world.heightMap?.[i] ?? 0;
-  const detail = (tileHash(i % world.width, Math.floor(i / world.width)) - 0.5) * 0.045;
-  return hslToRgb(habitat.hsl[0], habitat.hsl[1], habitat.hsl[2] + detail + h * 0.025);
+  const h = world.heightMap?.[i] ?? 0.5;
+  const moisture = world.moistureMap?.[i] ?? 0.5;
+  const rough = world.roughnessMap?.[i] ?? 0;
+  const detail = (tileHash(i % world.width, Math.floor(i / world.width)) - 0.5) * 0.012;
+  const local = world.textureMap?.[i] ?? 0;
+  const water = type === (world.waterTerrainType ?? 'water');
+  const depth = world.drainage?.depth?.[i] ?? 0;
+  const relief = water ? -Math.min(0.085, depth * 0.4) : (h - 0.5) * 0.065 - rough * 0.025;
+  return hslToRgb(
+    habitat.hsl[0] + (water ? 0 : (moisture - 0.5) * 0.025),
+    habitat.hsl[1],
+    habitat.hsl[2] + relief + local * 0.055 + detail
+  );
+}
+export function substrateRgb(world, i) {
+  const rgb = rawSubstrateRgb(world, i);
+  const water = world.waterTerrainType ?? 'water';
+  if (world.cells[i] === water) return rgb;
+  const x = i % world.width;
+  // Ecotone tint is shared by renderer and camouflage, never a render-only biome.
+  const adjacent = [
+    x > 0 ? i - 1 : -1,
+    x + 1 < world.width ? i + 1 : -1,
+    i - world.width,
+    i + world.width
+  ];
+  for (const j of adjacent) {
+    if (
+      j < 0 ||
+      j >= world.cells.length ||
+      world.cells[j] === world.cells[i] ||
+      world.cells[j] === water
+    )
+      continue;
+    const other = rawSubstrateRgb(world, j);
+    for (let c = 0; c < 3; c++) rgb[c] = rgb[c] * 0.9 + other[c] * 0.1;
+  }
+  return rgb;
 }
 export function initializeHabitatColours(world) {
   const base = new Float32Array(world.cells.length * 3);
@@ -42,7 +77,7 @@ export function habitatRgbAt(world, i, config = {}, includeVegetation = true) {
         world.habitatBaseColours[i * 3 + 2]
       ]
     : substrateRgb(world, i);
-  if (!includeVegetation || world.cells[i] === 'water') return rgb;
+  if (!includeVegetation || world.cells[i] === (world.waterTerrainType ?? 'water')) return rgb;
   const cover = clamp01((world.grass?.[i] ?? 0) / (config.grassCap || 1)) * 0.38;
   const green = vegetation[world.cells[i]] ?? vegetation.plains;
   const stress = clamp01(world.grassStress?.[i] ?? 0) * 0.18;

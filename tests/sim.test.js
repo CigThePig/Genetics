@@ -74,8 +74,10 @@ describe('sim scaffold', () => {
     const fullCount = countWaterTiles(full.state.world);
     const reducedCount = countWaterTiles(reduced.state.world);
 
-    expect(full.state.world.regions.length).toBeGreaterThan(0);
-    expect(reduced.state.world.regions).toEqual(full.state.world.regions);
+    expect(full.state.world.heightMap.length).toBe(
+      full.config.worldWidth * full.config.worldHeight
+    );
+    expect(reduced.state.world.heightMap).toEqual(full.state.world.heightMap);
     expect(reducedCount).toBeLessThan(fullCount);
   });
 });

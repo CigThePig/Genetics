@@ -99,7 +99,8 @@ export const metaWorld1 = {
   },
   terrainWaterCoverageMultiplier: {
     label: 'Water Coverage Mult',
-    description: 'Scales regional pond size; each catchment retains a drinking source.',
+    description:
+      'Higher values lower lake-depth and runoff thresholds, increasing water coverage. Distribution follows relief and rainfall; drinking access is not guaranteed. Rebuild world.',
     min: 0.1,
     max: 1,
     step: 0.05,

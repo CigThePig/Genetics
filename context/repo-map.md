@@ -139,7 +139,7 @@ Rules:
 - src/sim/world-grid.js
   - Role: world grid data structure + terrain/grass/stress accessors
 - src/sim/terrain-generator.js
-  - Role: public regional terrain entry point with a retained legacy blob export
+  - Role: public geographical terrain entry point; obsolete blob export removed
 - src/sim/terrain-effects.js
   - Role: terrain effects lookup table (friction, perception, plant cap)
 - src/sim/species.js
@@ -321,7 +321,7 @@ Rules:
 - tracks/2026-10-19-track-11-regional-colour-evolution/
   - Expanded spec, architecture, seven-phase plan, measurements and browser evidence.
 - src/sim/regional-terrain.js, habitat-analysis.js
-  - Seeded regional sites/biomes, local catchments, connected components and land-path water access.
+  - Continuous environmental biomes, relief/climate fields, connected components and land-path water access.
 - src/sim/habitat-colours.js, colour.js
   - Shared substrate/vegetation sampling, RGB contrast, circular hue math and statistics; no DOM.
 - src/sim/creatures/visibility.js, mate-preference.js
@@ -365,3 +365,22 @@ Rules:
   - Complete paired aggregation, optional static figures, compact trait archives, equal-workload performance and optional real-browser inspection.
 - tests/ecology.test.js
   - Causal recovery/urgency/finite-energy, observed contact, mating eligibility, accounting and ownership regressions.
+
+## Geographical world generation (2026-10-21)
+
+- src/sim/regional-terrain.js, hydrology.js
+  - Warped relief/climate, biome suitability, priority-flood storage, strict-downhill runoff and lake/channel classification.
+- src/render/terrain-cache.js, terrain-view.js; src/sim/habitat-colours.js
+  - Compact per-cell shared-colour raster, sliced vegetation updates/paused flush and cosmetic zoom detail.
+- src/sim/rng.js, creatures/spawn.js
+  - Stable named initialization streams and map-size-independent physical founder cohort separation.
+- scripts/verify-world.mjs, verify-world-browser.cjs, verify-world-app.cjs
+  - Seed maps/ecology, production-loop profiling and actual UI lifecycle checks; optional Python atlas/trajectory tools.
+- tracks/2026-10-21-world-generation/evidence.md, measurements.md
+  - Default-size decision, 120 stable Node JSON records, regenerated PNG atlases, observed software-browser summaries and exact artifact/measurement limitations.
+
+- scripts/world-provenance.mjs; tests/world-review.test.js, world-tooling-review.test.js
+  - Full-source evidence hashing with commit/dirty metadata; disabled-biome spawning/validation and diagnostic cleanup regressions.
+
+- tests/world-latest-review.test.js
+  - Viewport/rebuild zoom-floor changes and the explicit seed-only terrain API through both public import paths.

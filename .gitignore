@@ -8,3 +8,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+# Intermediate map rasters; reproducible PNG atlases are committed instead.
+tracks/2026-10-21-world-generation/evidence/**/*.ppm
