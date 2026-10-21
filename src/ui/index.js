@@ -827,6 +827,7 @@ export function createUI({
     { key: 'deathsStarvation', label: 'Deaths (starvation)', section: 'deaths', group: 'All' },
     { key: 'deathsThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'All' },
     { key: 'deathsInjury', label: 'Deaths (injury)', section: 'deaths', group: 'All' },
+    { key: 'deathsPredation', label: 'Deaths (predation)', section: 'deaths', group: 'All' },
     { key: 'deathsOther', label: 'Deaths (other)', section: 'deaths', group: 'All' },
     { key: 'deathsSquaresTotal', label: 'Deaths total', section: 'deaths', group: 'Squares' },
     { key: 'deathsSquaresAge', label: 'Deaths (age)', section: 'deaths', group: 'Squares' },
@@ -838,6 +839,12 @@ export function createUI({
     },
     { key: 'deathsSquaresThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Squares' },
     { key: 'deathsSquaresInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Squares' },
+    {
+      key: 'deathsSquaresPredation',
+      label: 'Deaths (predation)',
+      section: 'deaths',
+      group: 'Squares'
+    },
     { key: 'deathsSquaresOther', label: 'Deaths (other)', section: 'deaths', group: 'Squares' },
     { key: 'deathsTrianglesTotal', label: 'Deaths total', section: 'deaths', group: 'Triangles' },
     { key: 'deathsTrianglesAge', label: 'Deaths (age)', section: 'deaths', group: 'Triangles' },
@@ -859,6 +866,12 @@ export function createUI({
       section: 'deaths',
       group: 'Triangles'
     },
+    {
+      key: 'deathsTrianglesPredation',
+      label: 'Deaths (predation)',
+      section: 'deaths',
+      group: 'Triangles'
+    },
     { key: 'deathsTrianglesOther', label: 'Deaths (other)', section: 'deaths', group: 'Triangles' },
     { key: 'deathsCirclesTotal', label: 'Deaths total', section: 'deaths', group: 'Circles' },
     { key: 'deathsCirclesAge', label: 'Deaths (age)', section: 'deaths', group: 'Circles' },
@@ -870,6 +883,12 @@ export function createUI({
     },
     { key: 'deathsCirclesThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Circles' },
     { key: 'deathsCirclesInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Circles' },
+    {
+      key: 'deathsCirclesPredation',
+      label: 'Deaths (predation)',
+      section: 'deaths',
+      group: 'Circles'
+    },
     { key: 'deathsCirclesOther', label: 'Deaths (other)', section: 'deaths', group: 'Circles' },
     { key: 'deathsOctagonsTotal', label: 'Deaths total', section: 'deaths', group: 'Octagons' },
     { key: 'deathsOctagonsAge', label: 'Deaths (age)', section: 'deaths', group: 'Octagons' },
@@ -881,6 +900,12 @@ export function createUI({
     },
     { key: 'deathsOctagonsThirst', label: 'Deaths (thirst)', section: 'deaths', group: 'Octagons' },
     { key: 'deathsOctagonsInjury', label: 'Deaths (injury)', section: 'deaths', group: 'Octagons' },
+    {
+      key: 'deathsOctagonsPredation',
+      label: 'Deaths (predation)',
+      section: 'deaths',
+      group: 'Octagons'
+    },
     { key: 'deathsOctagonsOther', label: 'Deaths (other)', section: 'deaths', group: 'Octagons' },
     { key: 'grassAverage', label: 'Grass avg', section: 'plants', group: 'All' },
     { key: 'grassTotal', label: 'Grass total', section: 'plants', group: 'All' },

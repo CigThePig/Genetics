@@ -1,0 +1,14 @@
+diff --git a/src/sim/creatures/intent.js b/src/sim/creatures/intent.js
+index d4da79f..d243d80 100644
+--- a/src/sim/creatures/intent.js
++++ b/src/sim/creatures/intent.js
+@@ -146,7 +146,8 @@ export function updateCreatureIntent({
+     }
+     const nearbyWater = hasNearbyWater(world, cell, config);
+     const canDrink = waterRatio < drinkThreshold && nearbyWater;
+-    const canEat = energyRatio < eatThreshold;
++    const continuingMeal = creature.intent?.type === 'eat' && creature.intent?.foodType === FOOD_TYPES.MEAT && energyRatio < Math.max(eatThreshold, 0.95);
++    const canEat = energyRatio < eatThreshold || continuingMeal;
+     const foodAvailability = getFoodAvailabilityAtCell({ world, cell });
+     const dietPreferences = getFeedingPreferences(creature, config);
+     const canEatMeat = dietPreferences.includes(FOOD_TYPES.MEAT);

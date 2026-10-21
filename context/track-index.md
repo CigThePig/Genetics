@@ -439,3 +439,7 @@ Verification:
 ## Authorized maintenance — Pre-Track 12 foundation
 
 `tracks/2026-10-20-pre-track12-foundation/` implements individual movement goals, geographical herds/packs, committed search/scouting, finite local alarms, physical escape/navigation and survival-driven hunting. It includes seeded baseline/final recordings, optional motion/browser tools and integration readiness. Track 12's multi-hit attacks, wounds and healing remain excluded.
+
+## Authorized maintenance — Predator extinction investigation
+
+`tracks/2026-10-21-predator-ecology/` investigates generation replacement on corrected main, repairs premature resource interruption/visible-mate barriers, adds bounded observed social contacts and accurate consumption/predation accounting, and preserves ten-seed/two-lifespan plus extended evidence. It reduces census extinction without guaranteeing viability. Track 12 combat remains unimplemented; broader long-term ecological balance remains open.

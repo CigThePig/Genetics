@@ -58,3 +58,11 @@ Replaced species-wide/force-driven grouping with local membership, individual go
 ## 2026-10-20 — PR #138 Codex review corrections
 
 Addressed all seven findings: configured water in routing/collision/search, centred resource-memory destinations and visit-safe food confidence, complete live herd/pack cleanup, edge-safe escape horizons, per-member prey-sighting deduplication and the active regroup-size threshold. Added 13 regression cases; verified failures against the submitted snapshot and fixes against 199 passing tests, lint, formatting and build. Review-specific soak results are appended to the foundation evidence. No merge/deployment.
+
+## 2026-10-21 — Predator extinction investigation and resource recovery
+
+Investigated corrected main `4fab126` across ten deterministic seeds for at least 72,000 ticks, plus seed 1 for 144,000 ticks on both revisions. Reproduced all three corrected PR #138 hashes. Confirmed premature non-emergency meal/drink interruption and a visible-mate opportunity barrier; implemented resource continuation with emergency interruption, bounded observed mate contacts, actual capped feeding counters and explicit predation attribution. Founder counts, life-history/hunting/nutrition parameters remain unchanged. No Track 12 combat implementation.
+
+At twenty minutes, triangle extinction changes 10/10 → 5/10, octagons 10/10 → 3/10, predator births 11 → 112; wild descendant generations reach four/six. Both herbivore species survive every run, with unfavorable prey/sex-ratio outcomes retained. Only three predator endpoint populations retain both sexes; the forty-minute seed-1 run loses both predators. This improves replacement but does not establish equilibrium. Threshold-only/count/age/colour/competition/scarcity and contact-only experiments are preserved, including failures.
+
+`npm ci`, final `npm run verify` (215 tests, lint, format, build), three 36,000-tick soaks and exact independent final hashes pass. Real Chromium checks cover temporal state, observed-contact movement, finite resource recovery, read-only rendering and mobile controls. Equal-workload 80/240-actor timing, full source provenance, compact archives, figures and commands are in `tracks/2026-10-21-predator-ecology/`. Feature branch prepared for unmerged PR review; no merge/deployment. Hosted CI is separate from local checks.

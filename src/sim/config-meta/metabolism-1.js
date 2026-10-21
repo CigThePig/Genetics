@@ -1,4 +1,15 @@
 export const metaMetabolism1 = {
+  creatureResourceRecoveryRatio: {
+    label: 'Resource Recovery Target',
+    description:
+      'Continue an available drink or meat meal to this meter ratio (at least individual appetite). Interrupt when the competing reserve falls below half its inherited need threshold. No food or water is created.',
+    min: 0,
+    max: 1,
+    step: 0.05,
+    category: 'metabolism',
+    control: 'slider',
+    advanced: true
+  },
   creatureBasalEnergyDrain: {
     label: 'Energy Drain/s',
     description: 'Baseline energy drain per second.',

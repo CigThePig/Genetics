@@ -364,6 +364,7 @@ export const simConfig = {
 
   // === CREATURES: MATE SEEKING ===
   creatureMateSeekingEnabled: true,
+  creatureMateMemorySeconds: 120, // Observed contact locations; zero disables memory.
   creatureMateSeekRange: 28, // (was 25 - wider mate search)
   creatureMateSeekCommitTime: 0.8, // (was 1 - faster commitment)
   creatureReproductionRangeWhileSeeking: 7, // (was 6 - easier to complete mating)
@@ -384,6 +385,7 @@ export const simConfig = {
 
   // === CREATURES: NEEDS & EATING ===
   creatureNeedSwitchMargin: 0.05,
+  creatureResourceRecoveryRatio: 0.95, // Finish available drink/meat episodes unless another need is an emergency.
   creatureDrinkConcernMargin: 0.18,
   creatureDrinkThreshold: 0.75, // (was 0.8 - drink slightly less often)
   creatureDrinkAmount: 0.7, // (was 0.6 - drink faster)

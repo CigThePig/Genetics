@@ -350,3 +350,18 @@ Rules:
 - scripts/verify-behaviour-browser.cjs, plot-behaviour.py; tests/behaviour-foundation.test.js
   - Optional browser/matplotlib observation tools and causal movement/group/escape regressions.
 - Removed obsolete species-anchor/force/config implementation and src/workers/herding-worker.js; historical track documents describe their original snapshots only.
+
+## Predator extinction investigation
+
+- tracks/2026-10-21-predator-ecology/
+  - Specification, mechanism design, phased progress, exact experiments, source variants, paired ecological evidence and limits.
+- src/sim/creatures/mate-memory.js
+  - Creature-owned observed social contacts; bounded retention, visits and reachable last-location selection without hidden live tracking.
+- src/sim/creatures/intent.js, actions.js, combat.js, death.js, metrics-factory.js
+  - Safe continuation of available drink/meat episodes, visible mating opportunity arbitration, actual food-energy counters and explicit predation attribution.
+- scripts/investigate-ecology.mjs, controlled-ecology.mjs, check-founder-cohorts.mjs
+  - Observational long-run diagnostics and controlled nutrition/demography/founder experiments.
+- scripts/summarize-ecology.py, compact-ecology.py, benchmark-ecology.mjs, verify-ecology-browser.cjs
+  - Complete paired aggregation, optional static figures, compact trait archives, equal-workload performance and optional real-browser inspection.
+- tests/ecology.test.js
+  - Causal recovery/urgency/finite-energy, observed contact, mating eligibility, accounting and ownership regressions.

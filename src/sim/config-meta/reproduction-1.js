@@ -1,4 +1,16 @@
 export const metaReproduction1 = {
+  creatureMateMemorySeconds: {
+    label: 'Mate Contact Memory (s)',
+    description:
+      'How long observed opposite-sex contact locations can guide healthy mate search. Bounded to four contacts; zero disables. Does not reveal hidden positions or force mating.',
+    min: 0,
+    max: 600,
+    step: 10,
+    unit: 's',
+    category: 'reproduction',
+    control: 'slider',
+    advanced: true
+  },
   creatureReproductionMinAge: {
     label: 'Min Repro Age (s)',
     description: 'Minimum age required to reproduce.',
@@ -218,7 +230,8 @@ export const metaReproduction1 = {
   },
   creatureMateSeekPriorityOverridesNeeds: {
     label: 'Mate Seek Overrides Needs',
-    description: 'Allow mate seeking to override hunger/thirst.',
+    description:
+      'Allow blind mate search to override hunger/thirst. Without this, eligible animals may still court observed partners when no immediate meal or drink is available.',
     type: 'boolean',
     category: 'reproduction'
   },

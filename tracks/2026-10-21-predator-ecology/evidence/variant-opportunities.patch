@@ -1,0 +1,25 @@
+diff --git a/src/sim/creatures/intent.js b/src/sim/creatures/intent.js
+index d4da79f..fa648e6 100644
+--- a/src/sim/creatures/intent.js
++++ b/src/sim/creatures/intent.js
+@@ -216,6 +216,11 @@ export function updateCreatureIntent({
+       clearSearchState(creature);
+     }
+ 
++    // Eligible animals can court an observed mate when there is no immediate meal.
++    // Blind mate search still requires satiation; actual eating/drinking wins.
++    const canCourt = canSeekMate && !canDrink && !herbivoreConcernedNoWater &&
++      !selectFoodChoice({ creature, config, availability: foodAvailability, minimums: foodMinimums });
++
+     let intent = 'wander';
+     let foodType = null;
+     let target = null;
+@@ -223,7 +228,7 @@ export function updateCreatureIntent({
+     let targeting = null;
+     let mateTarget = null;
+ 
+-    if (canConsiderMate && reproductionState.mate && (creaturesById || spatialIndex)) {
++    if ((canConsiderMate || canCourt) && reproductionState.mate && (creaturesById || spatialIndex)) {
+       const mateState = reproductionState.mate;
+       let waitingOnCommittedMate = false;
+       if (Number.isFinite(mateState.targetId)) {
