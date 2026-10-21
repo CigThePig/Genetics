@@ -1,0 +1,23 @@
+{
+  "controlCommit": "690f23a",
+  "results": [
+    {
+      "seed": 1,
+      "ticks": 600,
+      "entireStateIdentical": true,
+      "stateHash": "824e99f36bba8d36a4694f2cb684dc1e7e16294a6798d9c96d88f022146a7ae5"
+    },
+    {
+      "seed": 42,
+      "ticks": 600,
+      "entireStateIdentical": true,
+      "stateHash": "d8db8cc067a364cfeca5ea164b08321f0e5fde2120ce0d8048eab360def98721"
+    },
+    {
+      "seed": 1337,
+      "ticks": 600,
+      "entireStateIdentical": true,
+      "stateHash": "a1fbb45bba54876b71ca433fd664e799cb241cf6852022c67ddc6dc24d5c7f62"
+    }
+  ]
+}

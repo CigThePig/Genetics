@@ -69,10 +69,14 @@ function lifeStages(value, path) {
 export function validateConfigValue(key, value) {
   if (!own(simConfig, key)) return fail(key, 'unknown config key');
   switch (key) {
-    case 'terrainBiomeWeights':
-      return record(value, key, ['forest', 'plains', 'sand', 'rock'], (n, at) =>
-        numeric(n, at, 0, 10)
-      );
+    case 'terrainBiomeWeights': {
+      const biomes = ['forest', 'plains', 'sand', 'rock'];
+      const result = record(value, key, biomes, (n, at) => numeric(n, at, 0, 10));
+      if (!result.ok) return result;
+      return biomes.some((biome) => (value[biome] ?? 1) > 0)
+        ? ok
+        : fail(key, 'enable at least one terrestrial biome');
+    }
     case 'terrainTypes':
       return Array.isArray(value) &&
         value.length > 0 &&

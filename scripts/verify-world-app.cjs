@@ -14,18 +14,20 @@ const out = 'tracks/2026-10-21-world-generation/evidence/app';
     '5199',
     '--strictPort'
   ]);
-  await new Promise((res, rej) => {
-    server.stdout.on('data', (d) => {
-      if (d.toString().includes('Local:')) res();
-    });
-    server.on('error', rej);
-  });
-  const browser = await chromium.launch({
-    headless: true,
-    executablePath: process.env.BROWSER_EXECUTABLE,
-    args: ['--no-sandbox', '--disable-dev-shm-usage']
-  });
+  let browser;
   try {
+    await new Promise((res, rej) => {
+      server.stdout.on('data', (d) => {
+        if (d.toString().includes('Local:')) res();
+      });
+      server.on('error', rej);
+      server.on('exit', (code) => rej(Error(`Vite exited before readiness (${code})`)));
+    });
+    browser = await chromium.launch({
+      headless: true,
+      executablePath: process.env.BROWSER_EXECUTABLE,
+      args: ['--no-sandbox', '--disable-dev-shm-usage']
+    });
     const page = await browser.newPage({
       viewport: { width: 390, height: 844 },
       deviceScaleFactor: 2,
@@ -134,8 +136,11 @@ const out = 'tracks/2026-10-21-world-generation/evidence/app';
     fs.writeFileSync(`${out}/results.json`, JSON.stringify(result, null, 2));
     console.log(result);
   } finally {
-    await browser.close();
-    server.kill();
+    try {
+      await browser?.close();
+    } finally {
+      server.kill();
+    }
   }
 })().catch((e) => {
   console.error(e);

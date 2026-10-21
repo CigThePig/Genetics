@@ -86,7 +86,7 @@ const root = resolve(arg('root', '.')),
         for (const rate of [60, 120])
           for (let trial = 0; trial < Number(arg('trials', 3)); trial++) {
             const result = await page.evaluate(
-              async ({ width, height, trial, rate, duration, hunting }) => {
+              async ({ width, height, trial, rate, duration, hunting, population }) => {
                 const { createPerfSampler } = await import('/Genetics/src/metrics/perf.js');
                 const { setActivePerf } = await import('/Genetics/src/metrics/perf-registry.js');
                 const perf = createPerfSampler({ windowMs: 1e9 });
@@ -95,7 +95,13 @@ const root = resolve(arg('root', '.')),
                 const a = window.bench;
                 window.allocations = [];
                 let start = performance.now();
-                const sim = a.createSim({ seed: 42, worldWidth: width, worldHeight: height });
+                const sim = a.createSim({
+                  seed: 42,
+                  worldWidth: width,
+                  worldHeight: height,
+                  creatureCount: population,
+                  creaturePredatorCount: Math.round(population * 0.1)
+                });
                 const initMs = performance.now() - start;
                 const zoom =
                   Math.min(innerWidth / (width * 20), innerHeight / (height * 20)) * 0.94;
@@ -108,6 +114,8 @@ const root = resolve(arg('root', '.')),
                   0
                 );
                 const sizes = window.allocations.map((c) => [c.width, c.height]);
+                // Keep dimensions, not strong references to replaced initial canvases.
+                window.allocations = [];
                 const resetStart = performance.now();
                 sim.setSeed(42);
                 a.renderer.render(sim, { immediate: true });
@@ -125,7 +133,7 @@ const root = resolve(arg('root', '.')),
                   }
                   for (let k = 0; k < predators.length; k++) {
                     const c = predators[k];
-                    c.meters.energy = 0.4;
+                    c.meters.energy = 0.55;
                     const target = prey[k];
                     for (let d = 3; d <= 8; d++) {
                       const x = Math.floor(c.position.x) + d,
@@ -227,6 +235,8 @@ const root = resolve(arg('root', '.')),
                   frameCount: frames.length,
                   elapsedMs: elapsed,
                   scenario: hunting ? 'Nearby hungry predator fixture' : 'Ordinary founders',
+                  startingPopulation: sim.config.creatureCount,
+                  finalPopulation: sim.state.creatures.length,
                   chases: sim.state.metrics.chaseAttempts,
                   kills: sim.state.metrics.killsTotal,
                   timers: perf.snapshot().timers,
@@ -250,7 +260,8 @@ const root = resolve(arg('root', '.')),
                 trial,
                 rate,
                 duration: Number(arg('duration', 3000)),
-                hunting: arg('hunting', 'false') === 'true'
+                hunting: arg('hunting', 'false') === 'true',
+                population: Number(arg('population', 80))
               }
             );
             results.push({ mobile, ...result });
@@ -275,6 +286,14 @@ const root = resolve(arg('root', '.')),
       await page.close();
     }
     fs.writeFileSync(`${out}/results.json`, JSON.stringify(results, null, 2));
+    fs.writeFileSync(
+      `${out}/completion.json`,
+      JSON.stringify(
+        { status: 'passed', trials: results.length, browser: browser.version() },
+        null,
+        2
+      )
+    );
   } finally {
     await browser?.close();
     server.kill();

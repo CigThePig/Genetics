@@ -34,27 +34,37 @@ fig.tight_layout()
 fig.savefig(root / 'visuals/population-trajectories.png', dpi=130)
 plt.close(fig)
 
-fig, axes = plt.subplots(1, 3, figsize=(12, 6))
-for ax, folder, maps, title in zip(axes, ['motion-baseline', 'motion-final-120', 'motion-final-240'],
-                                  ['baseline-120', 'final-120', 'final-240'],
-                                  ['Before 120 x 160', 'After 120 x 160', 'After 240 x 320']):
-    data = json.loads(gzip.decompress((root / folder / 'default-42-motion.json.gz').read_bytes()))
-    ax.imshow(Image.open(root / maps / 'seed-42.ppm'), extent=(0, data['width'], data['height'], 0), alpha=.8)
-    for actor_id in sorted({c['id'] for f in data['frames'] for c in f['creatures']}):
-        samples = [c for f in data['frames'] for c in f['creatures'] if c['id'] == actor_id]
-        predator = samples[0]['species'] in ['triangle', 'octagon']
-        colour = '#ff531a' if predator else '#f6eedd'
-        ax.plot([c['x'] for c in samples], [c['y'] for c in samples], lw=1.1 if predator else .5,
-                color=colour, alpha=.9 if predator else .7)
-        ax.scatter(samples[0]['x'], samples[0]['y'], s=8, edgecolors=colour, facecolors='none')
-        ax.scatter(samples[-1]['x'], samples[-1]['y'], s=10, marker='x', color=colour)
-    ax.set_title(title)
-    ax.set_aspect('equal')
-    ax.set_xlabel('x tiles')
-    ax.set_ylabel('y tiles')
-fig.suptitle('Seed 42: actual paths over 60 simulated seconds\nOrange predators; pale herbivores. Open circles start; crosses end.')
-fig.tight_layout()
-fig.savefig(root / 'visuals/movement-paths.png', dpi=130)
-plt.close(fig)
-for name in ['population-trajectories', 'movement-paths']:
+generated = ['population-trajectories']
+motion_inputs = [
+    root / folder / 'default-42-motion.json.gz'
+    for folder in ['motion-baseline', 'motion-final-120', 'motion-final-240']
+] + [root / folder / 'seed-42.ppm' for folder in ['baseline-120', 'final-120', 'final-240']]
+missing = [str(path) for path in motion_inputs if not path.is_file()]
+if missing:
+    print('Skipping optional motion figure; missing raw inputs: ' + ', '.join(missing), file=sys.stderr)
+else:
+    fig, axes = plt.subplots(1, 3, figsize=(12, 6))
+    for ax, folder, maps, title in zip(axes, ['motion-baseline', 'motion-final-120', 'motion-final-240'],
+                                      ['baseline-120', 'final-120', 'final-240'],
+                                      ['Before 120 x 160', 'After 120 x 160', 'After 240 x 320']):
+        data = json.loads(gzip.decompress((root / folder / 'default-42-motion.json.gz').read_bytes()))
+        ax.imshow(Image.open(root / maps / 'seed-42.ppm'), extent=(0, data['width'], data['height'], 0), alpha=.8)
+        for actor_id in sorted({c['id'] for f in data['frames'] for c in f['creatures']}):
+            samples = [c for f in data['frames'] for c in f['creatures'] if c['id'] == actor_id]
+            predator = samples[0]['species'] in ['triangle', 'octagon']
+            colour = '#ff531a' if predator else '#f6eedd'
+            ax.plot([c['x'] for c in samples], [c['y'] for c in samples], lw=1.1 if predator else .5,
+                    color=colour, alpha=.9 if predator else .7)
+            ax.scatter(samples[0]['x'], samples[0]['y'], s=8, edgecolors=colour, facecolors='none')
+            ax.scatter(samples[-1]['x'], samples[-1]['y'], s=10, marker='x', color=colour)
+        ax.set_title(title)
+        ax.set_aspect('equal')
+        ax.set_xlabel('x tiles')
+        ax.set_ylabel('y tiles')
+    fig.suptitle('Seed 42: actual paths over 60 simulated seconds\nOrange predators; pale herbivores. Open circles start; crosses end.')
+    fig.tight_layout()
+    fig.savefig(root / 'visuals/movement-paths.png', dpi=130)
+    plt.close(fig)
+    generated.append('movement-paths')
+for name in generated:
     Image.open(root / 'visuals' / f'{name}.png').save(root / 'visuals' / f'{name}.webp', quality=92, method=6)

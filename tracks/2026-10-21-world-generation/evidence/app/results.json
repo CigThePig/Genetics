@@ -1,0 +1,24 @@
+{
+  "loadMs": 1000,
+  "paused": {
+    "width": 240,
+    "height": 320,
+    "running": false
+  },
+  "readOnly": {
+    "unchanged": true,
+    "zoom": 0.076375
+  },
+  "extended": {
+    "ticks": 7141,
+    "population": 93,
+    "frameCount": 962,
+    "p50": 50,
+    "p95": 133.40000000000055,
+    "p99": 233.3000000000011,
+    "heap": 50400000
+  },
+  "reset": true,
+  "errors": [],
+  "environment": "Headless Chromium, mobile viewport + DPR2; not physical mobile hardware."
+}

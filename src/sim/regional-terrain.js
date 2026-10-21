@@ -7,6 +7,11 @@ const clamp = (v, a, b) => Math.min(b, Math.max(a, Number.isFinite(v) ? v : a));
 
 export function generateTerrain({ world, rng, config = {} }) {
   if (!world || !rng) return;
+  const biomes = ['forest', 'plains', 'sand', 'rock'];
+  const weights = biomes.map((biome) => clamp(config.terrainBiomeWeights?.[biome] ?? 1, 0, 10));
+  if (!weights.some((weight) => weight > 0)) {
+    throw new RangeError('terrainBiomeWeights: enable at least one terrestrial biome');
+  }
   const { width, height, cells } = world,
     size = cells.length;
   // Regeneration may reuse a grid: old water/shore cannot become input masks.
@@ -58,7 +63,6 @@ export function generateTerrain({ world, rng, config = {} }) {
   // Climate classification follows drainage; wet valleys and rain-shadow slopes
   // differ even within the same broad climate. Weights bias suitability, not quotas.
   const access = buildHabitatAccess(world);
-  const biomes = ['forest', 'plains', 'sand', 'rock'];
   for (let i = 0; i < size; i++) {
     const h = world.heightMap[i],
       rain = world.rainfallMap[i],
@@ -83,7 +87,7 @@ export function generateTerrain({ world, rng, config = {} }) {
     let winner = 1,
       score = -Infinity;
     for (let k = 0; k < 4; k++) {
-      const weight = clamp(config.terrainBiomeWeights?.[biomes[k]] ?? 1, 0, 10);
+      const weight = weights[k];
       const value = weight > 0 ? suitability[k] + Math.log(weight) * 0.18 : -Infinity;
       if (value > score) {
         score = value;

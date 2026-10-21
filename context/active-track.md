@@ -1,4 +1,4 @@
 Active track: None
-Current phase: Completed world-generation implementation and verification; PR #140 submitted for review.
-Next task: Await review; see tracks/2026-10-21-world-generation/evidence.md for evidence and limitations.
+Current phase: PR #140 implementation and six Codex review corrections complete.
+Next task: Review the updated PR; see tracks/2026-10-21-world-generation/review.md.
 Last updated: 2026-10-21

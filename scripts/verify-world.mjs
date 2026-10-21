@@ -2,8 +2,9 @@
 import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { createHash } from 'node:crypto';
-import { writeFileSync, mkdirSync, readFileSync } from 'node:fs';
+import { writeFileSync, mkdirSync } from 'node:fs';
 import { performance } from 'node:perf_hooks';
+import { worldProvenance } from './world-provenance.mjs';
 import assert from 'node:assert/strict';
 const arg = (k, d) => process.argv.find((a) => a.startsWith(`--${k}=`))?.slice(k.length + 3) ?? d;
 const root = resolve(arg('root', '.'));
@@ -15,26 +16,7 @@ const { createWorldGrid } = await load('src/sim/world-grid.js');
 const { createRng } = await load('src/sim/rng.js');
 const { simConfig } = await load('src/sim/config.js');
 const { HABITATS, habitatRgbAt } = await load('src/sim/habitat-colours.js');
-const fingerprint = createHash('sha256')
-  .update(
-    [
-      'src/sim/regional-terrain.js',
-      'src/sim/hydrology.js',
-      'src/sim/sim.js',
-      'src/sim/rng.js',
-      'src/sim/plants/grass.js',
-      'src/sim/creatures/spawn.js'
-    ]
-      .map((p) => {
-        try {
-          return readFileSync(resolve(root, p));
-        } catch {
-          return Buffer.from('absent:' + p);
-        }
-      })
-      .reduce((a, b) => Buffer.concat([a, b]), Buffer.alloc(0))
-  )
-  .digest('hex');
+const provenance = worldProvenance(root);
 const width = Number(arg('width', 120)),
   height = Number(arg('height', 160));
 const seeds = arg('seeds', '1,42,1337,' + Array.from({ length: 27 }, (_, i) => i + 2).join(','))
@@ -214,7 +196,7 @@ for (const seed of seeds) {
   }
   const elapsedMs = performance.now() - startTicks;
   const result = {
-    fingerprint,
+    ...provenance,
     replayHash: createHash('sha256')
       .update(
         JSON.stringify({

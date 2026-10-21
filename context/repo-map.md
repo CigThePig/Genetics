@@ -378,3 +378,6 @@ Rules:
   - Seed maps/ecology, production-loop profiling and actual UI lifecycle checks; optional Python atlas/trajectory tools.
 - tracks/2026-10-21-world-generation/evidence.md, measurements.md
   - Default-size decision, 120 stable Node JSON records, regenerated PNG atlases, observed software-browser summaries and exact artifact/measurement limitations.
+
+- scripts/world-provenance.mjs; tests/world-review.test.js, world-tooling-review.test.js
+  - Full-source evidence hashing with commit/dirty metadata; disabled-biome spawning/validation and diagnostic cleanup regressions.

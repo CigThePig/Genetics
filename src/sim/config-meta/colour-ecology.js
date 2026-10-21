@@ -21,7 +21,7 @@ export const metaColourEcology = {
   terrainBiomeWeights: {
     label: 'Biome prevalence',
     description:
-      'Bias environmental suitability; zero disables a biome. No fixed coverage quotas. Rebuild world.',
+      'Bias environmental suitability; zero disables a biome; at least one must remain enabled. No fixed coverage quotas. Rebuild world.',
     category: 'world',
     type: 'json',
     advanced: true

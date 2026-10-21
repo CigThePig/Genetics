@@ -107,6 +107,7 @@ export function createCreatures({ config, rng, world }) {
   const count = Number.isFinite(config?.creatureCount)
     ? Math.max(0, Math.trunc(config.creatureCount))
     : 0;
+  if (count === 0) return [];
   const predatorCount = resolvePredatorCount(config, count);
   const spawnQueue = createSpawnQueue(count, predatorCount);
   const creatures = [];
@@ -146,10 +147,17 @@ export function createCreatures({ config, rng, world }) {
     y: rng.nextFloat() * height
   });
 
-  const resolveLandPosition = (position) => {
+  const isLandPosition = (position) =>
+    position.x >= 0 &&
+    position.y >= 0 &&
+    position.x < width &&
+    position.y < height &&
+    !isWaterTile(world, Math.floor(position.x), Math.floor(position.y), waterTerrain);
+
+  const preferredLandPosition = (position) => {
     const cellX = Math.floor(position.x);
     const cellY = Math.floor(position.y);
-    if (isWaterTile(world, cellX, cellY, waterTerrain)) return false;
+    if (!isLandPosition(position)) return false;
     const i = cellY * width + cellX;
     const access = world.habitatAccess;
     return (
@@ -161,16 +169,31 @@ export function createCreatures({ config, rng, world }) {
     );
   };
 
-  const findFallbackLandPosition = () => {
-    for (let y = 0; y < height; y += 1) {
-      for (let x = 0; x < width; x += 1) {
-        if (resolveLandPosition({ x: x + 0.5, y: y + 0.5 })) {
-          return { x: x + 0.5, y: y + 0.5 };
-        }
+  // Prefer connected vegetation with nearby water. Biome-disabled or dry maps
+  // may contain none: accept existing land without inventing ecological resources.
+  const firstPosition = (accept) => {
+    for (let y = 0; y < height; y++)
+      for (let x = 0; x < width; x++) {
+        const position = { x: x + 0.5, y: y + 0.5 };
+        if (accept(position)) return position;
       }
-    }
-    return randomPosition();
+    return null;
   };
+  let resolveLandPosition = preferredLandPosition;
+  let fallback = firstPosition(resolveLandPosition);
+  if (!fallback) {
+    resolveLandPosition = (position) =>
+      isLandPosition(position) &&
+      (!world.habitatAccess ||
+        world.habitatAccess.mainLand[Math.floor(position.y) * width + Math.floor(position.x)]);
+    fallback = firstPosition(resolveLandPosition);
+  }
+  if (!fallback) {
+    resolveLandPosition = isLandPosition;
+    fallback = firstPosition(resolveLandPosition);
+  }
+  if (!fallback) throw new RangeError('Cannot spawn creatures: world has no traversable land');
+  const findFallbackLandPosition = () => ({ ...fallback });
 
   const findRandomLandPosition = (attempts = spawnRetries) => {
     for (let attempt = 0; attempt < attempts; attempt += 1) {

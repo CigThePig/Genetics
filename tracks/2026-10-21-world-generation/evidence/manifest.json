@@ -1,0 +1,794 @@
+{
+  "baselineCommit": "971e65604e4c688274f7a80bb570c4b5d435aee0",
+  "ecologicalImplementationCommit": "146745176c7b92ab672df9f84dffe3fa7773c421",
+  "finalEcologicalFingerprint": "40e8444ae3db2d3142b8195f2e38d932661c9648f1004718c55e1025dcf90507",
+  "fingerprintFiles": [
+    "src/sim/regional-terrain.js",
+    "src/sim/hydrology.js",
+    "src/sim/sim.js",
+    "src/sim/rng.js",
+    "src/sim/plants/grass.js",
+    "src/sim/creatures/spawn.js"
+  ],
+  "canonicalSeeds": [
+    1,
+    42,
+    1337
+  ],
+  "mapSeeds": [
+    1,
+    42,
+    1337,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    24,
+    25,
+    26,
+    27,
+    28
+  ],
+  "browserTrials": 76,
+  "physicalMobileTested": false,
+  "notes": [
+    "Final default scenarios: three 36,000-tick runs at 120x160/80 founders.",
+    "Final larger scenarios: 36,000 ticks each at 240x320/80 and 128 founders, seed 42.",
+    "Before-cohort data are explicitly prefixed; interrupted experiments are not endpoint comparisons.",
+    "Legacy baseline and early large-80 review copies remove invalid aliased intermediate death causes and reconstruct initial vegetation counts from paired zero-tick records; each corrected file records its original hash.",
+    "Engine/render profiles use the production timer/RAF driver with no-op panels; the real app check includes UI.",
+    "All profile comparisons occur after ecological jobs; host scheduling/GPU behavior remains uncalibrated.",
+    "Reviewed WebP images are compressed copies; diagnostics regenerate exact PNGs and raw shared RGB.",
+    "A final renderer-only paused-flush correction is covered by 244-test verification and a fresh full-app pause/reset run. Ordinary unpaused profile logic is unchanged; post-window flush aggregates are historical."
+  ],
+  "files": [
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/app/results.json",
+      "sha256": "ac3f6490a10159202797ae21eb8f28deeffd272aa6b200aaf0878efb17952bbd",
+      "bytes": 470
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-1.json",
+      "sha256": "5177e511decd8d08051d0789862f778aae5d624c11af6b12c0712abedefedd3d",
+      "bytes": 3934
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-10.json",
+      "sha256": "4cb2d974d4932efb7ea087ff49c12cd2ee757bab48d1ef5a1a3919c38dd1899c",
+      "bytes": 3789
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-11.json",
+      "sha256": "9c06018bddb5246196d345d75efce85135fb2c52223b4feb5780069deb00c231",
+      "bytes": 3996
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-12.json",
+      "sha256": "20db18dc3dacb2dee78f53b33f5e17e0a660940904c8159521e134c698794806",
+      "bytes": 3900
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-13.json",
+      "sha256": "216cb8106dc6adff7dfd65b4754408d36baf900fa2d0b58a49c99e57ea4fae3f",
+      "bytes": 3980
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-1337.json",
+      "sha256": "901469fcfc9995d88037edd9af90d7f41af2e523a61e17755ae13c79f18bb062",
+      "bytes": 3999
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-14.json",
+      "sha256": "466131a8a905cf383604fa36f3f84aad3b2ea6e7b1b5c8087a78e01ce21b72c3",
+      "bytes": 3907
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-15.json",
+      "sha256": "52c01d495a675d92f891e1dca657ce8cb06fc8c418c3a4001078b4dce35ad438",
+      "bytes": 3831
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-16.json",
+      "sha256": "37d78cc066bbb1c27a4e9140ddeda7d461082c19b7a5a07880b65f796021dd9a",
+      "bytes": 3879
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-17.json",
+      "sha256": "d1b411da9de1c79f9753bfda1b2a10b149938eab42dcd2e6b97d11d7eb30ba54",
+      "bytes": 3800
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-18.json",
+      "sha256": "76169cdfdc2d86d9136cb7f8676e595add369c25f98e8349a01172c8b6fec02f",
+      "bytes": 4029
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-19.json",
+      "sha256": "fdea31d7309474e0abf6dd8474688e37e246e6aeecec94549dc28aac71d99a9d",
+      "bytes": 3901
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-2.json",
+      "sha256": "379a8518e67155f086b1ec7310ae1e7e5892d91f3aaaf10083c03494dd44242f",
+      "bytes": 3698
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-20.json",
+      "sha256": "21d569f309941cbf74d48f17f9565dc89aa66d9981c3f96ab3b04b8e25856450",
+      "bytes": 4058
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-21.json",
+      "sha256": "f5b9e15e66686f3bd5d6fabddda819ce205d1f470bf7e821966f67a339fd3da9",
+      "bytes": 3810
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-22.json",
+      "sha256": "c4167f1bb276aea292630a4c842dfce6368c52d9700a6436fa80e228c17d551c",
+      "bytes": 3951
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-23.json",
+      "sha256": "3af83f4c7533e35842cb22529a75ae7f85a6b2ddcb8f22b2724eefacdae05e76",
+      "bytes": 4014
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-24.json",
+      "sha256": "c83cce3a49b99a237dc4a90b624de513fcd1538c60ddde35953c2274e1faeae1",
+      "bytes": 3879
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-25.json",
+      "sha256": "2a644b99b663e86a574516b5121fe2eda1eaaef426eb25576997cfa67c7f8f04",
+      "bytes": 3794
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-26.json",
+      "sha256": "d033bc9468f6bdfb7fc98a22d57fc0c65cf819bf9f3dedf2329e8421f94d4215",
+      "bytes": 3984
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-27.json",
+      "sha256": "b843aa63737de573c4d84d895598918e93733aae5724dc53ae50ad646fe4b68e",
+      "bytes": 3709
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-28.json",
+      "sha256": "31bbf294826be28137f0daac45c8cd5ff4dcce6880f58ecb28a6826b4d999c95",
+      "bytes": 3713
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-3.json",
+      "sha256": "6c2603fda12ac0c34e23b03673995b01dfd2b591115e6e6f7cfa39a8106863af",
+      "bytes": 3952
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-4.json",
+      "sha256": "204eba685466d96a28933b59bb5d2515fa334262dfbea19a4eee091803b84fc0",
+      "bytes": 3822
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-42.json",
+      "sha256": "e78425dafc126745e71bf739f0030124995b50efc44264dcbcdac776f5b8ed98",
+      "bytes": 3778
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-5.json",
+      "sha256": "9c89415ce94ab1551c965f67bbdda32395649d7523f6c42cfdcd7a666a7c5a4e",
+      "bytes": 3956
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-6.json",
+      "sha256": "1d2e41c0ba52fb42624632c2b5be8678375f4e3356e00254571f1d36f41ef8f7",
+      "bytes": 3997
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-7.json",
+      "sha256": "d6b0b4fa0a22644071f9f74fb1ac2c1f57838ef731bed858c771b3e23dbaf76b",
+      "bytes": 3999
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-8.json",
+      "sha256": "a45f4396e1df4a82db3c36ab59643752e630fa76c1e29b175a5dc730dc7cda9f",
+      "bytes": 4047
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-120/seed-9.json",
+      "sha256": "df2e5f15158eb236a34200a35ff7126bfe0545a80c2a9e2f6314b4e1fa159b6e",
+      "bytes": 3839
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-240/seed-1.json",
+      "sha256": "1cb3e064e8900099136dcec05ffdceb694d95ed89f56942eeb6e0c9d69a8b285",
+      "bytes": 6739
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-240/seed-1337.json",
+      "sha256": "594d5deeed66c42f6b2795d64895dc0c3f91943a9d4b87e192762169fabce265",
+      "bytes": 6444
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-240/seed-42.json",
+      "sha256": "66f646e989469e400577eddc710c86d9613aedc68a4023ae8ecac1520bf64ca9",
+      "bytes": 6603
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-soak/seed-1.json",
+      "sha256": "b0b7787901585f96cac754272ac51796ac3898e43301a7d8c32130045634513f",
+      "bytes": 15993
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-soak/seed-1337.json",
+      "sha256": "772f59eeca56b6a7fd3549b64f60c7fa18812f5fe977ce6aefa7cda795c2c86f",
+      "bytes": 16069
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/baseline-soak/seed-42.json",
+      "sha256": "49f2084da38206fa4277c9df06f422c444bfcd7b44df4d8a175eda56b221e3a9",
+      "bytes": 15815
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/cohort-distances.json",
+      "sha256": "19b1dc1cbcd7f13abb3e07bca2b5272f61872fdb1132af9d7d75d7d28565bdc2",
+      "bytes": 3231
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/exploratory/baseline-prototype.json",
+      "sha256": "cab10657fb0560bce3041f7b123c04485d1723b93f7a984aaff781fadfbb127c",
+      "bytes": 5898
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/exploratory/redesign-prototype.json",
+      "sha256": "34ffc2f1fa17666176a75ed9722eb3050f98c213710903ac88410600b42170c2",
+      "bytes": 105639
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-1.json",
+      "sha256": "41eeae959a90b6cb0cbae2ffa239cb8b41e8c1403bc1048237275338556c6b05",
+      "bytes": 5635
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-10.json",
+      "sha256": "fbee0ec326f67e608bb800ae40cdd2ad29f781efa3dbdc58640875146f19edf5",
+      "bytes": 4768
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-11.json",
+      "sha256": "a6d03010bca1db44ab99af10241e1a8db761a57229ee9734dfb14278838e20d6",
+      "bytes": 5035
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-12.json",
+      "sha256": "8f82ed4369d6a7a3d06097b713cbc0683ab312f5e6cb98fd47c2310613dc0d0d",
+      "bytes": 5465
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-13.json",
+      "sha256": "8b461090ea62e1021e1b1e43cb10549e4ef3561e887c65029d0994c4728a883d",
+      "bytes": 5760
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-1337.json",
+      "sha256": "03f108f12540022dfcefb31b867c9e429f3dc95e872374ae3544c7dfe4d40889",
+      "bytes": 6053
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-14.json",
+      "sha256": "e638602bef2957ac8627593b6a454ac974aa97211bd4b625959ce4f6a40134ba",
+      "bytes": 5890
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-15.json",
+      "sha256": "423aac42dda6d07aba43b53befe3718ac8b6b7815e7e6c4723474f8b29ad9d31",
+      "bytes": 5416
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-16.json",
+      "sha256": "150f461243bbd06a8a163f66f51aab2f44014f16ec1ab9508012411c93e99ddc",
+      "bytes": 5959
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-17.json",
+      "sha256": "d5cc2d513ba20e7b9710e203b9efad189572603e4539a350b5d69535dc0d45da",
+      "bytes": 5018
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-18.json",
+      "sha256": "278d13c2bc2814399525bdfef206f2bcfba2976a2db0cb67bb58259e2d818906",
+      "bytes": 4941
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-19.json",
+      "sha256": "e07ebd62de8b15954fa1b597a67b65fd7695ae88498652a54002cfb1a7433412",
+      "bytes": 5236
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-2.json",
+      "sha256": "254dffd91996b00897c3e0f2834af27a44e4eba38058e17913df9f5fd8b0e90a",
+      "bytes": 5512
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-20.json",
+      "sha256": "d0be64f5a3fb8baa95ae603da0c965f047ea6c907769790610f1ab235cf7bc25",
+      "bytes": 5441
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-21.json",
+      "sha256": "b2659b2f768c5dd04d892ed3ee9d07f2bb99d5d10876a7ead4ba3639d4027ca4",
+      "bytes": 5711
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-22.json",
+      "sha256": "0e4491bc2dca2608471eb633b9e418d4c122b2a8923828d89c1f811710a5d64d",
+      "bytes": 5112
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-23.json",
+      "sha256": "22593ef1c4b3bb7aea170affb9cfb72165a49eef0d7c200c9cbee44f55a0664d",
+      "bytes": 4882
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-24.json",
+      "sha256": "99a670977906bfaf97553ecd2e60e73afee91544edc93596475d709ca983028c",
+      "bytes": 6396
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-25.json",
+      "sha256": "bd1b0beed9ac7b2306ec3b56cca16527289a680995668a02ee9fe066985fc785",
+      "bytes": 5825
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-26.json",
+      "sha256": "28a756154c42f8fc03ff290144075482c6f8c86e7415e31861ca1d9b37f5288c",
+      "bytes": 5403
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-27.json",
+      "sha256": "63943c5c2bf7ae47e0022b57cf3715cf76816a1e8512e50f5f75e30c11dc7bf2",
+      "bytes": 6070
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-28.json",
+      "sha256": "39a63b8fb1633d04539f764c52ae6c1f184d73b5b27252e4a503db3ced796115",
+      "bytes": 5103
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-3.json",
+      "sha256": "993b5c5f1dd8e8e2a29752f84fdb95de3824804357ab50f712e2b6e179a8f174",
+      "bytes": 5671
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-4.json",
+      "sha256": "1d9093188a4514daad330c8308983775119579f4b519277ab89dccbe502cf2a1",
+      "bytes": 4924
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-42.json",
+      "sha256": "7b554abd908d1bdfdabf417a6ce8531b2506ba6dc06c3c3b0527669a0c5f87fa",
+      "bytes": 5558
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-5.json",
+      "sha256": "6d189537ddf62f6dafdf7ab096a3effc942b616cedac9621a1e3f563401d2a47",
+      "bytes": 4859
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-6.json",
+      "sha256": "a981a7e28af9e49371738fb14a8b3e72c158e3269f6dac5a2ce388152045d2ec",
+      "bytes": 5476
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-7.json",
+      "sha256": "eedce164201cd72e2b91e629576e74a52b1d3f824ac27c32ac1d2fe403e45100",
+      "bytes": 5930
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-8.json",
+      "sha256": "610c69f79dc68780bc5677dce857652244c93edb558341d93e698af73acad26b",
+      "bytes": 5416
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-120/seed-9.json",
+      "sha256": "d9734712db8e8440965faad68a06a507fd218b25ffc48c8322272e587df78375",
+      "bytes": 5750
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-1.json",
+      "sha256": "6469764b00fb11dceb24567682d400cd636bf65943aca629cfee8687c0d40189",
+      "bytes": 11601
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-10.json",
+      "sha256": "c0d953e5cbdb270b45eb8e43222994837877baaa90f29f7db49f2256e73cb8a0",
+      "bytes": 13258
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-11.json",
+      "sha256": "112a3b38f3bcf7cf987b3d2d2b8b5f92f6a0399c8aca02ca526ee81330d8a241",
+      "bytes": 11657
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-12.json",
+      "sha256": "5f7c9aad944a1fb5b912deafc991c3c28e41c3b049815c4aa07b52ea6f05cec0",
+      "bytes": 13053
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-13.json",
+      "sha256": "91d3f01d11f76055170963d251766b7d332ded183859f2d3ed27ee29e3e6cfc8",
+      "bytes": 15491
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-1337.json",
+      "sha256": "e2f26c493f8c97b767420593c7274a5583acf791c77a9a639c2dba1479fe35ea",
+      "bytes": 17374
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-14.json",
+      "sha256": "5db8ab4deba5b777f10e223289cc45f8c13fffaeea0a381a71b36541bbe146a8",
+      "bytes": 14414
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-15.json",
+      "sha256": "b865236c7692056a84732af42bcec483b15f4065b5a625737957d112e96e45c8",
+      "bytes": 14015
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-16.json",
+      "sha256": "db3c03a23d0304f949f162d1a6fbcdf01b0f629db13e655b808bad9ee56da854",
+      "bytes": 14528
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-17.json",
+      "sha256": "3f709d259bb683319e52e4d64bf44d435c7bdf22456c53a022f8cdc86e31ba1c",
+      "bytes": 14287
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-18.json",
+      "sha256": "f26ac812f87a7350570b542ee59ee0d2dfbfcd764f661d87690d623dabd6e40f",
+      "bytes": 13055
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-19.json",
+      "sha256": "ce5b34e4394d28ef8d67301a552c9bc17dfce87043d57a6ef54679b97f8273a2",
+      "bytes": 13132
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-2.json",
+      "sha256": "79fb1989e4c5b387c0068219933c9f915293eb054d860561d3d5e665a8daec7d",
+      "bytes": 12837
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-20.json",
+      "sha256": "bfbbf5e83beeaf55897ed9bda0a0b701358af92c59da8168676f8810786382e5",
+      "bytes": 13161
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-21.json",
+      "sha256": "0092369f1b342ca1be05c45519947200132f44422a30970d64d4d378c727455f",
+      "bytes": 14453
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-22.json",
+      "sha256": "79b9f9dcc58c85436d1d0494cf1653d76ab6b2a1538ffefd595a0e297ef704a2",
+      "bytes": 13479
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-23.json",
+      "sha256": "0097627ffca33e48a9924ece76a6dfd96678edc7af7294ab0827332e82f102a7",
+      "bytes": 15292
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-24.json",
+      "sha256": "fe87478d67da9ff4b2936210994aac6ab09685a9b05fa03a1cd270ae57d9e6ad",
+      "bytes": 14836
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-25.json",
+      "sha256": "bf2eef04546bbb10ad494db3f562880978e0e7a003bbd3cfe4adfb87a5110b9e",
+      "bytes": 13149
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-26.json",
+      "sha256": "941bd6bbba4125ebedab08c75723068c9c536f30e6be20e53bef85707641d7af",
+      "bytes": 15276
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-27.json",
+      "sha256": "47f10f8a3f87d2694c223964822c83117713b3b4f00eb85483afa6576ac64396",
+      "bytes": 13581
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-28.json",
+      "sha256": "6a64b507d192ba232cbc81b622e94f38703168efdaed5c9a81a940b13fbb92b2",
+      "bytes": 12890
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-3.json",
+      "sha256": "e7e49d253e29e72fa99ae3d98d70798b3e7bf07e7a506692e1be2d9480b90d72",
+      "bytes": 13206
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-4.json",
+      "sha256": "3ababfcde76aa11a47ab7774fa929d67102f8df81a93d62f066e44bd3443a094",
+      "bytes": 13573
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-42.json",
+      "sha256": "5967f5527b5403b68a5c642a798984879a279f8931725045694d5ac2e2f67f72",
+      "bytes": 12532
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-5.json",
+      "sha256": "665dbfb573e138e5dfd8860514b8cc261ee9175882b9b8f35a6abe2d4a7da4cd",
+      "bytes": 13917
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-6.json",
+      "sha256": "9f145db71b8b8e6fbe36715bfac9975fd6c965fb8f930d4c1eb58a5f103fe53b",
+      "bytes": 14697
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-7.json",
+      "sha256": "86ae42393dbc7de11c5747596ea98b2ba871b86247c9dbeba51c70e6aaff338b",
+      "bytes": 13119
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-8.json",
+      "sha256": "7e152edfbd228031a622b3b8d78c6bb261f761fde05ce50ea59f3acaa1922060",
+      "bytes": 15565
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-240/seed-9.json",
+      "sha256": "67409e21244e014d47b87f7eb078712cef1fd10793f369317193e3189db7988a",
+      "bytes": 13873
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-soak/seed-1.json",
+      "sha256": "798654525041ece835b6d8d91f8242a2e08de7a690b472f03c7b79e74dd7861e",
+      "bytes": 36544
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-soak/seed-1337.json",
+      "sha256": "3e726a6a236f52df188f9547876e714ade41d0293e65e46cc23a5960dbd9a35c",
+      "bytes": 36935
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/final-soak/seed-42.json",
+      "sha256": "06063ca6293ed91ab57cc690fd788e3e6d9b948d8a8f6e1509b2fae381cf0362",
+      "bytes": 36446
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/large-long-128/seed-42.json",
+      "sha256": "f50d28f6408b1cc2957f612785d99ab9bde08ac2d9f61872a4cefe3c52b69311",
+      "bytes": 43617
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/large-long-80/seed-42.json",
+      "sha256": "cb3c00a6965106fe77d370c688bdabe1b08f66b55ae7bca74f58ffc00157ff90",
+      "bytes": 43340
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/motion-baseline/default-42.json",
+      "sha256": "f873116fa4268b09f888750fceb71e77503c3be7a9f5e3be71d1892878c79367",
+      "bytes": 109939
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/motion-final-120/default-42.json",
+      "sha256": "0e5d7e7784605ae5b14de2ef2f2fc704a49f0e501b0747e2d8ee4a3e2a178bfa",
+      "bytes": 106153
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/motion-final-240/default-42.json",
+      "sha256": "d643543243139af14a5fa3fd8f574c77bf159786ff67977bd2e7a1e3dd06541d",
+      "bytes": 105491
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-fix-large-80/seed-42.json",
+      "sha256": "5a52591a29a8eb5d2a47ccaaac52a2405dcd9fcb7c6857118f807379753cfc42",
+      "bytes": 43349
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-fix-soak/seed-1.json",
+      "sha256": "585e2f35c6925e78d9beb3d17124bf526e587549b3a10a415d2f78bb6769b50b",
+      "bytes": 36442
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-fix-soak/seed-1337.json",
+      "sha256": "7e0d6504abdf3181924bf6712814b6f9054841baa57fa54d7aced9ad87299252",
+      "bytes": 36839
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-fix-soak/seed-42.json",
+      "sha256": "34daebb09958f50a8faaedf15162176243f19d6e9b91b741b0b346cf4f75a450",
+      "bytes": 36350
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-intermediate/seed-1.json",
+      "sha256": "d3504a7be78c443b1ebe50cc57d5f8babcdbb1482aaa30bc2350836ee99fd95f",
+      "bytes": 13318
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-intermediate/seed-1337.json",
+      "sha256": "0a478d02fa9c102f12ee9229506f90f3181f1ac7fa35a058f964e356e857603e",
+      "bytes": 13646
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-intermediate/seed-42.json",
+      "sha256": "a06c80e26a92eda003f4cef5ed1700ed7c9511ea7340cbabffde9edd32f0319e",
+      "bytes": 13455
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-large-128/seed-1.json",
+      "sha256": "b4443d4205c09e474985864475e9a60d61a54f4124686dcd14ee96704cfad640",
+      "bytes": 16636
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-large-128/seed-1337.json",
+      "sha256": "aa24978040437990f3c6dee73c130b20579c5876f0ec00d12826b4c165f6c429",
+      "bytes": 22433
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-large-128/seed-42.json",
+      "sha256": "46e87575abcc13deff191d000fe40847de2d886b1e43c5fc40f06b08f9206f85",
+      "bytes": 17563
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-large-80/seed-1.json",
+      "sha256": "128016f56e17a7939defb89a5ac4ffaf45c2a9ccedb1dff67b347263af52d9a2",
+      "bytes": 13844
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-large-80/seed-1337.json",
+      "sha256": "bbb86cffa9ffe43180e8ddd11305f376fa905317b92a9f9b1cd3a6cfde68ea61",
+      "bytes": 19646
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/pre-spawn-short-large-80/seed-42.json",
+      "sha256": "d861b06c40915df43c0b40667a6dbf1cc76c21750f22a254a367412061dc8611",
+      "bytes": 14780
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-baseline/completion.json",
+      "sha256": "bbc48ba087a83b7ef62395d961e438cbc0f9096ad1fcca797996587de32545e0",
+      "bytes": 69
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-baseline/results.json",
+      "sha256": "7d29704a60ca86fbecf0968d9e43f73ca3769ec4f924a76c264e3270321704a7",
+      "bytes": 250934
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-final/completion.json",
+      "sha256": "bbc48ba087a83b7ef62395d961e438cbc0f9096ad1fcca797996587de32545e0",
+      "bytes": 69
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-final/results.json",
+      "sha256": "7d2db2db6339bf56ae04aea1c85ce24e506d8519f1a65ed3a4d905ed127c9cd3",
+      "bytes": 232111
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-hunting/completion.json",
+      "sha256": "4284930df329bf5ebeb92ec78b882336c6f8a8f797d90b09e42f0012ef6f6a00",
+      "bytes": 68
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-hunting/results.json",
+      "sha256": "3fc7cfb483447169c006b3fcb5030c06d5e4104b3d79bc2efa95fe6a5efd12ef",
+      "bytes": 79142
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-intermediate/completion.json",
+      "sha256": "dd1faf0c13b5c2dd8ccf66c483a1185eb1c14a28c58bfad3506487c1a9fd2936",
+      "bytes": 69
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-intermediate/results.json",
+      "sha256": "daacb2b54e83fa96a572e71b6ff780992bd70ea3c9a0c5c51cea964b7d55e9a2",
+      "bytes": 116192
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-stress/completion.json",
+      "sha256": "4284930df329bf5ebeb92ec78b882336c6f8a8f797d90b09e42f0012ef6f6a00",
+      "bytes": 68
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-stress/results.json",
+      "sha256": "b3faeed5a0f4dda9b0d088a14f46e538647b3216a80aa60286f0f10896f667eb",
+      "bytes": 77088
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/profile-summary.json",
+      "sha256": "087016ab1f9345a895610ac02ec44a6aaff418c0f39bceae72337307eeab1597",
+      "bytes": 9326
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/regeneration-equivalence.json",
+      "sha256": "663fcb4a83b063a941f8f344a2f2cb90f5e972979723718d0da52a5b52203681",
+      "bytes": 433
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/stream-control/seed-42.json",
+      "sha256": "2d57c3f34461fd4d2e1972b25c656122751fb320c4f8b502fd6c9ad5348a84cc",
+      "bytes": 34947
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/after-atlas.webp",
+      "sha256": "870840bdbb5699975a7ada11f3668b398d1d1f49433fcba48561855a31db926f",
+      "bytes": 399532
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/before-after.webp",
+      "sha256": "005bd19e5a1f3571cb4d69a152db0cc792c2490c9096b52a64253d9ea6ecba9c",
+      "bytes": 148210
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/before-atlas.webp",
+      "sha256": "d866c4ee95ca25ed7864a723e3312b43a2dec1e7337c5109c716e199fbf0a06b",
+      "bytes": 388634
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/browser-after.webp",
+      "sha256": "618fb7ab0222e78ed0689220b88bfcca27a7038796986cd5da80661360d2b9bd",
+      "bytes": 49946
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/browser-before.webp",
+      "sha256": "4ec38e9fbdf489b6fbad1e10bc5eb4679bf99f30c173de119fd01309373099d7",
+      "bytes": 54478
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/final-120-fields.webp",
+      "sha256": "8237c6b4b09573fa85624f0301be7a56e590036e7fcb21c91ffc43e187351204",
+      "bytes": 355336
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/final-240-fields.webp",
+      "sha256": "a1964fa69f4b4831758d54f6846864339e4dae7e688b244d921a520b260094d0",
+      "bytes": 469902
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/large-atlas.webp",
+      "sha256": "65743288dc43cecd261cb5e7554367ac008e85b4c38d18a119f315b378503cf0",
+      "bytes": 542888
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/mobile-creatures-240.webp",
+      "sha256": "07fd08cb193c73c5807392236793a62de7183af738544d59f0164d2fb84dcfb6",
+      "bytes": 25880
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/mobile-full-240.webp",
+      "sha256": "6e361200e6af518680ee1f2a753aa567d139d1641d7a5b011a2ab744f9cf3d60",
+      "bytes": 57354
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/movement-paths.webp",
+      "sha256": "ec9ffa5a5b49f41d483101704ee012d9e33cf5bc8b470903e4ee1d2680496beb",
+      "bytes": 144122
+    },
+    {
+      "path": "tracks/2026-10-21-world-generation/evidence/visuals/population-trajectories.webp",
+      "sha256": "9175d7a4c9996e811a45e67008deb7f4d90e4c439853e3c6a3f1d3fa5a4baca0",
+      "bytes": 126856
+    }
+  ]
+}
