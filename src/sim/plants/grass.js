@@ -1,4 +1,4 @@
-import { getTerrainEffectsAt } from '../terrain-effects.js';
+import { getTerrainEffects, getTerrainEffectsAt } from '../terrain-effects.js';
 import { resolveTicksPerSecond } from '../utils/resolvers.js';
 
 export function consumeGrassAt({ world, x, y, amount }) {
@@ -70,9 +70,10 @@ export function updateGrass({ world, config }) {
     const current = Number.isFinite(grass[i]) ? grass[i] : 0;
     let cellCap = cap;
     if (width > 0) {
-      const x = i % width;
-      const y = Math.floor(i / width);
-      const effects = getTerrainEffectsAt(world, x, y);
+      // Grid scans already own valid indices; avoid resolving bounds every tick.
+      const effects = world.cells
+        ? getTerrainEffects(world.cells[i])
+        : getTerrainEffectsAt(world, i % width, Math.floor(i / width));
       const plantCap = Number.isFinite(effects?.plantCap) ? effects.plantCap : 1;
       cellCap = Math.max(0, cap * plantCap);
     }

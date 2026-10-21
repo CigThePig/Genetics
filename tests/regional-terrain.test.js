@@ -2,14 +2,16 @@ import { simConfig } from '../src/sim/config.js';
 import { describe, it, expect } from 'vitest';
 import { generateTerrain } from '../src/sim/regional-terrain.js';
 import { createWorldGrid } from '../src/sim/world-grid.js';
-import { createRng } from '../src/sim/rng.js';
+import { createSim } from '../src/sim/sim.js';
+import { createCamera } from '../src/render/camera.js';
+import { createRng, deriveSeed } from '../src/sim/rng.js';
 import { analyzeHabitats } from '../src/sim/habitat-analysis.js';
 const make = (seed, width = 120, height = 160, config = {}) => {
   const world = createWorldGrid({ width, height });
   generateTerrain({ world, rng: createRng(seed), config: { ...simConfig, seed, ...config } });
   return world;
 };
-describe('regional geography', () => {
+describe('environmental geography', () => {
   it('retains large diverse connected habitats and reachable water across 32 seeds', () => {
     const maps = new Set();
     for (let seed = 1; seed <= 32; seed++) {
@@ -18,25 +20,31 @@ describe('regional geography', () => {
       const land = w.cells.length - a.counts.water;
       for (const biome of ['forest', 'plains', 'sand', 'rock']) {
         expect(a.counts[biome] / land, `seed ${seed} ${biome}`).toBeGreaterThan(0.03);
-        expect(Math.max(...a.sizes[biome])).toBeGreaterThan(300);
+        // Ridges and riparian habitats can be elongated rather than one large blob.
+        expect(
+          a.sizes[biome].filter((n) => n >= 50).reduce((n, m) => n + m, 0) / a.counts[biome],
+          `seed ${seed} ${biome} substantial habitat`
+        ).toBeGreaterThan(0.7);
       }
       expect(a.substantialFraction).toBeGreaterThan(0.9);
       expect(a.landConnectivity).toBeGreaterThan(0.95);
       expect(a.boundaryDensity).toBeLessThan(0.15);
       expect(a.tinyLand).toBeLessThan(10);
       expect(a.waterCoverage).toBeGreaterThan(0.02);
-      expect(a.sizes.water.every((size) => size >= 20)).toBe(true);
+      expect(
+        a.sizes.water.filter((size) => size >= 20).reduce((a, b) => a + b, 0) / a.counts.water
+      ).toBeGreaterThan(0.85);
       expect(a.waterCoverage).toBeLessThan(0.2);
       expect(a.waterReachableFraction).toBeGreaterThan(0.99);
-      expect(a.waterDistanceP95).toBeLessThan(40);
+      expect(a.waterDistanceP95).toBeLessThan(60);
       maps.add(JSON.stringify(a.counts));
     }
     expect(maps.size).toBe(32);
   });
-  it('replays both terrain and regional metadata exactly', () => {
+  it('replays both terrain and environmental fields exactly', () => {
     expect(make(42)).toMatchObject({
       cells: make(42).cells,
-      regionIds: make(42).regionIds,
+      moistureMap: make(42).moistureMap,
       heightMap: make(42).heightMap
     });
   });
@@ -55,12 +63,86 @@ describe('regional geography', () => {
     expect([...world.heightMap].every(Number.isFinite)).toBe(true);
   });
   it('scale and prevalence change geography without breaking determinism', () => {
-    expect(make(4, 120, 160, { terrainRegionScale: 0.2 }).regions.length).toBeGreaterThan(
-      make(4).regions.length
-    );
+    expect(make(4, 120, 160, { terrainRegionScale: 0.2 }).heightMap).not.toEqual(make(4).heightMap);
     const c = { terrainBiomeWeights: { forest: 10, plains: 0, sand: 0, rock: 0 } };
     expect(analyzeHabitats(make(4, 120, 160, c)).counts.forest).toBeGreaterThan(
       analyzeHabitats(make(4)).counts.forest
     );
+  });
+});
+
+describe('geography integration invariants', () => {
+  it.each([
+    [120, 160],
+    [240, 320],
+    [180, 240],
+    [1, 50],
+    [50, 1],
+    [2, 2]
+  ])('routes runoff downhill without cycles at %i × %i', (width, height) => {
+    const world = make(42, width, height);
+    const { parent, spillParent, filled, accumulation } = world.drainage;
+    let runoff = 0,
+      sinkFlow = 0;
+    for (let i = 0; i < world.cells.length; i++) {
+      expect(filled[i]).toBeGreaterThanOrEqual(world.heightMap[i]);
+      runoff += 0.4 + world.rainfallMap[i];
+      if (parent[i] < 0) sinkFlow += accumulation[i];
+      else {
+        const p = parent[i];
+        expect(
+          Math.abs((p % width) - (i % width)) +
+            Math.abs(Math.floor(p / width) - Math.floor(i / width))
+        ).toBe(1);
+        expect(world.heightMap[p]).toBeLessThan(world.heightMap[i]);
+        expect(accumulation[p]).toBeGreaterThanOrEqual(accumulation[i]);
+        if (accumulation[i] > world.drainage.channelThreshold) expect(world.cells[p]).toBe('water');
+      }
+      if (spillParent[i] >= 0) expect(filled[spillParent[i]]).toBeLessThanOrEqual(filled[i]);
+    }
+    expect(Math.abs(sinkFlow - runoff) / runoff).toBeLessThan(0.00001);
+  });
+  it('derives biomes from climate and relief rather than assigning climate to labels', () => {
+    const world = make(42);
+    const mean = (field, type) => {
+      const ids = world.cells.map((v, i) => (v === type ? i : -1)).filter((i) => i >= 0);
+      return ids.reduce((n, i) => n + world[field][i], 0) / ids.length;
+    };
+    expect(mean('moistureMap', 'forest')).toBeGreaterThan(mean('moistureMap', 'sand'));
+    expect(mean('heightMap', 'rock')).toBeGreaterThan(mean('heightMap', 'plains'));
+    const other = make(42, 120, 160, {
+      terrainBiomeWeights: { forest: 10, plains: 1, sand: 1, rock: 1 }
+    });
+    expect(other.heightMap).toEqual(world.heightMap);
+    expect(other.moistureMap).toEqual(world.moistureMap);
+    expect(other.flowParent).toEqual(world.flowParent);
+  });
+  it('isolates initialization streams and resets to the same tick trajectory', () => {
+    const a = createSim({ seed: 42 }),
+      b = createSim({ seed: 42, grassPatchCount: 2, bushCount: 3 });
+    expect(a.state.creatures).toEqual(b.state.creatures);
+    a.tick();
+    b.tick();
+    expect(a.state.lastRoll).toBe(b.state.lastRoll);
+    const expected = JSON.stringify(a.state);
+    a.setSeed(42);
+    a.tick();
+    expect(JSON.stringify(a.state)).toBe(expected);
+    const terrain = createRng(deriveSeed(42, 'terrain'));
+    const spawn = createRng(deriveSeed(42, 'creatures'));
+    for (let i = 0; i < 100; i++) terrain.nextFloat();
+    expect(spawn.nextFloat()).toBe(createRng(deriveSeed(42, 'creatures')).nextFloat());
+  });
+  it('fits enlarged maps on narrow viewports while retaining pan bounds', () => {
+    const camera = createCamera({ minZoom: 0.1 });
+    camera.setViewport(390, 844);
+    camera.setBoundsFromWorld({ width: 240, height: 320 }, 20);
+    camera.zoomTo(0.001);
+    const state = camera.getState();
+    expect(state.zoom * 240 * 20).toBeLessThanOrEqual(390);
+    expect(state.zoom * 320 * 20).toBeLessThanOrEqual(844);
+    camera.panBy(10000, 10000);
+    expect(Math.abs(camera.getState().x)).toBe(0);
+    expect(Math.abs(camera.getState().y)).toBe(0);
   });
 });

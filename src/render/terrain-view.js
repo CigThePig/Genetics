@@ -7,7 +7,6 @@ export function createTerrainView({
   ensureTerrainCache,
   maybeUpdateGrassCache,
   terrainCache,
-  clamp,
   getTexture,
   getViewport
 }) {
@@ -73,77 +72,44 @@ export function createTerrainView({
     const nowMs = performance.now();
     maybeUpdateGrassCache(terrainCache, world, config, tileSize, perf, nowMs, flushGrass);
 
-    const padPx = tileSize * 2;
-    const mapLeft = originX;
-    const mapTop = originY;
-    const mapRight = originX + terrainCache.pxW;
-    const mapBottom = originY + terrainCache.pxH;
-    const visLeft = clamp(minWorldX - padPx, mapLeft, mapRight);
-    const visTop = clamp(minWorldY - padPx, mapTop, mapBottom);
-    const visRight = clamp(maxWorldX + padPx, mapLeft, mapRight);
-    const visBottom = clamp(maxWorldY + padPx, mapTop, mapBottom);
-
-    let sx = Math.floor(visLeft - originX);
-    let sy = Math.floor(visTop - originY);
-    let sRight = Math.ceil(visRight - originX);
-    let sBottom = Math.ceil(visBottom - originY);
-
-    sx = clamp(sx, 0, terrainCache.pxW);
-    sy = clamp(sy, 0, terrainCache.pxH);
-    sRight = clamp(sRight, 0, terrainCache.pxW);
-    sBottom = clamp(sBottom, 0, terrainCache.pxH);
-
-    const sw = Math.max(0, sRight - sx);
-    const sh = Math.max(0, sBottom - sy);
-    const dx = originX + sx;
-    const dy = originY + sy;
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PASS 1: Base terrain tiles
-    // ─────────────────────────────────────────────────────────────────────────
-
-    const tP1 = perf?.start('render.terrain.pass1');
-    if (terrainCache.base && sw > 0 && sh > 0) {
-      ctx.drawImage(terrainCache.base.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
+    const tRaster = perf?.start('render.terrain.pass1');
+    if (endCol > startCol && endRow > startRow) {
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(
+        terrainCache.base.canvas,
+        startCol,
+        startRow,
+        endCol - startCol,
+        endRow - startRow,
+        originX + startCol * tileSize,
+        originY + startRow * tileSize,
+        (endCol - startCol) * tileSize,
+        (endRow - startRow) * tileSize
+      );
     }
-    perf?.end('render.terrain.pass1', tP1);
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PASS 2: Terrain edge blending
-    // ─────────────────────────────────────────────────────────────────────────
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PASS 3: Water edge effects
-    // ─────────────────────────────────────────────────────────────────────────
-
+    perf?.end('render.terrain.pass1', tRaster);
+    // Sparse cosmetic contours at readable zoom, no extra terrain canvas layers.
     if (showDetail) {
-      const tP3 = perf?.start('render.terrain.pass3');
-      perf?.end('render.terrain.pass3', tP3);
+      ctx.lineWidth = 0.7 / state.zoom;
+      ctx.strokeStyle = 'rgba(210,230,225,0.13)';
+      ctx.beginPath();
+      for (let y = startRow; y < endRow; y++)
+        for (let x = startCol; x < endCol; x++) {
+          const i = y * world.width + x;
+          const type = _cells[i];
+          if ((x * 17 + y * 31) % 13 !== 0) continue;
+          if (
+            type === (world.waterTerrainType ?? 'water') ||
+            (type === 'rock' && (world.roughnessMap?.[i] ?? 0) > 0.2)
+          ) {
+            const px = originX + (x + 0.2) * tileSize,
+              py = originY + (y + 0.55) * tileSize;
+            ctx.moveTo(px, py);
+            ctx.lineTo(px + tileSize * 0.45, py - (type === 'rock' ? tileSize * 0.12 : 0));
+          }
+        }
+      ctx.stroke();
     }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PASS 4: Grass overlay
-    // ─────────────────────────────────────────────────────────────────────────
-
-    if (terrainCache.grass) {
-      const tP4 = perf?.start('render.terrain.pass4');
-      if (sw > 0 && sh > 0) {
-        ctx.drawImage(terrainCache.grass.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
-      }
-      perf?.end('render.terrain.pass4', tP4);
-    }
-
-    if (showDetail && terrainCache.detail && sw > 0 && sh > 0) {
-      ctx.drawImage(terrainCache.detail.canvas, sx, sy, sw, sh, dx, dy, sw, sh);
-    }
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PASS 5: Stress overlay
-    // ─────────────────────────────────────────────────────────────────────────
-
-    // ─────────────────────────────────────────────────────────────────────────
-    // PASS 6: Bushes
-    // ─────────────────────────────────────────────────────────────────────────
 
     if (Array.isArray(world.bushes) && world.bushes.length > 0) {
       const tP6 = perf?.start('render.terrain.pass6');

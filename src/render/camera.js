@@ -32,7 +32,18 @@ export function createCamera({
     viewport: { width: 0, height: 0 }
   };
 
-  const clampZoom = (nextZoom) => Math.min(state.maxZoom, Math.max(state.minZoom, nextZoom));
+  const clampZoom = (nextZoom) => {
+    const bounds = state.bounds,
+      viewport = state.viewport;
+    const fit =
+      bounds && viewport.width > 0 && viewport.height > 0
+        ? Math.min(
+            viewport.width / (bounds.maxX - bounds.minX),
+            viewport.height / (bounds.maxY - bounds.minY)
+          ) * 0.94
+        : state.minZoom;
+    return Math.min(state.maxZoom, Math.max(Math.min(state.minZoom, fit), nextZoom));
+  };
 
   /**
    * Clamp camera position to stay within map bounds

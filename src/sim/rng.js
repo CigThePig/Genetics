@@ -34,3 +34,13 @@ function normalizeSeed(seed) {
   const numericSeed = Number.isFinite(seed) ? Math.trunc(seed) : 0;
   return numericSeed >>> 0;
 }
+
+// FNV-1a stream label followed by an avalanche; stable across JS runtimes.
+// Stream derivation never advances a sibling or the runtime generator.
+export function deriveSeed(seed, label) {
+  let h = (normalizeSeed(seed) ^ 2166136261) >>> 0;
+  for (let i = 0; i < label.length; i++) h = Math.imul(h ^ label.charCodeAt(i), 16777619) >>> 0;
+  h = Math.imul(h ^ (h >>> 16), 0x85ebca6b);
+  h = Math.imul(h ^ (h >>> 13), 0xc2b2ae35);
+  return (h ^ (h >>> 16)) >>> 0;
+}

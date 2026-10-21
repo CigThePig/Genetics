@@ -1,7 +1,8 @@
 export const metaColourEcology = {
   terrainRegionScale: {
     label: 'Habitat scale',
-    description: 'Regional width as a fraction of world width. Rebuild world.',
+    description:
+      'Characteristic relief/climate scale relative to the shorter dimension (capped at 160 tiles). Rebuild world.',
     min: 0.18,
     max: 0.6,
     step: 0.02,
@@ -19,7 +20,8 @@ export const metaColourEcology = {
   },
   terrainBiomeWeights: {
     label: 'Biome prevalence',
-    description: 'Weights for extra regions; each primary biome retains a core. Rebuild world.',
+    description:
+      'Bias environmental suitability; zero disables a biome. No fixed coverage quotas. Rebuild world.',
     category: 'world',
     type: 'json',
     advanced: true
