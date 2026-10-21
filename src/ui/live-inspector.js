@@ -457,7 +457,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     const destination = creature.intent?.target;
     if (
       creature.intent?.type === 'seek' &&
-      creature.search?.goal === 'mate' &&
+      creature.search?.goal === 'mate-contact' &&
       contacts.some((e) => e.position.x === destination?.x && e.position.y === destination?.y)
     )
       behaviorBody.append(row('Mate search', 'Revisiting a last observed contact location'));

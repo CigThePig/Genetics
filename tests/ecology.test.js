@@ -156,12 +156,37 @@ describe('observed mate contacts', () => {
     o.config.creatureMateSeekRange = 4;
     updateCreatureIntent({ ...o, tick: 61 });
     expect(source.intent.type).toBe('seek');
-    expect(source.search.goal).toBe('mate');
+    expect(source.search.goal).toBe('mate-contact');
     expect(source.intent.target).toEqual(seen);
     expect(source.intent.target).not.toEqual(mate.position);
     updateCreatureReproduction(o);
     expect(o.metrics.pregnanciesTotal).toBe(0);
   });
+  it.each(['expiry', 'disabled', 'unreachable'])(
+    'abandons contact travel after %s and retains the replacement random search',
+    (reason) => {
+      const o = courtship(),
+        [source, mate] = o.creatures;
+      source.meters.energy = 0.95;
+      o.config.creatureMateMemorySeconds = 1;
+      updateCreatureIntent({ ...o, tick: 1 });
+      const observed = { ...mate.position };
+      o.creatures.pop();
+      updateCreatureIntent({ ...o, tick: 2 });
+      expect(source.intent.target).toEqual(observed);
+      if (reason === 'disabled') o.config.creatureMateMemorySeconds = 0;
+      if (reason === 'unreachable') {
+        for (let y = 0; y < o.world.height; y++) o.world.setTerrainAt(7, y, 'water');
+      }
+      const tick = reason === 'expiry' ? 62 : 3;
+      updateCreatureIntent({ ...o, tick });
+      expect(source.search.goal).toBe('mate');
+      expect(source.intent.target).not.toEqual(observed);
+      const randomTarget = { ...source.intent.target };
+      updateCreatureIntent({ ...o, tick: tick + 1 });
+      expect(source.intent.target).toEqual(randomTarget);
+    }
+  );
   it('expires and visits old contacts and clears memory when disabled', () => {
     const o = courtship(),
       c = o.creatures[0];
@@ -275,6 +300,61 @@ describe('resource recovery episodes', () => {
     updateCreatureIntent(b);
     expect(c.intent.type).toBe('eat');
   });
+  it('consumes positive meat residue during recovery without lowering meal initiation minimums', () => {
+    const o = recoveryCase(),
+      c = o.creatures[0];
+    o.world.carcasses[0].meat = 0.005;
+    updateCreatureIntent(o);
+    expect(c.intent).toMatchObject({ type: 'eat', foodType: 'meat' });
+    const before = c.meters.energy;
+    applyCreatureActions(o);
+    expect(c.meters.energy).toBeGreaterThan(before);
+    expect(o.metrics.feedingBySpecies.triangle.meat.consumed).toBeCloseTo(0.005);
+    expect(o.world.carcasses).toEqual([]);
+    updateCreatureIntent(o);
+    expect(c.intent.type).not.toBe('eat');
+    const fresh = recoveryCase();
+    fresh.world.carcasses[0].meat = 0.005;
+    fresh.creatures[0].intent = { type: 'wander' };
+    fresh.creatures[0].priority = 'hunger';
+    updateCreatureIntent(fresh);
+    expect(fresh.creatures[0].intent).not.toMatchObject({ type: 'eat', foodType: 'meat' });
+  });
+  it.each(
+    ['eat', 'drink'].flatMap((episode) =>
+      [false, true].flatMap((override) =>
+        [false, true].map((blind) => ({ episode, override, blind }))
+      )
+    )
+  )(
+    'honors mating override $override during $episode recovery (blind=$blind)',
+    ({ episode, override, blind }) => {
+      const o = courtship(),
+        source = o.creatures[0];
+      source.meters.energy = 0.8;
+      source.meters.water = 0.8;
+      source.intent = { type: episode, foodType: episode === 'eat' ? 'meat' : null };
+      spawnCarcass({ world: o.world, x: 5, y: 5, meat: 1, config: o.config });
+      o.world.setTerrainAt(4, 5, 'water');
+      o.config.creatureMateSeekPriorityOverridesNeeds = override;
+      if (blind) o.config.creatureMateSeekRange = 1;
+      updateCreatureIntent(o);
+      expect(source.intent.type).toBe(override ? (blind ? 'seek' : 'mate') : episode);
+      if (override && blind) expect(source.search.goal).toBe('mate');
+    }
+  );
+  it.each(['eat', 'drink'])(
+    'keeps %s recovery when the override cannot establish mating eligibility',
+    (episode) => {
+      const o = recoveryCase(),
+        c = o.creatures[0];
+      o.config.creatureMateSeekingEnabled = true;
+      o.config.creatureMateSeekPriorityOverridesNeeds = true;
+      c.intent = { type: episode, foodType: episode === 'eat' ? 'meat' : null };
+      updateCreatureIntent(o);
+      expect(c.intent.type).toBe(episode);
+    }
+  );
   it('cannot continue a meal after meat is gone', () => {
     const o = recoveryCase();
     o.world.carcasses = [];

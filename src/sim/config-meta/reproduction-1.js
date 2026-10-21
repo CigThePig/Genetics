@@ -231,7 +231,7 @@ export const metaReproduction1 = {
   creatureMateSeekPriorityOverridesNeeds: {
     label: 'Mate Seek Overrides Needs',
     description:
-      'Allow blind mate search to override hunger/thirst. Without this, eligible animals may still court observed partners when no immediate meal or drink is available.',
+      'Allow eligible mating and blind mate search to override hunger/thirst, including an ongoing meal or drink. Without this, eligible animals may still court observed partners when no immediate meal or drink is available.',
     type: 'boolean',
     category: 'reproduction'
   },

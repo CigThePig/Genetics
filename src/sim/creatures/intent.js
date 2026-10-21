@@ -139,7 +139,6 @@ export function updateCreatureIntent({
     const continuingMeal =
       creature.intent?.type === 'eat' &&
       creature.intent.foodType === FOOD_TYPES.MEAT &&
-      foodAvailability.meat >= Math.min(grassEatMin, berryEatMin) &&
       foodAvailability.meat > 0 &&
       energyRatio < Math.max(eatThreshold, recovery) &&
       waterRatio > drinkThreshold * 0.5;
@@ -227,7 +226,7 @@ export function updateCreatureIntent({
       reproductionState.mate.targetId = null;
       reproductionState.mate.commitTicksRemaining = 0;
     }
-    if (creature.search?.goal === 'mate' && !canConsiderMate) {
+    if (['mate', 'mate-contact'].includes(creature.search?.goal) && !canConsiderMate) {
       clearSearchState(creature);
     }
 
@@ -346,11 +345,12 @@ export function updateCreatureIntent({
     );
     const maxRendezvousDistance = resolveWaterRendezvousMaxDistance(config);
     let handled = false;
-    if (continuingDrink) {
+    const mateOverridesRecovery = mateSeekOverridesNeeds && canConsiderMate;
+    if (continuingDrink && !mateOverridesRecovery) {
       intent = 'drink';
       handled = true;
       clearSearchState(creature);
-    } else if (continuingMeal) {
+    } else if (continuingMeal && !mateOverridesRecovery) {
       intent = 'eat';
       foodType = FOOD_TYPES.MEAT;
       handled = true;
@@ -379,9 +379,11 @@ export function updateCreatureIntent({
       target = mateTarget.position ? { ...mateTarget.position } : null;
     } else if (!handled && canConsiderMate) {
       const contact = rememberedMatePosition(creature, world);
+      // A copied contact destination must not become a persistent random-search goal.
+      if (!contact && creature.search?.goal === 'mate-contact') clearSearchState(creature);
       if (contact) {
         const search = ensureSearchState(creature);
-        search.goal = 'mate';
+        search.goal = 'mate-contact';
         search.target = { ...contact };
         intent = 'seek';
         target = contact;
