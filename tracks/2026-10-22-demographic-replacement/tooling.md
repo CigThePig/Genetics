@@ -2,7 +2,7 @@
 
 Start from the PR source. The baseline is c1163f6dc5c17fecc5bf3672346735abf7941801.
 
-~~~sh
+```sh
 npm ci
 git worktree add --detach ../Genetics-baseline c1163f6dc5c17fecc5bf3672346735abf7941801
 node scripts/investigate-demography.mjs --root=../Genetics-baseline --ticks=72000 > baseline.jsonl
@@ -16,7 +16,7 @@ npm run verify
 python -m unittest discover -s tests -p 'test_demography_report.py'
 npm run test:soak -- --ticks=36000
 node scripts/benchmark-demography.mjs ../Genetics-baseline .
-~~~
+```
 
 The predefined seeds are 1,2,3,7,19,42,73,101,1337,2026. A checkpoint emits a complete observed cohort/trajectory record without restarting the RNG. The recorder accepts a JSON config override and a separately seeded diagnostic founder-age fraction. Source/recorder fingerprints, revision, resolved config and a final creature/summary hash accompany each record.
 
@@ -32,9 +32,9 @@ Mixed-age founders draw independently from 0–65% of genetic lifespan. This cha
 
 To create the passive-counter ablation, make another baseline worktree and replace exactly the two newborn assignments from parental cooldown to zero. Then run:
 
-~~~sh
+```sh
 node scripts/check-demographic-replay.mjs ../Genetics-newborn-only .
-~~~
+```
 
 The replay compares serializable world/creature state, including navigation Map/Set contents, after removing only the added counters. The direct regression also compares next RNG output with metrics disabled.
 

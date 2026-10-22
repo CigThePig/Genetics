@@ -28,15 +28,15 @@ Observed contacts remain bounded (four copied locations, 120-second expiry). Mat
 
 Observed extinctions at twenty minutes, baseline → revised, out of ten runs per cell:
 
-| Treatment | Squares | Circles | Triangles | Octagons |
-| --- | --- | --- | --- | --- |
-| Two favorable nearby founders | 2 → 2 | 2 → 2 | 2 → 2 | 2 → 2 |
-| Four favorable nearby founders | 1 → 0 | 1 → 1 | 1 → 0 | 0 → 0 |
-| Twelve favorable nearby founders | 0 → 0 | 0 → 0 | 0 → 0 | 0 → 0 |
-| Two mixed-age founders | 8 → 6 | 8 → 5 | 8 → 6 | 7 → 6 |
-| Same sex | 10 → 10 | 10 → 10 | 10 → 10 | 10 → 10 |
-| Separated | 10 → 10 | 10 → 10 | 10 → 10 | 10 → 10 |
-| No replenished resources | 10 → 10 | 10 → 10 | 10 → 10 | 10 → 10 |
+| Treatment                        | Squares | Circles | Triangles | Octagons |
+| -------------------------------- | ------- | ------- | --------- | -------- |
+| Two favorable nearby founders    | 2 → 2   | 2 → 2   | 2 → 2     | 2 → 2    |
+| Four favorable nearby founders   | 1 → 0   | 1 → 1   | 1 → 0     | 0 → 0    |
+| Twelve favorable nearby founders | 0 → 0   | 0 → 0   | 0 → 0     | 0 → 0    |
+| Two mixed-age founders           | 8 → 6   | 8 → 5   | 8 → 6     | 7 → 6    |
+| Same sex                         | 10 → 10 | 10 → 10 | 10 → 10   | 10 → 10  |
+| Separated                        | 10 → 10 | 10 → 10 | 10 → 10   | 10 → 10  |
+| No replenished resources         | 10 → 10 | 10 → 10 | 10 → 10   | 10 → 10  |
 
 Mature offspring in the two-founder favorable treatment sum to 90 → 138 squares, 89 → 132 circles, 88 → 128 triangles and 85 → 125 octagons. The live immature endpoints (10 → 17, 6 → 12, 9 → 14, 4 → 10) are censored, not failures.
 
@@ -48,27 +48,27 @@ Mixed founding ages often worsen the small-pair outcome. They change residual li
 
 Each run is 72,000 ticks: twenty simulated minutes, or 2.22 nominal lifespans. Same initial seeds/configuration are preserved. Legitimate earlier attempts change later RNG consumption; paired seeds do not imply identical later ecological events.
 
-| Seed | Squares | Circles | Triangles | Octagons |
-| --- | --- | --- | --- | --- |
-| 1 | 62 → 84 | 56 → 130 | 1 → 4 | 8 → 3 |
-| 2 | 79 → 190 | 150 → 248 | 0 → 4 | 2 → 10 |
-| 3 | 83 → 90 | 112 → 143 | 0 → 4 | 0 → 5 |
-| 7 | 23 → 143 | 63 → 113 | 0 → 1 | 1 → 4 |
-| 19 | 56 → 104 | 103 → 87 | 0 → 2 | 0 → 0 |
-| 42 | 67 → 42 | 84 → 108 | 0 → 0 | 5 → 5 |
-| 73 | 97 → 144 | 74 → 146 | 2 → 5 | 1 → 0 |
-| 101 | 85 → 157 | 76 → 149 | 7 → 9 | 0 → 0 |
-| 1337 | 48 → 124 | 114 → 128 | 4 → 7 | 0 → 0 |
-| 2026 | 57 → 70 | 36 → 87 | 0 → 0 | 0 → 0 |
+| Seed | Squares  | Circles   | Triangles | Octagons |
+| ---- | -------- | --------- | --------- | -------- |
+| 1    | 62 → 84  | 56 → 130  | 1 → 4     | 8 → 3    |
+| 2    | 79 → 190 | 150 → 248 | 0 → 4     | 2 → 10   |
+| 3    | 83 → 90  | 112 → 143 | 0 → 4     | 0 → 5    |
+| 7    | 23 → 143 | 63 → 113  | 0 → 1     | 1 → 4    |
+| 19   | 56 → 104 | 103 → 87  | 0 → 2     | 0 → 0    |
+| 42   | 67 → 42  | 84 → 108  | 0 → 0     | 5 → 5    |
+| 73   | 97 → 144 | 74 → 146  | 2 → 5     | 1 → 0    |
+| 101  | 85 → 157 | 76 → 149  | 7 → 9     | 0 → 0    |
+| 1337 | 48 → 124 | 114 → 128 | 4 → 7     | 0 → 0    |
+| 2026 | 57 → 70  | 36 → 87   | 0 → 0     | 0 → 0    |
 
 Census endpoints alone do not establish persistence. A surviving one-sex census without active pregnancy cannot produce a future opposite-sex pair in this closed sexual model. Juveniles can restore a temporarily missing mature pair; report tests cover that distinction.
 
-| Species | Extinct runs | Additional closed censuses | Mature offspring | Offspring with mature children |
-| --- | --- | --- | --- | --- |
-| Square | 0 → 0 | 0 → 0 | 1,403 → 2,002 | 978 → 1,468 |
-| Circle | 0 → 0 | 0 → 0 | 1,615 → 2,213 | 1,130 → 1,637 |
-| Triangle | 6 → 2 | 2 → 3 | 54 → 89 | 25 → 61 |
-| Octagon | 5 → 5 | 2 → 0 | 57 → 75 | 31 → 46 |
+| Species  | Extinct runs | Additional closed censuses | Mature offspring | Offspring with mature children |
+| -------- | ------------ | -------------------------- | ---------------- | ------------------------------ |
+| Square   | 0 → 0        | 0 → 0                      | 1,403 → 2,002    | 978 → 1,468                    |
+| Circle   | 0 → 0        | 0 → 0                      | 1,615 → 2,213    | 1,130 → 1,637                  |
+| Triangle | 6 → 2        | 2 → 3                      | 54 → 89          | 25 → 61                        |
+| Octagon  | 5 → 5        | 2 → 0                      | 57 → 75          | 31 → 46                        |
 
 Counts sum ten seeds. Both declines and gains are retained: octagon seed 1 worsens from eight survivors to three; square seed 42 from 67 to 42. This is not proof of equilibrium or a statistically established extinction probability.
 
@@ -80,12 +80,12 @@ Observed mature daughters per founding female: squares 1.239 → 1.289; circles 
 
 Approximate one-second exposure samples:
 
-| Species | Sufficient reserves / mature samples | Eligible opposite-sex partner anywhere / ready samples | Visible eligible partner / ready samples |
-| --- | --- | --- | --- |
-| Square | 80.1% → 80.5% | 94.1% → 97.7% | 15.2% → 21.0% |
-| Circle | 87.9% → 85.1% | 95.9% → 98.3% | 16.1% → 19.0% |
-| Triangle | 63.0% → 63.6% | 26.6% → 39.0% | 1.8% → 3.0% |
-| Octagon | 61.2% → 63.1% | 37.1% → 29.9% | 1.6% → 2.0% |
+| Species  | Sufficient reserves / mature samples | Eligible opposite-sex partner anywhere / ready samples | Visible eligible partner / ready samples |
+| -------- | ------------------------------------ | ------------------------------------------------------ | ---------------------------------------- |
+| Square   | 80.1% → 80.5%                        | 94.1% → 97.7%                                          | 15.2% → 21.0%                            |
+| Circle   | 87.9% → 85.1%                        | 95.9% → 98.3%                                          | 16.1% → 19.0%                            |
+| Triangle | 63.0% → 63.6%                        | 26.6% → 39.0%                                          | 1.8% → 3.0%                              |
+| Octagon  | 61.2% → 63.1%                        | 37.1% → 29.9%                                          | 1.6% → 2.0%                              |
 
 Ready includes maturity, adequate reserves, no pregnancy and no cooldown. The global census is diagnostic only. Brief contacts can fall between samples; conception/birth transitions are separately observed each tick. These gates are not a causal variance decomposition: population exposure, resources, preferences and random trajectories interact.
 

@@ -521,7 +521,7 @@ export function updateCreatureReproduction({
       },
       memory: { entries: [] },
       // Recovery belongs to an animal that attempted mating, not its offspring.
-          reproduction: { cooldownTicks: 0 }
+      reproduction: { cooldownTicks: 0 }
     });
 
     nextId += 1;
