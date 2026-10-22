@@ -1,4 +1,4 @@
-Active track: tracks/2026-10-22-demographic-replacement
-Current phase: Verified local investigation recovered through GitHub after executor disconnection.
-Next task: Complete hosted verification/evidence regeneration and automated review; no merge authorized.
+Active track: None
+Current phase: Demographic replacement investigation completed; PR #142 submitted.
+Next task: Review follow-up when findings become available; Track 12 remains separate. No merge authorized.
 Last updated: 2026-10-22

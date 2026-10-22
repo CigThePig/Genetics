@@ -407,3 +407,4 @@ Rules:
 - scripts/summarize-demography.py, archive-demography.py, plot-demography.py, analyze-demographic-topology.mjs: censored cohorts, conservation, archives, plots and birth components.
 - scripts/check-demographic-replay.mjs, benchmark-demography.mjs, publish-demographic-evidence.py: passive-counter replay, equal workloads and validated hosted evidence publication.
 - tests/demography.test.js, test_demography_report.py: all-species recovery, movement/access, counters and censoring regressions.
+- scripts/browser-startup.cjs, tests/browser-startup.test.js: bounded ANSI-aware Vite readiness and cleanup regressions for Chromium tooling.

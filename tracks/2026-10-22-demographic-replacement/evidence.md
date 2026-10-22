@@ -12,7 +12,7 @@ The universal-species hypothesis is partly supported: the hidden delay affects a
 
 The investigation started from main c1163f6 after inspecting PRs #138–#141 and their available reviews. Twenty paired 72,000-tick runs, 560 controlled assays, canonical 36,000-tick soaks, topology audits, replay and local verify completed before the executor disconnected. The preserved result tables below come from recorded tool outputs in local-snapshot-summary.json.
 
-The original compressed raw files became inaccessible during final archiving. The revised 144,000-tick seed-1 final checkpoint was not recovered; only its 108,000-tick census was observed. No local final performance or actual-browser success is claimed. GitHub CI regenerates source-pinned raw archives, extended runs and missing checks separately; hosted-results.md and manifest.json identify that regenerated evidence. Local and hosted results must not be silently conflated.
+The original compressed raw files became inaccessible during final archiving. The revised 144,000-tick seed-1 final checkpoint was not recovered; only its 108,000-tick census was observed. No local final performance or actual-browser success is claimed. GitHub CI subsequently regenerated the source-pinned raw archives and completed the extended runs and missing checks. All twenty 72,000-tick endpoint vectors exactly match the preserved local results. [Hosted results](evidence/hosted-results.md) and [manifest](evidence/manifest.json) identify those regenerated records; [browser provenance](evidence/browser-provenance.md) supplements the earlier archive manifest. Local and hosted results remain separately labelled.
 
 ## Current-source baseline
 
@@ -97,7 +97,13 @@ All twenty static topology audits found zero water births and zero newborn chang
 
 ## Extended observations and limits
 
-Recorded thirty-minute total censuses (baseline → revised) are 142 → 304 for seed 1, 172 → 223 for seed 42, and 220 → 433 for seed 1337. Seed 1's forty-minute baseline census is 185; its revised final checkpoint was unavailable when the executor disconnected. Do not interpret that as a completed local forty-minute pair. Hosted regeneration supplies independently labelled complete extended records.
+Recorded thirty-minute total censuses (baseline → revised) are 142 → 304 for seed 1, 172 → 223 for seed 42, and 220 → 433 for seed 1337. Seed 1's forty-minute baseline census is 185; its revised final checkpoint was unavailable when the executor disconnected. Do not interpret that as a completed local forty-minute pair. Hosted regeneration supplies the following complete extended records, with species ordered consistently and unequal horizons kept separate:
+
+- Seed 1, 144,000 ticks: squares 71 → 121, circles 113 → 499, triangles 0 → 0, octagons 1 → 0.
+- Seed 42, 108,000 ticks: squares 59 → 34, circles 110 → 189, triangles 0 → 0, octagons 3 → 0.
+- Seed 1337, 108,000 ticks: squares 63 → 204, circles 157 → 220, triangles 0 → 9, octagons 0 → 0.
+
+Revised seed 1 reaches 620 animals but loses both predators; revised seed 42 also loses both. These are observed outcomes, not a stability guarantee.
 
 Twenty/thirty/forty minutes do not establish equilibrium, adaptive divergence or permanent persistence. More herbivore growth can raise total interactive cost despite unchanged per-actor engine complexity. Longevity/growth formulas are verified, not claimed to be a complete biological life-history model. Field-density/prey competition, fine-scale interaction-radius realism and physical-phone profiling remain bounded limitations.
 
@@ -109,6 +115,14 @@ Three canonical 36,000-tick soaks pass finite state, bounds, IDs and population 
 
 Offline conservation checks resolve conception into birth, miscarriage, active pregnancy or maternal death. Detailed histories never enter production. The new fixed-size attempt/failure counters distinguish no opportunity from failed conception and reset with their simulation. There is no new per-tick global mate search or runtime ancestry archive.
 
-The local Chromium install failed and final standalone performance measurements were interrupted by environment loss. Hosted CI performs actual Chromium/narrow-viewport and equal-workload 80/240/480-actor trials; those outputs must be assessed separately. Cloud/Node results are not certification of a physical phone.
+Hosted final verification passes 296 JavaScript tests, four Python report tests, ESLint, formatting and the production build. Actual Chromium checks pass desktop and 390 × 844 viewport controls, observed-contact/resource scenarios and read-only rendering, with zero page errors. A literal Vite startup match had stalled the first browser job on ANSI-coloured output; a bounded, ANSI-aware startup helper now has four regression cases and cleans up failures. The successful browser run is linked in the provenance supplement.
+
+Equal-workload hosted Node medians of three trial means are:
+
+- 80 actors: baseline 3.083 → revised 3.037 ms/tick.
+- 240 actors: baseline 7.233 → revised 7.170 ms/tick.
+- 480 actors: baseline 19.280 → revised 19.208 ms/tick.
+
+Actor hashes match in every paired trial. Small timing differences are not evidence of a speedup. At 480 actors both revisions exceed the 16.7 ms budget for 60 simulation ticks per second. Increased later population can therefore raise total cost even though this correction adds no search and the passive metrics add only 198 serialized JSON bytes (not a heap measurement). Mobile performance and high-density scaling remain risks; neither cloud Node nor narrow-viewport Chromium certifies physical-phone throughput.
 
 The foundation supports controlled Track 12 development: healthy predators can produce reproductive descendants, lifecycle ownership is coherent, and demographic failures are observable. Wild fragility remains real. Preserve the integration contract in track12-readiness.md; no full combat system or merge is part of this PR.

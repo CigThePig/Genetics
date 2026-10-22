@@ -20,3 +20,5 @@ Preserve Sense → Decide → Act → Costs → LifeHistory → Regen → Metric
 Compare successful hunting and actual food energy alongside attempts, failures, conceptions, births, juvenile survival, mature descendants and deaths with exposure/censoring. More kills, more births or survivors at a chosen endpoint alone cannot validate combat.
 
 No population-dependent rescue, migration quotas, remote mate knowledge, lifespan immunity or fertility bonuses are introduced. Future combat tests need favorable opportunity controls and default/unfavorable ecology, not a survival target.
+
+Hosted equal-workload trials at 480 actors take about 19.2 ms per simulation tick in both revisions, exceeding a 60 TPS budget before rendering. Revised seed 1 reaches 620 animals at forty minutes while losing both predators. Track 12 may proceed with controlled comparisons, but high-density performance and physical-phone throughput require separate validation; ecology is not certified stable.
