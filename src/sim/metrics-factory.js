@@ -69,7 +69,11 @@ export function createDefaultMetrics() {
     killsByPredatorSpecies: createSpeciesCounter(),
     killsByPreySpecies: createSpeciesCounter(),
 
-    // Reproduction metrics
+    // Reproduction metrics: attempts count pairs, never both participating actors.
+    matingAttemptsTotal: 0,
+    matingFailuresTotal: 0,
+    matingAttemptsBySpecies: createSpeciesCounter(),
+    matingFailuresBySpecies: createSpeciesCounter(),
     birthsTotal: 0,
     birthsLastTick: 0,
     pregnanciesTotal: 0,

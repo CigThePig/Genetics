@@ -114,6 +114,8 @@ export function buildSimSummary(state, resolvedConfig) {
     killsTotal: state.metrics.killsTotal,
     carcassCount: state.metrics.carcassCount,
     carcassMeatTotal: state.metrics.carcassMeatTotal,
+    matingAttemptsTotal: state.metrics.matingAttemptsTotal,
+    matingFailuresTotal: state.metrics.matingFailuresTotal,
     birthsTotal: state.metrics.birthsTotal,
     birthsLastTick: state.metrics.birthsLastTick,
     pregnanciesTotal: state.metrics.pregnanciesTotal,
