@@ -74,6 +74,7 @@ export const simConfig = {
 
   // === CREATURES: SPAWNING ===
   creatureCount: 80,
+  creatureFounderGroups: 2, // Requested local breeding communities; small species stay together.
   creatureSpawnRetries: 20,
   creatureSpawnAnchorRetries: 30,
   creaturePredatorCount: 8, // (was 5 - more predators for better ecosystem pressure)
@@ -326,6 +327,7 @@ export const simConfig = {
   creatureMemoryMergeDistance: 1.5,
   creatureMemoryVisitPenalty: 0.5,
   creatureWaterMemoryInHerdEnabled: true,
+  creatureWaterPreferLocal: true, // Shared knowledge cannot override closer personally known water.
 
   // === CREATURES: METABOLISM ===
   creatureBasalEnergyDrain: 0.007, // (was 0.008 - slightly slower drain)

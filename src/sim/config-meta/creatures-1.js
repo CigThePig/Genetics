@@ -1,4 +1,14 @@
 export const metaCreatures1 = {
+  creatureFounderGroups: {
+    label: 'Founding Communities',
+    description:
+      'Requested separated communities per species. At least 12 founders per community; pairs stay together. Tiny species remain in one group.',
+    min: 1,
+    max: 8,
+    step: 1,
+    category: 'creatures',
+    advanced: true
+  },
   creatureSpawnRetries: {
     label: 'Spawn Land Attempts',
     description: 'Maximum land-position attempts for each creature at spawn.',

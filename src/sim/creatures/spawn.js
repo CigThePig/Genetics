@@ -1,3 +1,5 @@
+import { createRng, deriveSeed } from '../rng.js';
+import { createLineage } from './lineage.js';
 /**
  * Spawn Module
  *
@@ -142,9 +144,10 @@ export function createCreatures({ config, rng, world }) {
     }
   }
 
+  let placementRng = rng;
   const randomPosition = () => ({
-    x: rng.nextFloat() * width,
-    y: rng.nextFloat() * height
+    x: placementRng.nextFloat() * width,
+    y: placementRng.nextFloat() * height
   });
 
   const isLandPosition = (position) =>
@@ -214,9 +217,9 @@ export function createCreatures({ config, rng, world }) {
     // as the map grows. Keep the same physical annulus at every world size.
     const maxDistance = minDistance * 2;
     for (let attempt = 0; attempt < attempts; attempt += 1) {
-      const angle = rng.nextFloat() * Math.PI * 2;
+      const angle = placementRng.nextFloat() * Math.PI * 2;
       const distance = Math.sqrt(
-        minDistance ** 2 + rng.nextFloat() * (maxDistance ** 2 - minDistance ** 2)
+        minDistance ** 2 + placementRng.nextFloat() * (maxDistance ** 2 - minDistance ** 2)
       );
       const position = {
         x: origin.x + Math.cos(angle) * distance,
@@ -257,8 +260,8 @@ export function createCreatures({ config, rng, world }) {
     }
     const baseOrigin = resolveLandPosition(origin) ? origin : findRandomLandPosition(anchorRetries);
     for (let attempt = 0; attempt < attempts; attempt += 1) {
-      const offsetX = (rng.nextFloat() * 2 - 1) * radius;
-      const offsetY = (rng.nextFloat() * 2 - 1) * radius;
+      const offsetX = (placementRng.nextFloat() * 2 - 1) * radius;
+      const offsetY = (placementRng.nextFloat() * 2 - 1) * radius;
       const candidate = {
         x: clampToWorld(baseOrigin.x + offsetX, width),
         y: clampToWorld(baseOrigin.y + offsetY, height)
@@ -302,6 +305,46 @@ export function createCreatures({ config, rng, world }) {
   };
 
   const anchors = createAnchors();
+  const requestedGroups = Math.max(
+    1,
+    Math.min(
+      8,
+      Math.trunc(Number.isFinite(config?.creatureFounderGroups) ? config.creatureFounderGroups : 1)
+    )
+  );
+  const counts = Object.fromEntries(
+    SPECIES_LIST.map((s) => [s, spawnQueue.filter((v) => v === s).length])
+  );
+  const groupCounts = Object.fromEntries(
+    SPECIES_LIST.map((s) => [s, Math.max(1, Math.min(requestedGroups, Math.floor(counts[s] / 12)))])
+  );
+  const communities = [anchors];
+  for (let group = 1; group < Math.max(...Object.values(groupCounts)); group++) {
+    placementRng = createRng(deriveSeed(config?.seed ?? 1, `founding-community:${group}`));
+    // Best of bounded suitable samples: physical separation without terrain quotas.
+    let base = null,
+      best = -Infinity;
+    for (let attempt = 0; attempt < anchorRetries; attempt++) {
+      const p = findRandomLandPosition();
+      const separation = Math.min(
+        ...communities.map((a) => Math.hypot(p.x - a[SPECIES.SQUARE].x, p.y - a[SPECIES.SQUARE].y))
+      );
+      if (separation > best) {
+        base = p;
+        best = separation;
+      }
+    }
+    communities.push(
+      Object.fromEntries(
+        SPECIES_LIST.map((s) => [
+          s,
+          findNearbyLandPosition(base, speciesAnchorSpread, anchorRetries)
+        ])
+      )
+    );
+  }
+  placementRng = rng;
+  const speciesIndices = Object.fromEntries(SPECIES_LIST.map((s) => [s, 0]));
 
   for (let i = 0; i < count; i += 1) {
     const species = spawnQueue[i] ?? SPECIES_LIST[i % SPECIES_LIST.length];
@@ -317,6 +360,27 @@ export function createCreatures({ config, rng, world }) {
       if (resolveLandPosition(candidate)) {
         position = candidate;
         break;
+      }
+    }
+    // Always consume the original placement draws above. Moving an assigned
+    // community must not also change its founder phenotypes or runtime RNG.
+    const index = speciesIndices[species]++;
+    const community = Math.floor(index / 2) % groupCounts[species];
+    if (community > 0) {
+      const localRng = createRng(deriveSeed(config?.seed ?? 1, `founder-position:${i}`));
+      const localAnchor = communities[community][species];
+      position = { ...localAnchor };
+      for (let attempt = 0; attempt < spawnRetries; attempt++) {
+        const angle = localRng.nextFloat() * Math.PI * 2;
+        const radius = localRng.nextFloat() * clusterJitter;
+        const candidate = {
+          x: clampToWorld(localAnchor.x + Math.cos(angle) * radius, width),
+          y: clampToWorld(localAnchor.y + Math.sin(angle) * radius, height)
+        };
+        if (resolveLandPosition(candidate)) {
+          position = candidate;
+          break;
+        }
       }
     }
     const genome = createCreatureGenome({ config, species, rng });
@@ -335,6 +399,8 @@ export function createCreatures({ config, rng, world }) {
       : null;
     creatures.push({
       id: i,
+      lineage: createLineage({ id: i, position, config }),
+      foundingCommunity: community,
       generation: 0,
       position,
       species,

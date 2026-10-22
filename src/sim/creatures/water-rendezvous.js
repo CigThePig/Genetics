@@ -49,3 +49,31 @@ export function updateHerdWaterTargetsOncePerTick({ creatures, config, world, ti
   }
   world.herdWaterTargets = targets;
 }
+
+// Shared knowledge expands options; it must not make a follower bypass closer
+// water it has personally observed. Hysteresis keeps small score changes from
+// swapping a committed destination every tick.
+export function preferredWaterTarget(creature, shared, config) {
+  if (config?.creatureWaterPreferLocal === false || !shared) return shared;
+  const distance = (p) =>
+    Math.hypot(p.x + 0.5 - creature.position.x, p.y + 0.5 - creature.position.y);
+  let best = shared;
+  let bestDistance = distance(shared);
+  const observed = creature.perception?.waterCell;
+  if (observed) {
+    const d = distance(observed);
+    if (d < bestDistance * 0.85) {
+      best = observed;
+      bestDistance = d;
+    }
+  }
+  for (const p of creature.memory?.entries ?? []) {
+    if (p.type !== MEMORY_TYPES.WATER || !(p.strength > 0)) continue;
+    const d = distance(p);
+    if (d < bestDistance * 0.85) {
+      best = p;
+      bestDistance = d;
+    }
+  }
+  return best;
+}

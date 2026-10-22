@@ -1,0 +1,140 @@
+{
+  "protocol": "Alternating order, seed 42, 2400 warmup + 1200 measured ticks per trial; default 80 founders. Different behavior trajectories can change actor counts. Shared execution host, not device certification.",
+  "rows": [
+    {
+      "name": "original",
+      "trial": 0,
+      "initMs": 116.45129299999996,
+      "retainedMiB": 1.0884628295898438,
+      "stateBytes": 8516817,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 3.255687605833312,
+        "p50": 3.4832810000007157,
+        "p95": 4.1515049999998155,
+        "p99": 5.372817999999825
+      }
+    },
+    {
+      "name": "default",
+      "trial": 0,
+      "initMs": 138.22101699999985,
+      "retainedMiB": 0.11338043212890625,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.503683541666675,
+        "p50": 2.2279660000021977,
+        "p95": 3.5748880000028294,
+        "p99": 4.809387000001152
+      }
+    },
+    {
+      "name": "range-option",
+      "trial": 0,
+      "initMs": 79.11968699999852,
+      "retainedMiB": -0.5269546508789062,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 72,
+      "tickMs": {
+        "mean": 2.5127519475000097,
+        "p50": 2.3263540000007197,
+        "p95": 3.515099000000191,
+        "p99": 4.456763000001956
+      }
+    },
+    {
+      "name": "range-option",
+      "trial": 1,
+      "initMs": 75.4974280000024,
+      "retainedMiB": -0.09564971923828125,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 72,
+      "tickMs": {
+        "mean": 2.520425791666706,
+        "p50": 2.2578900000007707,
+        "p95": 3.5605970000033267,
+        "p99": 4.794423999999708
+      }
+    },
+    {
+      "name": "default",
+      "trial": 1,
+      "initMs": 62.15508899999986,
+      "retainedMiB": -0.259857177734375,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.3999137925000467,
+        "p50": 2.107335000000603,
+        "p95": 3.5511829999959446,
+        "p99": 4.9498339999991
+      }
+    },
+    {
+      "name": "original",
+      "trial": 1,
+      "initMs": 80.44365200000175,
+      "retainedMiB": -0.2975921630859375,
+      "stateBytes": 8516817,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.8667174083332427,
+        "p50": 2.52015499999834,
+        "p95": 3.9163209999969695,
+        "p99": 5.255734000005759
+      }
+    },
+    {
+      "name": "original",
+      "trial": 2,
+      "initMs": 75.08697400000528,
+      "retainedMiB": -0.12104034423828125,
+      "stateBytes": 8516817,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.5053163775000638,
+        "p50": 2.329719000001205,
+        "p95": 3.636601000005612,
+        "p99": 4.551466000004439
+      }
+    },
+    {
+      "name": "default",
+      "trial": 2,
+      "initMs": 65.6133070000069,
+      "retainedMiB": -0.18264007568359375,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 3.1483571166664963,
+        "p50": 3.36442199999874,
+        "p95": 4.324083999992581,
+        "p99": 5.178637000004528
+      }
+    },
+    {
+      "name": "range-option",
+      "trial": 2,
+      "initMs": 64.12328200000047,
+      "retainedMiB": -0.28607177734375,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 72,
+      "tickMs": {
+        "mean": 2.7266710725000305,
+        "p50": 2.3657830000011018,
+        "p95": 3.694810000000871,
+        "p99": 4.872537999995984
+      }
+    }
+  ]
+}

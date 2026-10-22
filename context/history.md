@@ -88,3 +88,9 @@ The execution environment recovered and all 146 original manifest entries verifi
 ## 2026-10-21 — PR #140 latest camera/terrain API review
 
 Confirmed both new findings. Camera viewport/bounds changes reapply the fit-dependent zoom floor, including small rebuilt worlds and cleared bounds. Redefined the existing terrain algorithm as an explicit config.seed API and removed its unused RNG parameter and ineffective terrain stream; geography itself is unchanged. Added four pre-fix-failing regressions (256 total tests). Thirty original-size plus three target-size world comparisons are byte-identical to the reviewed generator, and three canonical 600-tick states match archived hashes. See the latest section of tracks/2026-10-21-world-generation/review.md for migration details, validation and limits. No merge/deployment.
+
+## 2026-10-22 — Spatial population ecology
+
+Measured spatial/reproductive/genetic dynamics across ten seeds, 61 ecological runs (2,844,000 ticks), including nine 108,000-tick comparisons. Added bounded passive pedigree/neutral segregation, local founder communities with matched founding genomes and intact small predator cohorts, personal-water precedence over farther social destinations, inspector natal displacement, and reusable offline analysis/archive/browser tools. Two residency candidates were tested and removed after inconsistent results. Neither general divergence improvement nor sustained habitat adaptation is claimed. Default size/count/speeds and phenotypic inheritance remain; two founder communities are used when cohort size permits.
+
+Production verification: canonical 36,000-tick invariant soaks, normalized replay checks and full verify; final counts/results are in tracks/2026-10-22-spatial-ecology/evidence.md and measurements.md. Exact experimental sources are preserved in a small incremental Git bundle. Detailed histories remain offline. No merge or deployment authorized.

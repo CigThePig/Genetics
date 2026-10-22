@@ -1,4 +1,11 @@
 export const metaMemory1 = {
+  creatureWaterPreferLocal: {
+    label: 'Prefer Local Water',
+    description:
+      'Use closer personally observed water before following a herd drinking destination.',
+    category: 'memory',
+    advanced: true
+  },
   creatureMemoryMaxEntries: {
     label: 'Memory Max Entries',
     description: 'Max memory entries per creature.',

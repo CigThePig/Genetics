@@ -6,3 +6,5 @@ coverage/
 tracks/2026-10-20-pre-track12-foundation/evidence/
 # Reproducible map rasters, profiler output and ecological telemetry
 tracks/2026-10-21-world-generation/evidence/
+# Spatial ecology telemetry, immutable replay bundle and generated figures
+tracks/2026-10-22-spatial-ecology/evidence/

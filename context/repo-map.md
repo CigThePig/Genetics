@@ -384,3 +384,18 @@ Rules:
 
 - tests/world-latest-review.test.js
   - Viewport/rebuild zoom-floor changes and the explicit seed-only terrain API through both public import paths.
+
+## Spatial population ecology (2026-10-22)
+
+- src/sim/creatures/lineage.js
+  - Passive birthplace/pedigree and independent neutral allele inheritance; spawn and reproduction own lifecycle calls.
+- src/sim/spatial-metrics.js
+  - Read-only fixed-bin neutral heterozygosity partition with explicit sparse-sample guards.
+- scripts/verify-spatial-ecology.mjs, analyze-spatial-ecology.mjs, spatial-report.mjs
+  - Seeded paired movement/breeding/genetic experiments, deduplicated archive decoding and position-shuffled structure comparisons; detailed history stays outside gameplay.
+- scripts/benchmark-spatial.mjs, plot-spatial-ecology.py, summarize-spatial.py
+  - Reproducible timing comparisons, static figures and compact study tables.
+- scripts/verify-spatial-browser.cjs
+  - External Chromium app/inspector/read-only checks, temporal captures and frame/TPS measurements.
+- tracks/2026-10-22-spatial-ecology/
+  - Scope, selected/rejected mechanisms, reproduction commands and ecological/genetic evidence.
