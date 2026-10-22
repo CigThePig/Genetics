@@ -61,3 +61,5 @@ Real Chromium checks exercise desktop and 390×844 touch layout, normal/2× prog
 - Regression coverage includes neutral segregation, paternal-death pregnancy, copied state/reset, sample-size/monomorphism guards, founder genome preservation/sex pairs/tiny/extreme maps, personal-water commitment priority and pedigree analysis.
 
 [Tooling and archive format](tooling.md) explains original-observer limitations, units, censoring, genotype retention, sampling/permutation interpretation and exact-source replay through the small incremental Git bundle. Archives preserve measured observations; deterministic outcomes are not hard-coded tests for a desired amount of divergence.
+
+Closeout: [PR #141](https://github.com/CigThePig/Genetics/pull/141) is open and unmerged. [Hosted Verify](https://github.com/CigThePig/Genetics/actions/runs/39711800631) passes on implementation commit 1d2de8b. No automated review submissions or inline findings were available at the closeout checks.
