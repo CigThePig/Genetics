@@ -1,0 +1,593 @@
+{
+  "provenance": "Recovered from recorded local tool outputs after executor disconnection. Original raw archives were inaccessible; regenerated archives must be labelled independently.",
+  "baselineRevision": "c1163f6dc5c17fecc5bf3672346735abf7941801",
+  "seeds": [
+    1,
+    2,
+    3,
+    7,
+    19,
+    42,
+    73,
+    101,
+    1337,
+    2026
+  ],
+  "ticks": 72000,
+  "configuration": {
+    "worldWidth": 120,
+    "worldHeight": 160,
+    "founders": {
+      "square": 36,
+      "circle": 36,
+      "triangle": 4,
+      "octagon": 4
+    },
+    "balancedFoundingSex": true,
+    "initialAgeTicks": 0,
+    "nominalMaxAgeSeconds": 540
+  },
+  "endpoints": {
+    "baseline": {
+      "square": [
+        62,
+        79,
+        83,
+        23,
+        56,
+        67,
+        97,
+        85,
+        48,
+        57
+      ],
+      "circle": [
+        56,
+        150,
+        112,
+        63,
+        103,
+        84,
+        74,
+        76,
+        114,
+        36
+      ],
+      "triangle": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        7,
+        4,
+        0
+      ],
+      "octagon": [
+        8,
+        2,
+        0,
+        1,
+        0,
+        5,
+        1,
+        0,
+        0,
+        0
+      ]
+    },
+    "revised": {
+      "square": [
+        84,
+        190,
+        90,
+        143,
+        104,
+        42,
+        144,
+        157,
+        124,
+        70
+      ],
+      "circle": [
+        130,
+        248,
+        143,
+        113,
+        87,
+        108,
+        146,
+        149,
+        128,
+        87
+      ],
+      "triangle": [
+        4,
+        4,
+        4,
+        1,
+        2,
+        0,
+        5,
+        9,
+        7,
+        0
+      ],
+      "octagon": [
+        3,
+        10,
+        5,
+        4,
+        0,
+        5,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  },
+  "aggregates": {
+    "square": {
+      "births": [
+        1506,
+        2236
+      ],
+      "matureOffspring": [
+        1403,
+        2002
+      ],
+      "offspringWithMatureChildren": [
+        978,
+        1468
+      ],
+      "deadImmature": [
+        10,
+        27
+      ],
+      "censoredImmature": [
+        93,
+        207
+      ],
+      "extinctions": [
+        0,
+        0
+      ],
+      "additionalClosedCensus": [
+        0,
+        0
+      ],
+      "founderMatureDaughtersPerFemale": [
+        1.238888888888889,
+        1.288888888888889
+      ],
+      "reservesPerMature": [
+        0.801483205362484,
+        0.8048719431777908
+      ],
+      "partnerPerReady": [
+        0.9406424279105962,
+        0.9767084417119887
+      ],
+      "visiblePerReady": [
+        0.1517703514763737,
+        0.20970052717232554
+      ]
+    },
+    "circle": {
+      "births": [
+        1762,
+        2478
+      ],
+      "matureOffspring": [
+        1615,
+        2213
+      ],
+      "offspringWithMatureChildren": [
+        1130,
+        1637
+      ],
+      "deadImmature": [
+        25,
+        27
+      ],
+      "censoredImmature": [
+        122,
+        238
+      ],
+      "extinctions": [
+        0,
+        0
+      ],
+      "additionalClosedCensus": [
+        0,
+        0
+      ],
+      "founderMatureDaughtersPerFemale": [
+        1.3777777777777778,
+        1.3611111111111112
+      ],
+      "reservesPerMature": [
+        0.879054453602377,
+        0.8508263741292215
+      ],
+      "partnerPerReady": [
+        0.95877849002849,
+        0.9831294204614508
+      ],
+      "visiblePerReady": [
+        0.1610502730294397,
+        0.18950428185707932
+      ]
+    },
+    "triangle": {
+      "births": [
+        55,
+        92
+      ],
+      "matureOffspring": [
+        54,
+        89
+      ],
+      "offspringWithMatureChildren": [
+        25,
+        61
+      ],
+      "deadImmature": [
+        0,
+        0
+      ],
+      "censoredImmature": [
+        1,
+        3
+      ],
+      "extinctions": [
+        6,
+        2
+      ],
+      "additionalClosedCensus": [
+        2,
+        3
+      ],
+      "founderMatureDaughtersPerFemale": [
+        0.6,
+        0.7
+      ],
+      "reservesPerMature": [
+        0.6303302017479787,
+        0.6362274859102195
+      ],
+      "partnerPerReady": [
+        0.26641055620511106,
+        0.39048680787811224
+      ],
+      "visiblePerReady": [
+        0.018122598964422917,
+        0.03024897807506503
+      ]
+    },
+    "octagon": {
+      "births": [
+        57,
+        78
+      ],
+      "matureOffspring": [
+        57,
+        75
+      ],
+      "offspringWithMatureChildren": [
+        31,
+        46
+      ],
+      "deadImmature": [
+        0,
+        0
+      ],
+      "censoredImmature": [
+        0,
+        3
+      ],
+      "extinctions": [
+        5,
+        5
+      ],
+      "additionalClosedCensus": [
+        2,
+        0
+      ],
+      "founderMatureDaughtersPerFemale": [
+        0.8,
+        0.75
+      ],
+      "reservesPerMature": [
+        0.612340992012622,
+        0.631324004305705
+      ],
+      "partnerPerReady": [
+        0.37076451557977186,
+        0.29914650490230654
+      ],
+      "visiblePerReady": [
+        0.016090584028605484,
+        0.019750299781335967
+      ]
+    }
+  },
+  "predatorDeathCounts": {
+    "baseline": {
+      "age": 151,
+      "total": 161
+    },
+    "revised": {
+      "age": 174,
+      "total": 187
+    },
+    "ageDeathsWithEmptyHpEnergyOrWater": 0
+  },
+  "topology": {
+    "runs": 20,
+    "birthsAcrossMotherComponent": 0,
+    "birthsOnWater": 0
+  },
+  "controlled": {
+    "runs": 560,
+    "seeds": 10,
+    "ticks": 72000,
+    "extinctions": {
+      "pair": {
+        "square": [
+          2,
+          2
+        ],
+        "circle": [
+          2,
+          2
+        ],
+        "triangle": [
+          2,
+          2
+        ],
+        "octagon": [
+          2,
+          2
+        ]
+      },
+      "four": {
+        "square": [
+          1,
+          0
+        ],
+        "circle": [
+          1,
+          1
+        ],
+        "triangle": [
+          1,
+          0
+        ],
+        "octagon": [
+          0,
+          0
+        ]
+      },
+      "twelve": {
+        "square": [
+          0,
+          0
+        ],
+        "circle": [
+          0,
+          0
+        ],
+        "triangle": [
+          0,
+          0
+        ],
+        "octagon": [
+          0,
+          0
+        ]
+      },
+      "mixed-ages": {
+        "square": [
+          8,
+          6
+        ],
+        "circle": [
+          8,
+          5
+        ],
+        "triangle": [
+          8,
+          6
+        ],
+        "octagon": [
+          7,
+          6
+        ]
+      },
+      "same-sex": {
+        "square": [
+          10,
+          10
+        ],
+        "circle": [
+          10,
+          10
+        ],
+        "triangle": [
+          10,
+          10
+        ],
+        "octagon": [
+          10,
+          10
+        ]
+      },
+      "separated": {
+        "square": [
+          10,
+          10
+        ],
+        "circle": [
+          10,
+          10
+        ],
+        "triangle": [
+          10,
+          10
+        ],
+        "octagon": [
+          10,
+          10
+        ]
+      },
+      "limited": {
+        "square": [
+          10,
+          10
+        ],
+        "circle": [
+          10,
+          10
+        ],
+        "triangle": [
+          10,
+          10
+        ],
+        "octagon": [
+          10,
+          10
+        ]
+      }
+    },
+    "pairMatureOffspring": {
+      "square": [
+        90,
+        138
+      ],
+      "circle": [
+        89,
+        132
+      ],
+      "triangle": [
+        88,
+        128
+      ],
+      "octagon": [
+        85,
+        125
+      ]
+    },
+    "pairCensoredImmature": {
+      "square": [
+        10,
+        17
+      ],
+      "circle": [
+        6,
+        12
+      ],
+      "triangle": [
+        9,
+        14
+      ],
+      "octagon": [
+        4,
+        10
+      ]
+    }
+  },
+  "extendedKnownCensus": {
+    "108000": {
+      "1": [
+        142,
+        304
+      ],
+      "42": [
+        172,
+        223
+      ],
+      "1337": [
+        220,
+        433
+      ]
+    },
+    "144000": {
+      "1": {
+        "baseline": 185,
+        "revised": null,
+        "note": "Revised final checkpoint was not recoverable at environment disconnection; do not claim completion."
+      }
+    }
+  },
+  "verification": {
+    "javascriptTests": 292,
+    "pythonTests": 4,
+    "lint": true,
+    "format": true,
+    "build": true,
+    "canonicalSoaks": [
+      {
+        "seed": 1,
+        "ticks": 36000,
+        "population": 158,
+        "speciesSTCO": [
+          65,
+          5,
+          81,
+          7
+        ],
+        "pregnancies": 199,
+        "births": 171,
+        "chases": 79,
+        "kills": 21,
+        "deaths": 93,
+        "hash": "5f1142aa2c281ac7659aed8daaee166cd099f3a8ad337249a008d6f6264869da"
+      },
+      {
+        "seed": 42,
+        "ticks": 36000,
+        "population": 163,
+        "speciesSTCO": [
+          63,
+          3,
+          91,
+          6
+        ],
+        "pregnancies": 201,
+        "births": 177,
+        "chases": 71,
+        "kills": 23,
+        "deaths": 94,
+        "hash": "d73f2f7cc80c545cb77137b456a73bc1af7b7624be3bbca320fa0722769bbb5d"
+      },
+      {
+        "seed": 1337,
+        "ticks": 36000,
+        "population": 176,
+        "speciesSTCO": [
+          76,
+          5,
+          92,
+          3
+        ],
+        "pregnancies": 216,
+        "births": 185,
+        "chases": 81,
+        "kills": 22,
+        "deaths": 89,
+        "hash": "47430366ee38865a5b689960048cd7ac871e06a5ba6a762e5eb18c713eed01d7"
+      }
+    ],
+    "serializedReplayHashes": [
+      "502b3839c58154b986f126591cf3d512825125ab88cc9e6fe360ff6a9d478adb",
+      "ba14e0c76dbcf0f2ea845cb5cbc35c73f37ee52ff857be02c19410a224ca957a",
+      "e3215392a5f6dc292b6e0f7258b982baecaebf038597bf8253767431e6252271"
+    ],
+    "browser": "Local Chromium install failed; no actual-browser or phone certification from the disconnected environment.",
+    "performance": "Equal-workload final benchmark was not completed before disconnection."
+  }
+}

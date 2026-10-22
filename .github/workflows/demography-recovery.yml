@@ -1,0 +1,218 @@
+name: Demographic evidence recovery
+on:
+  pull_request:
+    types: [opened, reopened]
+permissions:
+  contents: read
+jobs:
+  prepare:
+    if: github.event.pull_request.head.repo.full_name == github.repository && github.head_ref == 'feat/demographic-replacement'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+      statuses: write
+    outputs:
+      sha: ${{ steps.verify.outputs.sha }}
+    env:
+      RECOVERY_BRANCH: ${{ github.head_ref }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.12.2
+          cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci --include=dev --no-audit --no-fund
+      - id: verify
+        name: Format recovered files and verify their exact working tree
+        run: |
+          npm run format
+          npm run verify
+          python -m unittest discover -s tests -p 'test_demography_report.py'
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          if ! git diff --quiet; then
+            git add -u
+            git commit -m "Format recovered demographic implementation after verification"
+            git push origin "HEAD:$RECOVERY_BRANCH"
+          fi
+          echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - name: Record verification against formatted commit
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          node --input-type=module <<'JS'
+          import { execFileSync } from 'node:child_process';
+          const sha=execFileSync('git',['rev-parse','HEAD'],{encoding:'utf8'}).trim();
+          const result=await fetch('https://api.github.com/repos/'+process.env.GITHUB_REPOSITORY+'/statuses/'+sha,{
+            method:'POST',headers:{Authorization:'Bearer '+process.env.GITHUB_TOKEN,Accept:'application/vnd.github+json'},
+            body:JSON.stringify({state:'success',context:'Demographic recovery verification',description:'Tests, lint, format, build and cohort-report tests passed',
+              target_url:process.env.GITHUB_SERVER_URL+'/'+process.env.GITHUB_REPOSITORY+'/actions/runs/'+process.env.GITHUB_RUN_ID})});
+          if(!result.ok)throw Error(await result.text());
+          JS
+  ecology:
+    needs: prepare
+    runs-on: ubuntu-22.04
+    timeout-minutes: 90
+    strategy:
+      fail-fast: false
+      max-parallel: 10
+      matrix:
+        variant: [baseline, final]
+        seed: [1, 2, 3, 7, 19, 42, 73, 101, 1337, 2026]
+    env:
+      SEED: ${{ matrix.seed }}
+      VARIANT: ${{ matrix.variant }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.12.2
+      - name: Prepare immutable baseline
+        run: |
+          git fetch --no-tags origin c1163f6dc5c17fecc5bf3672346735abf7941801 --depth=1
+          git worktree add --detach baseline c1163f6dc5c17fecc5bf3672346735abf7941801
+      - name: Full ecology with explicit checkpoints
+        run: |
+          mkdir -p out
+          ROOT=.
+          if [ "$VARIANT" = baseline ]; then ROOT=baseline; fi
+          case "$SEED" in
+            1) TICKS=144000 ;;
+            42|1337) TICKS=108000 ;;
+            *) TICKS=72000 ;;
+          esac
+          CHECKPOINT=
+          if [ "$TICKS" -gt 72000 ]; then CHECKPOINT=--checkpoints=72000; fi
+          node scripts/investigate-demography.mjs "--root=$ROOT" "--seeds=$SEED" "--ticks=$TICKS" $CHECKPOINT > out/raw.jsonl
+          python3 scripts/archive-demography.py "out/ecology-$VARIANT-$SEED.jsonl.gz" out/raw.jsonl
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demographic-ecology-${{ matrix.variant }}-${{ matrix.seed }}
+          path: out/ecology-*.jsonl.gz
+          overwrite: true
+  controlled:
+    needs: prepare
+    runs-on: ubuntu-22.04
+    timeout-minutes: 45
+    strategy:
+      matrix:
+        variant: [baseline, final]
+    env:
+      VARIANT: ${{ matrix.variant }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.12.2
+      - run: |
+          git fetch --no-tags origin c1163f6dc5c17fecc5bf3672346735abf7941801 --depth=1
+          git worktree add --detach baseline c1163f6dc5c17fecc5bf3672346735abf7941801
+          mkdir -p out
+          ROOT=.
+          if [ "$VARIANT" = baseline ]; then ROOT=baseline; fi
+          node scripts/controlled-demography.mjs "$ROOT" > out/controlled.jsonl
+          python3 -c 'import gzip,os,pathlib;p=pathlib.Path("out");(p/("controlled-"+os.environ["VARIANT"]+".jsonl.gz")).write_bytes(gzip.compress((p/"controlled.jsonl").read_bytes(),mtime=0))'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: demographic-controlled-${{ matrix.variant }}
+          path: out/controlled-*.jsonl.gz
+          overwrite: true
+  diagnostics:
+    needs: prepare
+    runs-on: ubuntu-22.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.prepare.outputs.sha }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.12.2
+          cache: npm
+      - run: npm ci --include=dev --no-audit --no-fund
+      - name: Prepare baseline and newborn-only ablation
+        run: |
+          git fetch --no-tags origin c1163f6dc5c17fecc5bf3672346735abf7941801 --depth=1
+          git worktree add --detach baseline c1163f6dc5c17fecc5bf3672346735abf7941801
+          git worktree add --detach candidate c1163f6dc5c17fecc5bf3672346735abf7941801
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('candidate/src/sim/creatures/reproduction.js')
+          s=p.read_text()
+          assert s.count('reproduction: { cooldownTicks }')==2
+          p.write_text(s.replace('reproduction: { cooldownTicks }','reproduction: { cooldownTicks: 0 }'))
+          PY
+      - name: Independent replay, canonical soaks and equal workload benchmark
+        run: |
+          mkdir -p out
+          node scripts/check-demographic-replay.mjs candidate . > out/replay.jsonl
+          node scripts/verify-simulation.mjs --ticks=36000 > out/soaks.jsonl
+          node scripts/benchmark-demography.mjs baseline . > out/performance.jsonl
+          cat out/performance.jsonl
+      - name: Actual Chromium app and narrow viewport checks
+        run: |
+          npm install --no-save --package-lock=false playwright@1.51.1
+          npx playwright install --with-deps chromium
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('scripts/verify-ecology-browser.cjs')
+          text=p.read_text()
+          old="const out = 'tracks/2026-10-21-predator-ecology/evidence/browser';"
+          assert old in text
+          Path('scripts/verify-demography-browser-recovery.cjs').write_text(text.replace(old,"const out = 'out/browser';"))
+          PY
+          node scripts/verify-demography-browser-recovery.cjs
+          cp out/browser/results.json out/browser-results.json
+          cat out/browser-results.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: demographic-diagnostics
+          path: |
+            out/*.json
+            out/*.jsonl
+            out/browser/
+          overwrite: true
+  publish:
+    needs: [prepare, ecology, controlled, diagnostics]
+    if: always() && needs.prepare.result == 'success' && needs.ecology.result == 'success' && needs.controlled.result == 'success'
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    env:
+      RECOVERY_BRANCH: ${{ github.head_ref }}
+      SOURCE_SHA: ${{ needs.prepare.outputs.sha }}
+      RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20.12.2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: demographic-*
+          path: incoming
+          merge-multiple: true
+      - run: python -m pip install matplotlib
+      - name: Audit and publish source-pinned evidence on this PR branch
+        run: |
+          python scripts/publish-demographic-evidence.py incoming "$SOURCE_SHA" "$RUN_URL"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tracks/2026-10-22-demographic-replacement/evidence
+          git commit -m "Regenerate audited demographic archives and performance evidence" || test -z "$(git status --porcelain)"
+          git push origin "HEAD:$RECOVERY_BRANCH"
