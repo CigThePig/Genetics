@@ -1,0 +1,95 @@
+{
+  "protocol": "Alternating order, seed 42, 2400 warmup + 1200 measured ticks per trial; default 80 founders. Different behavior trajectories can change actor counts. Shared execution host, not device certification.",
+  "rows": [
+    {
+      "name": "original",
+      "trial": 0,
+      "initMs": 115.99132399999999,
+      "retainedMiB": 1.1151351928710938,
+      "stateBytes": 8516817,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.5289240499999868,
+        "p50": 2.3744770000012068,
+        "p95": 3.4695110000002387,
+        "p99": 4.775894000000335
+      }
+    },
+    {
+      "name": "default",
+      "trial": 0,
+      "initMs": 107.07476599999973,
+      "retainedMiB": 0.11859893798828125,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.2927117533333954,
+        "p50": 2.1610360000013316,
+        "p95": 3.112825000000157,
+        "p99": 4.114228999998886
+      }
+    },
+    {
+      "name": "default",
+      "trial": 1,
+      "initMs": 84.61502800000017,
+      "retainedMiB": -0.37866973876953125,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.3268465549999626,
+        "p50": 2.1761289999994915,
+        "p95": 3.1847039999993285,
+        "p99": 4.362923999997292
+      }
+    },
+    {
+      "name": "original",
+      "trial": 1,
+      "initMs": 76.46639900000082,
+      "retainedMiB": -0.3001861572265625,
+      "stateBytes": 8516817,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.533091800833293,
+        "p50": 2.415005000002566,
+        "p95": 3.2602870000046096,
+        "p99": 4.148681000006036
+      }
+    },
+    {
+      "name": "original",
+      "trial": 2,
+      "initMs": 76.34290699999838,
+      "retainedMiB": -0.1162567138671875,
+      "stateBytes": 8516817,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.939626547499902,
+        "p50": 2.7420510000010836,
+        "p95": 4.143963000002259,
+        "p99": 5.499004999997851
+      }
+    },
+    {
+      "name": "default",
+      "trial": 2,
+      "initMs": 77.260623999995,
+      "retainedMiB": -0.09032440185546875,
+      "stateBytes": 8532918,
+      "finalPopulation": 80,
+      "learnedRanges": 0,
+      "tickMs": {
+        "mean": 2.3449514008336276,
+        "p50": 2.168427000004158,
+        "p95": 3.294848000005004,
+        "p99": 4.652602999994997
+      }
+    }
+  ]
+}

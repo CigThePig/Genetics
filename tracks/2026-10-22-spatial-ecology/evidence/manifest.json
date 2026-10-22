@@ -1,0 +1,1097 @@
+{
+  "baselineMain": "5740523524ebce6760786e78dbece18f43ba7d1d",
+  "experiments": [
+    {
+      "experiment": "baseline",
+      "seed": 1,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": null,
+      "overrides": {},
+      "outcome": "ee93090de2ff46f497cac77d14bbbb80f69b047f05dc97e4646c12f72b0f8fdc",
+      "file": "baseline/seed-1.json.gz"
+    },
+    {
+      "experiment": "baseline",
+      "seed": 1337,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": null,
+      "overrides": {},
+      "outcome": "ac7f93344c272d76575ded50a8bf2c04eec40629b47b0dd3dbb6cc875734ce87",
+      "file": "baseline/seed-1337.json.gz"
+    },
+    {
+      "experiment": "baseline",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": null,
+      "overrides": {},
+      "outcome": "ea4813c530d122dcf742cf1fddb498462a05908fc4a0a89cff9d8a7f671ec2e7",
+      "file": "baseline/seed-42.json.gz"
+    },
+    {
+      "experiment": "baseline-broad",
+      "seed": 101,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "dc49636f0a875ebb3efe402d7db3547ec0bc4e1b7f1540f5bdb27d0c16ecbf1e",
+      "file": "baseline-broad/seed-101.json.gz"
+    },
+    {
+      "experiment": "baseline-broad",
+      "seed": 19,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "4590b16d9fb4ec03f8edf696de2d36270795ea670bef67bb200e289315365816",
+      "file": "baseline-broad/seed-19.json.gz"
+    },
+    {
+      "experiment": "baseline-broad",
+      "seed": 2,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "f03e75a80ff3b76cca1f861003df3c6b29bc4d6164a7140bbb58d6b1b96336f9",
+      "file": "baseline-broad/seed-2.json.gz"
+    },
+    {
+      "experiment": "baseline-broad",
+      "seed": 2026,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "c7a972262908ad27054063d4948b207028eea6e4249371a620d8c0b3c8356540",
+      "file": "baseline-broad/seed-2026.json.gz"
+    },
+    {
+      "experiment": "baseline-broad",
+      "seed": 3,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "c07513f843c837fe39794a6c771c05833e54397f7d81ab6ded0335df97e57cf3",
+      "file": "baseline-broad/seed-3.json.gz"
+    },
+    {
+      "experiment": "baseline-broad",
+      "seed": 7,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "341808e45f075372d0c980d260f78b23353f7e549bd83830a6f1637cd787df67",
+      "file": "baseline-broad/seed-7.json.gz"
+    },
+    {
+      "experiment": "baseline-broad",
+      "seed": 73,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "34b45a715bfe10b7d03a2eff34a19070ec0e6181d954fd73f29e8ec1a0305493",
+      "file": "baseline-broad/seed-73.json.gz"
+    },
+    {
+      "experiment": "long-baseline",
+      "seed": 1,
+      "ticks": 108000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "c22675d9543c338ed43b7110c4f2e0acd651d10c7c42adb8303b7acce3397ce4",
+      "file": "long-baseline/seed-1.json.gz"
+    },
+    {
+      "experiment": "long-baseline",
+      "seed": 1337,
+      "ticks": 108000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "f44b518c4327f804e5931f79461a852b775a9a0b12e39337b2a491aa076111c1",
+      "file": "long-baseline/seed-1337.json.gz"
+    },
+    {
+      "experiment": "long-baseline",
+      "seed": 42,
+      "ticks": 108000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "c5a514a8a2be4b66579c40380959cc2567dc9b514e7803336deffd97c21e2650",
+      "overrides": {},
+      "outcome": "ee181d6a15c65cf820a8a7a7e549cc7b20f7cd624dc76527fa80d6f67f34e1db",
+      "file": "long-baseline/seed-42.json.gz"
+    },
+    {
+      "experiment": "familiar",
+      "seed": 1,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": null,
+      "overrides": {
+        "creatureFamiliarityWeight": 1
+      },
+      "outcome": "862e8c3ae18c4980e837112a4ea8aa3aa95bd850dbe7a11d3aa6f45f4a47f695",
+      "file": "familiar/seed-1.json.gz"
+    },
+    {
+      "experiment": "familiar",
+      "seed": 1337,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": null,
+      "overrides": {
+        "creatureFamiliarityWeight": 1
+      },
+      "outcome": "8ef72a80fbc3801d06ded9f612d98cd31d880b3ecab0ce1adc26c4c3707d582b",
+      "file": "familiar/seed-1337.json.gz"
+    },
+    {
+      "experiment": "familiar",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": null,
+      "overrides": {
+        "creatureFamiliarityWeight": 1
+      },
+      "outcome": "6faff90c38ed7e68a099472b318e4226314ff4dad096d21dcbaf407659e15646",
+      "file": "familiar/seed-42.json.gz"
+    },
+    {
+      "experiment": "groups",
+      "seed": 1,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": null,
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "ac2597d78e71d2c7073cba95487c03052bcfb92bcde65ed0a739f786412b8125",
+      "file": "groups/seed-1.json.gz"
+    },
+    {
+      "experiment": "groups",
+      "seed": 1337,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": null,
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "e3b1d1ca5211e6af60cf6dd931d081fcc630a5085575efbf34bb28616d310603",
+      "file": "groups/seed-1337.json.gz"
+    },
+    {
+      "experiment": "groups",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": null,
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "e40ce6f7ef407bb65df9823dcb592c627f6ddd300a8b4363ad1f6e516aade1a3",
+      "file": "groups/seed-42.json.gz"
+    },
+    {
+      "experiment": "combined",
+      "seed": 1,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "487f4a1b04c2fc2eace702bcbc492055e220f50a2373c07939aaaf186e121939",
+      "overrides": {
+        "creatureFounderGroups": 2,
+        "creatureFamiliarityWeight": 1
+      },
+      "outcome": "6cb1fb0c370f30bf8f6b5d825e56a6878e8c66eaf423e49d0150b61f16992895",
+      "file": "combined/seed-1.json.gz"
+    },
+    {
+      "experiment": "combined",
+      "seed": 1337,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "487f4a1b04c2fc2eace702bcbc492055e220f50a2373c07939aaaf186e121939",
+      "overrides": {
+        "creatureFounderGroups": 2,
+        "creatureFamiliarityWeight": 1
+      },
+      "outcome": "0f7f231bc6f6ac8440d54fadf0a27bcc7758b9f3c6cd4a568fc9343a1b6f2921",
+      "file": "combined/seed-1337.json.gz"
+    },
+    {
+      "experiment": "combined",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "487f4a1b04c2fc2eace702bcbc492055e220f50a2373c07939aaaf186e121939",
+      "overrides": {
+        "creatureFounderGroups": 2,
+        "creatureFamiliarityWeight": 1
+      },
+      "outcome": "2d0f5ca0b94144b17377c2576af0eda1496162e804ffe07f64d3c16ddf0d1195",
+      "file": "combined/seed-42.json.gz"
+    },
+    {
+      "experiment": "local-water",
+      "seed": 1,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "75eba1ddd054899feb0349a8bde2e312742fdf06df819b143aba734ed19f53bb",
+      "overrides": {},
+      "outcome": "2d5be2156df02d68dfe806aaee24df1bdfa902f78187f00ce129a2c14d09792e",
+      "file": "local-water/seed-1.json.gz"
+    },
+    {
+      "experiment": "local-water",
+      "seed": 1337,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "75eba1ddd054899feb0349a8bde2e312742fdf06df819b143aba734ed19f53bb",
+      "overrides": {},
+      "outcome": "7c19222f7b05dca8f8b302f1f68555938925c3db987490fc993ea6abd2f26775",
+      "file": "local-water/seed-1337.json.gz"
+    },
+    {
+      "experiment": "local-water",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "6c5027d5ff71c366ce327ea78183bb477ea54b4c",
+      "sourceFingerprint": "75eba1ddd054899feb0349a8bde2e312742fdf06df819b143aba734ed19f53bb",
+      "overrides": {},
+      "outcome": "bf570b7d1bff6453713a4c3b9037d677e2fd7e746d9e7f382f975533321a96e8",
+      "file": "local-water/seed-42.json.gz"
+    },
+    {
+      "experiment": "water-broad",
+      "seed": 101,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {},
+      "outcome": "c4d799a37225be289cba2aa5b3d65a6099003ee3e8e61e16ab6fc6b356561c14",
+      "file": "water-broad/seed-101.json.gz"
+    },
+    {
+      "experiment": "water-broad",
+      "seed": 19,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {},
+      "outcome": "f90971d107d34ef2cb589ef4a95d1277cee7c905dd5a077c474e93f78bf5f413",
+      "file": "water-broad/seed-19.json.gz"
+    },
+    {
+      "experiment": "water-broad",
+      "seed": 2,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {},
+      "outcome": "8bb789a801e41133dcc8a566f37322254a7135731bb2a6153e91aea02b1f9de6",
+      "file": "water-broad/seed-2.json.gz"
+    },
+    {
+      "experiment": "water-broad",
+      "seed": 2026,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {},
+      "outcome": "715bb686c7c980ae210f83cb47885e430041c8b62b0beff378075d6501d1863e",
+      "file": "water-broad/seed-2026.json.gz"
+    },
+    {
+      "experiment": "water-broad",
+      "seed": 3,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {},
+      "outcome": "441c096f014a40ea1dbc3eb14e22508b806a764bd228c07a7bacba5460046590",
+      "file": "water-broad/seed-3.json.gz"
+    },
+    {
+      "experiment": "water-broad",
+      "seed": 7,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {},
+      "outcome": "8f94eaa1bfbab69e106b4ac40a83d1417fbcc48c4ee0b2a2bce7e01613f0f407",
+      "file": "water-broad/seed-7.json.gz"
+    },
+    {
+      "experiment": "water-broad",
+      "seed": 73,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {},
+      "outcome": "5e912ccefbad39f8b263f29cc54938ccc5f63a45263030fc4b8cba3d21f44b9e",
+      "file": "water-broad/seed-73.json.gz"
+    },
+    {
+      "experiment": "final-broad",
+      "seed": 101,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "e7c114ddab23cceafc140c1dd79705ab719a396e4442ae7124e207572a81a71c",
+      "file": "final-broad/seed-101.json.gz"
+    },
+    {
+      "experiment": "final-broad",
+      "seed": 19,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "d0ee8b47b7dea2d3f64dc59b3bfa7a12ca8fb8bc465b14ec425b3fe0cb7a2711",
+      "file": "final-broad/seed-19.json.gz"
+    },
+    {
+      "experiment": "final-broad",
+      "seed": 2,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "4f0f8ba96d3db65491ba30739e034fef6daa5cc35d172f9304f44cba4cfb747c",
+      "file": "final-broad/seed-2.json.gz"
+    },
+    {
+      "experiment": "final-broad",
+      "seed": 2026,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "d81d3c6f281795a38d380c3dfe404e97b7a35e7b90dc8a4d23e44ca19a0e0041",
+      "file": "final-broad/seed-2026.json.gz"
+    },
+    {
+      "experiment": "final-broad",
+      "seed": 3,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "30d75b7c861065d5e12fe7dc51d6fe6b8c2a1026c56d143010a626cbeb2b4dcf",
+      "file": "final-broad/seed-3.json.gz"
+    },
+    {
+      "experiment": "final-broad",
+      "seed": 7,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "fd9c3e16cf7b80ce13b0043b5a8d04e4960f5ebd865c7dac5ab727a56e0556e4",
+      "file": "final-broad/seed-7.json.gz"
+    },
+    {
+      "experiment": "final-broad",
+      "seed": 73,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "7348387b95d21c2bd39cea21440855492f250011258294e5d6cf9d9e9261cfa5",
+      "file": "final-broad/seed-73.json.gz"
+    },
+    {
+      "experiment": "long-groups-water",
+      "seed": 1,
+      "ticks": 108000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "530c81d31e7ac64259711df3ba209025b5dac8b8c1652faa3bf8f4fa81882c54",
+      "file": "long-groups-water/seed-1.json.gz"
+    },
+    {
+      "experiment": "long-groups-water",
+      "seed": 1337,
+      "ticks": 108000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "4fd3891ab1815d3508f7996db7e5e23a8d84bb8a24da17a5f863fa0604388a5c",
+      "file": "long-groups-water/seed-1337.json.gz"
+    },
+    {
+      "experiment": "long-groups-water",
+      "seed": 42,
+      "ticks": 108000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2
+      },
+      "outcome": "89a9458b5017daa5b5469df60f2d0e34ec756fa68d18ce31833bf331738f6223",
+      "file": "long-groups-water/seed-42.json.gz"
+    },
+    {
+      "experiment": "residency-v2",
+      "seed": 1,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "07999c0db34e2d1448378fac18f3a71cbc7fb6ee3ff468b03847c82fca204318",
+      "file": "residency-v2/seed-1.json.gz"
+    },
+    {
+      "experiment": "residency-v2",
+      "seed": 1337,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "f5f90f535d779d557e075bddf744afdd686ff9995e556d3224b7bfcf255e9060",
+      "file": "residency-v2/seed-1337.json.gz"
+    },
+    {
+      "experiment": "residency-v2",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "ace8facb33b16cd28608592c005c2052636ac0af64194b29a13fd167d80b2fee",
+      "file": "residency-v2/seed-42.json.gz"
+    },
+    {
+      "experiment": "residency-broad",
+      "seed": 101,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "7b53f6a889b95cf462e6fdde50426993bcc1e0e7829652985322de4906a75362",
+      "file": "residency-broad/seed-101.json.gz"
+    },
+    {
+      "experiment": "residency-broad",
+      "seed": 19,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "42a0c2376bb7d066b28b4d30f650cbf5c044a7d622e9eaa942e78ca5380fcffe",
+      "file": "residency-broad/seed-19.json.gz"
+    },
+    {
+      "experiment": "residency-broad",
+      "seed": 2,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "ee56e317ee807adeddfc01140add59a8c1dfafc43e608fd449f76827bcaaec32",
+      "file": "residency-broad/seed-2.json.gz"
+    },
+    {
+      "experiment": "residency-broad",
+      "seed": 2026,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "5987fa4a6864cf2a5bd1fbb2e17d088dbd6ec71093acc524cae0eafb53670820",
+      "file": "residency-broad/seed-2026.json.gz"
+    },
+    {
+      "experiment": "residency-broad",
+      "seed": 3,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "2404f9d0a337653828843870f68e1a6aeabc58ec32855fa0f07fe24fc7b1db80",
+      "file": "residency-broad/seed-3.json.gz"
+    },
+    {
+      "experiment": "residency-broad",
+      "seed": 7,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "101116d65500adba43bd358329edc948ff2268a3796b59c1b52cf71f80963123",
+      "file": "residency-broad/seed-7.json.gz"
+    },
+    {
+      "experiment": "residency-broad",
+      "seed": 73,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "e5115e6439162cd6c40f057b56637320a905a12ffbc06c574a0f22c1b573c85b",
+      "file": "residency-broad/seed-73.json.gz"
+    },
+    {
+      "experiment": "long-residency",
+      "seed": 1,
+      "ticks": 108000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "436c8a05420d85441b69b91452776e3660f11a6308096e90e0ec7727c303b2d7",
+      "file": "long-residency/seed-1.json.gz"
+    },
+    {
+      "experiment": "long-residency",
+      "seed": 1337,
+      "ticks": 108000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "72b2a182c19250b7da8fd4f1dee32fd08bde0394f079a0093b77a387261adbba",
+      "file": "long-residency/seed-1337.json.gz"
+    },
+    {
+      "experiment": "long-residency",
+      "seed": 42,
+      "ticks": 108000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "700f674d78279d7bf88b778842bb63ec494e3d0f44b1bf2a39a3cfb3e1b34cc6",
+      "overrides": {
+        "creatureResidencyWeight": 1.2
+      },
+      "outcome": "0e8bc221d031c254a9d8789137ef5bbff2e3783b78860b6dc21dc11f8d9c26f9",
+      "file": "long-residency/seed-42.json.gz"
+    },
+    {
+      "experiment": "direction-control",
+      "seed": 1,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "2871578e749512a686783ef1c4a4ac69542c38936b3a84bb54d623edad5b399f",
+      "overrides": {
+        "creatureResidencyWeight": 1e-06
+      },
+      "outcome": "c18055eed636124d53ed7a73fe243223c4d27114bb31f219398fc3ddde002076",
+      "file": "direction-control/seed-1.json.gz"
+    },
+    {
+      "experiment": "direction-control",
+      "seed": 1337,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "2871578e749512a686783ef1c4a4ac69542c38936b3a84bb54d623edad5b399f",
+      "overrides": {
+        "creatureResidencyWeight": 1e-06
+      },
+      "outcome": "3d9a39d451edf25e20635d970fb581bde7b76a33b6be1741aed525c461407629",
+      "file": "direction-control/seed-1337.json.gz"
+    },
+    {
+      "experiment": "direction-control",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "d82ed047b8789e1712aa791f0021e3198b60d60b",
+      "sourceFingerprint": "2871578e749512a686783ef1c4a4ac69542c38936b3a84bb54d623edad5b399f",
+      "overrides": {
+        "creatureResidencyWeight": 1e-06
+      },
+      "outcome": "39fa94013ad948fd3b0a4a82dc740437ca8908a68ab35ccef92596b9ebf224f4",
+      "file": "direction-control/seed-42.json.gz"
+    },
+    {
+      "experiment": "size-180",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2,
+        "worldWidth": 180,
+        "worldHeight": 240
+      },
+      "outcome": "6953ae9cec94974e4eeb26ce05af57c947ebf359c6274ec661a1b2ffe935ded7",
+      "file": "size-180/seed-42.json.gz"
+    },
+    {
+      "experiment": "size-240",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2,
+        "worldWidth": 240,
+        "worldHeight": 320
+      },
+      "outcome": "6d7160a5f7c63b3baf41c0783fab13d5cbccef9ceb61f4357718eecbe66a8437",
+      "file": "size-240/seed-42.json.gz"
+    },
+    {
+      "experiment": "size-240-density",
+      "seed": 42,
+      "ticks": 36000,
+      "source": "d674d8f16ce9483c9612cf3480f8c4912b0910bd",
+      "sourceFingerprint": "1a7ed0fdfc0659ebdf6c3e4b67250f4fdf3091c4674e56ff2844ae3b0b6e5315",
+      "overrides": {
+        "creatureFounderGroups": 2,
+        "worldWidth": 240,
+        "worldHeight": 320,
+        "creatureCount": 128,
+        "creaturePredatorCount": 16
+      },
+      "outcome": "de957bfaf403b1c0be615e640a602f6b257cd06d3cde361465d8fe951f361192",
+      "file": "size-240-density/seed-42.json.gz"
+    }
+  ],
+  "totalRuns": 61,
+  "totalTicks": 2844000,
+  "files": [
+    {
+      "path": "analysis.json.gz",
+      "bytes": 714182,
+      "sha256": "8c920f3c7de1580f490f6f79ebc95b7d9b9f71433e319e3489638dd783e9e898"
+    },
+    {
+      "path": "baseline/seed-1.json.gz",
+      "bytes": 13852,
+      "sha256": "b6ae032448abb4c2d6260c8feb51dcf2dab635782598d871cea3351387dd1417"
+    },
+    {
+      "path": "baseline/seed-1337.json.gz",
+      "bytes": 12638,
+      "sha256": "a97bbfdff18e49e664e25890a9f349c590c8b9707b96147661b8d0e8d562c7b1"
+    },
+    {
+      "path": "baseline/seed-42.json.gz",
+      "bytes": 11502,
+      "sha256": "5d767825feee9840211eae83da3c8f527e0649db6a5ab8e10308087012f762cb"
+    },
+    {
+      "path": "baseline-broad/seed-101.json.gz",
+      "bytes": 102336,
+      "sha256": "ad70877001faab7bb7030f5922b6fc326464a9ddb656414060fa8b8c1d833caa"
+    },
+    {
+      "path": "baseline-broad/seed-19.json.gz",
+      "bytes": 99248,
+      "sha256": "9d65ffc943391ae499cc232cf292e4cf728bc88a7aa9738fbb4a29dd456e0a86"
+    },
+    {
+      "path": "baseline-broad/seed-2.json.gz",
+      "bytes": 100193,
+      "sha256": "d7bea5881a7c1a9b05aa2055c3795b31abd5e92dca0106b67c6073bbb0fa13d2"
+    },
+    {
+      "path": "baseline-broad/seed-2026.json.gz",
+      "bytes": 100939,
+      "sha256": "ae12655aeee8c9b2a0d2065254ff0bc2d076dfb1338f9158c29ae24719c61e68"
+    },
+    {
+      "path": "baseline-broad/seed-3.json.gz",
+      "bytes": 93324,
+      "sha256": "d7222201ddaee9ba2cc2c629b0695b60a0e86623f8c1f302701533dddd3fd37e"
+    },
+    {
+      "path": "baseline-broad/seed-7.json.gz",
+      "bytes": 99122,
+      "sha256": "8af20ee23d5e16233adfa05ccebff050308da0de86b63f6837d38e569d87c426"
+    },
+    {
+      "path": "baseline-broad/seed-73.json.gz",
+      "bytes": 107130,
+      "sha256": "6eed3f4ded4b8fd3d7ff96c014060f7acae13c6fad190a2aa51c10de27c5b0ac"
+    },
+    {
+      "path": "browser/control/desktop-inspector.webp",
+      "bytes": 51874,
+      "sha256": "6c910b7bb7c7e07bbfbd107580bc222ec0f0a48a36c7cb552878929a85950c10"
+    },
+    {
+      "path": "browser/control/mobile-inspector.webp",
+      "bytes": 17162,
+      "sha256": "72241f0db05e4f6002dcbc3ff16200bde3bc10c02f22ea0ee5f2fa83c3e34cfc"
+    },
+    {
+      "path": "browser/control/movement-3.webp",
+      "bytes": 39618,
+      "sha256": "c90d3ea027aa4131b241468e65781be55bb1e0b9d9198561ea6bddc0cc17b7d5"
+    },
+    {
+      "path": "browser/control/results.json",
+      "bytes": 1192,
+      "sha256": "9d0831fc1cbeadf11f421788c3aa44c021b99abea79627403c18ed1ed52760ae"
+    },
+    {
+      "path": "browser/default/desktop-inspector.webp",
+      "bytes": 47766,
+      "sha256": "1241586cbf70bc3e6ec55500cf276e8013467c8c9453e33d865dbee096c37707"
+    },
+    {
+      "path": "browser/default/mobile-inspector.webp",
+      "bytes": 17980,
+      "sha256": "c25632368f950bd0919b73cf4b656574d8d399f6130ed9fd459a6e249711f876"
+    },
+    {
+      "path": "browser/default/movement-3.webp",
+      "bytes": 39524,
+      "sha256": "6af6301aa1b359d5b319c79e53496cf31e45f24d105dcb022a6ff3b51edfa2bb"
+    },
+    {
+      "path": "browser/default/results.json",
+      "bytes": 1177,
+      "sha256": "a29fddd011b36111c7c6e1b05d64565a262779d2e8e2340a4ad7532d05ce2a73"
+    },
+    {
+      "path": "combined/seed-1.json.gz",
+      "bytes": 67675,
+      "sha256": "b186c4abbb272d5cdaa9cca511d17114ae701f0898bfa1c507f6e4368bc952d7"
+    },
+    {
+      "path": "combined/seed-1337.json.gz",
+      "bytes": 74403,
+      "sha256": "6200cc609e219faa2e10d765332d3deb18e9e0e6413aa8d8225218d95a1a613e"
+    },
+    {
+      "path": "combined/seed-42.json.gz",
+      "bytes": 81029,
+      "sha256": "187909edffd0e74ff8ff8d6118e4c645966a00f04affc63b143519a04ef3665f"
+    },
+    {
+      "path": "direction-control/seed-1.json.gz",
+      "bytes": 86605,
+      "sha256": "933b9e6c2a27a2321252526551ec44ca6ba9de25cb3173f6c6fbd98d501b542a"
+    },
+    {
+      "path": "direction-control/seed-1337.json.gz",
+      "bytes": 112362,
+      "sha256": "b28e7e17f7eadbdf1ff00f6dfd1f637b553b95dfc34c4c0c182b4d8fae4a3806"
+    },
+    {
+      "path": "direction-control/seed-42.json.gz",
+      "bytes": 107844,
+      "sha256": "90046fffe3d5e4c187448d2ea9f16cf063589dc640846c8bbcfb7297eed724e0"
+    },
+    {
+      "path": "familiar/seed-1.json.gz",
+      "bytes": 12381,
+      "sha256": "197733f387a2366d0fa61f5258a19f4b474ed76b1eebff5a3d4d7f8e1ec9ce99"
+    },
+    {
+      "path": "familiar/seed-1337.json.gz",
+      "bytes": 11493,
+      "sha256": "cf50443dbc40e89f5710a6628dcc8b18dc94ad410f9cc71e0ca3fac0ab01a7e6"
+    },
+    {
+      "path": "familiar/seed-42.json.gz",
+      "bytes": 13351,
+      "sha256": "51d873233c7472929396bdb8da671f58c3713ebd9d8016e7ff23f468449cfea4"
+    },
+    {
+      "path": "figures/neutral-structure.png",
+      "bytes": 329058,
+      "sha256": "c7bc4c4427439956af28bc6a13cc4b2a30052c61cfb519c5f7ec4f186d4ae29b"
+    },
+    {
+      "path": "figures/populations.png",
+      "bytes": 260227,
+      "sha256": "ffc1c2a62aebfb0636125271a5280a7b8a542026c58e6ba99a87ad9eae57096f"
+    },
+    {
+      "path": "final-broad/seed-101.json.gz",
+      "bytes": 109935,
+      "sha256": "e3a989ecd9e9bd6783ffa6a20ef741129e9858e0cb483267438cf1601d7813d9"
+    },
+    {
+      "path": "final-broad/seed-19.json.gz",
+      "bytes": 102395,
+      "sha256": "37955d48ac2d4bf849e0785bc6cfd6e0c48ec29eacb381bb674e5d1cd0553bbb"
+    },
+    {
+      "path": "final-broad/seed-2.json.gz",
+      "bytes": 105268,
+      "sha256": "6f7f8f21fc7a939f672ac5dd651a6da0c20ee6cd1ad2c7f3dbebeb66cde3a1e6"
+    },
+    {
+      "path": "final-broad/seed-2026.json.gz",
+      "bytes": 81066,
+      "sha256": "13cc0faf170696c655669a1c6834d623c498c9203036e25a2b30f0fbd93d5718"
+    },
+    {
+      "path": "final-broad/seed-3.json.gz",
+      "bytes": 110775,
+      "sha256": "3d6adfb2dcba55bf2052ec780490a75e1bdd32e7ff23c4f149ad2cbaf87744ad"
+    },
+    {
+      "path": "final-broad/seed-7.json.gz",
+      "bytes": 95326,
+      "sha256": "0f4a39b6a56cdcbd7b774bd55b39aa3a15144759af3520b6ba715227aae1d3a7"
+    },
+    {
+      "path": "final-broad/seed-73.json.gz",
+      "bytes": 103084,
+      "sha256": "ef11d46c2226daea49d23b89b229abdb6407b2027af4d7d419bac751595ba052"
+    },
+    {
+      "path": "groups/seed-1.json.gz",
+      "bytes": 12825,
+      "sha256": "3b5e76275cb44ed6409185c42ca2a7d13689fb879b2b84fa194ee1c90e901b84"
+    },
+    {
+      "path": "groups/seed-1337.json.gz",
+      "bytes": 13453,
+      "sha256": "10604db6458b6b98665863315446aebbcf02bf891077ab2958ba09cd075f285c"
+    },
+    {
+      "path": "groups/seed-42.json.gz",
+      "bytes": 11827,
+      "sha256": "c7eef1b592c4450d2390cea00711e48c05dbe277d4df7745040191f24f7baf1a"
+    },
+    {
+      "path": "local-water/seed-1.json.gz",
+      "bytes": 77552,
+      "sha256": "5c5a2a968c3899988564e74b52e35896d718545957dcd3bfb99a46aab0052ba2"
+    },
+    {
+      "path": "local-water/seed-1337.json.gz",
+      "bytes": 76384,
+      "sha256": "a1f700ee1d38dde2caa87cc29fac1b0907f09bb788b57eedae91070e1b2d0d26"
+    },
+    {
+      "path": "local-water/seed-42.json.gz",
+      "bytes": 61644,
+      "sha256": "ce08be0c143db3c0055e2dc2f935bd999c680ce5cbd25d2e4ef457b19ea7a44b"
+    },
+    {
+      "path": "long-baseline/seed-1.json.gz",
+      "bytes": 380312,
+      "sha256": "104de1c8e1aff299528caaa39145a16264e7127859c19ac97e990b66f92ab0d6"
+    },
+    {
+      "path": "long-baseline/seed-1337.json.gz",
+      "bytes": 284396,
+      "sha256": "02f0c4c55f1448734ad6c1379554a92d4938b54d5ec9b1bef9b7c86c4e796d33"
+    },
+    {
+      "path": "long-baseline/seed-42.json.gz",
+      "bytes": 259323,
+      "sha256": "0065faa45b8d5c176a8f70975377ab84f866cae124b5c3027350cba29978f175"
+    },
+    {
+      "path": "long-groups-water/seed-1.json.gz",
+      "bytes": 263963,
+      "sha256": "f0e25ee0c32eeeb98bd80029c2816ee2d80f12a6099dcfea86ed947c8999e654"
+    },
+    {
+      "path": "long-groups-water/seed-1337.json.gz",
+      "bytes": 307219,
+      "sha256": "f73a6c8bcebdc68d3465b0c3ede67a34bbfa33380eceea9ada8ceeffbffb6dd3"
+    },
+    {
+      "path": "long-groups-water/seed-42.json.gz",
+      "bytes": 294640,
+      "sha256": "232515bdb099910fbcdab989fa5ef518fb5f4222e43dbf562839915041a669c2"
+    },
+    {
+      "path": "long-residency/seed-1.json.gz",
+      "bytes": 317492,
+      "sha256": "935b2073c4b403a0d4481b2331afb65e6d0d20795cdce02323fe36b8dcceb75a"
+    },
+    {
+      "path": "long-residency/seed-1337.json.gz",
+      "bytes": 269997,
+      "sha256": "845fbabeed530719aa0bb856a5ce8ea1da79dbd547bf318c9f45628395546917"
+    },
+    {
+      "path": "long-residency/seed-42.json.gz",
+      "bytes": 248709,
+      "sha256": "d1ee815874101e8a2c635897c74399a0285d3681d8939cbcd073ee7e7d4eb813"
+    },
+    {
+      "path": "passive-replay.json",
+      "bytes": 627,
+      "sha256": "966b944a3295a5c3315a938cf00c5ead14a67b136c4d6fd2f77a46e0c3914062"
+    },
+    {
+      "path": "performance-experiments.json",
+      "bytes": 3678,
+      "sha256": "b70843b6e78b5437344c6a39d4df8f4445611074b9ea0350b9ee558bd5cd8341"
+    },
+    {
+      "path": "performance.json",
+      "bytes": 2524,
+      "sha256": "cef91ca45985ad5ceb8c29f232077a3b1d3da20dc20ae53beb4fbcd8704453ab"
+    },
+    {
+      "path": "production-soak.log",
+      "bytes": 1039,
+      "sha256": "69572cd49489682c738143942a6cfa7eb594397c3fc12c721ea90c9f978baa86"
+    },
+    {
+      "path": "replay-equivalence.json",
+      "bytes": 372,
+      "sha256": "f4745d8d8730a1af6d493877809c895c78784786cd507be12fcc98b9ea1105c8"
+    },
+    {
+      "path": "residency-broad/seed-101.json.gz",
+      "bytes": 98842,
+      "sha256": "4c2b362cb1336fe18019af7a411c24a13384cb83df5f0264ee4b3d0407e24569"
+    },
+    {
+      "path": "residency-broad/seed-19.json.gz",
+      "bytes": 99133,
+      "sha256": "1e1e33a36522e60b2620ad340d94e461912ada3b496f7a57f9cfc97205d112a4"
+    },
+    {
+      "path": "residency-broad/seed-2.json.gz",
+      "bytes": 102969,
+      "sha256": "d535511c285d404fbb3e61c355d8b1a7bc1312b430683d1786875b3849388ee1"
+    },
+    {
+      "path": "residency-broad/seed-2026.json.gz",
+      "bytes": 98881,
+      "sha256": "fa5d7cf27ac17479b57ff76a0c74972d464f7600fd0192e82c98710883b24757"
+    },
+    {
+      "path": "residency-broad/seed-3.json.gz",
+      "bytes": 109308,
+      "sha256": "b7749a193b5709f813fd735ab59a21b3317fa8d6474b93c127b2850b0f02e0a5"
+    },
+    {
+      "path": "residency-broad/seed-7.json.gz",
+      "bytes": 96195,
+      "sha256": "087c90f05a30fa8919c5c9456da6a448efc8a98ba6b9ee0214d85eea3d233e25"
+    },
+    {
+      "path": "residency-broad/seed-73.json.gz",
+      "bytes": 99016,
+      "sha256": "26255780d7b8d335623f96d9c66b7b23f313153fe9ac0af1f637ff77d222c374"
+    },
+    {
+      "path": "residency-v2/seed-1.json.gz",
+      "bytes": 95471,
+      "sha256": "725fd8249188ae9d5feebbd4793d191a58eeff12809d88d5c2c90144bac773a6"
+    },
+    {
+      "path": "residency-v2/seed-1337.json.gz",
+      "bytes": 104901,
+      "sha256": "85ef90b75fdd40c60055136d9e3c7b29f71cba629dfa2339ce700f308aa01602"
+    },
+    {
+      "path": "residency-v2/seed-42.json.gz",
+      "bytes": 94792,
+      "sha256": "de55e1c1481bd3ad25804fb29d66a2745c0e9cb90ab93e93a8bf88bc9a1e9ba5"
+    },
+    {
+      "path": "size-180/seed-42.json.gz",
+      "bytes": 101163,
+      "sha256": "43b24367ba206d88611cf937fafdff55ac54a11830db6d427df5914571ec9302"
+    },
+    {
+      "path": "size-240/seed-42.json.gz",
+      "bytes": 109588,
+      "sha256": "7cf95a2b0404e2bd0adf5f481fda54dad8076447f8012982a6452ce204af3fee"
+    },
+    {
+      "path": "size-240-density/seed-42.json.gz",
+      "bytes": 175060,
+      "sha256": "3123fa4740e223b3b5c02d6bbc2c3487024d184e6eaef25750519ed1fa6114e6"
+    },
+    {
+      "path": "source-experiments.bundle",
+      "bytes": 36908,
+      "sha256": "d2f1a03ed05d2573a5d93450927ea45ca3440248e9833266e88418b998265efa"
+    },
+    {
+      "path": "water-broad/seed-101.json.gz",
+      "bytes": 110170,
+      "sha256": "bd748f23fc48b0d0fc8afdfdd5e7bd523e903f460e65c7b41a5037c3ead74a7b"
+    },
+    {
+      "path": "water-broad/seed-19.json.gz",
+      "bytes": 97157,
+      "sha256": "830015ae407458aa7f8b38b443777515728a17fe48a2d677ea533cdfafdae98e"
+    },
+    {
+      "path": "water-broad/seed-2.json.gz",
+      "bytes": 94050,
+      "sha256": "7b310d2db84d9b1c809c239fbe6c6c0419a1f2497daa28a73e8a82cac32f7510"
+    },
+    {
+      "path": "water-broad/seed-2026.json.gz",
+      "bytes": 100372,
+      "sha256": "7beb43933d194fd4f799dc8a9da34e4173107cc4f4cda65c609ecaf505d43361"
+    },
+    {
+      "path": "water-broad/seed-3.json.gz",
+      "bytes": 101638,
+      "sha256": "81ba92a5a7d0579a681e2c4da3e9ccd33361938b11aeb63460a1b2059af4052f"
+    },
+    {
+      "path": "water-broad/seed-7.json.gz",
+      "bytes": 92534,
+      "sha256": "520bdbb73d29dd2ae8e6bc400728ef41ba9adc361c09f6681819abf9c3cf5ce1"
+    },
+    {
+      "path": "water-broad/seed-73.json.gz",
+      "bytes": 99909,
+      "sha256": "326e1abdded65b2b84cb4dc5965b7c1c9718903a2ef999bb673f306f83d3fcb5"
+    }
+  ],
+  "archiveFormat": "spatial-report-deduplicated-v1; nine tracked functional loci plus sixteen diploid neutral loci"
+}

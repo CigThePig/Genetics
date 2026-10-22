@@ -454,6 +454,16 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     const contacts = creature.reproduction?.contacts?.entries ?? [];
     if (contacts.length)
       behaviorBody.append(row('Remembered mate contacts', String(contacts.length)));
+    if (creature.lineage?.birthplace) {
+      const birth = creature.lineage.birthplace;
+      behaviorBody.append(row('Birthplace', `${birth.x.toFixed(1)}, ${birth.y.toFixed(1)}`));
+      behaviorBody.append(
+        row(
+          'Natal displacement',
+          `${Math.hypot(creature.position.x - birth.x, creature.position.y - birth.y).toFixed(1)} tiles`
+        )
+      );
+    }
     const destination = creature.intent?.target;
     if (
       creature.intent?.type === 'seek' &&

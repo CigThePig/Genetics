@@ -1,0 +1,19 @@
+{
+  "ticks": 600,
+  "config": {
+    "seed": 42,
+    "creatureCount": 6,
+    "creaturePredatorCount": 0,
+    "creatureReproductionMinAge": 0,
+    "creatureReproductionMinEnergyRatio": 0,
+    "creatureReproductionMinWaterRatio": 0,
+    "creatureReproductionRange": 100,
+    "creatureReproductionRangeWhileSeeking": 100,
+    "creatureMateSeekRange": 100,
+    "creatureGestationTime": 1,
+    "colourMatePreferenceEnabled": false
+  },
+  "births": 1,
+  "hash": "365eacec0bfbff9682c78e33de29936ca1f1d8719d84ac4d1658d3bb0408c27a",
+  "method": "Exclude passive lineage fields and world function identities; serialize Maps as entries."
+}

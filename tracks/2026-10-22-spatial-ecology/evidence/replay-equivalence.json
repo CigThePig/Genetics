@@ -1,0 +1,17 @@
+[
+  {
+    "seed": 1,
+    "ticks": 3600,
+    "hash": "4894965aaacb1876ceb47b1e2c24b9e7d0b2b0c7d72a3e3ebbad48b850cf5fa2"
+  },
+  {
+    "seed": 42,
+    "ticks": 3600,
+    "hash": "ac5995dc3df683aa3a40946fd56e56892ebddf3b97da2580fad2beebf42fb430"
+  },
+  {
+    "seed": 1337,
+    "ticks": 3600,
+    "hash": "cb7f5babeadd706c1a82a46e6068d6b2346a4dad19cf8f9b1ebe04acc6b541b2"
+  }
+]

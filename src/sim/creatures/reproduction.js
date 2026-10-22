@@ -1,3 +1,4 @@
+import { createLineage } from './lineage.js';
 import { createCreatureTraits } from './traits.js';
 import { inheritCreatureGenome, mutateCreatureGenome } from './genetics.js';
 import { resolveTicksPerSecond, createLifeStageState } from './life-stages.js';
@@ -208,6 +209,7 @@ export function updateCreatureReproduction({
         pregnancy.isPregnant = false;
         pregnancy.fatherId = null;
         pregnancy.fatherGenome = null;
+        pregnancy.fatherLineage = null;
         pregnancy.gestationTicksTotal = 0;
         pregnancy.gestationTicksRemaining = 0;
         if (metrics) {
@@ -233,7 +235,12 @@ export function updateCreatureReproduction({
       if (pregnancy.gestationTicksRemaining <= 0) {
         const father = pregnancy.fatherId !== null ? creaturesById.get(pregnancy.fatherId) : null;
         const mate = pregnancy.fatherGenome
-          ? { genome: pregnancy.fatherGenome, species: creature.species }
+          ? {
+              id: pregnancy.fatherId,
+              genome: pregnancy.fatherGenome,
+              lineage: pregnancy.fatherLineage,
+              species: creature.species
+            }
           : (father ?? creature);
         const position = createOffspringPosition({
           rng,
@@ -266,6 +273,13 @@ export function updateCreatureReproduction({
 
         newborns.push({
           id: nextId,
+          lineage: createLineage({
+            id: nextId,
+            position,
+            config,
+            parentA: creature,
+            parentB: mate
+          }),
           generation: 1 + Math.max(creature.generation ?? 0, pregnancy.fatherGeneration ?? 0),
           position,
           species: creature.species,
@@ -293,6 +307,7 @@ export function updateCreatureReproduction({
         pregnancy.isPregnant = false;
         pregnancy.fatherId = null;
         pregnancy.fatherGenome = null;
+        pregnancy.fatherLineage = null;
         pregnancy.gestationTicksTotal = 0;
         pregnancy.gestationTicksRemaining = 0;
 
@@ -405,6 +420,9 @@ export function updateCreatureReproduction({
           female.reproduction.pregnancy.fatherId = male?.id ?? null;
           female.reproduction.pregnancy.fatherGenome = { ...male.genome };
           female.reproduction.pregnancy.fatherGeneration = male.generation ?? 0;
+          female.reproduction.pregnancy.fatherLineage = male.lineage
+            ? structuredClone(male.lineage)
+            : null;
           female.reproduction.pregnancy.gestationTicksTotal = gestationTicks;
           female.reproduction.pregnancy.gestationTicksRemaining = gestationTicks;
           if (metrics) {
@@ -426,6 +444,7 @@ export function updateCreatureReproduction({
         } else {
           female.reproduction.pregnancy.fatherId = null;
           female.reproduction.pregnancy.fatherGenome = null;
+          female.reproduction.pregnancy.fatherLineage = null;
           female.reproduction.pregnancy.gestationTicksTotal = 0;
           female.reproduction.pregnancy.gestationTicksRemaining = 0;
         }
@@ -465,6 +484,7 @@ export function updateCreatureReproduction({
 
     newborns.push({
       id: nextId,
+      lineage: createLineage({ id: nextId, position, config, parentA: creature, parentB: mate }),
       generation: 1 + Math.max(creature.generation ?? 0, mate.generation ?? 0),
       position,
       species: creature.species,

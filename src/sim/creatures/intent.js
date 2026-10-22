@@ -1,3 +1,4 @@
+import { preferredWaterTarget } from './water-rendezvous.js';
 import { updateMateMemories, rememberedMatePosition } from './mate-memory.js';
 import { canSeeCreature } from './visibility.js';
 import { resolveTicksPerSecond } from './life-stages.js';
@@ -148,9 +149,11 @@ export function updateCreatureIntent({
     const minLocalHerdSize = resolveHerdingMinGroupSize(config);
     const isInHerd = localHerdSize >= minLocalHerdSize;
     const speciesKey = getSpeciesKey(creature.species);
-    const waterTarget = speciesKey
+    const sharedWaterTarget = speciesKey
       ? world?.herdWaterTargets?.[creature.herding?.groupId ?? speciesKey]
       : null;
+    const waterTarget = preferredWaterTarget(creature, sharedWaterTarget, config);
+    const personalWaterPreferred = waterTarget && waterTarget !== sharedWaterTarget;
     if (creature.search?.goal === 'water-rendezvous' && waterRatio >= concernThreshold) {
       clearSearchState(creature);
     }
@@ -359,7 +362,12 @@ export function updateCreatureIntent({
 
     if (herbivoreConcernedNoWater && waterTarget && isInHerd && !creature.herding?.isThreatened) {
       const search = ensureSearchState(creature);
-      if (search.goal === 'water-rendezvous' && search.target && search.commitTicksRemaining > 0) {
+      if (
+        search.goal === 'water-rendezvous' &&
+        search.target &&
+        search.commitTicksRemaining > 0 &&
+        !personalWaterPreferred
+      ) {
         search.commitTicksRemaining = Math.max(0, search.commitTicksRemaining - 1);
         intent = 'seek';
         target = { ...search.target };
