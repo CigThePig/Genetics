@@ -399,3 +399,12 @@ Rules:
   - External Chromium app/inspector/read-only checks, temporal captures and frame/TPS measurements.
 - tracks/2026-10-22-spatial-ecology/
   - Scope, selected/rejected mechanisms, reproduction commands and ecological/genetic evidence.
+
+## Demographic replacement
+
+- tracks/2026-10-22-demographic-replacement/: current-source findings, source-pinned cohorts, reproducible evidence, recovery provenance and Track 12 contract.
+- scripts/investigate-demography.mjs, controlled-demography.mjs: offline lifecycle/opportunity recorder and nested-founder assays.
+- scripts/summarize-demography.py, archive-demography.py, plot-demography.py, analyze-demographic-topology.mjs: censored cohorts, conservation, archives, plots and birth components.
+- scripts/check-demographic-replay.mjs, benchmark-demography.mjs, publish-demographic-evidence.py: passive-counter replay, equal workloads and source/diagnostic-validated hosted evidence publication.
+- tests/demography.test.js, test_demography_report.py: all-species recovery, movement/access, counters and censoring regressions.
+- scripts/browser-startup.cjs, tests/browser-startup.test.js: bounded ANSI-aware Vite readiness and cleanup regressions for Chromium tooling.

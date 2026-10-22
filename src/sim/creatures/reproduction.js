@@ -299,7 +299,8 @@ export function updateCreatureReproduction({
             hp: clampMeter(Math.min(baseHp, offspringHp * newbornMeterMultiplier))
           },
           memory: { entries: [] },
-          reproduction: { cooldownTicks }
+          // Recovery belongs to an animal that attempted mating, not its offspring.
+          reproduction: { cooldownTicks: 0 }
         });
 
         nextId += 1;
@@ -388,6 +389,21 @@ export function updateCreatureReproduction({
         config
       });
       didConceive = rng.nextFloat() < conceptionChance;
+    }
+
+    if (metrics) {
+      metrics.matingAttemptsTotal = (metrics.matingAttemptsTotal ?? 0) + 1;
+      if (metrics.matingAttemptsBySpecies) {
+        metrics.matingAttemptsBySpecies[creature.species] =
+          (metrics.matingAttemptsBySpecies[creature.species] ?? 0) + 1;
+      }
+      if (!didConceive) {
+        metrics.matingFailuresTotal = (metrics.matingFailuresTotal ?? 0) + 1;
+        if (metrics.matingFailuresBySpecies) {
+          metrics.matingFailuresBySpecies[creature.species] =
+            (metrics.matingFailuresBySpecies[creature.species] ?? 0) + 1;
+        }
+      }
     }
 
     const cooldownValue = didConceive ? cooldownTicks : failedCooldownTicks;
@@ -504,7 +520,8 @@ export function updateCreatureReproduction({
         hp: clampMeter(Math.min(baseHp, offspringHp))
       },
       memory: { entries: [] },
-      reproduction: { cooldownTicks }
+      // Recovery belongs to an animal that attempted mating, not its offspring.
+      reproduction: { cooldownTicks: 0 }
     });
 
     nextId += 1;

@@ -1,0 +1,660 @@
+{
+  "errors": [],
+  "observations": [
+    {
+      "seconds": 0,
+      "predators": [
+        {
+          "id": 0,
+          "position": {
+            "x": 119.999,
+            "y": 95.07116749781619
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 119.999,
+            "y": 97.60440520584567
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 119.999,
+            "y": 98.37880719020608
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 119.999,
+            "y": 96.74630276724463
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 104.60762412221943,
+            "y": 95.75522081475552
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 107.30533203294479,
+            "y": 92.760229526597
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 104.82251880051153,
+            "y": 92.72748750279312
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 105.84534931122002,
+            "y": 92.30599874169089
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "energy": 1,
+          "water": 1
+        }
+      ],
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      }
+    },
+    {
+      "seconds": 10,
+      "predators": [
+        {
+          "id": 0,
+          "position": {
+            "x": 119.999,
+            "y": 95.07116749781619
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 104.5,
+              "y": 101.5
+            }
+          },
+          "phase": null,
+          "energy": 0.9454925619401413,
+          "water": 0.9245389922679861,
+          "pregnant": false
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 119.972681681016,
+            "y": 97.6172385026543
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "phase": "paused",
+          "energy": 0.9377631533727495,
+          "water": 0.9232571230932454,
+          "pregnant": false
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 114.23731649657559,
+            "y": 97.20515260474997
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 114,
+              "y": 99
+            }
+          },
+          "phase": null,
+          "energy": 0.9445620553232494,
+          "water": 0.9219946262966063,
+          "pregnant": false
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 118.86620941144491,
+            "y": 93.80447231139408
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 119.5,
+              "y": 77.5
+            }
+          },
+          "phase": null,
+          "energy": 0.9353008941263887,
+          "water": 0.9176395501407688,
+          "pregnant": false
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 104.60513262178306,
+            "y": 95.75334476714659
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "phase": "moving",
+          "energy": 0.9423342006652282,
+          "water": 0.9231170161752447,
+          "pregnant": false
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 109.63132299743307,
+            "y": 96.4840642246367
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 117.5,
+              "y": 109.5
+            }
+          },
+          "phase": null,
+          "energy": 0.9438409489028734,
+          "water": 0.9260386213420393,
+          "pregnant": false
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 104.82251880051153,
+            "y": 92.72748750279312
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "phase": "moving",
+          "energy": 0.9308105035183747,
+          "water": 0.9148100895043134,
+          "pregnant": false
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 102.65429199503697,
+            "y": 97.30669751357769
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 103.5,
+              "y": 97.5
+            }
+          },
+          "phase": null,
+          "energy": 0.9421756466766231,
+          "water": 0.9240084222841718,
+          "pregnant": false
+        }
+      ],
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      }
+    },
+    {
+      "seconds": 30,
+      "predators": [
+        {
+          "id": 0,
+          "position": {
+            "x": 114.78674624878056,
+            "y": 99.2964071501907
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 114.5,
+              "y": 99.5
+            }
+          },
+          "phase": null,
+          "energy": 0.8364776858204239,
+          "water": 0.7736169768039582,
+          "pregnant": false
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 114.53469596896069,
+            "y": 99.15246450646775
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 114.5,
+              "y": 99.5
+            }
+          },
+          "phase": null,
+          "energy": 0.8132894601182485,
+          "water": 0.7697713692797361,
+          "pregnant": false
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 114.15222121158475,
+            "y": 99.478436447236
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 114.5,
+              "y": 99.5
+            }
+          },
+          "phase": null,
+          "energy": 0.8336861659697483,
+          "water": 0.765983878889819,
+          "pregnant": false
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 85.48736258817782,
+            "y": 99.30606051902929
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 89.5,
+              "y": 114.5
+            }
+          },
+          "phase": null,
+          "energy": 0.8059026823791662,
+          "water": 0.7529186504223064,
+          "pregnant": false
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 103.4846585514115,
+            "y": 97.85129031901656
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 103.5,
+              "y": 97.5
+            }
+          },
+          "phase": null,
+          "energy": 0.8270026019956846,
+          "water": 0.769351048525734,
+          "pregnant": false
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 114.32649154281856,
+            "y": 100.19659733184055
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 114.5,
+              "y": 100.5
+            }
+          },
+          "phase": null,
+          "energy": 0.8315228467086202,
+          "water": 0.7781158640261179,
+          "pregnant": false
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 103.3605763603436,
+            "y": 97.17930055606473
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 103.5,
+              "y": 97.5
+            }
+          },
+          "phase": null,
+          "energy": 0.7924315105551241,
+          "water": 0.7444302685129403,
+          "pregnant": false
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 103.19104047840001,
+            "y": 97.66202303075697
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 103.5,
+              "y": 97.5
+            }
+          },
+          "phase": null,
+          "energy": 0.8265269400298694,
+          "water": 0.7720252668525154,
+          "pregnant": false
+        }
+      ],
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      }
+    },
+    {
+      "seconds": 60,
+      "predators": [
+        {
+          "id": 0,
+          "position": {
+            "x": 84.32932252990199,
+            "y": 112.00113360970559
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 90.13527693444387,
+              "y": 112.15515866641158
+            }
+          },
+          "phase": null,
+          "energy": 0.6729553716408478,
+          "water": 0.7557624918179306,
+          "pregnant": false
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 93.4436818660295,
+            "y": 116.00642565389171
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 93.17481529373786,
+              "y": 115.92641656844783
+            }
+          },
+          "phase": null,
+          "energy": 0.6265789202364971,
+          "water": 0.7592349965933235,
+          "pregnant": false
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 91.22615567741217,
+            "y": 105.48762530522043
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 90.94582882522394,
+              "y": 105.31880721854857
+            }
+          },
+          "phase": null,
+          "energy": 0.6673723319394966,
+          "water": 0.7208031344413435,
+          "pregnant": false
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 115.4659758556504,
+            "y": 130.49739111535703
+          },
+          "intent": {
+            "type": "hunt",
+            "foodType": null,
+            "target": {
+              "x": 112.62252761932248,
+              "y": 128.34696958051006
+            }
+          },
+          "phase": "charging",
+          "energy": 0.6118053647583324,
+          "water": 0.7314716080974806,
+          "pregnant": false
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 118.61624971607182,
+            "y": 143.74084761308592
+          },
+          "intent": {
+            "type": "hunt",
+            "foodType": null,
+            "target": {
+              "x": 116.94098522568115,
+              "y": 144.0990243741814
+            }
+          },
+          "phase": "charging",
+          "energy": 0.6540052039913693,
+          "water": 0.7566929276368757,
+          "pregnant": false
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 117.81526886411142,
+            "y": 118.93420785777604
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 118.6721449446022,
+              "y": 143.60456560704532
+            }
+          },
+          "phase": null,
+          "energy": 0.6630456934172404,
+          "water": 0.7445167703209563,
+          "pregnant": false
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 117.55278039182845,
+            "y": 142.25740154746723
+          },
+          "intent": {
+            "type": "hunt",
+            "foodType": null,
+            "target": {
+              "x": 116.99877158163432,
+              "y": 144.01313104883866
+            }
+          },
+          "phase": "charging",
+          "energy": 0.5848630211102481,
+          "water": 0.723316626170142,
+          "pregnant": false
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 102.7392026981341,
+            "y": 153.02852820713696
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 103.5,
+              "y": 97.5
+            }
+          },
+          "phase": null,
+          "energy": 0.9771422232305012,
+          "water": 0.7388349824542306,
+          "pregnant": false
+        }
+      ],
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      }
+    }
+  ],
+  "contactScenario": {
+    "intent": {
+      "type": "seek",
+      "foodType": null,
+      "target": {
+        "x": 13.5,
+        "y": 10.5
+      }
+    },
+    "observations": {
+      "clock": 2,
+      "nextObservation": 61,
+      "entries": [
+        {
+          "id": 1,
+          "position": {
+            "x": 13.5,
+            "y": 10.5
+          },
+          "tick": 1
+        }
+      ]
+    }
+  },
+  "contactMotion": {
+    "before": {
+      "x": 10.505691857233217,
+      "y": 28.48586837598909
+    },
+    "after": {
+      "x": 21.627352052228293,
+      "y": 2.730712967480325
+    },
+    "pregnancies": 0,
+    "intent": {
+      "type": "seek",
+      "foodType": null,
+      "target": {
+        "x": 10.5,
+        "y": 14.5
+      }
+    }
+  },
+  "recovery": {
+    "energy": 0.39969945318468203,
+    "water": 0.47366244400376073,
+    "priority": "hunger",
+    "intent": {
+      "type": "drink",
+      "foodType": null,
+      "target": null
+    }
+  },
+  "replenished": {
+    "meters": {
+      "energy": 0.922170239692237,
+      "water": 0.9219002011473166,
+      "stamina": 1,
+      "hp": 1
+    },
+    "feeding": {
+      "consumed": 0.09504662223455186,
+      "energy": 0.5560227400721285,
+      "ticks": 10
+    }
+  },
+  "readOnlyRendering": true,
+  "mobileControls": true
+}

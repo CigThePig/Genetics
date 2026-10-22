@@ -643,7 +643,8 @@ describe('replay, ecology and bounded observation', () => {
         creatureCount: 12,
         creatureHerdingSimpleMode: simple,
         creaturePregnancyEnabled: false,
-        creatureReproductionMinAge: 0,
+        // Explicit development: recovery must not double as juvenile immaturity.
+        creatureReproductionMinAge: 1,
         creatureReproductionMinEnergyRatio: 0,
         creatureReproductionMinWaterRatio: 0,
         creatureReproductionRange: 20,
