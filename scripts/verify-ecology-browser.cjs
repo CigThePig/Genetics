@@ -2,8 +2,9 @@
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
 const { spawn } = require('node:child_process');
 const fs = require('node:fs');
+const { waitForVite } = require('./browser-startup.cjs');
 const assert = require('node:assert/strict');
-const out = 'tracks/2026-10-21-predator-ecology/evidence/browser';
+const out = process.env.ECOLOGY_BROWSER_OUT || 'tracks/2026-10-21-predator-ecology/evidence/browser';
 (async () => {
   fs.mkdirSync(out, { recursive: true });
   const server = spawn(process.execPath, [
@@ -14,13 +15,8 @@ const out = 'tracks/2026-10-21-predator-ecology/evidence/browser';
     '5189',
     '--strictPort'
   ]);
-  await new Promise((resolve, reject) => {
-    server.stdout.on('data', (d) => {
-      if (d.toString().includes('Local:')) resolve();
-    });
-    server.on('error', reject);
-    server.on('exit', (c) => reject(Error('Vite exited ' + c)));
-  });
+  await waitForVite(server);
+  console.log('Vite server ready');
   let browser;
   try {
     browser = await chromium.launch({
