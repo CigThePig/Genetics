@@ -2,7 +2,20 @@
 import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
+import { readFileSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
 const root = resolve(process.argv[2] ?? '.');
+const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: root, encoding: 'utf8' }).trim();
+const sourceHash = createHash('sha256');
+for (const path of execFileSync('git', ['ls-files', '-z', 'src'], { cwd: root, encoding: 'utf8' })
+  .split('\0')
+  .filter(Boolean))
+  sourceHash
+    .update(path)
+    .update('\0')
+    .update(readFileSync(resolve(root, path)));
+const sourceFingerprint = sourceHash.digest('hex');
 const load = (p) => import(pathToFileURL(resolve(root, 'src/sim/' + p + '.js')));
 const { createSim } = await load('sim');
 const { createRng, deriveSeed } = await load('rng');
@@ -93,6 +106,8 @@ for (const seed of seeds)
       console.log(
         JSON.stringify({
           root,
+          revision,
+          sourceFingerprint,
           seed,
           kind,
           mode,

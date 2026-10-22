@@ -1,4 +1,4 @@
 Active track: None
-Current phase: Demographic replacement investigation completed; PR #142 submitted.
-Next task: Review follow-up when findings become available; Track 12 remains separate. No merge authorized.
+Current phase: Demographic replacement and Codex corrections completed; PR #142.
+Next task: Track 12 remains a separate implementation assignment.
 Last updated: 2026-10-22
