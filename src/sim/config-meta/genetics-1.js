@@ -2,7 +2,7 @@ export const metaGenetics1 = {
   creatureGenomeInheritanceMode: {
     label: 'Inheritance model',
     description:
-      'Segregating copies either parent at each locus; blended averages parental values. Rebuild for a fresh comparison.',
+      'Segregating copies either parent at each locus; blended averages parental values. Applies to new worlds after Rebuild World; the active world keeps its current model.',
     type: 'select',
     options: [
       { value: 'segregating', label: 'Segregating loci' },

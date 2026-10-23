@@ -47,6 +47,8 @@ export function createSim(config = simConfig) {
       defaultGrass: 0,
       defaultGrassStress: 0
     });
+    // World-scoped treatment: editor changes remain pending until explicit rebuild.
+    world.inheritanceMode = resolvedConfig.creatureGenomeInheritanceMode;
     generateTerrain({ world, config: resolvedConfig });
     seedInitialPlants({ world, rng: stream('vegetation'), config: resolvedConfig });
     return world;

@@ -190,7 +190,7 @@ export const createCreatureGenome = ({ config, species, rng } = {}) => {
   return genome;
 };
 
-export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) => {
+export const inheritCreatureGenome = ({ parentA, parentB, config, rng, inheritanceMode } = {}) => {
   const defaults = resolveGenomeDefaults(config, parentA?.species);
   const keys = getGenomeKeys({ config, species: parentA?.species, parentA, parentB });
   const genome = {};
@@ -206,7 +206,7 @@ export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) =>
 
     // Compute inherited base: either random blend or midpoint
     let base;
-    if (rng && config?.creatureGenomeInheritanceMode === 'segregating') {
+    if (rng && (inheritanceMode ?? config?.creatureGenomeInheritanceMode) === 'segregating') {
       // Quantitative haploid loci: recombine intact parental values instead of
       // averaging away every inherited difference. Mutation remains separate.
       base = rng.nextFloat() < 0.5 ? resolvedA : resolvedB;

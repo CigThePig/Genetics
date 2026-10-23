@@ -1,10 +1,12 @@
 """Summarize copied observational records; no fitness/adaptation labels inferred."""
 import argparse, gzip, json, statistics, hashlib, subprocess
 from pathlib import Path
+from evolution_provenance import verify_record
 parser=argparse.ArgumentParser()
 parser.add_argument('directory',type=Path)
 args=parser.parse_args()
 root=args.directory
+provenance=json.loads((root/'provenance.json').read_text())
 seeds=[1,42,1337,2,7,19]
 species=['square','circle','triangle','octagon']
 expected=[root/f'{mode}-{seed}.json.gz' for mode in ['baseline','final'] for seed in seeds]
@@ -16,6 +18,7 @@ for mode in ['baseline','final']:
  for seed in seeds:
   path=root/f'{mode}-{seed}.json.gz'
   r=json.loads(gzip.decompress(path.read_bytes()))
+  verify_record(r,mode,path,provenance)
   assert r['seed']==seed and r['ticks']==72000
   expected_config={**defaults,'seed':seed}
   if mode=='baseline': expected_config.pop('creatureGenomeInheritanceMode')

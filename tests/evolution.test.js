@@ -142,3 +142,56 @@ describe('existing phenotype-to-reproduction causal pathway', () => {
     }
   });
 });
+
+describe('world-scoped inheritance treatment', () => {
+  it('keeps the active treatment and history until explicit rebuild, and retains pending config', () => {
+    const sim = createSim({ seed: 42, creatureGenomeInheritanceMode: 'segregating' });
+    const actors = sim.state.creatures;
+    const founders = sim.state.colourBaseline;
+    sim.config.creatureGenomeInheritanceMode = 'blended';
+    expect(sim.state.world.inheritanceMode).toBe('segregating');
+    expect(sim.state.creatures).toBe(actors);
+    expect(sim.state.colourBaseline).toBe(founders);
+    const options = {
+      parentA: { genome: { speed: 0.1 } },
+      parentB: { genome: { speed: 0.9 } },
+      config: {
+        ...sim.config,
+        creatureGenomeInheritanceNoise: 0,
+        creatureGenomeInheritanceMixChance: 0
+      },
+      inheritanceMode: sim.state.world.inheritanceMode,
+      rng: createRng(1)
+    };
+    expect([0.1, 0.9]).toContain(inheritCreatureGenome(options).speed);
+    sim.setSeed(42);
+    expect(sim.state.world.inheritanceMode).toBe('blended');
+    expect(sim.state.creatures).not.toBe(actors);
+    expect(sim.state.colourHistory).toHaveLength(1);
+    expect(
+      inheritCreatureGenome({ ...options, inheritanceMode: sim.state.world.inheritanceMode }).speed
+    ).toBe(0.5);
+  });
+});
+
+describe('research sampling uses simulation seconds', () => {
+  it('samples activity and distributions consistently at 30 and 60 TPS', async () => {
+    const { recordEvolution } = await import('../scripts/investigate-evolution.mjs');
+    for (const ticksPerSecond of [30, 60]) {
+      const result = await recordEvolution({
+        ticks: 31 * ticksPerSecond,
+        overrides: { ticksPerSecond, creatureCount: 4, creaturePredatorCount: 0 }
+      });
+      expect(result.seconds).toBe(31);
+      expect(result.sampling.ticksPerSecond).toBe(ticksPerSecond);
+      expect(result.history.map((row) => row.seconds)).toEqual([0, 30, 31]);
+      for (const life of result.lives) {
+        const end = life.deathTick ?? result.ticks;
+        const samples = Object.values(life.activity).reduce((a, b) => a + b, 0);
+        expect(samples).toBe(
+          Math.floor((end - (life.deathTick !== null ? 1 : 0)) / ticksPerSecond) + 1
+        );
+      }
+    }
+  }, 30000);
+});

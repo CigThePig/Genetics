@@ -39,4 +39,4 @@ jobs:
         run: npm run verify
 
       - name: Verify demographic reports
-        run: python -m unittest discover -s tests -p 'test_demography_report.py'
+        run: python -m unittest discover -s tests -p 'test_*.py'
