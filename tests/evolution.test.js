@@ -177,6 +177,21 @@ describe('world-scoped inheritance treatment', () => {
 });
 
 describe('research sampling uses simulation seconds', () => {
+  it('records the escape override instead of a suppressed feeding intent', async () => {
+    const { recordEvolution } = await import('../scripts/investigate-evolution.mjs');
+    const result = await recordEvolution({
+      ticks: 1,
+      overrides: { creatureCount: 4, creaturePredatorCount: 0 },
+      setup: (sim) => {
+        for (const c of sim.state.creatures) {
+          c.intent = { type: 'eat', foodType: 'grass' };
+          c.herding = { isThreatened: true };
+        }
+      }
+    });
+    for (const life of result.lives) expect(life.activity).toEqual({ flee: 1 });
+    expect(result.sampling.activityBasis).toContain('not confirmed consumption');
+  });
   it('samples activity and distributions consistently at 30 and 60 TPS', async () => {
     const { recordEvolution } = await import('../scripts/investigate-evolution.mjs');
     for (const ticksPerSecond of [30, 60]) {

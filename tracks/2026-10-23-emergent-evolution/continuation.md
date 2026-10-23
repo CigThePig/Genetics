@@ -1,5 +1,7 @@
 # PR #144 continuation: ecological selection and inherited vigilance
 
+> Historical evidence: the later [code review](review.md) fixes threat-memory retention and recording/audit defects. The quantitative results below describe the pinned pre-review candidate; they have not been rerun for the corrected policy.
+
 ## Executive assessment
 
 The original PR correctly improved inheritance without proving ordinary habitat adaptation. This continuation preserves that work and fixes all three review findings. Its production change gives the existing alertness locus a consequential, local behavioral choice: how close an observed danger can approach before escape interrupts feeding and drinking. It resolves competing movement/pacing authority rather than adding personalities, planning, genes or demographic protection.

@@ -15,6 +15,8 @@ SPECIES = ['square', 'circle', 'triangle', 'octagon']
 REPO = Path(__file__).resolve().parents[1]
 BASELINE = '992c84122dc4eb6697f02c48bdd2dd3ac24f0b28'
 CANDIDATE = '5f9ea2cf2e47cc0667561de6206129082b05d1ae'
+ARCHIVE_COMMIT = '533ce1c0d6572b0130ca1286181e06426c9c9f7e'
+ARCHIVE_PATH = 'tracks/2026-10-23-emergent-evolution/evidence/continuation'
 RUNNER_V2 = '3726347484b0bb4b3a51715ae7ac6b28d710ef1b'
 
 @functools.lru_cache(None)
@@ -40,9 +42,22 @@ def verify_protocol(r, name):
         expected_habitat = group.split('-')[-1] if group.startswith(('transfer-', 'habitat-')) else 'plains'
         assert r['intervention']['habitat'] == expected_habitat
         assert r['intervention']['water'] == ('x == 0' if group.startswith('vigilance-') else 'x % 16 == 0')
-        if group.startswith('vigilance-'): assert r['intervention']['polymorphism'] == 'alertness'
-        if group == 'vigilance-matched-no-predators': assert r['intervention']['removePredators'] is True
-        assert bool(r.get('transfer')) == group.startswith('transfer-')
+        intervention = r['intervention']
+        assert intervention.get('polymorphism') == ('alertness' if group.startswith('vigilance-') else None)
+        assert intervention.get('removePredators', False) is (group == 'vigilance-matched-no-predators')
+        assert intervention['initialGrass'] == 'terrain capacity' and intervention['bushes'] == 0
+        assert intervention['placement'] == 'seeded uniform land'
+        transferring = group.startswith('transfer-')
+        assert intervention['transplant'] is transferring
+        assert bool(r.get('transfer')) == transferring
+        if transferring:
+            transfer = r['transfer']
+            assert Path(transfer['path']).name == f'habitat-{group.split("-")[1]}-{seed}.json.gz', 'Wrong transfer donor habitat/seed'
+            assert transfer['cohort'] == 'living descendants', 'Wrong transfer cohort'
+            assert transfer['sampling'] == 'seeded uniform with replacement by species'
+            assert isinstance(transfer['poolSize'], int) and transfer['poolSize'] > 0
+    else:
+        assert not r.get('intervention') and not r.get('transfer'), 'Ordinary run contains an intervention'
     assert r['config'] == cfg, f'Noncanonical experiment configuration: {name}'
     assert r['seed'] == cfg['seed'] and r['seconds'] == (1800 if group == 'wild-extended' else 1200) and r['ticks'] == cfg['ticksPerSecond']*r['seconds']
 
@@ -58,26 +73,49 @@ def committed_fingerprint(commit):
         digest.update(content)
     return digest.hexdigest()
 
+@functools.lru_cache(None)
+def committed_bytes(commit, file):
+    return subprocess.check_output(['git', 'show', f'{commit}:{file}'], cwd=REPO)
+
+def verify_runner(record, path):
+    names = {'natural-evolution.mjs', 'investigate-evolution.mjs', 'world-provenance.mjs'}
+    if 'runner' not in record:
+        # Early recordings omitted runner metadata. Grandfather exact published
+        # bytes only; deleting metadata must not bypass runner verification.
+        archived = committed_bytes(ARCHIVE_COMMIT, f'{ARCHIVE_PATH}/{path.name}')
+        assert path.read_bytes() == archived, f'Unverified legacy runner: {path}'
+        return
+    assert set(record['runner']) == names, 'Incomplete runner dependencies'
+    for name, digest in record['runner'].items():
+        versions = [committed_bytes(ARCHIVE_COMMIT, f'scripts/{name}')]
+        if name == 'natural-evolution.mjs':
+            versions += [committed_bytes(ARCHIVE_COMMIT, f'{ARCHIVE_PATH}/runner-v1.mjs.txt'),
+                         committed_bytes(RUNNER_V2, f'scripts/{name}')]
+        assert digest in {hashlib.sha256(v).hexdigest() for v in versions}, f'Unverified experiment runner: {path} / {name}'
+
 def load_record(path):
     r = json.loads(gzip.decompress(path.read_bytes()))
     assert r.get('sourceDirty') is False, f'Dirty/unverified source: {path}'
     assert r.get('sourceFingerprint') == committed_fingerprint(r['commit']), f'Source mismatch: {path}'
     assert r['seconds'] == r['ticks'] / r['config']['ticksPerSecond'], f'Duration mismatch: {path}'
     assert r['history'][0]['tick'] == 0 and r['history'][-1]['tick'] == r['ticks'], f'Incomplete history: {path}'
-    if 'runner' in r:
-        for name, digest in r['runner'].items():
-            assert name in ['natural-evolution.mjs', 'investigate-evolution.mjs', 'world-provenance.mjs'], 'Unknown runner dependency'
-            versions = [REPO/'scripts'/name]
-            if name == 'natural-evolution.mjs': versions.append(path.parent/'runner-v1.mjs.txt')
-            hashes = [hashlib.sha256(p.read_bytes()).hexdigest() for p in versions if p.is_file()]
-            if name == 'natural-evolution.mjs':
-                hashes.append(hashlib.sha256(subprocess.check_output(['git','show',f'{RUNNER_V2}:scripts/{name}'],cwd=REPO)).hexdigest())
-            assert digest in hashes, f'Unverified experiment runner: {path} / {name}'
-    if 'transfer' in r:
-        source = Path(r['transfer']['path'])
-        if not source.is_file(): source = path.parent / source.name
-        assert hashlib.sha256(source.read_bytes()).hexdigest() == r['transfer']['sha256'], f'Transfer source changed: {path}'
+    verify_runner(r, path)
     return r
+
+def verify_transfer(record, path):
+    if not record.get('transfer'): return
+    transfer = record['transfer']
+    # Resolve only inside the audited matrix, never an arbitrary file left at the
+    # recorder's original absolute/relative path on this machine.
+    source = path.parent / Path(transfer['path']).name
+    assert hashlib.sha256(source.read_bytes()).hexdigest() == transfer['sha256'], f'Transfer source changed: {path}'
+    donor = load_record(source)
+    verify_protocol(donor, source.name)
+    pool = [c for c in donor['lives'] if c['deathTick'] is None and c['generation'] > 0]
+    assert len(pool) == transfer['poolSize'], 'Transfer pool size mismatch'
+    for c in record['lives']:
+        if c['generation'] == 0:
+            assert any(c['species'] == d['species'] and c['genome'] == d['genome'] for d in pool), 'Transferred founder is absent from donor cohort'
 
 def estimate(values):
     values = list(values)
@@ -133,6 +171,7 @@ def analyze(directory, require_complete=True):
         if path.name == 'analysis-runs.json.gz': continue
         r = load_record(path)
         verify_protocol(r, path.name)
+        verify_transfer(r, path)
         rows[path.name] = {'seed': r['seed'], 'commit': r['commit'], 'sourceFingerprint': r['sourceFingerprint'], 'ticks': r['ticks'], 'seconds': r['seconds'], 'configSha256': hashlib.sha256(json.dumps(r['config'], sort_keys=True, separators=(',', ':')).encode()).hexdigest(), 'recordSha256': hashlib.sha256(path.read_bytes()).hexdigest(), 'founderGenotypePlacementSha256': founder_fingerprint(r), 'herbivoreFounderGenotypePlacementSha256': founder_fingerprint(r, True), 'intervention': r.get('intervention'),
           'species': {s: species_summary(r, s) for s in SPECIES}, 'kills': sum(r['metrics']['killsByPredatorSpecies'].values()), 'milliseconds': r['milliseconds'], 'hash': r['hash']}
     def fetch(name):

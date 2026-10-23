@@ -23,6 +23,7 @@ export async function recordEvolution({
   setup(sim);
   const sampling = {
     activitySeconds: 1,
+    activityBasis: 'escape override, otherwise selected intent (not confirmed consumption)',
     distributionSeconds: 30,
     progressSeconds: 600,
     ticksPerSecond: sim.config.ticksPerSecond
@@ -75,7 +76,7 @@ export async function recordEvolution({
       )
         r.matureTick = sim.state.tick;
       if (sim.state.tick % interval(sampling.activitySeconds) === 0) {
-        const intent = c.intent?.type ?? 'none';
+        const intent = c.herding?.isThreatened ? 'flee' : (c.intent?.type ?? 'none');
         r.activity[intent] = (r.activity[intent] ?? 0) + 1;
       }
     }

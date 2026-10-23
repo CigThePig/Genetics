@@ -134,3 +134,10 @@ Wild variation and outcomes remain mixed. Herbivore speed variance is broader on
 - Connected existing inherited alertness to local escape distance, resource interruption and inspector/history visibility without additional genes or population protection.
 - Completed 91 full-engine records / 3,564,000 ticks with matched controls, reciprocal transfers, neutral-marker context and complete life histories. Constructed ecological selection is demonstrated; ordinary sustained adaptation and reliable habitat home advantage remain unproven.
 - Added reproducible audit, figures, browser traces, source bundle and performance evidence. Local full verification: 318 JS tests, lint/format/build and 20 Python regressions; desktop/390-pixel checks and birth-inclusive actor replay passed. Default performance is similar, while the 480-actor uninstrumented comparison is slower and both variants exceed 60 TPS. See the track continuation report for exact measurements and limitations.
+
+## 2026-10-23 — PR #144 code review follow-up
+
+- Preserve finite danger observations independently of the individual escape decision.
+- Correct flight activity recording and bind reciprocal transfers and runner provenance to the registered historical protocol.
+- Verified 320 JS tests, 24 Python tests, lint/format/build, three 3,600-tick invariant soaks, all 91 archived records and 168 artifact checksums. Archived analysis is unchanged. Browser launch was unavailable (missing Chromium).
+- Detailed findings and historical-evidence limitations: [review](../tracks/2026-10-23-emergent-evolution/review.md). Existing PR remains unmerged.

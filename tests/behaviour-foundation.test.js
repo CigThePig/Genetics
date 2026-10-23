@@ -174,6 +174,30 @@ describe('threat information and escape', () => {
     for (let i = 0; i < 30; i++) updateCreatureHerdingSimple(o);
     expect(o.creatures.every((c) => !c.herding.isThreatened)).toBe(true);
   });
+  it('retains a finite observation outside the escape buffer and reacts on re-entry', () => {
+    const prey = actor(0, 20),
+      predator = actor(1, 24, 10, 'triangle');
+    prey.traits.alertness = 0;
+    const o = options([prey, predator]);
+    updateCreatureHerdingSimple(o);
+    expect(prey.herding.isThreatened).toBe(false);
+    expect(prey.herding.threatPosition).toEqual({ x: 24, y: 10 });
+    const ttl = prey.herding.threatDecayTicks;
+    o.creatures = [prey]; // No fresh sighting: only the copied, expiring observation.
+    prey.position.x = 22.5;
+    updateCreatureHerdingSimple(o);
+    expect(prey.herding.isThreatened).toBe(true);
+    expect(prey.herding.threatDecayTicks).toBe(ttl - 1);
+    prey.position.x = 20;
+    updateCreatureHerdingSimple(o);
+    expect(prey.herding.isThreatened).toBe(false);
+    expect(prey.herding.threatDirection).toBeNull();
+    for (let i = 0; i < ttl; i++) updateCreatureHerdingSimple(o);
+    expect(prey.herding.threatPosition).toBeNull();
+    prey.position.x = 22.5;
+    updateCreatureHerdingSimple(o);
+    expect(prey.herding.isThreatened).toBe(false);
+  });
   it('avoids cancellation between opposing threats and does not align to neighbours', () => {
     const c = actor(0, 30, 30),
       w = world();

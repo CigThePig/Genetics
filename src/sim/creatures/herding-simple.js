@@ -161,8 +161,12 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
       continue;
     }
     h.threatDirection = null;
-    h.threatPosition = null;
-    h.threatHops = 0;
+    // Observation lifetime is independent of the individual's escape decision.
+    // Retain copied information for re-entry and local warnings until it expires.
+    if (h.threatDecayTicks === 0) {
+      h.threatPosition = null;
+      h.threatHops = 0;
+    }
     h.lastRegroupVector = null;
     // Personal-space forces taper to zero and never attract toward a centre.
     let sx = 0,
