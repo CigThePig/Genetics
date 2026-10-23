@@ -72,7 +72,7 @@ MIT. See `LICENSE`.
 ## Inherited trait history and evolutionary experiments
 
 **Graphs → Evolution history** now compares inherited speed, perception, metabolism,
-growth and longevity distributions with founders or an earlier sample. Counts and
+growth, longevity and vigilance distributions with founders or an earlier sample. Counts and
 mean/SD accompany the histogram; colour histories remain available. Distribution
 changes can reflect drift, migration and age composition as well as selection.
 They do not by themselves establish adaptation.
@@ -82,8 +82,14 @@ before the existing noise/mutation steps. This preserves inherited alternatives
 instead of blending every difference. Configuration → **Inheritance model** can
 select **Legacy blending** for comparison; its existing mix-chance control is
 inactive in segregating mode. Older settings without this key use the new default
-when rebuilt. No live genome is rewritten, no adaptive outcome is assigned, and
+when rebuilt. A selector change shows a pending-rebuild banner; the active world keeps its inheritance model until a world rebuild. No live genome is rewritten, no adaptive outcome is assigned, and
 extinction remains possible.
 
 [Investigation, evidence and limits](tracks/2026-10-23-emergent-evolution/evidence.md) ·
 [Reproduce the experiments](tracks/2026-10-23-emergent-evolution/tooling.md)
+
+Inherited vigilance now changes how close observed danger can approach before an
+animal interrupts feeding or drinking to escape. Its buffer appears in the
+inspector; caution can buy distance while costing resource opportunities.
+[Ecological selection, reciprocal transfers and remaining limits](tracks/2026-10-23-emergent-evolution/continuation.md)
+reports what was demonstrated and why ordinary habitat adaptation remains unproven.

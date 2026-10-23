@@ -58,6 +58,7 @@ export async function recordEvolution({
           birthTick: sim.state.tick,
           parents: [...(c.lineage?.parents ?? [])],
           genome: { ...c.genome },
+          markers: [...(c.lineage?.markers ?? [])],
           birthplace: { ...c.position },
           matureTick: null,
           deathTick: null,

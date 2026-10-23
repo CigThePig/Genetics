@@ -191,11 +191,12 @@ describe('PR #135: alert distance and PR #136: stale regroup', () => {
         tick: 5
       });
       expect(member.herding.nearestThreatDistance).toBeNull();
+      expect(member.herding.escapeDistance).toBeNull();
     }
   );
 
   it.each([true, false])(
-    'assesses a persistent distant threat once and reassesses closer or returning threats (simple %s)',
+    'keeps distant observed danger from interrupting needs and escapes inside the live buffer (simple %s)',
     (simple) => {
       const member = animal(0),
         predator = animal(1, 'triangle', 29);
@@ -216,42 +217,36 @@ describe('PR #135: alert distance and PR #136: stale regroup', () => {
         updateBehaviorIntegration({ ...options, tick });
       };
       step(1);
-      expect(member.behaviorState.state).toBe('alert');
-      step(2);
       expect(member.behaviorState.state).toBe('relaxed');
-      // Multiple real integration ticks, rather than just checking the assessment exit.
-      for (let tick = 3; tick <= 20; tick++) {
+      // A predator outside the buffer remains observed without repeatedly pausing feeding/travel.
+      for (let tick = 2; tick <= 20; tick++) {
         step(tick);
         expect(member.behaviorState.state).not.toBe('alert');
+        expect(member.herding.nearestThreatDistance).toBe(9);
+        expect(member.herding.isThreatened).toBe(false);
       }
-      // A closer threat warrants a new assessment even outside the flee threshold.
       predator.position.x = 28.5;
       step(21);
-      expect(member.behaviorState.state).toBe('alert');
-      step(22);
       expect(member.behaviorState.state).toBe('relaxed');
-      step(23);
-      expect(member.behaviorState.state).toBe('relaxed');
-      // A live threshold change must also bypass the previous assessment.
+      // A live threshold change must take effect without a second assessment lock.
       config.creatureBehaviorAlertToFleeThreshold = 9;
       step(24);
-      expect(member.behaviorState.state).toBe('alert');
-      step(25);
       expect(member.behaviorState.state).toBe('fleeing');
-      // Losing visibility clears the assessment; the same distance on return alerts again.
+      // An escape goal persists across its acquisition boundary, then releases outside hysteresis.
+      predator.position.x = 30;
+      step(25);
+      expect(member.herding.isThreatened).toBe(true);
+      predator.position.x = 32;
+      step(26);
+      expect(member.herding.isThreatened).toBe(false);
       predator.position.x = 90;
-      for (let tick = 26; tick <= 40; tick++) step(tick);
+      for (let tick = 27; tick <= 40; tick++) step(tick);
       config.creatureBehaviorAlertToFleeThreshold = 8;
       predator.position.x = 29;
       step(41);
-      expect(member.behaviorState.state).toBe('alert');
-      step(42);
       expect(member.behaviorState.state).toBe('relaxed');
-      // Closing inside the danger threshold still escalates after the alert lock.
       predator.position.x = 27;
       step(43);
-      expect(member.behaviorState.state).toBe('alert');
-      step(44);
       expect(member.behaviorState.state).toBe('fleeing');
     }
   );

@@ -1,0 +1,376 @@
+{
+  "seeds": [
+    1,
+    42,
+    1337,
+    2,
+    7,
+    19
+  ],
+  "runCount": 91,
+  "ticks": 3564000,
+  "simulatedSeconds": 109800,
+  "interpretation": "Genetic change and associations are not automatically adaptive evolution. Reciprocal comparisons require both destination contrasts; confidence intervals use six worlds, not species as replicates. Arena extinction and sparse founder pools are retained.",
+  "comparisons": {
+    "plainsHomeOriginMatureChildrenAdvantage": {
+      "nWorlds": 6,
+      "mean": 0.04166666666666674,
+      "range": [
+        -0.5277777777777777,
+        0.4722222222222223
+      ],
+      "pairedWorlds": [
+        -0.5277777777777777,
+        0.3055555555555558,
+        0.02777777777777768,
+        -0.25,
+        0.22222222222222232,
+        0.4722222222222223
+      ],
+      "descriptive95Interval": [
+        -0.35025838743476156,
+        0.43359172076809505
+      ]
+    },
+    "forestHomeOriginMatureChildrenAdvantage": {
+      "nWorlds": 6,
+      "mean": -0.060185185185185265,
+      "range": [
+        -0.44444444444444464,
+        0.36111111111111116
+      ],
+      "pairedWorlds": [
+        0.36111111111111116,
+        0.1388888888888884,
+        -0.30555555555555536,
+        -0.44444444444444464,
+        0.08333333333333348,
+        -0.19444444444444464
+      ],
+      "descriptive95Interval": [
+        -0.3797919461812298,
+        0.25942157581085923
+      ]
+    },
+    "baselineHighMinusLowVigilanceMatureChildren": {
+      "nWorlds": 6,
+      "mean": -0.12916666666666668,
+      "range": [
+        -0.35000000000000003,
+        0.125
+      ],
+      "pairedWorlds": [
+        0.125,
+        -0.35000000000000003,
+        -0.125,
+        -0.2,
+        0,
+        -0.22500000000000003
+      ],
+      "descriptive95Interval": [
+        -0.30745819978377803,
+        0.04912486645044467
+      ]
+    },
+    "baselineHighMinusLowVigilancePredationFraction": {
+      "nWorlds": 6,
+      "mean": 0.022916666666666665,
+      "range": [
+        -0.125,
+        0.1875
+      ],
+      "pairedWorlds": [
+        -0.012499999999999997,
+        0.05,
+        -0.125,
+        0.03749999999999999,
+        0.1875,
+        0.0
+      ],
+      "descriptive95Interval": [
+        -0.08380585852278198,
+        0.1296391918561153
+      ]
+    },
+    "candidateHighMinusLowVigilanceMatureChildren": {
+      "nWorlds": 6,
+      "mean": -0.8354166666666667,
+      "range": [
+        -1.5625,
+        -0.4375
+      ],
+      "pairedWorlds": [
+        -1.5625,
+        -0.5625,
+        -0.6499999999999999,
+        -0.8,
+        -1,
+        -0.4375
+      ],
+      "descriptive95Interval": [
+        -1.2615601321015042,
+        -0.40927320123182914
+      ]
+    },
+    "candidateHighMinusLowVigilancePredationFraction": {
+      "nWorlds": 6,
+      "mean": -0.4375,
+      "range": [
+        -0.55,
+        -0.275
+      ],
+      "pairedWorlds": [
+        -0.275,
+        -0.44999999999999996,
+        -0.45,
+        -0.55,
+        -0.55,
+        -0.35
+      ],
+      "descriptive95Interval": [
+        -0.5521788010324925,
+        -0.3228211989675075
+      ]
+    },
+    "no-predatorsHighMinusLowVigilanceMatureChildren": {
+      "nWorlds": 6,
+      "mean": 0.09999999999999999,
+      "range": [
+        -0.025000000000000022,
+        0.2749999999999999
+      ],
+      "pairedWorlds": [
+        -0.025000000000000022,
+        0.2749999999999999,
+        -0.02499999999999991,
+        0.15000000000000002,
+        0.1875,
+        0.03749999999999998
+      ],
+      "descriptive95Interval": [
+        -0.029350942328419075,
+        0.22935094232841907
+      ]
+    },
+    "no-predatorsHighMinusLowVigilancePredationFraction": {
+      "nWorlds": 6,
+      "mean": 0.0,
+      "range": [
+        0.0,
+        0.0
+      ],
+      "pairedWorlds": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive95Interval": [
+        0.0,
+        0.0
+      ]
+    },
+    "neutralHighMinusLowVigilanceMatureChildren": {
+      "nWorlds": 6,
+      "mean": -0.004166666666666661,
+      "range": [
+        -0.6125,
+        0.22500000000000003
+      ],
+      "pairedWorlds": [
+        0.22500000000000003,
+        0.06250000000000006,
+        -0.04999999999999999,
+        0.16249999999999998,
+        -0.6125,
+        0.1875
+      ],
+      "descriptive95Interval": [
+        -0.3339655547693254,
+        0.3256322214359921
+      ]
+    },
+    "neutralHighMinusLowVigilancePredationFraction": {
+      "nWorlds": 6,
+      "mean": -0.04166666666666667,
+      "range": [
+        -0.3,
+        0.2875
+      ],
+      "pairedWorlds": [
+        -0.1625,
+        0.11249999999999999,
+        -0.3,
+        -0.175,
+        0.2875,
+        -0.012500000000000011
+      ],
+      "descriptive95Interval": [
+        -0.2677993967722399,
+        0.18446606343890654
+      ]
+    },
+    "no-water-drainHighMinusLowVigilanceMatureChildren": {
+      "nWorlds": 6,
+      "mean": -0.3958333333333333,
+      "range": [
+        -0.8374999999999999,
+        -0.22500000000000003
+      ],
+      "pairedWorlds": [
+        -0.2625,
+        -0.375,
+        -0.8374999999999999,
+        -0.22500000000000003,
+        -0.425,
+        -0.25000000000000006
+      ],
+      "descriptive95Interval": [
+        -0.6372808211541843,
+        -0.15438584551248233
+      ]
+    },
+    "no-water-drainHighMinusLowVigilancePredationFraction": {
+      "nWorlds": 6,
+      "mean": -0.63125,
+      "range": [
+        -0.75,
+        -0.5
+      ],
+      "pairedWorlds": [
+        -0.6875,
+        -0.75,
+        -0.5,
+        -0.65,
+        -0.525,
+        -0.675
+      ],
+      "descriptive95Interval": [
+        -0.734140202590249,
+        -0.5283597974097509
+      ]
+    },
+    "matched-no-predatorsHighMinusLowVigilanceMatureChildren": {
+      "nWorlds": 6,
+      "mean": 0.11249999999999999,
+      "range": [
+        -0.1875000000000001,
+        0.5
+      ],
+      "pairedWorlds": [
+        0.5,
+        -0.17500000000000004,
+        0.16249999999999998,
+        0.2250000000000001,
+        0.15000000000000002,
+        -0.1875000000000001
+      ],
+      "descriptive95Interval": [
+        -0.160952169149378,
+        0.38595216914937797
+      ]
+    },
+    "matched-no-predatorsHighMinusLowVigilancePredationFraction": {
+      "nWorlds": 6,
+      "mean": 0.0,
+      "range": [
+        0.0,
+        0.0
+      ],
+      "pairedWorlds": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "descriptive95Interval": [
+        0.0,
+        0.0
+      ]
+    },
+    "plainsSegregatingMinusBlendedMatureOffspring": {
+      "nWorlds": 6,
+      "mean": 5.333333333333333,
+      "range": [
+        -28.5,
+        22
+      ],
+      "pairedWorlds": [
+        9.5,
+        -0.5,
+        22,
+        10.0,
+        -28.5,
+        19.5
+      ],
+      "descriptive95Interval": [
+        -13.999568572485156,
+        24.66623523915182
+      ]
+    },
+    "plainsSegregatingMinusBlendedSpeedVariance": {
+      "nWorlds": 6,
+      "mean": 0.0021237227553642787,
+      "range": [
+        -0.0006059942265996365,
+        0.006923042156013482
+      ],
+      "pairedWorlds": [
+        0.00077848449873518,
+        0.00011740592088148446,
+        0.004484097941421243,
+        0.006923042156013482,
+        -0.0006059942265996365,
+        0.001045300241733919
+      ],
+      "descriptive95Interval": [
+        -0.0009562651692575984,
+        0.005203710679986156
+      ]
+    },
+    "forestSegregatingMinusBlendedMatureOffspring": {
+      "nWorlds": 6,
+      "mean": 4.916666666666667,
+      "range": [
+        -13.5,
+        30.0
+      ],
+      "pairedWorlds": [
+        30.0,
+        -2.5,
+        5.5,
+        3.0,
+        7,
+        -13.5
+      ],
+      "descriptive95Interval": [
+        -10.160506347943866,
+        19.9938396812772
+      ]
+    },
+    "forestSegregatingMinusBlendedSpeedVariance": {
+      "nWorlds": 6,
+      "mean": 0.0023648719517613513,
+      "range": [
+        0.0009985864330185707,
+        0.004723151677229597
+      ],
+      "pairedWorlds": [
+        0.004723151677229597,
+        0.00243430823016618,
+        0.0016105593135915244,
+        0.0031941560542698188,
+        0.0012284700022924177,
+        0.0009985864330185707
+      ],
+      "descriptive95Interval": [
+        0.0008819040972411572,
+        0.0038478398062815455
+      ]
+    }
+  }
+}

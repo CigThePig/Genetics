@@ -1,0 +1,19 @@
+{
+  "javascriptTests": 318,
+  "pythonTests": 20,
+  "canonicalSoaks": {
+    "seeds": [
+      1,
+      42,
+      1337
+    ],
+    "ticksEach": 18000
+  },
+  "browserReplay": {
+    "baselineActors": 107,
+    "candidateActors": 99,
+    "ticks": 10800,
+    "actorStatesEqual": true
+  },
+  "crossRuntimeIdenticalReplayEstablished": false
+}

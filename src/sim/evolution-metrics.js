@@ -1,6 +1,7 @@
 // Read-only quantitative gene distributions. Hue has separate circular metrics.
 export const EVOLUTION_GENES = {
   speed: 'Speed',
+  alertness: 'Vigilance (alertness)',
   perceptionRange: 'Perception range',
   basalEnergyDrain: 'Basal energy drain',
   basalWaterDrain: 'Basal water drain',

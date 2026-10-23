@@ -138,3 +138,7 @@ The history has fixed cardinality: six loci × ten bins × four species, at most
 | Is the experience undirected?   | Extinction, scarcity, costs and failed reproduction remain; no population floor or adaptive script is added.                                                               | Practical ecosystem balance and the creator's subjective assessment still require further observation.      |
 
 This is a focused improvement to evolutionary freedom and its visibility, not a declaration that Genetics has achieved open-ended evolution. The highest-value remaining research is replicated habitat-specific fitness testing, demographic opportunity in small predator pools, the mutation-cost ratchet and whether inherited behavioral preferences could create a useful strategy tradeoff. Those questions should be resolved by experiments, not by adding features or promises to this PR.
+
+## Continuation of PR #144
+
+This report preserves the original investigation snapshot. The [continuation report](continuation.md) adds review repairs, inherited-vigilance behavior, 91 full-engine records, matched ecological ablations, negative reciprocal-transfer results and new validation/performance evidence. In current production, changing inheritance marks a pending rebuild and does not change the active world treatment. Alertness mapping is broader, and vigilance is the seventh history distribution. Original source commits/artifacts remain available; neither report claims sustained ordinary habitat adaptation or that subjective experiential success is solved.

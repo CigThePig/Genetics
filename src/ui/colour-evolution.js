@@ -35,7 +35,7 @@ export function createColourEvolution(container) {
     'Hue bins run red → green → blue → red. Outline: earlier population; solid: latest sample. Heights show fractions, counts show sample size. Slide to compare history (10-second samples; latest 20 minutes plus founding population).';
   const traitHint = document.createElement('small');
   traitHint.textContent =
-    'Inherited values run 0–1. Speed carries energy/water costs; growth shortens life. Changes can reflect selection, drift, migration or age composition; these graphs alone do not demonstrate adaptation.';
+    'Inherited values run 0–1. Speed carries energy/water costs; growth shortens life; vigilance trades resource opportunities for earlier escape. Changes can reflect selection, drift, migration or age composition; these graphs alone do not demonstrate adaptation.';
   panel.append(heading, speciesSelect, label, slider, traitSelect, charts, hint, traitHint);
   container.append(panel);
   let data = [],

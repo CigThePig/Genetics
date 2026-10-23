@@ -12,6 +12,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Setup Node (pinned)
         uses: actions/setup-node@v4
@@ -38,5 +40,8 @@ jobs:
       - name: Verify
         run: npm run verify
 
-      - name: Verify demographic reports
+      - name: Import immutable evolutionary experiment source
+        run: git fetch tracks/2026-10-23-emergent-evolution/evidence/continuation/source.bundle refs/heads/evidence/pr144-continuation:refs/evidence/pr144-continuation
+
+      - name: Verify research reports
         run: python -m unittest discover -s tests -p 'test_*.py'

@@ -39,7 +39,7 @@ const DEFAULT_GENOME = {
 const DEFAULT_GENE_RANGES = {
   speed: { min: 0.8, max: 1.2 },
   perceptionRange: { min: 0.8, max: 1.2 },
-  alertness: { min: 0.85, max: 1.15 },
+  alertness: { min: 0.2, max: 1.8 },
   reactionDelay: { min: 0.8, max: 1.2 },
   basalEnergyDrain: { min: 0.85, max: 1.2 },
   basalWaterDrain: { min: 0.85, max: 1.2 },

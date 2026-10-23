@@ -423,3 +423,12 @@ Rules:
   - Complete-matrix/config validation, descriptive comparisons, figures and optional browser checks.
 - tests/evolution.test.js
   - Segregation, legacy fallback, mutation/config, passive bounded history and phenotype-to-reproduction ablations.
+
+## PR #144 continuation tools
+
+- scripts/natural-evolution.mjs: full-engine habitat, reciprocal genome-transfer and vigilance-ablation experiments.
+- scripts/analyze-natural-evolution.py: source/config/runner audit, founder fitness and paired-world uncertainty.
+- scripts/threat-choice.mjs: controlled perception, escape and feeding-opportunity fixtures.
+- scripts/profile-evolution.mjs: equal-workload hot-path and bounded history profiling.
+- scripts/plot-natural-evolution.py: scientific figures from audited records and browser traces.
+- tracks/2026-10-23-emergent-evolution/continuation.md: methods, results, limitations and reproduction instructions.

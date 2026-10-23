@@ -1,7 +1,7 @@
 """Summarize copied observational records; no fitness/adaptation labels inferred."""
 import argparse, gzip, json, statistics, hashlib, subprocess
 from pathlib import Path
-from evolution_provenance import verify_record
+from evolution_provenance import verify_record, verify_legacy_artifact
 parser=argparse.ArgumentParser()
 parser.add_argument('directory',type=Path)
 args=parser.parse_args()
@@ -49,6 +49,7 @@ for seed in seeds:
  b=json.loads(gzip.decompress((root/f'final-{seed}.json.gz').read_bytes()))
  def founding(r):return [{k:c[k] for k in ['id','species','sex','genome','birthplace']} for c in r['lives'] if c['generation']==0]
  assert founding(a)==founding(b), f'Founders differ for seed {seed}'
+verify_legacy_artifact(root/'controlled.json.gz')
 controlled=json.loads(gzip.decompress((root/'controlled.json.gz').read_bytes()))
 for mode in ['blended','segregating']:
  for mutation in [False,True]:
@@ -57,6 +58,6 @@ for mode in ['blended','segregating']:
    final=[r['history'][-1]['speed']['mean'] for r in rows]
    summary['controlled'].append({'mode':mode,'mutation':mutation,'pressure':pressure,'nSeeds':len(rows),'meanSpeed':statistics.mean(final),'rangeSpeed':[min(final),max(final)],'meanVariance':statistics.mean(r['history'][-1]['speed']['variance'] for r in rows)})
 (root/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
-manifest={'baselineCommit':'b0985754ef70fd4bc6517bafa16e522bbb134000','productionCommit':'da9764494cb015f8257dcc4c7d326b02224de2cc','artifacts':{str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.rglob('*')) if p.is_file() and p.name!='manifest.json'}}
+manifest={'baselineCommit':'b0985754ef70fd4bc6517bafa16e522bbb134000','productionCommit':'da9764494cb015f8257dcc4c7d326b02224de2cc','artifacts':{str(p.relative_to(root)):hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(root.rglob('*')) if p.is_file() and p.name!='manifest.json' and 'continuation' not in p.relative_to(root).parts}}
 (root/'manifest.json').write_text(json.dumps(manifest,indent=2)+'\n')
 print(json.dumps({'wildRuns':len(summary['wild']),'controlledAssays':len(controlled['results'])}))

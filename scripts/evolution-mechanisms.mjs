@@ -14,7 +14,10 @@ export function reproductiveMechanism({
   species = 'circle',
   speed = 0.1,
   environment = 'energy',
-  ablate = false
+  ablate = false,
+  parentSpeeds,
+  worldMode,
+  configMode
 } = {}) {
   const sim = createSim({
     seed,
@@ -33,6 +36,7 @@ export function reproductiveMechanism({
     creatureReproductionRangeWhileSeeking: 1,
     creatureGenomeMutationRate: 0,
     creatureGenomeInheritanceNoise: 0,
+    ...(configMode ? { creatureGenomeInheritanceMode: configMode } : {}),
     ...(ablate
       ? environment === 'energy'
         ? { creatureTradeoffSpeedToEnergyDrainScale: 0 }
@@ -43,8 +47,9 @@ export function reproductiveMechanism({
   const world = createWorldGrid({ width: 40, height: 10, defaultTerrain: 'plains' }),
     config = sim.config,
     rng = createRng(seed);
+  world.inheritanceMode = worldMode;
   for (const [i, c] of creatures.entries()) {
-    c.genome.speed = speed;
+    c.genome.speed = parentSpeeds?.[i] ?? speed;
     c.traits = createCreatureTraits({ config, species, genome: c.genome });
     c.sex = i ? 'female' : 'male';
     c.ageTicks = 6000;

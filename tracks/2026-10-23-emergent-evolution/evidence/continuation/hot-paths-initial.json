@@ -1,0 +1,362 @@
+[
+  {
+    "root": "/workspace/scratch/a57246888676/Genetics-pr144-baseline",
+    "count": 480,
+    "ticks": 600,
+    "timers": [
+      {
+        "name": "tick.total",
+        "totalMs": 13475.504973999987,
+        "avgMs": 22.459174956666644,
+        "maxMs": 84.02727100000084,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.herding",
+        "totalMs": 8732.512726000006,
+        "avgMs": 14.554187876666678,
+        "maxMs": 54.33886800000073,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.perception",
+        "totalMs": 1238.9640379999937,
+        "avgMs": 2.064940063333323,
+        "maxMs": 9.229448000000048,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.intent",
+        "totalMs": 971.3875409999914,
+        "avgMs": 1.6189792349999856,
+        "maxMs": 36.063914000000295,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.plants",
+        "totalMs": 710.4819389999857,
+        "avgMs": 1.1841365649999762,
+        "maxMs": 7.962538999998287,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.movement",
+        "totalMs": 679.3996730000495,
+        "avgMs": 1.1323327883334158,
+        "maxMs": 4.232873000000836,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.memory",
+        "totalMs": 259.631536999992,
+        "avgMs": 0.43271922833332005,
+        "maxMs": 6.594273000000612,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.reproduction",
+        "totalMs": 156.73978999999144,
+        "avgMs": 0.26123298333331907,
+        "maxMs": 0.7830100000010134,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.lifeStages",
+        "totalMs": 109.72825000002194,
+        "avgMs": 0.18288041666670324,
+        "maxMs": 2.5457559999995283,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.pack",
+        "totalMs": 95.33186200001728,
+        "avgMs": 0.15888643666669547,
+        "maxMs": 0.9208549999998468,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.spatialIndex",
+        "totalMs": 84.95608400000629,
+        "avgMs": 0.14159347333334382,
+        "maxMs": 1.2174140000006446,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.basalMetabolism",
+        "totalMs": 42.368655999993734,
+        "avgMs": 0.07061442666665622,
+        "maxMs": 0.39283200000136276,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.alertness",
+        "totalMs": 39.62159499997233,
+        "avgMs": 0.06603599166662055,
+        "maxMs": 0.8685670000013488,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.actions",
+        "totalMs": 35.110638000007384,
+        "avgMs": 0.05851773000001231,
+        "maxMs": 0.8452939999988303,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.sprintDecision",
+        "totalMs": 31.208671999978833,
+        "avgMs": 0.05201445333329806,
+        "maxMs": 0.5399799999995594,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.staminaRegen",
+        "totalMs": 18.424049000023388,
+        "avgMs": 0.03070674833337231,
+        "maxMs": 0.2645119999997405,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.combat",
+        "totalMs": 15.86840399999437,
+        "avgMs": 0.02644733999999062,
+        "maxMs": 0.2695100000000821,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.deaths",
+        "totalMs": 14.978489999969497,
+        "avgMs": 0.024964149999949163,
+        "maxMs": 0.5548220000000583,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.chase",
+        "totalMs": 14.347690999998576,
+        "avgMs": 0.023912818333330962,
+        "maxMs": 0.26280899999983376,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.sprintCosts",
+        "totalMs": 13.316556999986915,
+        "avgMs": 0.022194261666644857,
+        "maxMs": 0.235288999999284,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.priority",
+        "totalMs": 9.560168000025442,
+        "avgMs": 0.015933613333375736,
+        "maxMs": 0.2712520000004588,
+        "calls": 600,
+        "group": "tick"
+      }
+    ],
+    "escapeSamples": 42049,
+    "threatSamples": 21862,
+    "historySnapshots": 120,
+    "historyBytes": 629401,
+    "baselineBytes": 5240
+  },
+  {
+    "root": "/workspace/scratch/a57246888676/Genetics",
+    "count": 480,
+    "ticks": 600,
+    "timers": [
+      {
+        "name": "tick.total",
+        "totalMs": 13460.645322000051,
+        "avgMs": 22.434408870000084,
+        "maxMs": 50.8018579999989,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.herding",
+        "totalMs": 9117.206433999992,
+        "avgMs": 15.195344056666654,
+        "maxMs": 28.522546000000148,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.perception",
+        "totalMs": 1166.3374499999845,
+        "avgMs": 1.9438957499999743,
+        "maxMs": 5.016092999998364,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.intent",
+        "totalMs": 978.1584909999874,
+        "avgMs": 1.6302641516666456,
+        "maxMs": 23.830485999998928,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.plants",
+        "totalMs": 669.4680899999803,
+        "avgMs": 1.115780149999967,
+        "maxMs": 4.83208999999988,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.movement",
+        "totalMs": 513.354802000038,
+        "avgMs": 0.85559133666673,
+        "maxMs": 4.422593999999663,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.memory",
+        "totalMs": 196.87663200000316,
+        "avgMs": 0.3281277200000053,
+        "maxMs": 2.457461999998486,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.reproduction",
+        "totalMs": 149.70966700003555,
+        "avgMs": 0.2495161116667259,
+        "maxMs": 2.662045000000944,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.pack",
+        "totalMs": 88.60355900007562,
+        "avgMs": 0.14767259833345936,
+        "maxMs": 3.169426000000385,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.lifeStages",
+        "totalMs": 80.79062400000475,
+        "avgMs": 0.13465104000000794,
+        "maxMs": 1.1810400000031223,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.spatialIndex",
+        "totalMs": 80.07598700002927,
+        "avgMs": 0.1334599783333821,
+        "maxMs": 2.8609789999973145,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.actions",
+        "totalMs": 39.88885199996366,
+        "avgMs": 0.06648141999993944,
+        "maxMs": 0.8990720000001602,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.basalMetabolism",
+        "totalMs": 34.170472000045265,
+        "avgMs": 0.05695078666674211,
+        "maxMs": 0.41631600000255276,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.alertness",
+        "totalMs": 28.852847000027396,
+        "avgMs": 0.04808807833337899,
+        "maxMs": 0.30746500000168453,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.chase",
+        "totalMs": 18.4461460001221,
+        "avgMs": 0.030743576666870165,
+        "maxMs": 0.18888000000151806,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.staminaRegen",
+        "totalMs": 18.229065999945306,
+        "avgMs": 0.03038177666657551,
+        "maxMs": 0.16389300000082585,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.sprintDecision",
+        "totalMs": 16.26024399996095,
+        "avgMs": 0.02710040666660158,
+        "maxMs": 0.26015499999994063,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.deaths",
+        "totalMs": 14.72540899998421,
+        "avgMs": 0.02454234833330702,
+        "maxMs": 0.26914899999974295,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.combat",
+        "totalMs": 13.097790999923745,
+        "avgMs": 0.021829651666539576,
+        "maxMs": 0.25260400000115624,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.priority",
+        "totalMs": 9.814034000028187,
+        "avgMs": 0.01635672333338031,
+        "maxMs": 0.23425700000007055,
+        "calls": 600,
+        "group": "tick"
+      },
+      {
+        "name": "tick.sprintCosts",
+        "totalMs": 8.044559999932972,
+        "avgMs": 0.013407599999888286,
+        "maxMs": 0.09678400000120746,
+        "calls": 600,
+        "group": "tick"
+      }
+    ],
+    "escapeSamples": 14052,
+    "threatSamples": 36532,
+    "historySnapshots": 120,
+    "historyBytes": 686281,
+    "baselineBytes": 5714
+  }
+]

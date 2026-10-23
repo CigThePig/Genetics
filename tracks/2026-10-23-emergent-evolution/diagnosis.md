@@ -31,3 +31,17 @@ A universal **haploid quantitative-locus recombination** model copies one parent
 ## Remaining causal work
 
 Field genotype associations are not randomized causal estimates. Geography, relatedness, sexual selection, age structure, mutation and chance can all shift distributions. A common-garden/reciprocal-transfer program with replicated habitat selection ablations is still needed before claiming local adaptation. Similarly, observer screenshots establish readable information and actual behavior, not that a viewer now finds the simulation compelling. The user remains the judge of that experience.
+
+## Continuation: inherited vigilance candidate
+
+The original wild founder careers show weak, inconsistent associations between speed/perception and mature children across the six predefined seeds. These associations alone cannot distinguish selection from spatial/sex confounding. The original mechanisms therefore remain plausible but ordinary adaptation remains unproven.
+
+A concrete behavioral conflict was found: herding treats visible/propagated threats as movement overrides, but behavior integration inserts stationary assessment independently. Movement can say escape while the inspector says eating, and actions continue feeding during escape. A 54-case stationary-predator fixture finds nearly identical escape time across alertness genotypes, with all groups feeding during escape.
+
+Candidate: use the existing alertness phenotype for one local escape buffer, normalized to configured baseline alertness. Widen its inherited multiplier range from .85–1.15 to .2–1.8 so ordinary founder variation can change decisions. Preserve perception limits, local warning expiry, escape direction commitment and exit hysteresis. Accepted danger immediately owns movement/pacing and interrupts feeding/drinking. This adds no genes, personality classes, planning framework or external fitness awards. Its cost is lost resource opportunity; early escape need not be universally advantageous. Risk: fewer kills or excess need interruption could destabilize predators/prey. Full-engine ecology and actual hunting must decide whether to retain it.
+
+The mutation-cost ratchet remains a competing explanation for long-horizon degradation. It is not changed simultaneously with vigilance, so ecological comparisons can identify this candidate's consequences.
+
+## Continuation decision
+
+Retain the inherited-vigilance candidate: the full-engine arena shows a six-seed reproductive consequence that weakens under matched predator removal and constant phenotype. High vigilance reduces predator deaths while costing mature offspring; it is not a universally superior policy. Ordinary-world outcomes remain variable. Reciprocal forest/plains genome transfers fail to establish home adaptation despite directional speed tendencies. No density, fertility, mutation or demographic protection changes are justified by this evidence. Full results, uncertainty, rejected explanations and remaining limits are in continuation.md.

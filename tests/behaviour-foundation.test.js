@@ -158,7 +158,12 @@ describe('threat information and escape', () => {
   it('uses previous-tick warnings and cannot sustain an alarm loop after danger leaves', () => {
     const cs = [actor(0, 20), actor(1, 28), actor(2, 36), actor(3, 19, 10, 'triangle')];
     const o = options(cs);
-    o.config = { ...config, creatureSimpleHerdingThreatRange: 3, creatureThreatDecaySeconds: 0.2 };
+    o.config = {
+      ...config,
+      creatureSimpleHerdingThreatRange: 3,
+      creatureThreatDecaySeconds: 0.2,
+      creatureBehaviorAlertToFleeThreshold: 10
+    };
     updateCreatureHerdingSimple(o);
     expect(cs[0].herding.isThreatened).toBe(true);
     expect(cs[1].herding.isThreatened).toBe(false);

@@ -10,6 +10,7 @@ import {
   resolveSeparationRadius,
   resolveSeparationStrength,
   resolveThreatRange,
+  resolveEscapeDistance,
   resolveThreatPropagationRadius,
   resolveThreatPropagationHops,
   resolveThreatDecayTicks,
@@ -131,7 +132,13 @@ export function updateCreatureHerdingSimple({ creatures, config, spatialIndex, r
       }
     }
     const wasThreatened = h.isThreatened;
-    h.isThreatened = h.threatDecayTicks > 0;
+    h.escapeDistance = resolveEscapeDistance(c, config);
+    const rememberedDistance = h.threatPosition
+      ? Math.hypot(h.threatPosition.x - c.position.x, h.threatPosition.y - c.position.y)
+      : Infinity;
+    // Exit hysteresis preserves an escape goal without boundary oscillation.
+    h.isThreatened =
+      h.threatDecayTicks > 0 && rememberedDistance <= h.escapeDistance * (wasThreatened ? 1.25 : 1);
     if (h.isThreatened && h.threatPosition) {
       h.escapeCommitTicks = Math.max(0, (h.escapeCommitTicks ?? 0) - 1);
       if (

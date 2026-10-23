@@ -1,0 +1,8 @@
+{
+  "seed": 42,
+  "ticks": 9000,
+  "births": 24,
+  "actorHash": "ab2aeea5ee3879bf6509031f4563f8c88ab02f3e98a0c70298e59c19a399e85b",
+  "actorStatesEqual": true,
+  "description": "Final vigilance history and disabled-state cleanup versus frozen measured candidate; includes ordinary births. Enabled-world actor trajectory is unchanged."
+}

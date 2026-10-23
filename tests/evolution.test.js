@@ -93,6 +93,8 @@ describe('passive inherited distributions', () => {
     expect(s.speed.histogram[0]).toBe(1);
     expect(s.speed.histogram[5]).toBe(1);
     expect(s.speed.histogram[9]).toBe(1);
+    expect(s.alertness.count).toBe(0);
+    expect(summarizeEvolutionGenes([{ genome: { alertness: 0.2 } }]).alertness.mean).toBe(0.2);
     expect(s.growthRate.mean).toBe(null);
     expect(s.growthRate.count).toBe(0);
     expect(summarizeEvolutionGenes([{ genome: { speed: 0.4 } }]).speed.variance).toBe(0);
@@ -194,4 +196,33 @@ describe('research sampling uses simulation seconds', () => {
       }
     }
   }, 30000);
+});
+
+describe('world treatment reaches both production birth paths', () => {
+  it('uses the active world mode for gestation and immediate births despite pending config', async () => {
+    const { reproductiveMechanism } = await import('../scripts/evolution-mechanisms.mjs');
+    for (const species of ['square', 'circle', 'triangle', 'octagon']) {
+      const result = reproductiveMechanism({
+        species,
+        environment: 'energy',
+        ablate: true,
+        parentSpeeds: [0.1, 0.9],
+        configMode: 'blended',
+        worldMode: 'segregating'
+      });
+      expect(result.births).toBeGreaterThan(0);
+      for (const child of result.offspring) expect([0.1, 0.9]).toContain(child.speed);
+      const legacy = reproductiveMechanism({
+        species,
+        environment: 'energy',
+        ablate: true,
+        parentSpeeds: [0.1, 0.9],
+        configMode: 'segregating',
+        worldMode: 'blended'
+      });
+      expect(legacy.births).toBeGreaterThan(0);
+      for (const child of legacy.offspring) expect(child.speed).toBeGreaterThan(0.1);
+      for (const child of legacy.offspring) expect(child.speed).toBeLessThan(0.9);
+    }
+  });
 });

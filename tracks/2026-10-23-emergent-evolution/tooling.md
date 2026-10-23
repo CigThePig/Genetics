@@ -41,3 +41,20 @@ Regenerate figures and benchmarks before the final summarizer call: it validates
 The original matrix summarizer authenticates clean source fingerprints against pinned audit values. Historical files without inline fingerprints are accepted only when their exact compressed bytes match the original PR commit's SHA-256 catalog; this narrow exception is not available to new or edited recordings. The historical artifact contents are preserved. `python -m unittest discover -s tests -p 'test_*.py'` exercises rejection paths and is now run in CI.
 
 `natural-evolution.mjs --out=...json.gz --seed=1 --habitat=forest --seconds=1200` runs a documented constructed habitat with the complete simulation engine. `--transfer=...json.gz` initializes new organisms from living descendant genomes of that source; positions, sex assignment, initial age and reserves are newly standardized, memories are fresh. It refuses missing source species. No automatic transfer or ecological intervention occurs in gameplay.
+
+## Full-engine ecological continuation
+
+Read [the continuation report](continuation.md) before interpreting these fixtures. Ordinary worlds and constructed ecology are separate evidence levels. `natural-evolution.mjs` supports `--root`, `--water=edge`, `--polymorphism=alertness`, `--remove-predators=1`, `--transfer` and `--mode=blended`; all interventions are initial-only and recorded. Missing donor species abort rather than receiving replacement genomes. The CLI exclusively claims output with a lock and refuses overwrite. `runner-v1.mjs.txt` archives an intermediate runner; another immutable version is in the source bundle. Their byte hashes are audited.
+
+`analyze-natural-evolution.py <continuation-directory>` verifies the full registered matrix, clean source fingerprints against Git objects, pinned configuration, runner versions, transfer source hashes and matched founders. It writes a compact `analysis.json` and compressed per-run details in `analysis-runs.json.gz`. `--partial` is only for exploration. Mature-child fitness uses the configured effective-age reproductive threshold; descendant careers at the horizon remain right-censored. Founder selection versus matched mature-child response separates reproductive weighting from transmission/mate contribution; it does not identify mutation alone. Neutral markers are descriptive controls, not an automatic adaptation test.
+
+Reproduce alternating equal-actor profiles after other simulation jobs finish:
+
+```sh
+node scripts/benchmark-demography.mjs --allow-behavior-change /path/to/baseline /path/to/final > /tmp/profile.jsonl
+node scripts/profile-evolution.mjs /tmp/hot-paths.json /path/to/baseline /path/to/final
+```
+
+The flag preserves equal actor-count checks while permitting intentional behavioral trajectories to differ. It does not remove the original default hash-equality assertion for inheritance-only comparisons. Three alternating trials at each 80/240/480 actor workload are archived. Instrumented stage timing and bounded-history JSON size are supplementary diagnostics, not physical heap or mobile FPS certification.
+
+The optional browser runner accepts `EVOLUTION_BROWSER_ROOT`, `EVOLUTION_BROWSER_MODES`, `EVOLUTION_BROWSER_TIMES`, `EVOLUTION_BROWSER_OUT` and `EVOLUTION_BROWSER_QUICK`, alongside the external Playwright/executable paths. Normal-run observations use one-second traces of the first founder per species, 0/60/180-second screenshots and desktop/390-pixel UI/reset checks. Paused/manual-tick screenshots do not measure render FPS. Browser source fingerprints and version are recorded.

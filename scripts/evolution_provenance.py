@@ -27,3 +27,8 @@ def verify_record(record, mode, path, provenance):
         assert hashlib.sha256(path.read_bytes()).hexdigest() == LEGACY_SHA256.get(path.name), "Unverified legacy recording bytes"
     assert record["seconds"] == record["ticks"] / record["config"]["ticksPerSecond"], "Inconsistent duration"
     assert record["history"][0]["tick"] == 0 and record["history"][-1]["tick"] == record["ticks"], "Incomplete history"
+
+
+def verify_legacy_artifact(path):
+    expected = {"controlled.json.gz": 'b17b441fca3938339fb93c9e9e148c5639b4e281caf0e378c9820956669e77ea'}
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == expected.get(path.name), "Unverified historical controlled artifact"

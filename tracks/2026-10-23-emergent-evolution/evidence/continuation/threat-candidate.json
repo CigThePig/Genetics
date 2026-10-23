@@ -1,0 +1,1044 @@
+{
+  "source": {
+    "fingerprint": "9b92ff7706a06cc6b759d8f0a23bc388d5df82eabdc1114c2c454f5e99f8648e",
+    "fingerprintAlgorithm": "sha256-src-v1",
+    "fingerprintFiles": [
+      "src/app/bootstrap.js",
+      "src/app/config-controller.js",
+      "src/app/loop.js",
+      "src/app/settings.js",
+      "src/app/timebase.js",
+      "src/input/index.js",
+      "src/main.js",
+      "src/metrics/index.js",
+      "src/metrics/perf-registry.js",
+      "src/metrics/perf.js",
+      "src/render/camera.js",
+      "src/render/renderer-enhanced.js",
+      "src/render/renderer.js",
+      "src/render/terrain-cache.js",
+      "src/render/terrain-view.js",
+      "src/sim/colour-metrics.js",
+      "src/sim/colour.js",
+      "src/sim/config-defaults.js",
+      "src/sim/config-meta/behavior-1.js",
+      "src/sim/config-meta/chase-1.js",
+      "src/sim/config-meta/colour-ecology.js",
+      "src/sim/config-meta/creatures-1.js",
+      "src/sim/config-meta/genetics-1.js",
+      "src/sim/config-meta/herding-1.js",
+      "src/sim/config-meta/herding-2.js",
+      "src/sim/config-meta/input-1.js",
+      "src/sim/config-meta/lifespan-1.js",
+      "src/sim/config-meta/memory-1.js",
+      "src/sim/config-meta/metabolism-1.js",
+      "src/sim/config-meta/movement-1.js",
+      "src/sim/config-meta/perception-1.js",
+      "src/sim/config-meta/physics-1.js",
+      "src/sim/config-meta/plants-1.js",
+      "src/sim/config-meta/predator-1.js",
+      "src/sim/config-meta/rendering-1.js",
+      "src/sim/config-meta/reproduction-1.js",
+      "src/sim/config-meta/simulation-1.js",
+      "src/sim/config-meta/world-1.js",
+      "src/sim/config.js",
+      "src/sim/creatures/actions.js",
+      "src/sim/creatures/aging.js",
+      "src/sim/creatures/alertness.js",
+      "src/sim/creatures/behavior-helpers.js",
+      "src/sim/creatures/behavior-hunting.js",
+      "src/sim/creatures/behavior-integration.js",
+      "src/sim/creatures/behavior-state.js",
+      "src/sim/creatures/chase.js",
+      "src/sim/creatures/combat.js",
+      "src/sim/creatures/death.js",
+      "src/sim/creatures/food.js",
+      "src/sim/creatures/genetics.js",
+      "src/sim/creatures/herding-simple-helpers.js",
+      "src/sim/creatures/herding-simple.js",
+      "src/sim/creatures/herding.js",
+      "src/sim/creatures/index.js",
+      "src/sim/creatures/intent-helpers.js",
+      "src/sim/creatures/intent.js",
+      "src/sim/creatures/life-stages.js",
+      "src/sim/creatures/lineage.js",
+      "src/sim/creatures/local-groups.js",
+      "src/sim/creatures/locomotion.js",
+      "src/sim/creatures/mate-memory.js",
+      "src/sim/creatures/mate-preference.js",
+      "src/sim/creatures/memory.js",
+      "src/sim/creatures/metabolism.js",
+      "src/sim/creatures/movement-helpers.js",
+      "src/sim/creatures/movement.js",
+      "src/sim/creatures/navigation.js",
+      "src/sim/creatures/pack-helpers.js",
+      "src/sim/creatures/pack.js",
+      "src/sim/creatures/perception.js",
+      "src/sim/creatures/reproduction-helpers.js",
+      "src/sim/creatures/reproduction.js",
+      "src/sim/creatures/spawn.js",
+      "src/sim/creatures/targeting.js",
+      "src/sim/creatures/traits.js",
+      "src/sim/creatures/visibility.js",
+      "src/sim/creatures/water-rendezvous.js",
+      "src/sim/evolution-metrics.js",
+      "src/sim/habitat-analysis.js",
+      "src/sim/habitat-colours.js",
+      "src/sim/hydrology.js",
+      "src/sim/metrics-factory.js",
+      "src/sim/noise.js",
+      "src/sim/plant-generator.js",
+      "src/sim/plants/bushes.js",
+      "src/sim/plants/carcasses.js",
+      "src/sim/plants/grass.js",
+      "src/sim/plants/index.js",
+      "src/sim/regional-terrain.js",
+      "src/sim/rng.js",
+      "src/sim/sim.js",
+      "src/sim/spatial-index.js",
+      "src/sim/spatial-metrics.js",
+      "src/sim/species.js",
+      "src/sim/summary.js",
+      "src/sim/terrain-effects.js",
+      "src/sim/terrain-generator-enhanced.js",
+      "src/sim/terrain-generator.js",
+      "src/sim/utils/config.js",
+      "src/sim/utils/resolvers.js",
+      "src/sim/worker.js",
+      "src/sim/world-grid.js",
+      "src/styles.css",
+      "src/ui/colour-evolution.js",
+      "src/ui/config-panel.js",
+      "src/ui/config-sections.js",
+      "src/ui/config-storage.js",
+      "src/ui/config-validation.js",
+      "src/ui/config-values.js",
+      "src/ui/graphs-panel.js",
+      "src/ui/index.js",
+      "src/ui/live-inspector.js"
+    ],
+    "sourceCommit": "5f9ea2cf2e47cc0667561de6206129082b05d1ae",
+    "sourceDirty": false
+  },
+  "description": "Stationary observed predator; fixed grass-feeding intent and uniform grass. Production herding, behavior, movement, and feeding; no pursuit or reproduction. Measures decision and opportunity cost only.",
+  "results": [
+    {
+      "seed": 1,
+      "gene": 0.1,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9456476531724004,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.1,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9456476531724004,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.1,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9456476531724004,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.5,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.85,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8691476531723966,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 8.535439744961907,
+        "y": 12.439119191898477
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.5,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.3333333333333333,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9156476531723989,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 12.675987142596247,
+        "y": 12.438606099055654
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.5,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9456476531724004,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.9,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.6333333333333333,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.7986476531723932,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 2.264819376008408,
+        "y": 12.43912097862126
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.9,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.15,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8421476531723953,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 6.133916583151273,
+        "y": 12.439120912312244
+      }
+    },
+    {
+      "seed": 1,
+      "gene": 0.9,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 0.7666666666666667,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8766476531723969,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 9.202548494380064,
+        "y": 12.439116523283388
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.1,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9435567333503705,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.1,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9435567333503705,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.1,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9435567333503705,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.5,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 1.2666666666666666,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8295567333503648,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 8.696478218914685,
+        "y": 11.34134388179004
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.5,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.75,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.876056733350367,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 12.73505124627576,
+        "y": 11.330730538484547
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.5,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9435567333503705,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.9,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 2.0833333333333335,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.7560567333503635,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 2.323710683583862,
+        "y": 11.341380805008988
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.9,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.5833333333333333,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8010567333503633,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 6.225391265910856,
+        "y": 11.34137966265892
+      }
+    },
+    {
+      "seed": 42,
+      "gene": 0.9,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.2,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2833333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8355567333503652,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 9.216727817590705,
+        "y": 11.341304113255056
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.1,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9441116997051109,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.1,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9441116997051109,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.1,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9441116997051109,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.5,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 1.2166666666666666,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8346116997051055,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 8.712782212192963,
+        "y": 11.401272202839461
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.5,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.6833333333333333,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8826116997051079,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 12.7934202612553,
+        "y": 11.390393823985258
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.5,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9441116997051109,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.9,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 2.066666666666667,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.758111699705104,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 2.2204245320420988,
+        "y": 11.401303710883152
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.9,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.5333333333333334,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8061116997051041,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 6.294048604919184,
+        "y": 11.40130273486195
+      }
+    },
+    {
+      "seed": 1337,
+      "gene": 0.9,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.15,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8406116997051057,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 9.222007024448601,
+        "y": 11.401238268118405
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.1,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9463978567638129,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.1,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9463978567638129,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.1,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9463978567638129,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.5,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 1.05,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8518978567638082,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 8.676012234903846,
+        "y": 13.60036519280535
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.5,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.5333333333333333,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8983978567638106,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 12.722152354598684,
+        "y": 13.612632997658322
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.5,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9463978567638129,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.9,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.8666666666666667,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.7783978567638057,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 2.2927147885127,
+        "y": 13.600322513808521
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.9,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.3666666666666667,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8233978567638067,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 6.200840420282807,
+        "y": 13.60032383423395
+      }
+    },
+    {
+      "seed": 2,
+      "gene": 0.9,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 0.9833333333333333,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2166666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8578978567638085,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 9.197124560199718,
+        "y": 13.600411160660377
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.1,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9438498006942106,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.1,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9438498006942106,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.1,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9438498006942106,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.5,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 1.45,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8133498006942042,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 8.635358305041493,
+        "y": 11.25941831886401
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.5,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.95,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8583498006942063,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 12.657260821248089,
+        "y": 11.25039473367148
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.5,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.9438498006942106,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.9,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 2.25,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.7413498006942036,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 2.2098736990950405,
+        "y": 11.25945606845186
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.9,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.75,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.7863498006942036,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 6.225787268252648,
+        "y": 11.259454666354607
+      }
+    },
+    {
+      "seed": 7,
+      "gene": 0.9,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.3666666666666667,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2666666666666666,
+      "energy": 1,
+      "meanEnergy": 0.8208498006942044,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 9.304713437964434,
+        "y": 11.259361938554122
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.1,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9453719750632231,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.1,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9453719750632231,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.1,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.21600000000000003,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9453719750632231,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.5,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.8666666666666667,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8673719750632192,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 8.661791759996055,
+        "y": 12.653963667613374
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.5,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0.35,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9138719750632214,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 12.667680204845848,
+        "y": 12.655281216722178
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.5,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.6,
+      "escapingSeconds": 0,
+      "firstEscapeTick": null,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.9453719750632231,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 15.5,
+        "y": 12.5
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.9,
+      "distance": 4,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.7,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.7923719750632159,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 2.2068464938875967,
+        "y": 12.65395908383586
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.9,
+      "distance": 8,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 1.1833333333333333,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8388719750632176,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 6.208904708804694,
+        "y": 12.653959225747101
+      }
+    },
+    {
+      "seed": 19,
+      "gene": 0.9,
+      "distance": 11,
+      "seconds": 10,
+      "alertness": 0.984,
+      "escapingSeconds": 0.8,
+      "firstEscapeTick": 1,
+      "feedingSeconds": 1.2333333333333334,
+      "energy": 1,
+      "meanEnergy": 0.8733719750632195,
+      "feedingWhileEscapingSeconds": 0,
+      "position": {
+        "x": 9.17820066867405,
+        "y": 12.653968604511798
+      }
+    }
+  ]
+}
