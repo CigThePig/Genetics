@@ -1,5 +1,6 @@
 import { SPECIES_LIST } from './species.js';
 import { circularSummary } from './colour.js';
+import { summarizeEvolutionGenes } from './evolution-metrics.js';
 export const COLOUR_HISTORY_LIMIT = 120;
 export function colourPopulationSnapshot(creatures, tick, world) {
   const species = {};
@@ -17,6 +18,7 @@ export function colourPopulationSnapshot(creatures, tick, world) {
     }
     species[name] = {
       count: members.length,
+      genes: summarizeEvolutionGenes(members),
       body: circularSummary(members.map((c) => c.traits?.bodyHue)),
       preference: circularSummary(members.map((c) => c.traits?.matePreferenceHue)),
       saturation: mean('bodySaturation'),

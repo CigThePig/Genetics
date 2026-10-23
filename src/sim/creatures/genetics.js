@@ -206,7 +206,11 @@ export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) =>
 
     // Compute inherited base: either random blend or midpoint
     let base;
-    if (rng && rng.nextFloat() < mixChance) {
+    if (rng && config?.creatureGenomeInheritanceMode === 'segregating') {
+      // Quantitative haploid loci: recombine intact parental values instead of
+      // averaging away every inherited difference. Mutation remains separate.
+      base = rng.nextFloat() < 0.5 ? resolvedA : resolvedB;
+    } else if (rng && rng.nextFloat() < mixChance) {
       // Random blend between parents
       const t = rng.nextFloat();
       base = isHue(key) ? mixHue(resolvedA, resolvedB, t) : resolvedA + (resolvedB - resolvedA) * t;

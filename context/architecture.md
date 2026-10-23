@@ -200,3 +200,28 @@ Recovery belongs to animals that attempted mating. Successful/failed parental co
 Global/per-species matingAttempts and matingFailures counters count pairs once, consume no RNG and reset with their owning simulation. Pregnancy is conception, birth is completed offspring, and neither alone measures replacement. Detailed cohort/opportunity histories and potential-pair-loss reconstruction are offline only; they never give animals census knowledge.
 
 Future wound eligibility belongs in the shared reproductive predicate, mobility penalties in movement/traits. Do not overload recovery as a juvenile or injury clock. Preserve tick order, pregnancy ownership and explicit lethal-event attribution. See tracks/2026-10-22-demographic-replacement/track12-readiness.md.
+
+## Quantitative locus inheritance and observation (2026-10-23)
+
+The default functional genome now uses haploid quantitative-locus segregation:
+each locus copies either parental normalized value with probability one-half,
+then retains existing inheritance noise, mutation and mutation-cost coupling.
+There are no hidden diploid functional alleles, dominance, habitat-assigned
+values or organism-level fitness scores. Trait mapping and state-based tradeoffs
+remain unchanged. Both birth paths use the same inheritance function; the copied
+paternal flat genome continues to survive paternal death during gestation.
+
+`creatureGenomeInheritanceMode: 'blended'` preserves the previous random/midpoint
+blend and circular hue interpolation. The mix-chance knob applies only to that
+mode. Seedless/standalone callers without the new setting retain legacy fallback.
+Changing the mode changes future offspring and RNG consumption; it does not
+rewrite live traits. Old settings merge with new-world defaults; select blending
+explicitly for historical replay. The app persists settings rather than complete
+live-world saves. Neutral diagnostic markers remain separate diploid loci.
+
+`evolution-metrics.js` adds six quantitative gene histograms/moments to the existing
+10-second colour snapshot. Histories remain at most 120 snapshots plus founders,
+owned/reset by the simulation. Rendering and UI read them without sampling RNG or
+changing actors. Empty samples have null mean/variance; a monomorphic sample has
+zero variance. Hue retains separate circular statistics. These are descriptive
+population snapshots, not selection or adaptation classifiers.

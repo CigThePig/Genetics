@@ -562,42 +562,50 @@ describe('soft mate choice and lifecycle consistency', () => {
     rival.meters.hp = 0;
     expect(findMate(opts)).toBe(other);
   });
-  it('conceives with the pursued father and inherits his saved colour after death', () => {
-    const mother = animal(2),
-      father = animal(3, 'circle', 11),
-      substitute = animal(5, 'circle', 10.2);
-    mother.genome.bodyHue = 0.99;
-    father.genome.bodyHue = 0.01;
-    substitute.genome.bodyHue = 0.5;
-    mother.intent = { type: 'mate' };
-    mother.reproduction.mate = { targetId: 3, commitTicksRemaining: 50 };
-    father.generation = 2;
-    const creatures = [mother, father, substitute],
-      world = worldOf();
-    const config = {
-      ...simConfig,
-      creatureReproductionMinAge: 0,
-      creatureReproductionMinEnergyRatio: 0,
-      creatureReproductionMinWaterRatio: 0,
-      creatureConceptionChance: 1,
-      creatureGestationTime: 1 / 60,
-      creatureGenomeMutationRate: 0,
-      creatureGenomeInheritanceNoise: 0,
-      creatureGenomeInheritanceMixChance: 0
-    };
-    const opts = { creatures, world, config, rng: createRng(4), metrics: {} };
-    updateCreatureReproduction(opts);
-    expect(mother.reproduction.pregnancy.fatherId).toBe(3);
-    creatures.splice(1, 1);
-    updateCreatureReproduction(opts);
-    const child = creatures.at(-1);
-    expect(child.generation).toBe(3);
-    expect(hueDistance(child.traits.bodyHue, 0)).toBeLessThan(1e-10);
-    expect(child.traits.bodyCss).toBe(
-      createCreatureTraits({ config, genome: child.genome }).bodyCss
-    );
-    expect(mother.reproduction.pregnancy.isPregnant).toBe(false);
-  });
+  it.each(['blended', 'segregating'])(
+    'conceives with the pursued father and inherits his saved colour after death (%s)',
+    (mode) => {
+      const mother = animal(2),
+        father = animal(3, 'circle', 11),
+        substitute = animal(5, 'circle', 10.2);
+      mother.genome.bodyHue = 0.99;
+      father.genome.bodyHue = 0.01;
+      substitute.genome.bodyHue = 0.5;
+      mother.intent = { type: 'mate' };
+      mother.reproduction.mate = { targetId: 3, commitTicksRemaining: 50 };
+      father.generation = 2;
+      const creatures = [mother, father, substitute],
+        world = worldOf();
+      const config = {
+        ...simConfig,
+        creatureReproductionMinAge: 0,
+        creatureReproductionMinEnergyRatio: 0,
+        creatureReproductionMinWaterRatio: 0,
+        creatureConceptionChance: 1,
+        creatureGestationTime: 1 / 60,
+        creatureGenomeMutationRate: 0,
+        creatureGenomeInheritanceNoise: 0,
+        creatureGenomeInheritanceMixChance: 0,
+        creatureGenomeInheritanceMode: mode
+      };
+      const opts = { creatures, world, config, rng: createRng(4), metrics: {} };
+      updateCreatureReproduction(opts);
+      expect(mother.reproduction.pregnancy.fatherId).toBe(3);
+      creatures.splice(1, 1);
+      updateCreatureReproduction(opts);
+      const child = creatures.at(-1);
+      expect(child.generation).toBe(3);
+      if (mode === 'blended') expect(hueDistance(child.traits.bodyHue, 0)).toBeLessThan(1e-10);
+      else
+        expect(
+          Math.min(hueDistance(child.traits.bodyHue, 0.99), hueDistance(child.traits.bodyHue, 0.01))
+        ).toBeLessThan(1e-10);
+      expect(child.traits.bodyCss).toBe(
+        createCreatureTraits({ config, genome: child.genome }).bodyCss
+      );
+      expect(mother.reproduction.pregnancy.isPregnant).toBe(false);
+    }
+  );
   it('retains valid variable colour through six controlled generations', () => {
     let a = animal(1),
       b = animal(2);

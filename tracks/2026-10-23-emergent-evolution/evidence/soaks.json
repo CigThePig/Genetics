@@ -1,0 +1,62 @@
+[
+  {
+    "seed": 1,
+    "ticks": 36000,
+    "maxPopulation": 159,
+    "deathsFirstMinute": 0,
+    "medianDeathSeconds": 517.7666666666667,
+    "population": 124,
+    "species": [
+      67,
+      5,
+      51,
+      1
+    ],
+    "pregnancies": 164,
+    "births": 143,
+    "chases": 86,
+    "kills": 12,
+    "deaths": 99,
+    "hash": "64709bf79350963ec0ee696a1eb58cd5589ef50b22e796916671dd79fc283df7"
+  },
+  {
+    "seed": 42,
+    "ticks": 36000,
+    "maxPopulation": 185,
+    "deathsFirstMinute": 0,
+    "medianDeathSeconds": 525,
+    "population": 161,
+    "species": [
+      72,
+      5,
+      78,
+      6
+    ],
+    "pregnancies": 198,
+    "births": 173,
+    "chases": 155,
+    "kills": 27,
+    "deaths": 92,
+    "hash": "2bd029b5ed18990f0bcf9f6735d76afe9140d3007475d5cefd1b8ee7365e0b67"
+  },
+  {
+    "seed": 1337,
+    "ticks": 36000,
+    "maxPopulation": 190,
+    "deathsFirstMinute": 2,
+    "medianDeathSeconds": 517.75,
+    "population": 151,
+    "species": [
+      71,
+      9,
+      60,
+      11
+    ],
+    "pregnancies": 213,
+    "births": 184,
+    "chases": 137,
+    "kills": 39,
+    "deaths": 113,
+    "hash": "9a0fa93530f2a88470ce6599ef57f006ac15336e25a1c4eeab41dbe70fa1671a"
+  }
+]

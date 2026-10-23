@@ -1,0 +1,29 @@
+{
+  "javascriptTests": 311,
+  "pythonTests": 12,
+  "npmVerify": "passed locally",
+  "soakSeeds": [
+    1,
+    42,
+    1337
+  ],
+  "soakTicksPerSeed": 36000,
+  "wildRuns": 14,
+  "wildTicks": 1080000,
+  "controlledAssays": 160,
+  "weakPressureAssays": 160,
+  "engineFixtures": 96,
+  "browserDesktop": [
+    1280,
+    900
+  ],
+  "browserMobileLayout": [
+    390,
+    844
+  ],
+  "browserErrors": [],
+  "performanceTrials": 18,
+  "physicalPhoneProfile": false,
+  "adaptiveHabitatDivergenceEstablished": false,
+  "experientialSuccessIndependentlyEstablished": false
+}

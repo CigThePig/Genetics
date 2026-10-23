@@ -68,3 +68,22 @@ If you rename this repo, update:
 ## License
 
 MIT. See `LICENSE`.
+
+## Inherited trait history and evolutionary experiments
+
+**Graphs → Evolution history** now compares inherited speed, perception, metabolism,
+growth and longevity distributions with founders or an earlier sample. Counts and
+mean/SD accompany the histogram; colour histories remain available. Distribution
+changes can reflect drift, migration and age composition as well as selection.
+They do not by themselves establish adaptation.
+
+New worlds copy either parent's value independently at each quantitative locus
+before the existing noise/mutation steps. This preserves inherited alternatives
+instead of blending every difference. Configuration → **Inheritance model** can
+select **Legacy blending** for comparison; its existing mix-chance control is
+inactive in segregating mode. Older settings without this key use the new default
+when rebuilt. No live genome is rewritten, no adaptive outcome is assigned, and
+extinction remains possible.
+
+[Investigation, evidence and limits](tracks/2026-10-23-emergent-evolution/evidence.md) ·
+[Reproduce the experiments](tracks/2026-10-23-emergent-evolution/tooling.md)

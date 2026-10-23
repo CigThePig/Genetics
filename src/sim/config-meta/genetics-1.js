@@ -1,4 +1,15 @@
 export const metaGenetics1 = {
+  creatureGenomeInheritanceMode: {
+    label: 'Inheritance model',
+    description:
+      'Segregating copies either parent at each locus; blended averages parental values. Rebuild for a fresh comparison.',
+    type: 'select',
+    options: [
+      { value: 'segregating', label: 'Segregating loci' },
+      { value: 'blended', label: 'Legacy blending' }
+    ],
+    category: 'genetics'
+  },
   creatureGenomeMutationRate: {
     label: 'Mutation Rate',
     description: 'Per-gene mutation probability.',
@@ -49,7 +60,8 @@ export const metaGenetics1 = {
   },
   creatureGenomeInheritanceMixChance: {
     label: 'Inheritance Mix Chance',
-    description: 'Chance to blend parent genes randomly.',
+    description:
+      'Legacy blending only: chance of a random blend rather than midpoint. Inactive with segregating loci.',
     min: 0,
     max: 1,
     step: 0.05,
