@@ -1,3 +1,4 @@
+import { clearLandLine } from './navigation.js';
 import { mateSelectionCost } from './mate-preference.js';
 import { canSeeCreature } from './visibility.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
@@ -134,7 +135,8 @@ export const selectMateTarget = (options) => {
     spatialIndex,
     config = {},
     world,
-    honorCommitment = false
+    honorCommitment = false,
+    requireLandContact = false
   } = options;
   if (!source?.position || !Array.isArray(creatures)) return null;
   const range = Math.sqrt(maxDistanceSq);
@@ -164,6 +166,10 @@ export const selectMateTarget = (options) => {
     const reservedMate = findById(reservedId);
     return !isMateCandidate({ ...options, source: candidate, candidate: reservedMate });
   };
+  const hasContact = (candidate) =>
+    !requireLandContact ||
+    !world?.getTerrainAt ||
+    clearLandLine(world, source.position, candidate.position);
   const ownCommitment = honorCommitment ? committedId(source) : null;
   if (ownCommitment !== null) {
     const mate = findById(ownCommitment);
@@ -172,7 +178,9 @@ export const selectMateTarget = (options) => {
       const d =
         (mate.position.x - source.position.x) ** 2 + (mate.position.y - source.position.y) ** 2;
       // A valid distant or concealed commitment cannot be replaced at conception.
-      return d <= maxDistanceSq && canSeeCreature(source, mate, world, config, range, true)
+      return d <= maxDistanceSq &&
+        canSeeCreature(source, mate, world, config, range, true) &&
+        hasContact(mate)
         ? mate
         : null;
     }
@@ -185,6 +193,7 @@ export const selectMateTarget = (options) => {
       (candidate.position.x - source.position.x) ** 2 +
       (candidate.position.y - source.position.y) ** 2;
     if (d > maxDistanceSq || !canSeeCreature(source, candidate, world, config, range)) continue;
+    if (!hasContact(candidate)) continue;
     const cost = mateSelectionCost(source, candidate, Math.sqrt(d), config);
     if (cost < best || (cost === best && candidate.id < (chosen?.id ?? Infinity))) {
       chosen = candidate;
@@ -194,7 +203,8 @@ export const selectMateTarget = (options) => {
   return chosen;
 };
 
-export const findMate = (options) => selectMateTarget({ ...options, honorCommitment: true });
+export const findMate = (options) =>
+  selectMateTarget({ ...options, honorCommitment: true, requireLandContact: true });
 
 const spawnOffset = (rng) => (rng.nextFloat() * 2 - 1) * 0.35;
 

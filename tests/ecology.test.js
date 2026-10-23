@@ -1,3 +1,4 @@
+import { navigationTarget } from '../src/sim/creatures/navigation.js';
 import { describe, it, expect } from 'vitest';
 import { createSim } from '../src/sim/sim.js';
 import { createDefaultMetrics } from '../src/sim/metrics-factory.js';
@@ -178,10 +179,17 @@ describe('observed mate contacts', () => {
       if (reason === 'unreachable') {
         for (let y = 0; y < o.world.height; y++) o.world.setTerrainAt(7, y, 'water');
       }
-      const tick = reason === 'expiry' ? 62 : 3;
+      let tick = reason === 'expiry' ? 62 : 3;
       updateCreatureIntent({ ...o, tick });
       expect(source.search.goal).toBe('mate');
       expect(source.intent.target).not.toEqual(observed);
+      // A sampled destination on the disconnected bank is now rejected. Let
+      // exploration retry, then check that the reachable replacement is retained.
+      for (let attempt = 0; !source.intent.target && attempt < 16; attempt++) {
+        updateCreatureIntent({ ...o, tick: ++tick });
+      }
+      expect(source.intent.target).not.toBeNull();
+      expect(navigationTarget(o.world, source.position, source.intent.target)).not.toBeNull();
       const randomTarget = { ...source.intent.target };
       updateCreatureIntent({ ...o, tick: tick + 1 });
       expect(source.intent.target).toEqual(randomTarget);

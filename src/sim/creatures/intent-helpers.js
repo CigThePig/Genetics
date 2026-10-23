@@ -1,3 +1,4 @@
+import { navigationTarget } from './navigation.js';
 import { resolveWaterTerrain, isWaterTile } from '../utils/resolvers.js';
 import { SPECIES } from '../species.js';
 import { resolveNeedMeterBase, normalizeNeedRatio } from './metabolism.js';
@@ -196,8 +197,14 @@ export const pickSearchTarget = ({ creature, goal, config, world, rng }) => {
     }
   }
 
-  // Aim at cell center to reduce edge jitter.
-  search.target = { x: targetX + 0.5, y: targetY + 0.5 };
+  // Do not retain an unreachable goal forever. A rejected sample is retried on
+  // the next decision with the advanced heading; no unseen resources are queried.
+  const target = { x: targetX + 0.5, y: targetY + 0.5 };
+  search.target =
+    !isWaterTile(world, targetX, targetY, waterTerrain) &&
+    navigationTarget(world, creature.position, target)
+      ? target
+      : null;
   return search.target;
 };
 

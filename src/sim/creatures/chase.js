@@ -1,3 +1,4 @@
+import { clearLandLine } from './navigation.js';
 import { canSeeCreature } from './visibility.js';
 import { canCatchPrey } from './behavior-helpers.js';
 import { resolveTicksPerSecond } from '../utils/resolvers.js';
@@ -207,7 +208,11 @@ export function updateCreatureChase({ creatures, config, metrics, tick, spatialI
     const distance = Math.sqrt(dx * dx + dy * dy);
     chase.distance = distance;
 
-    if (distance <= catchDistance && canCatchPrey(creature, config)) {
+    if (
+      distance <= catchDistance &&
+      canCatchPrey(creature, config) &&
+      (!world?.getTerrainAt || clearLandLine(world, creature.position, target.position))
+    ) {
       concludeChase({
         chase,
         config,
