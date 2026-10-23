@@ -15,5 +15,15 @@
     "ticks": 10800,
     "actorStatesEqual": true
   },
-  "crossRuntimeIdenticalReplayEstablished": false
+  "crossRuntimeIdenticalReplayEstablished": false,
+  "hostedCI": {
+    "commit": "cfd21c0056b7b21fde287e5959f5c109e7aab6db",
+    "run": 40008829687,
+    "conclusion": "success"
+  },
+  "localFreshTests": {
+    "passed": 318,
+    "failed": 0,
+    "success": true
+  }
 }

@@ -1,6 +1,7 @@
 # Active track
 
-[Emergent evolution](../tracks/2026-10-23-emergent-evolution/plan.md), PR #144 continuation.
+No active implementation track.
 
-Phase: final evidence audit, performance and PR publication.
-Next: finish validation, publish all changes to the existing branch, inspect CI/reviews.
+PR #144 continuation is implemented, evidenced and published; it remains unmerged.
+See [the completed plan](../tracks/2026-10-23-emergent-evolution/plan.md) and continuation report.
+A fresh Codex review was requested; no new findings were present at closeout.

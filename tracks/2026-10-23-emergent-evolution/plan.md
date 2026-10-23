@@ -35,4 +35,6 @@ Audit found the `36 founders / no predators` configuration also changes herbivor
 - [x] Implement inherited vigilance with local information and a real resource opportunity cost; retain legacy inheritance and legitimate extinction.
 - [x] Observe normal-browser behavior and compare final bounded history/actor replay, ecology and performance.
 - [x] Run regression/full verification and package reproducible evidence for the existing PR.
-- [ ] Publish final continuation commit, inspect hosted CI and any new valid review findings; do not merge.
+- [x] Publish final continuation commit, inspect hosted CI and any new valid review findings; do not merge.
+
+Published in cfd21c0; hosted Verify run 40008829687 passed, including the source-bundle import and Python report tests. Fresh Codex review requested; original threads remain resolved and no new findings were present at closeout. A request is not a completed review.

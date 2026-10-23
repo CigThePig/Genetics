@@ -161,3 +161,7 @@ node scripts/natural-evolution.mjs --root=/path/to/frozen-candidate --seed=42 --
 ```
 
 The archived runner and source hashes distinguish tool revisions. `--partial` analysis is explicitly exploratory; final evidence requires the complete registered matrix. See [tooling](tooling.md) for browser and performance commands. The continuation has its own artifact manifest; the original report and manifest remain historical snapshots.
+
+## Publication validation
+
+Continuation published to existing PR #144 in `cfd21c0`. [Hosted Verify run 40008829687](https://github.com/CigThePig/Genetics/actions/runs/40008829687) passed full verification, immutable source-bundle import and Python research tests. A fresh local JSON test report independently confirms 318 passed / 0 failed; lint, formatting and build passed. All original review findings are resolved; a fresh review was requested and no new findings were present at closeout. This is not a claim that the new review has finished. The PR remains unmerged.
