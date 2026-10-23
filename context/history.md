@@ -106,3 +106,14 @@ Hosted closeout: all twenty local endpoint vectors reproduce exactly, compact ra
 ## 2026-10-22 — PR #142 Codex publication corrections
 
 Confirmed both findings with successful pre-fix reproductions: a false source label was accepted and missing incoming diagnostics could republish stale output. Added full input preflight, committed-source fingerprint/revision validation, controlled-recorder provenance and an explicit manifest product list. All 26 ecological rows and all 18 original manifest checksums verify; historical controlled archives remain explicitly without embedded source identity. Full verify passes 296 JavaScript tests, lint, formatting and build; 12 Python tests pass, plus a synthetic publication integration smoke and matching real controlled assay. See the demographic track's review.md. User authorized merge into main after final hosted checks; no manual deployment requested.
+
+## 2026-10-23 — Repository bug and behaviour review
+
+Fixed four reproduced defects: nearby route corners discarded before safe traversal,
+unreachable exploration destinations retained indefinitely, conception across water, and
+captures through diagonal water corners. Added five pre-fix-failing cases and updated the
+mate-contact replacement test to require a reachable retained goal. Local verify passes
+301 JavaScript tests, lint, formatting and build; 12 Python tests and canonical three-seed
+3,600-tick invariant smoke runs pass. No population balancing or Track 12 implementation.
+See context/repository-review-2026-10-23.md for scope, reproductions and limits. Dedicated
+PR requested; no merge or deployment authorized.

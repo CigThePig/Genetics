@@ -127,8 +127,8 @@ export function navigationTarget(world, position, target, routeState = null) {
   return followPath(world, position, path);
 }
 function followPath(world, position, path) {
-  while (path.length > 1 && Math.hypot(path[0].x - position.x, path[0].y - position.y) < 0.9)
-    path.shift();
+  // Proximity alone cannot skip a corner: the next segment may still cross water.
+  // The visibility scan below discards only waypoints that can safely be bypassed.
   let result = null,
     index = 0;
   for (let i = 0; i < Math.min(path.length, 8); i++) {
