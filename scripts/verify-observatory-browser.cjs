@@ -123,7 +123,8 @@ const out = 'tracks/2026-10-24-observatory-ui/evidence';
     await page.setViewportSize({ width: 852, height: 393 });
     assert(await page.locator('.top-bar-expand').isVisible());
     await page.locator('.top-bar-expand').click();
-    assert.equal(await page.locator('.top-bar-controls').evaluate((el) => el.inert), false);
+    const controls = page.locator('.top-bar-controls');
+    assert.equal(await controls.evaluate((el) => el.inert), false);
     for (const [width, height] of [
       [393, 852],
       [320, 568],
