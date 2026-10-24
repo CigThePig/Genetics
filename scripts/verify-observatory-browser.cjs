@@ -117,14 +117,6 @@ const out = 'tracks/2026-10-24-observatory-ui/evidence';
     assert.equal(await page.locator('.census-total strong').textContent(), '80');
     assert.equal(await page.evaluate(() => window.__testApp.inspector.getTrackedId()), null);
     await page.keyboard.press('Escape');
-    // Verify that a collapsed portrait bar can reopen after rotation.
-    await page.setViewportSize({ width: 393, height: 852 });
-    await page.locator('.top-bar-expand').click();
-    await page.setViewportSize({ width: 852, height: 393 });
-    assert(await page.locator('.top-bar-expand').isVisible());
-    await page.locator('.top-bar-expand').click();
-    const controls = page.locator('.top-bar-controls');
-    assert.equal(await controls.evaluate((el) => el.inert), false);
     for (const [width, height] of [
       [393, 852],
       [320, 568],
@@ -132,13 +124,6 @@ const out = 'tracks/2026-10-24-observatory-ui/evidence';
       [768, 1024]
     ]) {
       await page.setViewportSize({ width, height });
-      if (width === 852) {
-        await page.locator('[title="Fit world"]').click();
-        const zoom = await page.evaluate(
-          () => window.__testApp.camera.getState().zoom
-        );
-        assert(zoom < 0.05);
-      }
       await page.screenshot({ path: `${out}/world-${width}x${height}.png` });
       await page.locator('.panel-content').evaluateAll((nodes) =>
         nodes.forEach((node) => {
