@@ -3,6 +3,8 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { createUI } from '../src/ui/index.js';
 import { createPanelController } from '../src/ui/panel-controller.js';
 import { createLiveInspector } from '../src/ui/live-inspector.js';
+import { createCamera } from '../src/render/camera.js';
+import { createSim } from '../src/sim/sim.js';
 
 let app;
 beforeEach(() => {
@@ -79,6 +81,48 @@ describe('observatory interactions', () => {
     expect(
       [...app.querySelectorAll('.metrics-grid .metrics-subheading')].every((node) => node.hidden)
     ).toBe(true);
+  });
+
+  it('keeps focused inspector section buttons mounted while live values update', () => {
+    const { inspector } = setup();
+    const sim = createSim({ seed: 42 });
+    inspector.selectCreature(sim.state.creatures[0]);
+    const render = () =>
+      inspector.update({
+        creatures: sim.state.creatures,
+        tick: sim.state.tick,
+        world: sim.state.world,
+        config: sim.config
+      });
+    render();
+    const header = app.querySelector('.inspector-section-header');
+    header.focus();
+    expect(document.activeElement).toBe(header);
+    for (let tick = 1; tick <= 5; tick++) {
+      sim.state.tick = tick;
+      render();
+      expect(document.activeElement).toBe(header);
+      expect(app.querySelector('.inspector-section-header')).toBe(header);
+      expect(app.querySelectorAll('.inspector-section-header')).toHaveLength(6);
+    }
+    header.click();
+    expect(header.getAttribute('aria-expanded')).toBe('false');
+    render();
+    expect(header.getAttribute('aria-expanded')).toBe('false');
+    expect(app.querySelector('.inspector-section-header')).toBe(header);
+    header.focus();
+    header.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(app.querySelector('.inspector-panel').classList.contains('visible')).toBe(false);
+  });
+
+  it('allows the landscape Fit world scale beneath the ordinary zoom floor', () => {
+    const camera = createCamera({ minZoom: 0.01, maxZoom: 5 });
+    camera.setBoundsFromWorld({ width: 120, height: 160 }, 20);
+    camera.setViewport(852, 393);
+    const requested = Math.min((852 - 48) / (120 * 20), (393 - 240) / (160 * 20));
+    camera.zoomTo(requested);
+    expect(camera.getState().zoom).toBeCloseTo(requested);
+    expect(camera.getState().zoom * 160 * 20).toBeLessThanOrEqual(153);
   });
 
   it('keeps playback callbacks and excludes collapsed controls from keyboard access', () => {
