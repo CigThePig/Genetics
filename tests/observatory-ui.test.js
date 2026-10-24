@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { createUI } from '../src/ui/index.js';
 import { createPanelController } from '../src/ui/panel-controller.js';
 import { createLiveInspector } from '../src/ui/live-inspector.js';
@@ -7,12 +7,18 @@ import { createCamera } from '../src/render/camera.js';
 import { createSim } from '../src/sim/sim.js';
 
 let app;
+let controllers;
 beforeEach(() => {
+  controllers = [];
   document.body.innerHTML = '<div id="app"></div>';
   app = document.querySelector('#app');
 });
+afterEach(() => {
+  for (const controller of controllers) controller.destroy();
+});
 const setup = (options = {}) => {
   const panelController = createPanelController(app);
+  controllers.push(panelController);
   const ui = createUI({ panelController, ...options });
   const inspector = createLiveInspector({ container: app, panelController });
   return { ui, inspector };
@@ -37,6 +43,40 @@ describe('observatory interactions', () => {
     expect(app.querySelectorAll('.overlay-panel.visible')).toHaveLength(0);
     expect(document.activeElement.getAttribute('aria-label')).toBe('Inspector');
     expect(app.dataset.panelOpen).toBeUndefined();
+  });
+
+  it('dismisses an active panel with Escape when focus is outside the app', async () => {
+    setup();
+    const outside = document.createElement('button');
+    outside.textContent = 'Outside the app';
+    document.body.append(outside);
+
+    for (const selector of ['.fab-config', '[aria-label="Inspector"]']) {
+      const trigger = app.querySelector(selector);
+      trigger.click();
+      await Promise.resolve();
+      outside.focus();
+      expect(document.activeElement).toBe(outside);
+      const escape = new KeyboardEvent('keydown', {
+        key: 'Escape',
+        bubbles: true,
+        cancelable: true
+      });
+      outside.dispatchEvent(escape);
+      expect(escape.defaultPrevented).toBe(true);
+      expect(app.querySelectorAll('.overlay-panel.visible')).toHaveLength(0);
+      expect(document.activeElement).toBe(trigger);
+      expect(app.dataset.panelOpen).toBeUndefined();
+    }
+
+    outside.focus();
+    const unusedEscape = new KeyboardEvent('keydown', {
+      key: 'Escape',
+      bubbles: true,
+      cancelable: true
+    });
+    outside.dispatchEvent(unusedEscape);
+    expect(unusedEscape.defaultPrevented).toBe(false);
   });
 
   it('updates the census from supplied state including zero counts after reset', () => {
@@ -111,6 +151,46 @@ describe('observatory interactions', () => {
     expect(header.getAttribute('aria-expanded')).toBe('false');
     expect(app.querySelector('.inspector-section-header')).toBe(header);
     header.focus();
+    header.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+    expect(app.querySelector('.inspector-panel').classList.contains('visible')).toBe(false);
+  });
+
+  it('retains keyboard focus on Hunting when a predator finishes chasing', () => {
+    const { inspector } = setup();
+    const sim = createSim({ seed: 42 });
+    const predator = sim.state.creatures.find((creature) => creature.species === 'triangle');
+    expect(predator).toBeDefined();
+    predator.chase = { status: 'pursuing', targetId: 7, distance: 2.5 };
+    inspector.selectCreature(predator);
+    const render = () =>
+      inspector.update({
+        creatures: sim.state.creatures,
+        tick: sim.state.tick,
+        world: sim.state.world,
+        config: sim.config
+      });
+    render();
+
+    const hunting = app.querySelector('[data-inspector-section="hunting"]');
+    expect(hunting).not.toBeNull();
+    const header = hunting.querySelector('.inspector-section-header');
+    header.click();
+    header.focus();
+    expect(header.getAttribute('aria-expanded')).toBe('true');
+
+    predator.chase.status = 'idle';
+    sim.state.tick += 1;
+    render();
+    expect(hunting.isConnected).toBe(true);
+    expect(hunting.querySelector('.inspector-section-header')).toBe(header);
+    expect(document.activeElement).toBe(header);
+    expect(header.getAttribute('aria-expanded')).toBe('true');
+    expect(hunting.textContent).toContain('Not currently hunting');
+
+    predator.chase.status = 'pursuing';
+    render();
+    expect(document.activeElement).toBe(header);
+    expect(hunting.textContent).toContain('Pursuing');
     header.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
     expect(app.querySelector('.inspector-panel').classList.contains('visible')).toBe(false);
   });
