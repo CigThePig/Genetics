@@ -1,0 +1,10 @@
+{
+  "browser": "153.0.8010.0",
+  "passiveInspector": true,
+  "exactDeath": true,
+  "followChild": true,
+  "tapHeight": 44,
+  "mobileOverflow": false,
+  "reset": true,
+  "pageErrors": []
+}
