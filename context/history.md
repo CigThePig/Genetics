@@ -149,3 +149,17 @@ Built on merged PR #144 with bounded, fading personal danger places influencing 
 ## 2026-10-24 — PR #145 review fixes
 
 Corrected danger-route departure discounts and reinforced-memory eviction. Preserved life-story family controls and milestone scrolling through inspector frame updates, including memorial follow. Added two simulation regressions and three jsdom UI regressions to normal verification, plus external Chromium held mouse/touch and scrolling cases. Recorded scoped 80/320/640-animal observer scaling evidence without a full-engine/mobile claim. See the lived-experience evidence follow-up for validation and limitations.
+
+## 2026-10-24 — Observatory UI redesign
+
+- Replaced the dark floating-icon interface with an ivory/forest observatory,
+  visible playback, live species census and labeled shared navigation.
+- Added category/search metric exploration, exclusive panels, keyboard graph
+  tracking, Escape/focus restoration and inert hidden panels; restyled inspector,
+  life stories, settings, charts and evolutionary history for phones and desktops.
+- Added Fit world and synchronized camera follow cancellation; fixed stale paused
+  census after rebuilding and chart sizing after viewport changes.
+- Validation: 337 tests / 28 files; lint, formatting and production build; Chromium
+  checks at five sizes plus touch tap/drag/pinch/animal-selection flows. No page
+  errors. See the track evidence for screenshots, reproduction and limitations.
+- No simulation rules changed; no new runtime dependencies or remote fonts.

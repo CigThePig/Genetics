@@ -1,0 +1,23 @@
+{
+  "errors": [],
+  "viewports": [
+    "1440×960",
+    "393×852",
+    "320×568",
+    "852×393",
+    "768×1024"
+  ],
+  "checks": [
+    "play/pause/step/speed",
+    "census and seed reset",
+    "metric category/search/empty state",
+    "keyboard graph tracking",
+    "exclusive panels",
+    "Escape focus restoration",
+    "config search",
+    "creature selection/follow",
+    "fit-world camera and follow cancellation",
+    "touch controls, drag, pinch and animal selection",
+    "panel bounds and overflow"
+  ]
+}

@@ -1,3 +1,4 @@
+import { labelButton } from './observatory.js';
 import { createLifeStoryCard } from './life-story.js';
 import { camouflageAt } from '../sim/creatures/visibility.js';
 import { matePreferenceMismatch } from '../sim/creatures/mate-preference.js';
@@ -19,7 +20,12 @@ import { FOOD_LABELS } from '../sim/creatures/food.js';
  * @param {Function} options.onFollowToggle - Callback when follow is toggled
  * @returns {Object} Inspector API
  */
-export function createLiveInspector({ container, ticksPerSecond = 60, onFollowToggle }) {
+export function createLiveInspector({
+  container,
+  ticksPerSecond = 60,
+  onFollowToggle,
+  panelController
+}) {
   // State
   let trackedCreatureId = null;
   let currentWorld = null,
@@ -35,11 +41,15 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
 
   const inspectorFab = document.createElement('button');
   inspectorFab.className = 'fab';
-  inspectorFab.innerHTML = '🔍';
+  labelButton(inspectorFab, 'inspect', 'Inspector');
   inspectorFab.title = 'Inspector';
 
-  fabContainer.append(inspectorFab);
-  container.append(fabContainer);
+  const navigation = container.querySelector('.observatory-nav');
+  if (navigation) navigation.prepend(inspectorFab);
+  else {
+    fabContainer.append(inspectorFab);
+    container.append(fabContainer);
+  }
 
   // Create floating panel
   const panel = document.createElement('div');
@@ -56,16 +66,17 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
 
   const title = document.createElement('h2');
   title.className = 'panel-title';
-  title.innerHTML = '🔍 Inspector';
+  title.innerHTML = 'Field notes';
 
   const followBtn = document.createElement('button');
   followBtn.className = 'follow-btn';
-  followBtn.innerHTML = '📍 Follow';
+  followBtn.innerHTML = 'Follow';
   followBtn.style.display = 'none';
 
   const clearBtn = document.createElement('button');
   clearBtn.className = 'inspector-clear-btn';
-  clearBtn.innerHTML = '🧹';
+  clearBtn.textContent = 'Clear';
+  clearBtn.setAttribute('aria-label', 'Clear selection');
   clearBtn.title = 'Clear selection';
   clearBtn.style.display = 'none';
 
@@ -74,6 +85,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
   const closeBtn = document.createElement('button');
   closeBtn.className = 'panel-close';
   closeBtn.innerHTML = '×';
+  closeBtn.setAttribute('aria-label', 'Close inspector');
 
   header.append(titleContainer, followBtn, clearBtn, closeBtn);
 
@@ -85,7 +97,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
   const placeholder = document.createElement('p');
   placeholder.className = 'inspector-empty';
   placeholder.innerHTML =
-    'Tap a creature on the map to inspect it.<br><br>📍 Tap "Follow" to track its movement.';
+    '<span class="empty-illustration" aria-hidden="true">◎</span><strong>Every life has a story.</strong><br>Tap an animal to discover its needs, inherited traits, memories and family.<br><br>Choose Follow to travel with it.';
 
   content.append(placeholder);
   panel.append(header, content);
@@ -96,31 +108,40 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
 
   const togglePanel = () => {
     panelVisible = !panelVisible;
+    panelController?.sync(
+      panel,
+      panelVisible,
+      () => {
+        if (panelVisible) togglePanel();
+      },
+      inspectorFab
+    );
     panel.classList.toggle('visible', panelVisible);
     inspectorFab.classList.toggle('active', panelVisible);
   };
 
+  panel.setAttribute('role', 'region');
+  panel.setAttribute('aria-label', 'Field notes');
+  panelController?.sync(panel, false, () => {}, inspectorFab);
   inspectorFab.addEventListener('click', togglePanel);
   closeBtn.addEventListener('click', togglePanel);
 
-  // Follow button handler
-  followBtn.addEventListener('click', () => {
-    if (trackedCreatureId !== null) {
-      isFollowing = !isFollowing;
-      followBtn.classList.toggle('active', isFollowing);
-      followBtn.innerHTML = isFollowing ? '📍 Following' : '📍 Follow';
-      onFollowToggle?.(trackedCreatureId, isFollowing);
-    }
-  });
+  const setFollowing = (next) => {
+    isFollowing = Boolean(next) && trackedCreatureId !== null;
+    followBtn.classList.toggle('active', isFollowing);
+    followBtn.textContent = isFollowing ? 'Following' : 'Follow';
+    onFollowToggle?.(trackedCreatureId, isFollowing);
+  };
+  followBtn.addEventListener('click', () => setFollowing(!isFollowing));
 
   const clearTracking = () => {
     trackedCreatureId = null;
     isFollowing = false;
     followBtn.classList.remove('active');
-    followBtn.innerHTML = '📍 Follow';
+    followBtn.innerHTML = 'Follow';
     followBtn.style.display = 'none';
     clearBtn.style.display = 'none';
-    title.textContent = '🔍 Inspector';
+    title.textContent = 'Field notes';
     content.innerHTML = '';
     content.append(placeholder.cloneNode(true));
     onFollowToggle?.(null, false);
@@ -155,7 +176,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
   // CREATE SECTION HELPER
   // ═══════════════════════════════════════════════════════════════════════════
 
-  const createSection = (id, titleText, emoji, defaultOpen = false) => {
+  const createSection = (id, titleText, _emoji, defaultOpen = false) => {
     if (typeof sectionStates[id] !== 'boolean') {
       sectionStates[id] = defaultOpen;
     }
@@ -163,12 +184,13 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     const section = document.createElement('div');
     section.className = 'inspector-section';
 
-    const sectionHeader = document.createElement('div');
+    const sectionHeader = document.createElement('button');
     sectionHeader.className = 'inspector-section-header';
+    sectionHeader.setAttribute('aria-expanded', String(sectionStates[id]));
 
     const sectionTitle = document.createElement('span');
     sectionTitle.className = 'inspector-section-title';
-    sectionTitle.innerHTML = `${emoji} ${titleText}`;
+    sectionTitle.textContent = titleText;
 
     const arrow = document.createElement('span');
     arrow.className = 'inspector-section-arrow';
@@ -188,6 +210,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
 
     sectionHeader.addEventListener('click', () => {
       sectionStates[id] = !sectionStates[id];
+      sectionHeader.setAttribute('aria-expanded', String(sectionStates[id]));
       sectionBody.classList.toggle('expanded', sectionStates[id]);
       arrow.classList.toggle('expanded', sectionStates[id]);
     });
@@ -261,9 +284,9 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
         onSelect: (relative) => {
           trackedCreatureId = relative.id;
           isFollowing = true;
-          title.textContent = `🔍 #${relative.id}`;
+          title.textContent = `#${relative.id}`;
           followBtn.classList.add('active');
-          followBtn.textContent = '📍 Following';
+          followBtn.textContent = 'Following';
           onFollowToggle?.(relative.id, true);
           buildCreatureDisplay(relative, currentTick);
         }
@@ -629,7 +652,8 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
         const label = camelToLabel(key);
         const deviation = ((genome[key] - 0.5) * 200).toFixed(0);
         const deviationText = deviation > 0 ? `+${deviation}%` : `${deviation}%`;
-        const color = deviation > 0 ? '#4ade80' : deviation < 0 ? '#f87171' : null;
+        const color =
+          deviation > 0 ? 'var(--accent-primary)' : deviation < 0 ? 'var(--accent-red)' : null;
         geneBody.append(row(label, deviationText, color));
       }
     }
@@ -664,8 +688,8 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
         trackedCreatureId = creature.id;
         isFollowing = false;
         followBtn.classList.remove('active');
-        followBtn.innerHTML = '📍 Follow';
-        title.textContent = `🔍 #${creature.id}`;
+        followBtn.innerHTML = 'Follow';
+        title.textContent = `#${creature.id}`;
 
         // Auto-open panel when selecting a creature
         if (!panelVisible) {
@@ -675,10 +699,10 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
         trackedCreatureId = null;
         isFollowing = false;
         followBtn.classList.remove('active');
-        followBtn.innerHTML = '📍 Follow';
+        followBtn.innerHTML = 'Follow';
         followBtn.style.display = 'none';
         clearBtn.style.display = 'none';
-        title.textContent = '🔍 Inspector';
+        title.textContent = 'Field notes';
         content.innerHTML = '';
 
         const noCreature = document.createElement('p');
@@ -702,7 +726,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       buildCreatureDisplay(creature, tick);
 
       if (!creature) {
-        title.textContent = `🔍 Remembering #${trackedCreatureId}`;
+        title.textContent = `Remembering #${trackedCreatureId}`;
         isFollowing = false;
         followBtn.classList.remove('active');
         onFollowToggle?.(null, false);
@@ -719,6 +743,8 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     /**
      * Check if currently following.
      */
+    setFollowing,
+
     isFollowing() {
       return isFollowing && trackedCreatureId !== null;
     },

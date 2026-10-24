@@ -17,6 +17,7 @@ import { createRenderer } from '../render/renderer.js';
 import { createCamera } from '../render/camera.js';
 import { createInput } from '../input/index.js';
 import { createMetrics } from '../metrics/index.js';
+import { createPanelController } from '../ui/panel-controller.js';
 import { createUI } from '../ui/index.js';
 import { createLiveInspector } from '../ui/live-inspector.js';
 import { createGraphsPanel } from '../ui/graphs-panel.js';
@@ -123,11 +124,27 @@ export function bootApplication(app) {
   };
 
   const recenter = () => {
+    inspector.setFollowing(false);
     camera.stopFollowing();
     camera.reset();
     updateCameraBounds();
     ui.setTracking(null, false);
     if (!loop.isRunning()) renderer.render(sim, { immediate: !loop.isRunning() });
+  };
+
+  const fitWorld = () => {
+    recenter();
+    const { width, height } = getWorldDimensions();
+    if (width && height) {
+      const availableHeight = Math.max(100, window.innerHeight - 240);
+      camera.zoomTo(
+        Math.min(
+          (window.innerWidth - 48) / (width * getTileSize()),
+          availableHeight / (height * getTileSize())
+        )
+      );
+      renderer.render(sim, { immediate: !loop.isRunning() });
+    }
   };
 
   const rebuildWorld = (nextSeed) => {
@@ -142,6 +159,7 @@ export function bootApplication(app) {
     renderer.render(sim, { immediate: !loop.isRunning() });
     graphsPanel.reset();
     graphsPanel.recordMetrics(sim.getSummary());
+    ui.setMetrics(sim.getSummary());
     settings.save({ seed: sim.getSeed() });
     ui.setStatus(`Seed: ${sim.getSeed()}`);
     loop.resetTimebase();
@@ -151,7 +169,9 @@ export function bootApplication(app) {
   // UI SETUP
   // ═══════════════════════════════════════════════════════════════════════════
 
+  const panelController = createPanelController(app);
   const ui = createUI({
+    panelController,
     statusNode: null,
     metrics,
     onPlay: loop.start,
@@ -173,6 +193,7 @@ export function bootApplication(app) {
     onZoomIn: zoomIn,
     onZoomOut: zoomOut,
     onRecenter: recenter,
+    onFitWorld: fitWorld,
     initialFpsVisible: initialSettings.fpsVisible
   });
 
@@ -194,6 +215,7 @@ export function bootApplication(app) {
   // ═══════════════════════════════════════════════════════════════════════════
 
   const inspector = createLiveInspector({
+    panelController,
     container: app,
     ticksPerSecond: sim.config?.ticksPerSecond ?? 60,
     onFollowToggle: (creatureId, isFollowing) => {
@@ -214,6 +236,7 @@ export function bootApplication(app) {
   // ═══════════════════════════════════════════════════════════════════════════
 
   const graphsPanel = createGraphsPanel({
+    panelController,
     container: app
   });
 

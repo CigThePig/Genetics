@@ -447,3 +447,18 @@ Rules:
   - jsdom regression coverage for persistent family buttons, focus, milestone scroll and inspector lifecycle.
 - tests/lived-experience.test.js, tracks/2026-10-24-lived-experience/
   - Causal memory/priority, retention, lifecycle, determinism and implementation evidence.
+
+## Observatory interface (2026-10-24)
+
+- src/observatory.css
+  - Ivory/forest presentation layer, responsive census/navigation/panels and reduced motion.
+- src/ui/observatory.js
+  - Shared SVG interface icons and read-only live species census.
+- src/ui/panel-controller.js
+  - Application-owned non-modal panel coordination, inert state and Escape/focus restoration.
+- src/ui/index.js
+  - Playback, labeled research navigation, category/search metric exploration and camera actions.
+- tests/observatory-ui.test.js, scripts/verify-observatory-browser.cjs
+  - Interaction regressions and optional desktop/touch-browser screenshot verification.
+- tracks/2026-10-24-observatory-ui/
+  - Design, implementation plan, validation notes and before/after screenshots.
