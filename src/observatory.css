@@ -912,6 +912,13 @@ svg {
   .top-bar-state {
     display: none;
   }
+  /* A portrait-collapsed bar must remain expandable after rotation. */
+  .top-bar-expand {
+    display: flex;
+    order: 4;
+    width: 44px;
+    height: 44px;
+  }
   .world-census {
     top: 80px;
     width: 180px;
