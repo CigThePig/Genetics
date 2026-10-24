@@ -37,7 +37,7 @@ export function bootApplication(app) {
 
   // Camera with enhanced features
   const camera = createCamera({
-    minZoom: 0.1,
+    minZoom: 0.01, // Fit world must fit between playback and navigation on short screens.
     maxZoom: 5,
     zoom: 1,
     followSmoothing: 0.12
