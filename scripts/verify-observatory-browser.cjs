@@ -105,10 +105,20 @@ const out = 'tracks/2026-10-24-observatory-ui/evidence';
     await page.screenshot({ path: `${out}/desktop-inspector.png` });
     // Keyboard focus must survive actual animation-frame updates while running.
     await page.getByRole('button', { name: 'Play', exact: true }).click();
-    const beforeInspectorTicks = await page.evaluate(() => window.__testApp.sim.state.tick);
+    const beforeInspectorTicks = await page.evaluate(
+      () => window.__testApp.sim.state.tick
+    );
     await page.locator('.inspector-section-header').first().focus();
-    await page.waitForFunction((previous) => window.__testApp.sim.state.tick > previous + 3, beforeInspectorTicks);
-    assert(await page.locator('.inspector-section-header').first().evaluate((node) => node === document.activeElement));
+    await page.waitForFunction(
+      (previous) => window.__testApp.sim.state.tick > previous + 3,
+      beforeInspectorTicks
+    );
+    assert(
+      await page
+        .locator('.inspector-section-header')
+        .first()
+        .evaluate((node) => node === document.activeElement)
+    );
     await page.keyboard.press('Escape');
     assert.equal(await page.locator('.inspector-panel.visible').count(), 0);
     await page.getByRole('button', { name: 'Pause', exact: true }).click();
@@ -127,12 +137,17 @@ const out = 'tracks/2026-10-24-observatory-ui/evidence';
     await page.keyboard.press('Escape');
     // Persistently collapsed portrait playback must be recoverable after rotation.
     await page.setViewportSize({ width: 393, height: 852 });
-    await page.getByRole('button', { name: 'Toggle playback controls', exact: true }).click();
-    assert(await page.locator('.top-bar-controls').evaluate((el) => el.inert));
+    const playbackToggle = page.getByRole('button', {
+      name: 'Toggle playback controls',
+      exact: true
+    });
+    const controlsPanel = page.locator('.top-bar-controls');
+    await playbackToggle.click();
+    assert(await controlsPanel.evaluate((el) => el.inert));
     await page.setViewportSize({ width: 852, height: 393 });
-    assert(await page.getByRole('button', { name: 'Toggle playback controls', exact: true }).isVisible());
-    await page.getByRole('button', { name: 'Toggle playback controls', exact: true }).click();
-    assert.equal(await page.locator('.top-bar-controls').evaluate((el) => el.inert), false);
+    assert(await playbackToggle.isVisible());
+    await playbackToggle.click();
+    assert.equal(await controlsPanel.evaluate((el) => el.inert), false);
     await page.getByRole('button', { name: 'Fit world', exact: true }).click();
     const landscapeFit = await page.evaluate(() => {
       const { sim, camera } = window.__testApp;
@@ -141,7 +156,11 @@ const out = 'tracks/2026-10-24-observatory-ui/evidence';
         (innerWidth - 48) / (width * sim.config.tileSize),
         Math.max(100, innerHeight - 240) / (height * sim.config.tileSize)
       );
-      return { target, actual: camera.getState().zoom, worldPixels: height * sim.config.tileSize };
+      return {
+        target,
+        actual: camera.getState().zoom,
+        worldPixels: height * sim.config.tileSize
+      };
     });
     assert(Math.abs(landscapeFit.actual - landscapeFit.target) < 0.000001);
     assert(landscapeFit.actual * landscapeFit.worldPixels <= 153.01);
