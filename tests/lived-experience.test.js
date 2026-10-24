@@ -60,6 +60,34 @@ describe('lived experience', () => {
     expect(rememberedRouteRisk(c, { x: 40, y: 20 }, {})).toBeCloseTo(across / 2);
     expect(rememberedRouteRisk(c, { x: 40, y: 20 }, { creatureDangerMemorySeconds: 0 })).toBe(0);
   });
+  it('never discounts a route that approaches or crosses the remembered site', () => {
+    const c = animal();
+    c.position = { x: 0, y: 0 };
+    c.experience = { dangerSites: [{ x: 1, y: 0, remaining: 45 }] };
+    const crossing = rememberedRouteRisk(c, { x: 18, y: 0 }, {});
+    const away = rememberedRouteRisk(c, { x: -6, y: 0 }, {});
+    expect(crossing).toBe(1);
+    expect(away).toBeLessThan(crossing);
+    expect(rememberedRouteRisk(c, { x: 1, y: 18 }, {})).toBeGreaterThan(away);
+    // Tangential travel does not get closer, and starting exactly on a site
+    // must still allow departure in any direction.
+    expect(rememberedRouteRisk(c, { x: 0, y: 18 }, {})).toBeLessThan(crossing);
+    c.position.x = 1;
+    expect(rememberedRouteRisk(c, { x: 18, y: 0 }, {})).toBeLessThan(1);
+  });
+  it('evicts the least recently observed site after reinforcement', () => {
+    const c = animal();
+    danger(c);
+    const observe = (x) => {
+      c.herding.threatPosition = { x, y: 20 };
+      updateDangerMemories({ creatures: [c], config: {} });
+    };
+    [0, 10, 20, 0, 30].forEach(observe);
+    expect(c.experience.dangerSites.map((s) => s.x)).toEqual([20, 0, 30]);
+    expect(c.experience.dangerSites[1].remaining).toBeGreaterThan(
+      c.experience.dangerSites[0].remaining
+    );
+  });
   it('changes actual roaming choice but leaves needs and social reunion authoritative', () => {
     const world = createWorldGrid({ width: 80, height: 80, defaultTerrain: 'plains' });
     const a = animal(),

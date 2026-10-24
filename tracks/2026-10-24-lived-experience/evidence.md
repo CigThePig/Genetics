@@ -58,3 +58,20 @@ Playwright and Chromium are external validation tools, not repository dependenci
 This makes acquired history consequential and observable. It does not prove that the original evolutionary vision is achieved. Only herbivores using the existing herd escape system learn these danger sites; predators retain their existing pack/search behavior. Social following can outweigh place caution. The notebook is bounded, not a complete genealogy: old memorials and old milestones are evicted, and family buttons show up to eight living direct relatives. No multi-generation selection assay, new full-engine performance benchmark, physical mobile test or automatic dynasty continuation is claimed.
 
 ![Mobile field notebook](evidence/browser/mobile.png)
+
+## PR #145 review follow-up (2026-10-24)
+
+All four review findings are addressed:
+
+- Route departure discounts require a nonnegative initial distance derivative relative to each site. Along a straight segment this ensures clearance never decreases. The reported (0,0) → (18,0), danger (1,0) counterexample now scores 1, versus about 0.714 moving away to (-6,0). Tangent and on-site departure remain possible.
+- Reinforced sites move to the newest observation position before bounded eviction. A/B/C/A/D retains C/A/D, with copied positions and the existing three-site/time limits unchanged.
+- The inspector owns a persistent story card per selected life/status. Keyed family buttons remain connected while relatives survive; the milestone list remains the same scrollable node and only replaces its entries when events change, retaining scroll offset. Numeric inspector details continue refreshing separately. Selection, death, expired memorials and reset replace/clear the appropriate card.
+- Three jsdom UI regressions run in the normal Verify test job; they check node identity, focus, event updates, scroll state, living/memorial family follow, relatives arriving/dying, and clear/expired-record behavior. Two added simulation regressions cover the route counterexample and reinforced eviction.
+
+Actual browser checks in Chromium 153 held mouse/touch input over six animation frames while the app tick/frame loop ran. Desktop 1280×900 and mobile-sized 390×844 each passed living and memorial family follow, retained scroll and list/button identity. The existing passive-inspector, exact-death, 44px target, overflow and reset checks also passed with zero page errors. This is browser-emulated touch, not a physical phone. Reproduce with external Playwright/Chromium via `PLAYWRIGHT_MODULE`, `BROWSER_EXECUTABLE` and `EVIDENCE_OUT=tracks/2026-10-24-lived-experience/evidence/review-fixes/browser node scripts/verify-lived-experience-browser.cjs`.
+
+[Browser results](evidence/review-fixes/browser/results.json) retain the four input cases. Original evidence above remains a historical snapshot.
+
+The review's allocation concern was a performance risk rather than a confirmed defect. `node --expose-gc scripts/benchmark-life-story.mjs` measured 20,000 steady-state observations at each of 80/320/640 animals. Median batch means were approximately 0.0066/0.0261/0.0522 ms per call; p95 batch means were 0.0096/0.0313/0.0720 ms. At 120 calls/sec the median observer-only estimate is 0.79/3.14/6.26 ms of CPU per second. Post-GC retained-heap deltas did not increase in this sample; these are noisy retained-heap measurements, not allocation-rate or GC-pause measurements. No observer hot-path restructuring was justified by this narrow probe. Birth/death bursts, full-engine mobile GC, sustained 2× playback and physical phones remain outside this measurement. [Raw probe](evidence/review-fixes/observer-scaling.json).
+
+Final local verification: `npm run verify` passed all 333 tests in 27 files, lint, formatting and production build. `npm run test:soak -- --ticks=1200` passed seeds 1, 42 and 1337 ([raw smoke results](evidence/review-fixes/soak.jsonl)); these short runs check state stability, not long-term balance. Hosted CI for the follow-up commit is separate.

@@ -2070,3 +2070,7 @@ body {
   display: block;
   color: var(--text-muted);
 }
+
+.life-story-card [hidden] {
+  display: none;
+}

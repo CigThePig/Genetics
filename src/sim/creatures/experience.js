@@ -15,13 +15,15 @@ export function updateDangerMemories({ creatures, config }) {
     // Social alarms can trigger escape, but cannot manufacture personal experience.
     if (!seconds || !h?.isThreatened || !h.nearbyThreats || !h.threatPosition) continue;
     const point = h.threatPosition;
-    let site = memory.dangerSites.find((s) => Math.hypot(s.x - point.x, s.y - point.y) < 4);
+    const index = memory.dangerSites.findIndex((s) => Math.hypot(s.x - point.x, s.y - point.y) < 4);
+    let site = index < 0 ? null : memory.dangerSites.splice(index, 1)[0];
     if (!site) {
       if (memory.dangerSites.length === 3) memory.dangerSites.shift();
       site = { x: point.x, y: point.y, remaining: seconds };
-      memory.dangerSites.push(site);
     }
     site.remaining = seconds;
+    // Keep sites in last-observed order, including reinforced memories.
+    memory.dangerSites.push(site);
     // A pre-escape discretionary goal should be reconsidered after danger passes.
     if (
       c.locomotion &&
@@ -48,7 +50,10 @@ export function rememberedRouteRisk(creature, target, config) {
     const clearance = Math.hypot(site.x - a.x - t * dx, site.y - a.y - t * dy);
     const start = Math.hypot(site.x - a.x, site.y - a.y);
     const end = Math.hypot(site.x - target.x, site.y - target.y);
-    const departure = start < 6 && end > start ? Math.min(1, 6 / Math.max(6, end)) : 1;
+    // Only discount segments whose distance from this site never decreases.
+    const movingAway = (a.x - site.x) * dx + (a.y - site.y) * dy >= 0;
+    const departure =
+      start < 6 && movingAway && end > start ? Math.min(1, 6 / Math.max(6, end)) : 1;
     risk +=
       Math.max(0, 1 - clearance / 6) *
       Math.min(1, Math.max(0, site.remaining / seconds)) *
