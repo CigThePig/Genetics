@@ -1,3 +1,5 @@
+import { createCensus, icon, labelButton } from './observatory.js';
+
 /**
  * Mobile-First UI System
  *
@@ -11,6 +13,7 @@
 
 export function createUI({
   statusNode,
+  panelController,
   metrics,
   onPlay,
   onPause,
@@ -19,6 +22,7 @@ export function createUI({
   onSeedChange,
   onFpsToggle,
   onRecenter,
+  onFitWorld,
   onZoomIn,
   onZoomOut,
   initialFpsVisible = true
@@ -74,24 +78,27 @@ export function createUI({
 
   const title = document.createElement('h1');
   title.className = 'top-bar-title';
-  title.innerHTML = '🧬 Genetics';
+  title.innerHTML = `${icon('leaf')}<span>Genetics<small>A LIVING OBSERVATORY</small></span>`;
 
   // State indicator shows play state when collapsed
-  const stateIndicator = document.createElement('div');
+  const stateIndicator = document.createElement('button');
   stateIndicator.className = 'top-bar-state';
   stateIndicator.innerHTML = '<span class="state-icon">⏸</span><span class="state-speed">1×</span>';
 
   // Expand/collapse toggle
   const expandBtn = document.createElement('button');
   expandBtn.className = 'top-bar-expand';
-  expandBtn.innerHTML = '▼';
-  expandBtn.title = 'Expand controls';
+  expandBtn.innerHTML = '▲';
+  expandBtn.title = 'Collapse controls';
 
   topBarHeader.append(title, stateIndicator, expandBtn);
 
   // Controls panel (collapsible)
   const controlsPanel = document.createElement('div');
   controlsPanel.className = 'top-bar-controls';
+  controlsPanel.id = 'playback-controls';
+  expandBtn.setAttribute('aria-controls', controlsPanel.id);
+  stateIndicator.setAttribute('aria-controls', controlsPanel.id);
 
   // Playback row
   const playbackRow = document.createElement('div');
@@ -99,24 +106,25 @@ export function createUI({
 
   const stepBtn = document.createElement('button');
   stepBtn.className = 'control-btn';
-  stepBtn.innerHTML = '⏭';
+  labelButton(stepBtn, 'step', 'Step');
   stepBtn.title = 'Step';
   stepBtn.addEventListener('click', () => onStep?.());
 
   const playBtn = document.createElement('button');
   playBtn.className = 'control-btn play-btn';
-  playBtn.innerHTML = '▶';
+  labelButton(playBtn, 'play', 'Play');
   playBtn.title = 'Play';
   playBtn.addEventListener('click', () => onPlay?.());
 
   const pauseBtn = document.createElement('button');
   pauseBtn.className = 'control-btn';
-  pauseBtn.innerHTML = '⏸';
+  labelButton(pauseBtn, 'pause', 'Pause');
   pauseBtn.title = 'Pause';
   pauseBtn.addEventListener('click', () => onPause?.());
 
   const speedSelect = document.createElement('select');
   speedSelect.className = 'speed-select';
+  speedSelect.setAttribute('aria-label', 'Simulation speed');
   [
     { label: '1×', value: '1' },
     { label: '2×', value: '2' },
@@ -134,7 +142,7 @@ export function createUI({
   // FPS toggle (small text button)
   const fpsToggleBtn = document.createElement('button');
   fpsToggleBtn.className = 'fps-toggle-btn';
-  fpsToggleBtn.textContent = 'FPS';
+  fpsToggleBtn.textContent = 'Performance';
   fpsToggleBtn.title = 'Performance';
 
   playbackRow.append(stepBtn, playBtn, pauseBtn, speedSelect, fpsToggleBtn);
@@ -154,9 +162,16 @@ export function createUI({
   container.append(topBar);
 
   // Control panel expand/collapse
-  let controlsExpanded = false;
+  let controlsExpanded = true;
+  topBar.classList.add('expanded');
+  expandBtn.setAttribute('aria-expanded', 'true');
+  stateIndicator.setAttribute('aria-expanded', 'true');
+  expandBtn.setAttribute('aria-label', 'Toggle playback controls');
   const toggleControls = () => {
     controlsExpanded = !controlsExpanded;
+    controlsPanel.inert = !controlsExpanded;
+    expandBtn.setAttribute('aria-expanded', String(controlsExpanded));
+    stateIndicator.setAttribute('aria-expanded', String(controlsExpanded));
     topBar.classList.toggle('expanded', controlsExpanded);
     expandBtn.innerHTML = controlsExpanded ? '▲' : '▼';
     expandBtn.title = controlsExpanded ? 'Collapse controls' : 'Expand controls';
@@ -173,6 +188,10 @@ export function createUI({
     if (iconEl) iconEl.textContent = isRunning ? '▶' : '⏸';
     if (speedEl) speedEl.textContent = `${speed}×`;
     stateIndicator.classList.toggle('running', isRunning);
+    stateIndicator.setAttribute(
+      'aria-label',
+      `${isRunning ? 'Running' : 'Paused'} at ${speed}×. Toggle playback controls`
+    );
   };
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -206,11 +225,16 @@ export function createUI({
 
   const recenterBtn = document.createElement('button');
   recenterBtn.className = 'quick-action-btn';
-  recenterBtn.innerHTML = '⌖';
+  recenterBtn.innerHTML = icon('center');
   recenterBtn.title = 'Recenter';
   recenterBtn.addEventListener('click', () => onRecenter?.());
 
-  quickActions.append(zoomInBtn, zoomOutBtn, recenterBtn);
+  const fitBtn = document.createElement('button');
+  fitBtn.className = 'quick-action-btn';
+  fitBtn.innerHTML = icon('fit');
+  fitBtn.title = 'Fit world';
+  fitBtn.addEventListener('click', () => onFitWorld?.());
+  quickActions.append(zoomInBtn, zoomOutBtn, recenterBtn, fitBtn);
   container.append(quickActions);
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -220,7 +244,6 @@ export function createUI({
   let fpsVisible = initialFpsVisible;
   const applyFpsVisible = (nextVisible, { save = true } = {}) => {
     fpsVisible = Boolean(nextVisible);
-    fpsToggleBtn.classList.toggle('active', fpsVisible);
     metrics?.setVisible?.(fpsVisible);
     if (save) onFpsToggle?.(fpsVisible);
   };
@@ -239,7 +262,7 @@ export function createUI({
 
   const perfPanelTitle = document.createElement('h2');
   perfPanelTitle.className = 'panel-title';
-  perfPanelTitle.innerHTML = '⚡ Performance';
+  perfPanelTitle.textContent = 'Performance';
 
   const perfPanelClose = document.createElement('button');
   perfPanelClose.className = 'panel-close';
@@ -615,6 +638,8 @@ export function createUI({
 
   const setPerfVisible = (nextVisible) => {
     perfVisible = Boolean(nextVisible);
+    fpsToggleBtn.classList.toggle('active', perfVisible);
+    panelController?.sync(perfPanel, perfVisible, () => setPerfVisible(false), fpsToggleBtn);
     perfPanel.classList.toggle('visible', perfVisible);
     if (perfIntervalId) {
       clearInterval(perfIntervalId);
@@ -656,7 +681,7 @@ export function createUI({
 
   const metricsPanelTitle = document.createElement('h2');
   metricsPanelTitle.className = 'panel-title';
-  metricsPanelTitle.innerHTML = '📊 Metrics';
+  metricsPanelTitle.textContent = 'Ecosystem';
 
   const metricsPanelClose = document.createElement('button');
   metricsPanelClose.className = 'panel-close';
@@ -1440,8 +1465,9 @@ export function createUI({
   let graphsPanel = null;
 
   const createMetricSection = (sectionTitle, defs) => {
-    const section = document.createElement('div');
+    const section = document.createElement('section');
     section.className = 'metrics-section';
+    section.dataset.section = defs[0].section;
 
     const titleEl = document.createElement('h3');
     titleEl.className = 'metrics-section-title';
@@ -1462,6 +1488,17 @@ export function createUI({
       const item = document.createElement('li');
       item.className = 'metrics-item metrics-item-clickable';
       item.dataset.metricKey = metric.key;
+      item.tabIndex = 0;
+      item.setAttribute('role', 'button');
+      item.setAttribute('aria-pressed', 'false');
+      item.setAttribute('aria-label', `Track ${metric.group || ''} ${metric.label}`.trim());
+      item.dataset.search = `${metric.group || ''} ${metric.label} ${metric.key}`.toLowerCase();
+      item.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter' || event.key === ' ') {
+          event.preventDefault();
+          item.click();
+        }
+      });
 
       // Tracking indicator dot (hidden by default)
       const trackingDot = document.createElement('span');
@@ -1512,6 +1549,7 @@ export function createUI({
       const color = graphsPanel.getTrackedColor(key);
 
       refs.item.classList.toggle('tracking', isTracked);
+      refs.item.setAttribute('aria-pressed', String(isTracked));
       refs.trackingDot.classList.toggle('visible', isTracked);
       if (color) {
         refs.trackingDot.style.backgroundColor = color;
@@ -1535,6 +1573,59 @@ export function createUI({
     }
   }
 
+  const metricFilters = document.createElement('div');
+  metricFilters.className = 'metric-filters';
+  const metricSearch = document.createElement('input');
+  metricSearch.type = 'search';
+  metricSearch.placeholder = 'Find a metric or species…';
+  metricSearch.setAttribute('aria-label', 'Search ecosystem metrics');
+  const categorySelect = document.createElement('select');
+  categorySelect.setAttribute('aria-label', 'Metric category');
+  for (const { key, title } of [{ key: 'all', title: 'All categories' }, ...sections]) {
+    const option = document.createElement('option');
+    option.value = key;
+    option.textContent = title;
+    categorySelect.append(option);
+  }
+  categorySelect.value = 'population';
+  const noResults = document.createElement('p');
+  noResults.className = 'metrics-empty';
+  noResults.textContent = 'No matching metrics. Try another term or category.';
+  noResults.setAttribute('role', 'status');
+  const filterMetrics = () => {
+    const query = metricSearch.value.trim().toLowerCase();
+    let total = 0;
+    for (const section of metricsBody.querySelectorAll('.metrics-section')) {
+      const categoryMatches =
+        categorySelect.value === 'all' || section.dataset.section === categorySelect.value;
+      let matches = 0;
+      for (const item of section.querySelectorAll('[data-metric-key]')) {
+        item.hidden = !categoryMatches || !item.dataset.search.includes(query);
+        if (!item.hidden) matches++;
+      }
+      for (const heading of section.querySelectorAll('.metrics-subheading')) {
+        let next = heading.nextElementSibling,
+          hasVisible = false;
+        while (next && !next.classList.contains('metrics-subheading')) {
+          hasVisible ||= !next.hidden;
+          next = next.nextElementSibling;
+        }
+        heading.hidden = !hasVisible;
+      }
+      section.hidden = matches === 0;
+      total += matches;
+    }
+    noResults.hidden = total > 0;
+  };
+  metricSearch.addEventListener('input', filterMetrics);
+  categorySelect.addEventListener('change', filterMetrics);
+  metricFilters.append(metricSearch, categorySelect);
+  const metricsHint = document.createElement('p');
+  metricsHint.className = 'metrics-hint';
+  metricsHint.textContent = 'Select a metric to plot its history in Trends.';
+  metricsPanelContent.append(metricsHint, metricFilters, noResults);
+  filterMetrics();
+
   // Seed input row
   const seedRow = document.createElement('div');
   seedRow.className = 'seed-row';
@@ -1543,11 +1634,14 @@ export function createUI({
   seedInput.type = 'number';
   seedInput.className = 'seed-input';
   seedInput.placeholder = 'Seed';
+  seedInput.setAttribute('aria-label', 'World seed');
 
   const seedApplyBtn = document.createElement('button');
   seedApplyBtn.className = 'btn btn-sm';
-  seedApplyBtn.textContent = 'Apply';
+  seedApplyBtn.textContent = 'New world';
+  seedApplyBtn.title = 'Rebuild the world using this seed';
   seedApplyBtn.addEventListener('click', () => {
+    if (!seedInput.value.trim()) return;
     const value = Number(seedInput.value);
     if (Number.isFinite(value)) {
       onSeedChange?.(Math.trunc(value));
@@ -1564,12 +1658,20 @@ export function createUI({
   // Metrics FAB
   const metricsFab = document.createElement('button');
   metricsFab.className = 'fab fab-metrics';
-  metricsFab.innerHTML = '📊';
+  labelButton(metricsFab, 'census', 'Ecosystem');
   metricsFab.title = 'Metrics';
 
   let metricsVisible = false;
   const toggleMetrics = () => {
     metricsVisible = !metricsVisible;
+    panelController?.sync(
+      metricsPanel,
+      metricsVisible,
+      () => {
+        if (metricsVisible) toggleMetrics();
+      },
+      metricsFab
+    );
     metricsPanel.classList.toggle('visible', metricsVisible);
     metricsFab.classList.toggle('active', metricsVisible);
     // Close other panels
@@ -1583,11 +1685,12 @@ export function createUI({
   // Graphs FAB
   const graphsFab = document.createElement('button');
   graphsFab.className = 'fab fab-graphs';
-  graphsFab.innerHTML = '📉';
+  labelButton(graphsFab, 'chart', 'Trends');
   graphsFab.title = 'Graphs';
 
   const setGraphsFabActive = (nextVisible) => {
     graphsFab.classList.toggle('active', Boolean(nextVisible));
+    graphsFab.setAttribute('aria-expanded', String(Boolean(nextVisible)));
   };
 
   graphsFab.addEventListener('click', () => {
@@ -1606,12 +1709,20 @@ export function createUI({
 
   const configFab = document.createElement('button');
   configFab.className = 'fab fab-config';
-  configFab.innerHTML = '⚙️';
+  labelButton(configFab, 'settings', 'Settings');
   configFab.title = 'Config';
 
   let configVisible = false;
   const toggleConfig = () => {
     configVisible = !configVisible;
+    panelController?.sync(
+      configPanel,
+      configVisible,
+      () => {
+        if (configVisible) toggleConfig();
+      },
+      configFab
+    );
     configPanel.classList.toggle('visible', configVisible);
     configFab.classList.toggle('active', configVisible);
     // Close other panels
@@ -1622,6 +1733,8 @@ export function createUI({
   configFab.addEventListener('click', toggleConfig);
 
   // Assemble right FABs (FPS moved to top bar)
+  fabContainerRight.classList.add('observatory-nav');
+  fabContainerRight.setAttribute('aria-label', 'Observatory tools');
   fabContainerRight.append(metricsFab, graphsFab, configFab);
   container.append(fabContainerRight);
 
@@ -1631,6 +1744,30 @@ export function createUI({
 
   // Track current speed for state indicator
   let currentSpeed = 1;
+  const census = createCensus(container, () => {
+    if (!metricsVisible) toggleMetrics();
+  });
+  const fieldNote = document.createElement('div');
+  fieldNote.className = 'field-note';
+  fieldNote.innerHTML =
+    '<span class="eyebrow">The living world</span><span>Drag to explore · Scroll or pinch to zoom · Tap a creature to meet it</span>';
+  container.append(fieldNote);
+  const worldStamp = document.createElement('div');
+  worldStamp.className = 'world-stamp';
+  worldStamp.innerHTML = '<span class="world-seed"></span><span class="world-tick">TICK 0</span>';
+  topBarHeader.append(worldStamp);
+  for (const [panel, trigger, name] of [
+    [metricsPanel, metricsFab, 'Ecosystem'],
+    [configPanel, configFab, 'Settings'],
+    [perfPanel, fpsToggleBtn, 'Performance']
+  ]) {
+    panel.setAttribute('role', 'region');
+    panel.setAttribute('aria-label', name);
+    panelController?.sync(panel, false, () => {}, trigger);
+    panel.querySelector('.panel-close')?.setAttribute('aria-label', `Close ${name.toLowerCase()}`);
+  }
+  for (const button of quickActions.querySelectorAll('button'))
+    button.setAttribute('aria-label', button.title);
 
   return {
     setStatus(message) {
@@ -1661,6 +1798,7 @@ export function createUI({
 
     setSeed(seed) {
       seedInput.value = String(seed);
+      worldStamp.querySelector('.world-seed').textContent = `SEED ${seed}`;
     },
 
     setFpsVisible(visible) {
@@ -1669,11 +1807,16 @@ export function createUI({
 
     setMetrics(summary) {
       if (!summary) return;
+      census.update(summary);
+      const tickText = `TICK ${Number.isFinite(summary.tick) ? summary.tick.toLocaleString('en') : '—'}`;
+      const tickNode = worldStamp.querySelector('.world-tick');
+      if (tickNode.textContent !== tickText) tickNode.textContent = tickText;
 
       for (const key in metricNodes) {
         const node = metricNodes[key];
         const value = summary[key];
-        node.textContent = formatMetricValue(key, value);
+        const text = formatMetricValue(key, value);
+        if (node.textContent !== text) node.textContent = text;
       }
     },
 

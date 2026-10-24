@@ -72,10 +72,11 @@ export function createConfigPanel({
 
   const title = document.createElement('h2');
   title.className = 'panel-title';
-  title.innerHTML = '⚙️ Configuration';
+  title.textContent = 'World settings';
 
   const closeBtn = document.createElement('button');
   closeBtn.className = 'panel-close';
+  closeBtn.setAttribute('aria-label', 'Close settings');
   closeBtn.innerHTML = '×';
 
   header.append(title, closeBtn);

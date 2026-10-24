@@ -17,14 +17,14 @@ const HISTORY_SIZE = 600;
 
 // Color palette for tracked metrics (cycles through these)
 const METRIC_COLORS = [
-  '#4ade80', // Green
-  '#60a5fa', // Blue
-  '#f87171', // Red
-  '#fb923c', // Orange
-  '#a78bfa', // Purple
-  '#22d3ee', // Cyan
-  '#fbbf24', // Yellow
-  '#e879f9' // Pink
+  '#287451', // Green
+  '#326f9b', // Blue
+  '#ad443d', // Red
+  '#a66522', // Orange
+  '#7e55a0', // Purple
+  '#187b83', // Cyan
+  '#8b791c', // Yellow
+  '#a34782' // Pink
 ];
 
 // Time window presets
@@ -37,7 +37,7 @@ const TIME_WINDOWS = [
 /**
  * Creates the graphs panel system
  */
-export function createGraphsPanel({ container }) {
+export function createGraphsPanel({ container, panelController }) {
   // ═══════════════════════════════════════════════════════════════════════════
   // STATE
   // ═══════════════════════════════════════════════════════════════════════════
@@ -66,6 +66,9 @@ export function createGraphsPanel({ container }) {
   // Main panel (bottom sheet style)
   const panel = document.createElement('div');
   panel.className = 'graphs-panel';
+  panel.setAttribute('role', 'region');
+  panel.setAttribute('aria-label', 'Trends and inheritance');
+  panelController?.sync(panel, false, () => {}, container.querySelector('.fab-graphs'));
 
   // Handle area for drag
   const handleArea = document.createElement('div');
@@ -81,7 +84,7 @@ export function createGraphsPanel({ container }) {
 
   const headerTitle = document.createElement('h2');
   headerTitle.className = 'graphs-title';
-  headerTitle.textContent = '📉 Graphs';
+  headerTitle.textContent = 'Trends & inheritance';
 
   const headerHint = document.createElement('span');
   headerHint.className = 'graphs-hint';
@@ -90,6 +93,7 @@ export function createGraphsPanel({ container }) {
   const closeBtn = document.createElement('button');
   closeBtn.className = 'graphs-close';
   closeBtn.innerHTML = '×';
+  closeBtn.setAttribute('aria-label', 'Close trends');
   closeBtn.addEventListener('click', () => toggle(false));
 
   header.append(headerTitle, headerHint, closeBtn);
@@ -177,7 +181,7 @@ export function createGraphsPanel({ container }) {
     if (trackedMetrics.size === 0) {
       const emptyHint = document.createElement('span');
       emptyHint.className = 'graphs-empty-hint';
-      emptyHint.textContent = 'No metrics tracked. Tap 📊 Metrics → select items to graph.';
+      emptyHint.textContent = 'No metrics tracked. Open Ecosystem and select a metric.';
       trackedChips.append(emptyHint);
       headerHint.style.display = 'block';
       return;
@@ -226,10 +230,10 @@ export function createGraphsPanel({ container }) {
 
     if (trackedMetrics.size === 0) {
       // No data yet
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fillStyle = '#647268';
       ctx.font = '14px system-ui';
       ctx.textAlign = 'center';
-      ctx.fillText('Tap metrics in 📊 panel to track them here', width / 2, height / 2);
+      ctx.fillText('Choose a metric in Ecosystem to begin', width / 2, height / 2);
       return;
     }
 
@@ -268,7 +272,7 @@ export function createGraphsPanel({ container }) {
     }
 
     if (seriesData.length === 0 || seriesData[0].points.length === 0) {
-      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fillStyle = '#647268';
       ctx.font = '14px system-ui';
       ctx.textAlign = 'center';
       ctx.fillText('Run simulation to see data', width / 2, height / 2);
@@ -282,8 +286,8 @@ export function createGraphsPanel({ container }) {
     globalMax = globalMax + padding;
 
     // Draw grid
-    const gridColor = 'rgba(255,255,255,0.08)';
-    const labelColor = 'rgba(255,255,255,0.4)';
+    const gridColor = 'rgba(35,65,48,0.12)';
+    const labelColor = '#526259';
     const marginLeft = 50;
     const marginRight = 10;
     const marginTop = 10;
@@ -398,15 +402,19 @@ export function createGraphsPanel({ container }) {
     const nextState = Boolean(nextVisible);
     if (visible === nextState) return;
     visible = nextState;
+    panelController?.sync(
+      panel,
+      visible,
+      () => setVisible(false),
+      container.querySelector('.fab-graphs')
+    );
     panel.classList.toggle('visible', visible);
     notifyVisibility();
 
     if (visible) {
       // Resize and render when becoming visible
-      setTimeout(() => {
-        resizeCanvas();
-        renderGraph();
-      }, 50);
+      resizeCanvas();
+      renderGraph();
     }
   };
 

@@ -36,7 +36,7 @@ export function buildConfigSections({
     sectionTitle.className = 'config-section-title';
 
     const sectionTitleText = document.createElement('span');
-    sectionTitleText.textContent = `${info.icon} ${info.label}`;
+    sectionTitleText.textContent = info.label;
 
     const sectionActions = document.createElement('span');
     sectionActions.className = 'config-section-actions';
@@ -400,7 +400,7 @@ export function buildConfigSections({
   resetSection.style.borderTop = '1px solid var(--border-subtle)';
 
   const resetButton = document.createElement('button');
-  resetButton.textContent = '🔄 Reset to Defaults';
+  resetButton.textContent = 'Reset to Defaults';
   resetButton.className = 'btn';
   resetButton.style.width = '100%';
   return { resetButton, resetSection };
