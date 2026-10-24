@@ -141,3 +141,11 @@ Wild variation and outcomes remain mixed. Herbivore speed variance is broader on
 - Correct flight activity recording and bind reciprocal transfers and runner provenance to the registered historical protocol.
 - Verified 320 JS tests, 24 Python tests, lint/format/build, three 3,600-tick invariant soaks, all 91 archived records and 168 artifact checksums. Archived analysis is unchanged. Browser launch was unavailable (missing Chromium).
 - Detailed findings and historical-evidence limitations: [review](../tracks/2026-10-23-emergent-evolution/review.md). Existing PR remains unmerged.
+
+## 2026-10-24 — Animals with a past
+
+Built on merged PR #144 with bounded, fading personal danger places influencing discretionary roaming; added individual field notebooks, actual death memorials and living-family camera following. No population protection or inherited experience. Eight new regressions pass; existing 320-test suite, lint, formatting and build pass. Three 3,600-tick disabled-memory comparisons match the merged baseline exactly; six ordinary 36,000-tick paired runs pass invariants with mixed ecological outcomes. Real Chromium desktop/390px lifecycle checks pass with zero errors. See tracks/2026-10-24-lived-experience/evidence.md for raw results, source provenance, screenshots and limits. No equilibrium, adaptation or physical-phone performance claim.
+
+## 2026-10-24 — PR #145 review fixes
+
+Corrected danger-route departure discounts and reinforced-memory eviction. Preserved life-story family controls and milestone scrolling through inspector frame updates, including memorial follow. Added two simulation regressions and three jsdom UI regressions to normal verification, plus external Chromium held mouse/touch and scrolling cases. Recorded scoped 80/320/640-animal observer scaling evidence without a full-engine/mobile claim. See the lived-experience evidence follow-up for validation and limitations.

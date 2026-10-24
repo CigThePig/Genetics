@@ -1,3 +1,6 @@
+import { updateDangerMemories } from './creatures/experience.js';
+import { observeLifeStories, rememberDeath } from './life-story.js';
+import { resolveTicksPerSecond } from './creatures/life-stages.js';
 import { updateLocomotionGoals } from './creatures/locomotion.js';
 import { recordColourHistory } from './colour-metrics.js';
 import { updateBehaviorIntegration } from './creatures/behavior-integration.js';
@@ -59,6 +62,7 @@ export function createSim(config = simConfig) {
 
   const state = {
     tick: 0,
+    elapsedSeconds: 0,
     lastRoll: 0,
     world: buildWorld(),
     creatures: [],
@@ -67,6 +71,7 @@ export function createSim(config = simConfig) {
   state.creatures = spawnCreatures(state.world);
   state.world.nextCreatureId = state.creatures.length;
   initializePlants({ state, config: resolvedConfig, rng: stream('bushes') });
+  observeLifeStories(state);
   recordColourHistory(state, resolvedConfig);
 
   return {
@@ -80,6 +85,7 @@ export function createSim(config = simConfig) {
       resolvedConfig.seed = seedValue;
       rng.setSeed(deriveSeed(seedValue, 'runtime'));
       state.tick = 0;
+      state.elapsedSeconds = 0;
       state.lastRoll = 0;
       state.world = buildWorld();
       state.creatures = spawnCreatures(state.world);
@@ -88,6 +94,7 @@ export function createSim(config = simConfig) {
       state.colourHistory = [];
       state.world.nextCreatureId = state.creatures.length;
       initializePlants({ state, config: resolvedConfig, rng: stream('bushes') });
+      observeLifeStories(state);
       recordColourHistory(state, resolvedConfig);
       spatialIndex.clear();
     },
@@ -96,6 +103,7 @@ export function createSim(config = simConfig) {
       const tTotal = perf?.start('tick.total');
       try {
         state.tick += 1;
+        state.elapsedSeconds += 1 / resolveTicksPerSecond(resolvedConfig);
         state.lastRoll = rng.nextFloat();
 
         // Rebuild spatial index once per tick for O(1) neighbor queries
@@ -185,6 +193,8 @@ export function createSim(config = simConfig) {
         });
         perf?.end('tick.pack', tPack);
 
+        updateDangerMemories({ creatures: state.creatures, config: resolvedConfig });
+
         updateLocomotionGoals({
           creatures: state.creatures,
           config: resolvedConfig,
@@ -256,8 +266,10 @@ export function createSim(config = simConfig) {
         });
         perf?.end('tick.reproduction', tReproduction);
 
+        observeLifeStories(state);
         const tDeaths = perf?.start('tick.deaths');
         applyCreatureDeaths({
+          onDeath: (creature, cause) => rememberDeath(state, creature, cause),
           creatures: state.creatures,
           config: resolvedConfig,
           metrics: state.metrics

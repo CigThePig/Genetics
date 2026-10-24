@@ -231,3 +231,33 @@ The alertness locus now maps through the existing phenotype multiplier to .2–1
 The inspector reports actual flight and buffer; the same bounded history includes inherited vigilance. The standalone legacy state helper remains available, but production escape authority belongs to herding/integration. Disabling herding clears the derived buffer. See the continuation report for constructed selection, negative habitat-transfer results and ordinary-world limits; graphs do not classify adaptation.
 
 Threat observations retain their existing finite lifetime independently of whether the animal currently chooses escape. Leaving the escape buffer clears steering, while the copied danger position/hop count expires with its timer; re-entry and local warnings can still use valid observations.
+
+## Lived experience and individual observation (2026-10-24)
+
+After local herding decides escape, `creatures/experience.js` records only accepted,
+personally visible danger. Each animal keeps at most three copied geographical
+sites, merging observations within four tiles. Site retention defaults to 45
+simulated seconds and decays independently of the short immediate-threat memory.
+It is not inherited, shared, or linked to a live predator. Disabling duration clears
+sites on the next tick. Repeated personal sightings refresh retention.
+
+Discretionary locomotion considers up to its existing eight reachable candidates,
+choosing the lowest remembered route exposure (six-tile influence, age weighted,
+with lower departure cost when the endpoint gains clearance). It stops at the
+first unexposed candidate, retaining historical RNG consumption when there are no
+memories. All-risky candidates remain usable; memory never makes terrain blocked.
+Personal danger invalidates pre-escape discretionary goals. Social reunion,
+following, packs, active escape and resource/mating priorities retain authority.
+Changing the policy changes subsequent ecological RNG consumption and trajectories;
+equal seed/config/ticks still replay. This is acquired behavior, not an adaptation
+classifier or a new inherited personality locus.
+
+`life-story.js` records world entry, stage transitions, flight episodes, offspring
+births and authoritative death causes. Observation occurs after reproduction;
+death records are copied by a callback from the death owner. Twelve latest events
+per actor and 128 recent world-owned memorials bound retention. Names use IDs and
+never consume RNG. Births update living or retained deceased parents; there is no
+unbounded ancestry graph. Family navigation derives living relatives from copied
+parent IDs and does not grant animals knowledge of relatives. Cumulative travelled
+distance is in tiles. Event timestamps use accumulated simulated seconds so later
+TPS edits do not relabel the past. Reset replaces world archives and actor stories.

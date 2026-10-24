@@ -1,4 +1,15 @@
 export const metaMemory1 = {
+  creatureDangerMemorySeconds: {
+    label: 'Danger Place Memory',
+    description:
+      'How long personally experienced danger biases roaming. Fades with time; zero disables. Does not block food, water, mates or group reunion.',
+    min: 0,
+    max: 180,
+    step: 5,
+    unit: 's',
+    category: 'memory',
+    control: 'slider'
+  },
   creatureWaterPreferLocal: {
     label: 'Prefer Local Water',
     description:

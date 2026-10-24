@@ -1,3 +1,4 @@
+import { createLifeStoryCard } from './life-story.js';
 import { camouflageAt } from '../sim/creatures/visibility.js';
 import { matePreferenceMismatch } from '../sim/creatures/mate-preference.js';
 /**
@@ -250,21 +251,57 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
   // BUILD CREATURE DISPLAY
   // ═══════════════════════════════════════════════════════════════════════════
 
+  let lifeCard = null;
+  let displayedLife = null;
+  const details = document.createElement('div');
+  const storyCard = (creature, deceased = false) => {
+    const key = `${creature.id}:${deceased}`;
+    if (!lifeCard || displayedLife !== key) {
+      lifeCard = createLifeStoryCard({
+        onSelect: (relative) => {
+          trackedCreatureId = relative.id;
+          isFollowing = true;
+          title.textContent = `🔍 #${relative.id}`;
+          followBtn.classList.add('active');
+          followBtn.textContent = '📍 Following';
+          onFollowToggle?.(relative.id, true);
+          buildCreatureDisplay(relative, currentTick);
+        }
+      });
+      displayedLife = key;
+      content.replaceChildren(lifeCard.element, details);
+    } else if (!lifeCard.element.isConnected) {
+      content.replaceChildren(lifeCard.element, details);
+    }
+    lifeCard.update({ creature, creatures: currentCreatures, deceased });
+  };
+  let currentTick = 0;
   const buildCreatureDisplay = (creature, tick) => {
-    content.innerHTML = '';
+    details.replaceChildren();
 
     if (!creature) {
       const lost = document.createElement('div');
       lost.className = 'inspector-empty';
-      lost.innerHTML = `<strong style="color: var(--accent-red);">Creature lost!</strong><br>May have died or moved out of range.`;
-      content.append(lost);
+      const memorial = currentWorld?.memorials?.find((m) => m.id === trackedCreatureId);
+      if (memorial) storyCard(memorial, true);
+      else {
+        lifeCard = null;
+        displayedLife = null;
+        content.replaceChildren(details);
+      }
+      lost.textContent = memorial
+        ? 'Their life continues in the offspring above, if any are still alive.'
+        : 'This life is no longer in the recent record (128 deaths retained).';
+      details.append(lost);
       followBtn.style.display = 'none';
-      clearBtn.style.display = 'none';
+      clearBtn.style.display = 'block';
       return;
     }
 
     followBtn.style.display = 'block';
     clearBtn.style.display = 'block';
+
+    storyCard(creature);
 
     const traitsColour = creature.traits ?? {};
     const { section: colourSection, body: colourBody } = createSection(
@@ -317,7 +354,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     explanation.textContent =
       'Exposure estimates colour concealment; actual detection also depends on observer senses, range and movement. Species is identified by shape.';
     colourBody.append(explanation);
-    content.append(colourSection);
+    details.append(colourSection);
 
     // STATUS SECTION
     const { section: statusSection, body: statusBody } = createSection(
@@ -357,7 +394,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       statusBody.append(row('Pregnant', `🤰 ${progress}%`), row('Due in', ticksToTime(remaining)));
     }
 
-    content.append(statusSection);
+    details.append(statusSection);
 
     // VITALS SECTION
     const { section: vitalsSection, body: vitalsBody } = createSection(
@@ -375,7 +412,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       meterBar('Stamina', meters.stamina, 1, 'stamina')
     );
 
-    content.append(vitalsSection);
+    details.append(vitalsSection);
 
     // BEHAVIOR SECTION
     const { section: behaviorSection, body: behaviorBody } = createSection(
@@ -498,7 +535,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
           `${creature.pack.role}; ${creature.pack.visited?.length ?? 0} recent locations`
         )
       );
-    content.append(behaviorSection);
+    details.append(behaviorSection);
 
     // TRAITS SECTION
     const { section: traitsSection, body: traitsBody } = createSection(
@@ -517,7 +554,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       row('Water burn', `${num(traits.basalWaterDrain * 100, 2)}%/s`)
     );
 
-    content.append(traitsSection);
+    details.append(traitsSection);
 
     // HUNTING SECTION (predators only)
     const chase = creature.chase;
@@ -550,7 +587,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
         huntBody.append(row('Last hunt', outcomeLabels[chase.lastOutcome] || chase.lastOutcome));
       }
 
-      content.append(huntSection);
+      details.append(huntSection);
     }
 
     // GENETICS SECTION
@@ -597,11 +634,11 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       }
     }
 
-    content.append(geneSection);
+    details.append(geneSection);
 
     const behavior = document.createElement('p');
     behavior.textContent = `Behavior: ${creature.behaviorState?.state ?? 'relaxed'} / ${creature.behaviorState?.phase ?? 'none'}`;
-    content.append(behavior);
+    details.append(behavior);
 
     // Tick footer
     const tickDiv = document.createElement('div');
@@ -610,7 +647,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
     tickDiv.style.color = 'var(--text-muted)';
     tickDiv.style.textAlign = 'right';
     tickDiv.textContent = `Tick: ${tick} • Live`;
-    content.append(tickDiv);
+    details.append(tickDiv);
   };
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -622,6 +659,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
      * Called when user taps to select a creature.
      */
     selectCreature(creature, tapLocation) {
+      onFollowToggle?.(null, false);
       if (creature) {
         trackedCreatureId = creature.id;
         isFollowing = false;
@@ -654,6 +692,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
      * Called every tick/frame to update the display.
      */
     update({ creatures, tick, world, config }) {
+      currentTick = tick;
       currentWorld = world ?? currentWorld;
       currentConfig = config ?? currentConfig;
       currentCreatures = creatures ?? [];
@@ -663,7 +702,7 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       buildCreatureDisplay(creature, tick);
 
       if (!creature) {
-        title.textContent = `🔍 Lost #${trackedCreatureId}`;
+        title.textContent = `🔍 Remembering #${trackedCreatureId}`;
         isFollowing = false;
         followBtn.classList.remove('active');
         onFollowToggle?.(null, false);

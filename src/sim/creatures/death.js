@@ -57,7 +57,7 @@ export const selectDeathCause = ({ creature, maxAgeTicks }) => {
  * Modifies creatures array in place.
  * Uses per-creature maxAgeTicks if available (from genome), otherwise falls back to config.
  */
-export function applyCreatureDeaths({ creatures, config, metrics }) {
+export function applyCreatureDeaths({ creatures, config, metrics, onDeath }) {
   if (!Array.isArray(creatures)) {
     return;
   }
@@ -80,6 +80,7 @@ export function applyCreatureDeaths({ creatures, config, metrics }) {
       continue;
     }
     creature.deathCause = cause;
+    onDeath?.(creature, cause);
     totalDeaths += 1;
     if (counts && counts[cause] !== undefined) {
       counts[cause] += 1;

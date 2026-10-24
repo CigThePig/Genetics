@@ -1,0 +1,30 @@
+{
+  "node": "v24.22.1",
+  "scope": "Steady-state observer only, seed 42; repeated reads of unchanged actors. Batch timing includes GC pauses, but does not measure allocation rate, full simulation, browser frames or physical phones.",
+  "samples": [
+    {
+      "population": 80,
+      "observations": 20000,
+      "batchMeanMsP50": 0.006571410000000242,
+      "batchMeanMsP95": 0.009625219999999785,
+      "estimatedMsPerSecondAt120TPS": 0.7885692000000291,
+      "retainedHeapBytes": -27952
+    },
+    {
+      "population": 320,
+      "observations": 20000,
+      "batchMeanMsP50": 0.026125430000000734,
+      "batchMeanMsP95": 0.03127159000000006,
+      "estimatedMsPerSecondAt120TPS": 3.135051600000088,
+      "retainedHeapBytes": -325992
+    },
+    {
+      "population": 640,
+      "observations": 20000,
+      "batchMeanMsP50": 0.052166720000000166,
+      "batchMeanMsP95": 0.07196339999999964,
+      "estimatedMsPerSecondAt120TPS": 6.2600064000000195,
+      "retainedHeapBytes": -1282232
+    }
+  ]
+}
