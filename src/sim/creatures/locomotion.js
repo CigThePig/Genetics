@@ -1,3 +1,4 @@
+import { rememberedRouteRisk } from './experience.js';
 import { clearLandLine } from './navigation.js';
 const distance = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
 export function setLocomotionGoal(creature, target, reason, ticks) {
@@ -54,6 +55,8 @@ export function updateLocomotionGoals({ creatures, config, rng, world }) {
       } else {
         const heading = c.motion?.heading ?? 0;
         let target = null;
+        let bestRisk = Infinity;
+        let avoidedDanger = false;
         for (let i = 0; i < 8; i++) {
           const angle = heading + (rng.nextFloat() - 0.5) * Math.PI * 1.4;
           const length =
@@ -64,14 +67,23 @@ export function updateLocomotionGoals({ creatures, config, rng, world }) {
             y: Math.max(0.5, Math.min(world.height - 0.5, c.position.y + Math.sin(angle) * length))
           };
           if (clearLandLine(world, c.position, p)) {
-            target = p;
-            break;
+            const risk = rememberedRouteRisk(c, p, config);
+            if (risk < bestRisk) {
+              target = p;
+              bestRisk = risk;
+            }
+            if (risk === 0) break;
+            avoidedDanger = true;
           }
         }
         g = setLocomotionGoal(
           c,
           target,
-          c.intent.type === 'graze' ? 'graze locally' : 'explore',
+          avoidedDanger
+            ? 'skirt remembered danger'
+            : c.intent.type === 'graze'
+              ? 'graze locally'
+              : 'explore',
           Math.ceil(
             (6 +
               rng.nextFloat() * 6 +

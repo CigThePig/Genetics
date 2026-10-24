@@ -321,6 +321,7 @@ export const simConfig = {
   creatureBehaviorEnvironmentPauseProbability: 0.3,
 
   // === CREATURES: MEMORY ===
+  creatureDangerMemorySeconds: 45,
   creatureMemoryMaxEntries: 12,
   creatureMemoryDecay: 0.018, // (was 0.02 - memories last slightly longer)
   creatureMemoryMinStrength: 0.05,
