@@ -45,6 +45,21 @@ Use **Inspector → Colour & habitat** for swatches and individual traits, and *
 
 Verification and ecological limitations: [Track 11 evidence](tracks/2026-10-19-track-11-regional-colour-evolution/evidence.md). Geography and selection mechanisms are implemented; long-term balance/adaptive divergence remain subjects for Track 13.
 
+## Follow a life
+
+Tap a creature to open its field notebook: an observer-assigned name, travelled
+distance, flight episodes, offspring and the latest twelve life milestones.
+**Follow** keeps it in view. Living parent/child buttons let you continue watching
+a family; after death, the inspector keeps the actual cause and offers living
+children. The world retains the most recent 128 memorials.
+
+Animals remember personally experienced danger for a while and prefer less
+exposed roaming routes. Those memories fade, stay individual, and never block
+food, water or reunion. Search **Danger Place Memory** in Configuration to change
+the duration or set it to zero for comparison. Learned experience is separate
+from inherited genes; neither a dramatic life nor a changing population proves
+adaptive evolution. [Design and validation](tracks/2026-10-24-lived-experience/evidence.md).
+
 ## Repository map
 
 - Architecture + invariants: `context/architecture.md`

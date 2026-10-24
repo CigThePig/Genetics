@@ -432,3 +432,14 @@ Rules:
 - scripts/profile-evolution.mjs: equal-workload hot-path and bounded history profiling.
 - scripts/plot-natural-evolution.py: scientific figures from audited records and browser traces.
 - tracks/2026-10-23-emergent-evolution/continuation.md: methods, results, limitations and reproduction instructions.
+
+## Animals with a past (2026-10-24)
+
+- src/sim/creatures/experience.js
+  - Bounded personal danger places, finite retention and discretionary route exposure.
+- src/sim/life-story.js, src/ui/life-story.js
+  - Passive bounded individual milestones/memorials and field notebook/family navigation.
+- scripts/verify-lived-experience.mjs, verify-lived-passive.mjs, verify-lived-experience-browser.cjs
+  - Paired ordinary-world memory runs, baseline identity check and browser lifecycle checks.
+- tests/lived-experience.test.js, tracks/2026-10-24-lived-experience/
+  - Causal memory/priority, retention, lifecycle, determinism and implementation evidence.
