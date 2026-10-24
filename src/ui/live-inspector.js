@@ -644,10 +644,16 @@ export function createLiveInspector({
       }
 
       addSection(huntSection);
-    } else {
-      // A hunt can end while another section is focused; only remove this
-      // conditional section rather than rebuilding every section header.
-      sectionNodes.get('hunting')?.section.remove();
+    } else if (sectionNodes.has('hunting')) {
+      // Keep the header mounted when a chase ends: removing it would drop
+      // keyboard focus and reset the user's place in the inspector.
+      const { section: huntSection, body: huntBody } = createSection(
+        'hunting',
+        'Hunting',
+        '🎯'
+      );
+      huntBody.append(row('Status', 'Not currently hunting'));
+      addSection(huntSection);
     }
 
     // GENETICS SECTION
