@@ -34,6 +34,7 @@ export function createLiveInspector({
   let isFollowing = false;
   let currentTicksPerSecond = ticksPerSecond;
   const sectionStates = { status: true, vitals: true };
+  const sectionNodes = new Map();
 
   // Create FAB for inspector
   const fabContainer = document.createElement('div');
@@ -177,12 +178,20 @@ export function createLiveInspector({
   // ═══════════════════════════════════════════════════════════════════════════
 
   const createSection = (id, titleText, _emoji, defaultOpen = false) => {
+    // Retain the section header itself across frames: removing a focused button
+    // drops keyboard focus and breaks Escape navigation while the world runs.
+    const existing = sectionNodes.get(id);
+    if (existing) {
+      existing.body.replaceChildren();
+      return existing;
+    }
     if (typeof sectionStates[id] !== 'boolean') {
       sectionStates[id] = defaultOpen;
     }
 
     const section = document.createElement('div');
     section.className = 'inspector-section';
+    section.dataset.inspectorSection = id;
 
     const sectionHeader = document.createElement('button');
     sectionHeader.className = 'inspector-section-header';
@@ -216,7 +225,9 @@ export function createLiveInspector({
     });
 
     section.append(sectionHeader, sectionBody);
-    return { section, body: sectionContent };
+    const entry = { section, body: sectionContent };
+    sectionNodes.set(id, entry);
+    return entry;
   };
 
   // ═══════════════════════════════════════════════════════════════════════════
@@ -277,6 +288,23 @@ export function createLiveInspector({
   let lifeCard = null;
   let displayedLife = null;
   const details = document.createElement('div');
+  let displayedCreatureId = null;
+  const sectionOrder = ['colour', 'status', 'vitals', 'behavior', 'traits', 'hunting', 'genetics'];
+  const addSection = (section) => {
+    if (section.parentNode === details) return;
+    const index = sectionOrder.indexOf(section.dataset.inspectorSection);
+    const next = [...details.children].find((child) => {
+      const other = sectionOrder.indexOf(child.dataset.inspectorSection);
+      return other < 0 || other > index;
+    });
+    details.insertBefore(section, next ?? null);
+  };
+  const activityText = document.createElement('p');
+  const tickDiv = document.createElement('div');
+  tickDiv.style.marginTop = '12px';
+  tickDiv.style.fontSize = '11px';
+  tickDiv.style.color = 'var(--text-muted)';
+  tickDiv.style.textAlign = 'right';
   const storyCard = (creature, deceased = false) => {
     const key = `${creature.id}:${deceased}`;
     if (!lifeCard || displayedLife !== key) {
@@ -300,9 +328,14 @@ export function createLiveInspector({
   };
   let currentTick = 0;
   const buildCreatureDisplay = (creature, tick) => {
-    details.replaceChildren();
+    if (displayedCreatureId !== (creature?.id ?? null)) {
+      details.replaceChildren();
+      sectionNodes.clear();
+      displayedCreatureId = creature?.id ?? null;
+    }
 
     if (!creature) {
+      details.replaceChildren();
       const lost = document.createElement('div');
       lost.className = 'inspector-empty';
       const memorial = currentWorld?.memorials?.find((m) => m.id === trackedCreatureId);
@@ -377,7 +410,7 @@ export function createLiveInspector({
     explanation.textContent =
       'Exposure estimates colour concealment; actual detection also depends on observer senses, range and movement. Species is identified by shape.';
     colourBody.append(explanation);
-    details.append(colourSection);
+    addSection(colourSection);
 
     // STATUS SECTION
     const { section: statusSection, body: statusBody } = createSection(
@@ -417,7 +450,7 @@ export function createLiveInspector({
       statusBody.append(row('Pregnant', `🤰 ${progress}%`), row('Due in', ticksToTime(remaining)));
     }
 
-    details.append(statusSection);
+    addSection(statusSection);
 
     // VITALS SECTION
     const { section: vitalsSection, body: vitalsBody } = createSection(
@@ -435,7 +468,7 @@ export function createLiveInspector({
       meterBar('Stamina', meters.stamina, 1, 'stamina')
     );
 
-    details.append(vitalsSection);
+    addSection(vitalsSection);
 
     // BEHAVIOR SECTION
     const { section: behaviorSection, body: behaviorBody } = createSection(
@@ -558,7 +591,7 @@ export function createLiveInspector({
           `${creature.pack.role}; ${creature.pack.visited?.length ?? 0} recent locations`
         )
       );
-    details.append(behaviorSection);
+    addSection(behaviorSection);
 
     // TRAITS SECTION
     const { section: traitsSection, body: traitsBody } = createSection(
@@ -577,7 +610,7 @@ export function createLiveInspector({
       row('Water burn', `${num(traits.basalWaterDrain * 100, 2)}%/s`)
     );
 
-    details.append(traitsSection);
+    addSection(traitsSection);
 
     // HUNTING SECTION (predators only)
     const chase = creature.chase;
@@ -610,7 +643,11 @@ export function createLiveInspector({
         huntBody.append(row('Last hunt', outcomeLabels[chase.lastOutcome] || chase.lastOutcome));
       }
 
-      details.append(huntSection);
+      addSection(huntSection);
+    } else {
+      // A hunt can end while another section is focused; only remove this
+      // conditional section rather than rebuilding every section header.
+      sectionNodes.get('hunting')?.section.remove();
     }
 
     // GENETICS SECTION
@@ -658,20 +695,14 @@ export function createLiveInspector({
       }
     }
 
-    details.append(geneSection);
+    addSection(geneSection);
 
-    const behavior = document.createElement('p');
-    behavior.textContent = `Behavior: ${creature.behaviorState?.state ?? 'relaxed'} / ${creature.behaviorState?.phase ?? 'none'}`;
-    details.append(behavior);
+    activityText.textContent = `Behavior: ${creature.behaviorState?.state ?? 'relaxed'} / ${creature.behaviorState?.phase ?? 'none'}`;
+    if (activityText.parentNode !== details) details.append(activityText);
 
-    // Tick footer
-    const tickDiv = document.createElement('div');
-    tickDiv.style.marginTop = '12px';
-    tickDiv.style.fontSize = '11px';
-    tickDiv.style.color = 'var(--text-muted)';
-    tickDiv.style.textAlign = 'right';
+    // Keep footer nodes mounted too, so all live section buttons remain stable.
     tickDiv.textContent = `Tick: ${tick} • Live`;
-    details.append(tickDiv);
+    if (tickDiv.parentNode !== details) details.append(tickDiv);
   };
 
   // ═══════════════════════════════════════════════════════════════════════════
