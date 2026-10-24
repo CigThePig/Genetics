@@ -647,11 +647,7 @@ export function createLiveInspector({
     } else if (sectionNodes.has('hunting')) {
       // Keep the header mounted when a chase ends: removing it would drop
       // keyboard focus and reset the user's place in the inspector.
-      const { section: huntSection, body: huntBody } = createSection(
-        'hunting',
-        'Hunting',
-        '🎯'
-      );
+      const { section: huntSection, body: huntBody } = createSection('hunting', 'Hunting', '🎯');
       huntBody.append(row('Status', 'Not currently hunting'));
       addSection(huntSection);
     }
