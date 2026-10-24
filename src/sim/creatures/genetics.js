@@ -39,7 +39,7 @@ const DEFAULT_GENOME = {
 const DEFAULT_GENE_RANGES = {
   speed: { min: 0.8, max: 1.2 },
   perceptionRange: { min: 0.8, max: 1.2 },
-  alertness: { min: 0.85, max: 1.15 },
+  alertness: { min: 0.2, max: 1.8 },
   reactionDelay: { min: 0.8, max: 1.2 },
   basalEnergyDrain: { min: 0.85, max: 1.2 },
   basalWaterDrain: { min: 0.85, max: 1.2 },
@@ -190,7 +190,7 @@ export const createCreatureGenome = ({ config, species, rng } = {}) => {
   return genome;
 };
 
-export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) => {
+export const inheritCreatureGenome = ({ parentA, parentB, config, rng, inheritanceMode } = {}) => {
   const defaults = resolveGenomeDefaults(config, parentA?.species);
   const keys = getGenomeKeys({ config, species: parentA?.species, parentA, parentB });
   const genome = {};
@@ -206,7 +206,11 @@ export const inheritCreatureGenome = ({ parentA, parentB, config, rng } = {}) =>
 
     // Compute inherited base: either random blend or midpoint
     let base;
-    if (rng && rng.nextFloat() < mixChance) {
+    if (rng && (inheritanceMode ?? config?.creatureGenomeInheritanceMode) === 'segregating') {
+      // Quantitative haploid loci: recombine intact parental values instead of
+      // averaging away every inherited difference. Mutation remains separate.
+      base = rng.nextFloat() < 0.5 ? resolvedA : resolvedB;
+    } else if (rng && rng.nextFloat() < mixChance) {
       // Random blend between parents
       const t = rng.nextFloat();
       base = isHue(key) ? mixHue(resolvedA, resolvedB, t) : resolvedA + (resolvedB - resolvedA) * t;

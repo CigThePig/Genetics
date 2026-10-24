@@ -461,6 +461,7 @@ export const simConfig = {
   },
   creatureGenomeRanges: {},
   creatureGestationMultiplier: 1,
+  creatureGenomeInheritanceMode: 'segregating',
   creatureGenomeJitter: 0.1, // (was 0.08 - more initial variation)
   creatureGenomeMutationRate: 0.2, // (was 0.18 - slightly more mutations)
   creatureGenomeMutationStrength: 0.12, // (was 0.1 - stronger mutations for faster evolution)

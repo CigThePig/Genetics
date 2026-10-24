@@ -251,6 +251,7 @@ export function updateCreatureReproduction({
         });
         const genome = mutateCreatureGenome({
           genome: inheritCreatureGenome({
+            inheritanceMode: world?.inheritanceMode,
             parentA: creature,
             parentB: mate,
             config,
@@ -478,6 +479,7 @@ export function updateCreatureReproduction({
 
     const genome = mutateCreatureGenome({
       genome: inheritCreatureGenome({
+        inheritanceMode: world?.inheritanceMode,
         parentA: creature,
         parentB: mate,
         config,

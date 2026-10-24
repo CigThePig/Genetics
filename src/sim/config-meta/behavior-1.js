@@ -88,8 +88,9 @@ export const metaBehavior1 = {
     control: 'slider'
   },
   creatureBehaviorAlertToFleeThreshold: {
-    label: 'Alert Flee Threshold',
-    description: 'Distance at which alert transitions to fleeing.',
+    label: 'Escape Buffer',
+    description:
+      'Escape distance at baseline inherited vigilance. Individuals scale this buffer with alertness; danger must be observed or locally reported.',
     min: 1,
     max: 20,
     step: 1,

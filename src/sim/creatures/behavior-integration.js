@@ -25,14 +25,9 @@ export function updateBehaviorIntegration({ creatures, config, rng, world, tick 
       state.phaseLockedUntilTick = tick + Math.ceil((config.ticksPerSecond ?? 60) * 2);
     }
     if (creature.herding?.isThreatened) {
-      // Threat propagation also counts, even without a directly visible predator.
-      if (
-        (creature.herding?.nearbyThreats ?? 0) === 0 &&
-        state.state !== BEHAVIOR_STATES.FLEEING &&
-        state.state !== BEHAVIOR_STATES.ALERT
-      ) {
-        startFleeing(creature, tick, config);
-      }
+      // Herding owns the escape decision; pacing must not insert a second
+      // stationary assessment after an observed danger has crossed its buffer.
+      if (state.state !== BEHAVIOR_STATES.FLEEING) startFleeing(creature, tick, config);
     } else if (intent === 'hunt') {
       if (state.state !== BEHAVIOR_STATES.HUNTING) startHunting(creature, tick, config);
     } else if (intent === 'eat' && creature.intent.foodType === 'meat') {

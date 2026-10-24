@@ -1,0 +1,2620 @@
+{
+  "browser": "153.0.8010.0",
+  "errors": [],
+  "seed": 42,
+  "observations": [
+    {
+      "mode": "blended",
+      "seconds": 0,
+      "population": 80,
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "actors": [
+        {
+          "id": 0,
+          "position": {
+            "x": 19.855153606285487,
+            "y": 85.903397717751
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.9458894022926687,
+            "bodySaturation": 0.46896456996910274,
+            "bodyLightness": 0.5213102349545806,
+            "matePreferenceHue": 0.7524741399288177,
+            "mateChoosiness": 0.4240923038683832,
+            "colourDiscrimination": 0.7283256342634559,
+            "speed": 0.49947979231365025,
+            "perceptionRange": 0.4300479969475418,
+            "alertness": 0.42596896677277984,
+            "reactionDelay": 0.5166334504727275,
+            "basalEnergyDrain": 0.42168655754067,
+            "basalWaterDrain": 0.5924398237839341,
+            "basalStaminaDrain": 0.5982856803573668,
+            "sprintStartThreshold": 0.4148139060009271,
+            "sprintStopThreshold": 0.4964753568638116,
+            "sprintSpeedMultiplier": 0.4245983708184212,
+            "sprintStaminaDrain": 0.5288708087056875,
+            "staminaRegen": 0.5320916040334851,
+            "drinkThreshold": 0.4112722158432007,
+            "drinkAmount": 0.573163824994117,
+            "eatThreshold": 0.5660700449254363,
+            "eatAmount": 0.5361059877555817,
+            "grassEatMin": 0.5586689135991036,
+            "berryEatMin": 0.5377200543414802,
+            "gestationMultiplier": 0.4873677658848464,
+            "growthRate": 0.5558325922582299,
+            "longevity": 0.4646738462615758
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 19.075905536111154,
+            "y": 91.10045228538006
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.8153832158632577,
+            "bodySaturation": 0.45697642196901145,
+            "bodyLightness": 0.4947149912361056,
+            "matePreferenceHue": 0.7633618936873972,
+            "mateChoosiness": 0.4179749400354922,
+            "colourDiscrimination": 0.7466405109968036,
+            "speed": 0.49303037393838167,
+            "perceptionRange": 0.5869963088072836,
+            "alertness": 0.42499228455126287,
+            "reactionDelay": 0.44766259589232504,
+            "basalEnergyDrain": 0.47412837282754483,
+            "basalWaterDrain": 0.43267706157639624,
+            "basalStaminaDrain": 0.4622642852365971,
+            "sprintStartThreshold": 0.51015003323555,
+            "sprintStopThreshold": 0.5508687878493219,
+            "sprintSpeedMultiplier": 0.47565440451726315,
+            "sprintStaminaDrain": 0.45578029728494585,
+            "staminaRegen": 0.5030209746211767,
+            "drinkThreshold": 0.44895958113484086,
+            "drinkAmount": 0.43997563449665905,
+            "eatThreshold": 0.5949852524790913,
+            "eatAmount": 0.5530957263428717,
+            "grassEatMin": 0.5008065820671618,
+            "berryEatMin": 0.41563201416283846,
+            "gestationMultiplier": 0.5218250316102058,
+            "growthRate": 0.5579823658801615,
+            "longevity": 0.4050404661800712
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 21.149324064425144,
+            "y": 90.62293635361907
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.07830044263973823,
+            "bodySaturation": 0.39114371188916264,
+            "bodyLightness": 0.49855846092104916,
+            "matePreferenceHue": 0.8549283017404377,
+            "mateChoosiness": 0.41393784643150866,
+            "colourDiscrimination": 0.708543590363115,
+            "speed": 0.448598778154701,
+            "perceptionRange": 0.505851635383442,
+            "alertness": 0.4646353376097977,
+            "reactionDelay": 0.44173297644592824,
+            "basalEnergyDrain": 0.4629510279279202,
+            "basalWaterDrain": 0.4971546735148877,
+            "basalStaminaDrain": 0.4829921809956431,
+            "sprintStartThreshold": 0.5730536061804742,
+            "sprintStopThreshold": 0.41440306352451445,
+            "sprintSpeedMultiplier": 0.442624109890312,
+            "sprintStaminaDrain": 0.4205034404061735,
+            "staminaRegen": 0.47372556631453333,
+            "drinkThreshold": 0.5680357123259455,
+            "drinkAmount": 0.4553305324167013,
+            "eatThreshold": 0.475783903663978,
+            "eatAmount": 0.5183713257312774,
+            "grassEatMin": 0.47659649793058634,
+            "berryEatMin": 0.5339206930249929,
+            "gestationMultiplier": 0.413147531170398,
+            "growthRate": 0.5721795761957764,
+            "longevity": 0.5710703185759485
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 19.530495147781664,
+            "y": 89.65549117094315
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.9927907946705818,
+            "bodySaturation": 0.3610030735377222,
+            "bodyLightness": 0.5180359779857099,
+            "matePreferenceHue": 0.971038082782179,
+            "mateChoosiness": 0.4084301439579576,
+            "colourDiscrimination": 0.7687218582257628,
+            "speed": 0.4104415839072317,
+            "perceptionRange": 0.5027974616270512,
+            "alertness": 0.5368107394780963,
+            "reactionDelay": 0.522927732206881,
+            "basalEnergyDrain": 0.5580218532122672,
+            "basalWaterDrain": 0.4506417823024094,
+            "basalStaminaDrain": 0.4980466114822775,
+            "sprintStartThreshold": 0.5128830325789749,
+            "sprintStopThreshold": 0.5607490512542427,
+            "sprintSpeedMultiplier": 0.46879632589407266,
+            "sprintStaminaDrain": 0.4808494622353464,
+            "staminaRegen": 0.43296989616937936,
+            "drinkThreshold": 0.44530625492334364,
+            "drinkAmount": 0.4203989928588271,
+            "eatThreshold": 0.48683793041855095,
+            "eatAmount": 0.407222891272977,
+            "grassEatMin": 0.471668109158054,
+            "berryEatMin": 0.4328628126066178,
+            "gestationMultiplier": 0.5768167114816606,
+            "growthRate": 0.5364004736766219,
+            "longevity": 0.41104857744649054
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 24.960335181804226,
+            "y": 91.59623494423712
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.006567958556115583,
+            "bodySaturation": 0.35655804234556854,
+            "bodyLightness": 0.5117743849288672,
+            "matePreferenceHue": 0.9334151462838054,
+            "mateChoosiness": 0.4984529941342771,
+            "colourDiscrimination": 0.6754362539853901,
+            "speed": 0.58716677185148,
+            "perceptionRange": 0.5092169128358364,
+            "alertness": 0.4154974529519677,
+            "reactionDelay": 0.555205666879192,
+            "basalEnergyDrain": 0.5006255060434341,
+            "basalWaterDrain": 0.5799661476630718,
+            "basalStaminaDrain": 0.5531120755709708,
+            "sprintStartThreshold": 0.4992043256293982,
+            "sprintStopThreshold": 0.5889834182336926,
+            "sprintSpeedMultiplier": 0.4462435814086348,
+            "sprintStaminaDrain": 0.4893748551141471,
+            "staminaRegen": 0.42053383952006695,
+            "drinkThreshold": 0.4337740083225071,
+            "drinkAmount": 0.5780852136667818,
+            "eatThreshold": 0.496254260558635,
+            "eatAmount": 0.5070985951460898,
+            "grassEatMin": 0.5309672068804503,
+            "berryEatMin": 0.5574326501693576,
+            "gestationMultiplier": 0.4862834750674665,
+            "growthRate": 0.5964700575917959,
+            "longevity": 0.4957595071289688
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 24.039652186023144,
+            "y": 89.21975292848012
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.7922899035736919,
+            "bodySaturation": 0.5304796995129436,
+            "bodyLightness": 0.47257528747431937,
+            "matePreferenceHue": 0.7427116687782109,
+            "mateChoosiness": 0.4789647889789194,
+            "colourDiscrimination": 0.5262246873695403,
+            "speed": 0.5184776374138892,
+            "perceptionRange": 0.530695737618953,
+            "alertness": 0.4090850609354675,
+            "reactionDelay": 0.4281560390722007,
+            "basalEnergyDrain": 0.5079479303210974,
+            "basalWaterDrain": 0.41132561755366626,
+            "basalStaminaDrain": 0.5557136469054967,
+            "sprintStartThreshold": 0.5867219778243452,
+            "sprintStopThreshold": 0.5846298291813582,
+            "sprintSpeedMultiplier": 0.5304615702945739,
+            "sprintStaminaDrain": 0.40370140727609394,
+            "staminaRegen": 0.5543956298846752,
+            "drinkThreshold": 0.5993707287125289,
+            "drinkAmount": 0.400218827277422,
+            "eatThreshold": 0.47329136594198645,
+            "eatAmount": 0.4011926564387977,
+            "grassEatMin": 0.5989130730275065,
+            "berryEatMin": 0.5899984587915241,
+            "gestationMultiplier": 0.42716328050009905,
+            "growthRate": 0.44379034428857267,
+            "longevity": 0.4788357860874385
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 26.184751617077193,
+            "y": 95.74118168399106
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.782060869988054,
+            "bodySaturation": 0.4993297998327762,
+            "bodyLightness": 0.4806390881538391,
+            "matePreferenceHue": 0.5630237369611859,
+            "mateChoosiness": 0.3334128906019032,
+            "colourDiscrimination": 0.6506174328736961,
+            "speed": 0.4707887460011989,
+            "perceptionRange": 0.4222082814667374,
+            "alertness": 0.5279484995175153,
+            "reactionDelay": 0.4966218154411763,
+            "basalEnergyDrain": 0.5480428021866828,
+            "basalWaterDrain": 0.4152845088392496,
+            "basalStaminaDrain": 0.5161354197654873,
+            "sprintStartThreshold": 0.5292620667256415,
+            "sprintStopThreshold": 0.4418713850900531,
+            "sprintSpeedMultiplier": 0.42393688382580874,
+            "sprintStaminaDrain": 0.5583932253532111,
+            "staminaRegen": 0.40318457833491267,
+            "drinkThreshold": 0.5073192022275179,
+            "drinkAmount": 0.5508523303549737,
+            "eatThreshold": 0.42396396067924796,
+            "eatAmount": 0.48725079339928923,
+            "grassEatMin": 0.5085216019768268,
+            "berryEatMin": 0.5210307603701949,
+            "gestationMultiplier": 0.5193972553126514,
+            "growthRate": 0.5835924583021551,
+            "longevity": 0.5623325771652162
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 26.2173930192159,
+            "y": 94.58409022567996
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.5714303406514227,
+            "bodySaturation": 0.37282939795404674,
+            "bodyLightness": 0.3767046695575118,
+            "matePreferenceHue": 0.6281573742255568,
+            "mateChoosiness": 0.31624109935946765,
+            "colourDiscrimination": 0.6877860314212739,
+            "speed": 0.5162102221976965,
+            "perceptionRange": 0.5501357962843031,
+            "alertness": 0.5166336998809129,
+            "reactionDelay": 0.5750137061811984,
+            "basalEnergyDrain": 0.4868781405966729,
+            "basalWaterDrain": 0.42018740200437604,
+            "basalStaminaDrain": 0.5417914487887174,
+            "sprintStartThreshold": 0.49397924859076736,
+            "sprintStopThreshold": 0.45601357901468875,
+            "sprintSpeedMultiplier": 0.51252585593611,
+            "sprintStaminaDrain": 0.5518154000397771,
+            "staminaRegen": 0.5694729723036289,
+            "drinkThreshold": 0.47898932253010573,
+            "drinkAmount": 0.5123772779479623,
+            "eatThreshold": 0.4111704203765839,
+            "eatAmount": 0.5437119300011546,
+            "grassEatMin": 0.5334865484852344,
+            "berryEatMin": 0.4145139563828707,
+            "gestationMultiplier": 0.5254682402126492,
+            "growthRate": 0.44878101074136795,
+            "longevity": 0.5312606095802039
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        }
+      ]
+    },
+    {
+      "mode": "blended",
+      "seconds": 60,
+      "population": 80,
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "actors": [
+        {
+          "id": 0,
+          "position": {
+            "x": 6.547275367934598,
+            "y": 36.26271147274559
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 5.674478446284368,
+              "y": 39.11768077855287
+            }
+          },
+          "genome": {
+            "bodyHue": 0.9458894022926687,
+            "bodySaturation": 0.46896456996910274,
+            "bodyLightness": 0.5213102349545806,
+            "matePreferenceHue": 0.7524741399288177,
+            "mateChoosiness": 0.4240923038683832,
+            "colourDiscrimination": 0.7283256342634559,
+            "speed": 0.49947979231365025,
+            "perceptionRange": 0.4300479969475418,
+            "alertness": 0.42596896677277984,
+            "reactionDelay": 0.5166334504727275,
+            "basalEnergyDrain": 0.42168655754067,
+            "basalWaterDrain": 0.5924398237839341,
+            "basalStaminaDrain": 0.5982856803573668,
+            "sprintStartThreshold": 0.4148139060009271,
+            "sprintStopThreshold": 0.4964753568638116,
+            "sprintSpeedMultiplier": 0.4245983708184212,
+            "sprintStaminaDrain": 0.5288708087056875,
+            "staminaRegen": 0.5320916040334851,
+            "drinkThreshold": 0.4112722158432007,
+            "drinkAmount": 0.573163824994117,
+            "eatThreshold": 0.5660700449254363,
+            "eatAmount": 0.5361059877555817,
+            "grassEatMin": 0.5586689135991036,
+            "berryEatMin": 0.5377200543414802,
+            "gestationMultiplier": 0.4873677658848464,
+            "growthRate": 0.5558325922582299,
+            "longevity": 0.4646738462615758
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6315207934563407,
+            "water": 0.7306391398564934,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 1.9512586903672358,
+            "y": 35.300780659704174
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 1.8430344791484852,
+              "y": 34.992499774832496
+            }
+          },
+          "genome": {
+            "bodyHue": 0.8153832158632577,
+            "bodySaturation": 0.45697642196901145,
+            "bodyLightness": 0.4947149912361056,
+            "matePreferenceHue": 0.7633618936873972,
+            "mateChoosiness": 0.4179749400354922,
+            "colourDiscrimination": 0.7466405109968036,
+            "speed": 0.49303037393838167,
+            "perceptionRange": 0.5869963088072836,
+            "alertness": 0.42499228455126287,
+            "reactionDelay": 0.44766259589232504,
+            "basalEnergyDrain": 0.47412837282754483,
+            "basalWaterDrain": 0.43267706157639624,
+            "basalStaminaDrain": 0.4622642852365971,
+            "sprintStartThreshold": 0.51015003323555,
+            "sprintStopThreshold": 0.5508687878493219,
+            "sprintSpeedMultiplier": 0.47565440451726315,
+            "sprintStaminaDrain": 0.45578029728494585,
+            "staminaRegen": 0.5030209746211767,
+            "drinkThreshold": 0.44895958113484086,
+            "drinkAmount": 0.43997563449665905,
+            "eatThreshold": 0.5949852524790913,
+            "eatAmount": 0.5530957263428717,
+            "grassEatMin": 0.5008065820671618,
+            "berryEatMin": 0.41563201416283846,
+            "gestationMultiplier": 0.5218250316102058,
+            "growthRate": 0.5579823658801615,
+            "longevity": 0.4050404661800712
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6276472107093802,
+            "water": 0.7493219744998435,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 21.595857121587464,
+            "y": 106.03333268606721
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 25.746557157872267,
+              "y": 105.33854072067682
+            }
+          },
+          "genome": {
+            "bodyHue": 0.07830044263973823,
+            "bodySaturation": 0.39114371188916264,
+            "bodyLightness": 0.49855846092104916,
+            "matePreferenceHue": 0.8549283017404377,
+            "mateChoosiness": 0.41393784643150866,
+            "colourDiscrimination": 0.708543590363115,
+            "speed": 0.448598778154701,
+            "perceptionRange": 0.505851635383442,
+            "alertness": 0.4646353376097977,
+            "reactionDelay": 0.44173297644592824,
+            "basalEnergyDrain": 0.4629510279279202,
+            "basalWaterDrain": 0.4971546735148877,
+            "basalStaminaDrain": 0.4829921809956431,
+            "sprintStartThreshold": 0.5730536061804742,
+            "sprintStopThreshold": 0.41440306352451445,
+            "sprintSpeedMultiplier": 0.442624109890312,
+            "sprintStaminaDrain": 0.4205034404061735,
+            "staminaRegen": 0.47372556631453333,
+            "drinkThreshold": 0.5680357123259455,
+            "drinkAmount": 0.4553305324167013,
+            "eatThreshold": 0.475783903663978,
+            "eatAmount": 0.5183713257312774,
+            "grassEatMin": 0.47659649793058634,
+            "berryEatMin": 0.5339206930249929,
+            "gestationMultiplier": 0.413147531170398,
+            "growthRate": 0.5721795761957764,
+            "longevity": 0.5710703185759485
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6490244436987638,
+            "water": 0.72181790865457,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 22.27489050157565,
+            "y": 110.33247287633185
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 31.20032905609639,
+              "y": 109.03312330859022
+            }
+          },
+          "genome": {
+            "bodyHue": 0.9927907946705818,
+            "bodySaturation": 0.3610030735377222,
+            "bodyLightness": 0.5180359779857099,
+            "matePreferenceHue": 0.971038082782179,
+            "mateChoosiness": 0.4084301439579576,
+            "colourDiscrimination": 0.7687218582257628,
+            "speed": 0.4104415839072317,
+            "perceptionRange": 0.5027974616270512,
+            "alertness": 0.5368107394780963,
+            "reactionDelay": 0.522927732206881,
+            "basalEnergyDrain": 0.5580218532122672,
+            "basalWaterDrain": 0.4506417823024094,
+            "basalStaminaDrain": 0.4980466114822775,
+            "sprintStartThreshold": 0.5128830325789749,
+            "sprintStopThreshold": 0.5607490512542427,
+            "sprintSpeedMultiplier": 0.46879632589407266,
+            "sprintStaminaDrain": 0.4808494622353464,
+            "staminaRegen": 0.43296989616937936,
+            "drinkThreshold": 0.44530625492334364,
+            "drinkAmount": 0.4203989928588271,
+            "eatThreshold": 0.48683793041855095,
+            "eatAmount": 0.407222891272977,
+            "grassEatMin": 0.471668109158054,
+            "berryEatMin": 0.4328628126066178,
+            "gestationMultiplier": 0.5768167114816606,
+            "growthRate": 0.5364004736766219,
+            "longevity": 0.41104857744649054
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6551749045609725,
+            "water": 0.7764714047085696,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 0.13992359375646163,
+            "y": 52.53107966778057
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 2.3534390135526415,
+              "y": 55.644999939205505
+            }
+          },
+          "genome": {
+            "bodyHue": 0.006567958556115583,
+            "bodySaturation": 0.35655804234556854,
+            "bodyLightness": 0.5117743849288672,
+            "matePreferenceHue": 0.9334151462838054,
+            "mateChoosiness": 0.4984529941342771,
+            "colourDiscrimination": 0.6754362539853901,
+            "speed": 0.58716677185148,
+            "perceptionRange": 0.5092169128358364,
+            "alertness": 0.4154974529519677,
+            "reactionDelay": 0.555205666879192,
+            "basalEnergyDrain": 0.5006255060434341,
+            "basalWaterDrain": 0.5799661476630718,
+            "basalStaminaDrain": 0.5531120755709708,
+            "sprintStartThreshold": 0.4992043256293982,
+            "sprintStopThreshold": 0.5889834182336926,
+            "sprintSpeedMultiplier": 0.4462435814086348,
+            "sprintStaminaDrain": 0.4893748551141471,
+            "staminaRegen": 0.42053383952006695,
+            "drinkThreshold": 0.4337740083225071,
+            "drinkAmount": 0.5780852136667818,
+            "eatThreshold": 0.496254260558635,
+            "eatAmount": 0.5070985951460898,
+            "grassEatMin": 0.5309672068804503,
+            "berryEatMin": 0.5574326501693576,
+            "gestationMultiplier": 0.4862834750674665,
+            "growthRate": 0.5964700575917959,
+            "longevity": 0.4957595071289688
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.5814439089528491,
+            "water": 0.6857160882003832,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 3.0691573741193428,
+            "y": 62.53123177112072
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 2.785546615703555,
+              "y": 62.37236417226657
+            }
+          },
+          "genome": {
+            "bodyHue": 0.7922899035736919,
+            "bodySaturation": 0.5304796995129436,
+            "bodyLightness": 0.47257528747431937,
+            "matePreferenceHue": 0.7427116687782109,
+            "mateChoosiness": 0.4789647889789194,
+            "colourDiscrimination": 0.5262246873695403,
+            "speed": 0.5184776374138892,
+            "perceptionRange": 0.530695737618953,
+            "alertness": 0.4090850609354675,
+            "reactionDelay": 0.4281560390722007,
+            "basalEnergyDrain": 0.5079479303210974,
+            "basalWaterDrain": 0.41132561755366626,
+            "basalStaminaDrain": 0.5557136469054967,
+            "sprintStartThreshold": 0.5867219778243452,
+            "sprintStopThreshold": 0.5846298291813582,
+            "sprintSpeedMultiplier": 0.5304615702945739,
+            "sprintStaminaDrain": 0.40370140727609394,
+            "staminaRegen": 0.5543956298846752,
+            "drinkThreshold": 0.5993707287125289,
+            "drinkAmount": 0.400218827277422,
+            "eatThreshold": 0.47329136594198645,
+            "eatAmount": 0.4011926564387977,
+            "grassEatMin": 0.5989130730275065,
+            "berryEatMin": 0.5899984587915241,
+            "gestationMultiplier": 0.42716328050009905,
+            "growthRate": 0.44379034428857267,
+            "longevity": 0.4788357860874385
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6117089767319719,
+            "water": 0.7055005612347234,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 40.21124019630491,
+            "y": 113.1871579385555
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 51.250884513174675,
+              "y": 113.20091373443556
+            }
+          },
+          "genome": {
+            "bodyHue": 0.782060869988054,
+            "bodySaturation": 0.4993297998327762,
+            "bodyLightness": 0.4806390881538391,
+            "matePreferenceHue": 0.5630237369611859,
+            "mateChoosiness": 0.3334128906019032,
+            "colourDiscrimination": 0.6506174328736961,
+            "speed": 0.4707887460011989,
+            "perceptionRange": 0.4222082814667374,
+            "alertness": 0.5279484995175153,
+            "reactionDelay": 0.4966218154411763,
+            "basalEnergyDrain": 0.5480428021866828,
+            "basalWaterDrain": 0.4152845088392496,
+            "basalStaminaDrain": 0.5161354197654873,
+            "sprintStartThreshold": 0.5292620667256415,
+            "sprintStopThreshold": 0.4418713850900531,
+            "sprintSpeedMultiplier": 0.42393688382580874,
+            "sprintStaminaDrain": 0.5583932253532111,
+            "staminaRegen": 0.40318457833491267,
+            "drinkThreshold": 0.5073192022275179,
+            "drinkAmount": 0.5508523303549737,
+            "eatThreshold": 0.42396396067924796,
+            "eatAmount": 0.48725079339928923,
+            "grassEatMin": 0.5085216019768268,
+            "berryEatMin": 0.5210307603701949,
+            "gestationMultiplier": 0.5193972553126514,
+            "growthRate": 0.5835924583021551,
+            "longevity": 0.5623325771652162
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6284427039806353,
+            "water": 0.7448848540378593,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 41.47254633864548,
+            "y": 113.59585890075162
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 44.66170896017965,
+              "y": 111.98864416277657
+            }
+          },
+          "genome": {
+            "bodyHue": 0.5714303406514227,
+            "bodySaturation": 0.37282939795404674,
+            "bodyLightness": 0.3767046695575118,
+            "matePreferenceHue": 0.6281573742255568,
+            "mateChoosiness": 0.31624109935946765,
+            "colourDiscrimination": 0.6877860314212739,
+            "speed": 0.5162102221976965,
+            "perceptionRange": 0.5501357962843031,
+            "alertness": 0.5166336998809129,
+            "reactionDelay": 0.5750137061811984,
+            "basalEnergyDrain": 0.4868781405966729,
+            "basalWaterDrain": 0.42018740200437604,
+            "basalStaminaDrain": 0.5417914487887174,
+            "sprintStartThreshold": 0.49397924859076736,
+            "sprintStopThreshold": 0.45601357901468875,
+            "sprintSpeedMultiplier": 0.51252585593611,
+            "sprintStaminaDrain": 0.5518154000397771,
+            "staminaRegen": 0.5694729723036289,
+            "drinkThreshold": 0.47898932253010573,
+            "drinkAmount": 0.5123772779479623,
+            "eatThreshold": 0.4111704203765839,
+            "eatAmount": 0.5437119300011546,
+            "grassEatMin": 0.5334865484852344,
+            "berryEatMin": 0.4145139563828707,
+            "gestationMultiplier": 0.5254682402126492,
+            "growthRate": 0.44878101074136795,
+            "longevity": 0.5312606095802039
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6155211661676976,
+            "water": 0.736209766390203,
+            "stamina": 1,
+            "hp": 1
+          }
+        }
+      ]
+    },
+    {
+      "mode": "blended",
+      "seconds": 180,
+      "population": 106,
+      "births": {
+        "square": 16,
+        "triangle": 2,
+        "circle": 14,
+        "octagon": 0
+      },
+      "actors": [
+        {
+          "id": 0,
+          "position": {
+            "x": 115.62359986991932,
+            "y": 122.63303650821511
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "bodyHue": 0.9458894022926687,
+            "bodySaturation": 0.46896456996910274,
+            "bodyLightness": 0.5213102349545806,
+            "matePreferenceHue": 0.7524741399288177,
+            "mateChoosiness": 0.4240923038683832,
+            "colourDiscrimination": 0.7283256342634559,
+            "speed": 0.49947979231365025,
+            "perceptionRange": 0.4300479969475418,
+            "alertness": 0.42596896677277984,
+            "reactionDelay": 0.5166334504727275,
+            "basalEnergyDrain": 0.42168655754067,
+            "basalWaterDrain": 0.5924398237839341,
+            "basalStaminaDrain": 0.5982856803573668,
+            "sprintStartThreshold": 0.4148139060009271,
+            "sprintStopThreshold": 0.4964753568638116,
+            "sprintSpeedMultiplier": 0.4245983708184212,
+            "sprintStaminaDrain": 0.5288708087056875,
+            "staminaRegen": 0.5320916040334851,
+            "drinkThreshold": 0.4112722158432007,
+            "drinkAmount": 0.573163824994117,
+            "eatThreshold": 0.5660700449254363,
+            "eatAmount": 0.5361059877555817,
+            "grassEatMin": 0.5586689135991036,
+            "berryEatMin": 0.5377200543414802,
+            "gestationMultiplier": 0.4873677658848464,
+            "growthRate": 0.5558325922582299,
+            "longevity": 0.4646738462615758
+          },
+          "phase": "moving",
+          "meters": {
+            "energy": 0.8652701385519506,
+            "water": 0.9401205261735425,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 85.82147859490543,
+            "y": 90.34326417533389
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 85.5,
+              "y": 90.5
+            }
+          },
+          "genome": {
+            "bodyHue": 0.8153832158632577,
+            "bodySaturation": 0.45697642196901145,
+            "bodyLightness": 0.4947149912361056,
+            "matePreferenceHue": 0.7633618936873972,
+            "mateChoosiness": 0.4179749400354922,
+            "colourDiscrimination": 0.7466405109968036,
+            "speed": 0.49303037393838167,
+            "perceptionRange": 0.5869963088072836,
+            "alertness": 0.42499228455126287,
+            "reactionDelay": 0.44766259589232504,
+            "basalEnergyDrain": 0.47412837282754483,
+            "basalWaterDrain": 0.43267706157639624,
+            "basalStaminaDrain": 0.4622642852365971,
+            "sprintStartThreshold": 0.51015003323555,
+            "sprintStopThreshold": 0.5508687878493219,
+            "sprintSpeedMultiplier": 0.47565440451726315,
+            "sprintStaminaDrain": 0.45578029728494585,
+            "staminaRegen": 0.5030209746211767,
+            "drinkThreshold": 0.44895958113484086,
+            "drinkAmount": 0.43997563449665905,
+            "eatThreshold": 0.5949852524790913,
+            "eatAmount": 0.5530957263428717,
+            "grassEatMin": 0.5008065820671618,
+            "berryEatMin": 0.41563201416283846,
+            "gestationMultiplier": 0.5218250316102058,
+            "growthRate": 0.5579823658801615,
+            "longevity": 0.4050404661800712
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.9352395983621522,
+            "water": 0.8397904528744213,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 115.60999385150069,
+            "y": 121.28896864473305
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "bodyHue": 0.07830044263973823,
+            "bodySaturation": 0.39114371188916264,
+            "bodyLightness": 0.49855846092104916,
+            "matePreferenceHue": 0.8549283017404377,
+            "mateChoosiness": 0.41393784643150866,
+            "colourDiscrimination": 0.708543590363115,
+            "speed": 0.448598778154701,
+            "perceptionRange": 0.505851635383442,
+            "alertness": 0.4646353376097977,
+            "reactionDelay": 0.44173297644592824,
+            "basalEnergyDrain": 0.4629510279279202,
+            "basalWaterDrain": 0.4971546735148877,
+            "basalStaminaDrain": 0.4829921809956431,
+            "sprintStartThreshold": 0.5730536061804742,
+            "sprintStopThreshold": 0.41440306352451445,
+            "sprintSpeedMultiplier": 0.442624109890312,
+            "sprintStaminaDrain": 0.4205034404061735,
+            "staminaRegen": 0.47372556631453333,
+            "drinkThreshold": 0.5680357123259455,
+            "drinkAmount": 0.4553305324167013,
+            "eatThreshold": 0.475783903663978,
+            "eatAmount": 0.5183713257312774,
+            "grassEatMin": 0.47659649793058634,
+            "berryEatMin": 0.5339206930249929,
+            "gestationMultiplier": 0.413147531170398,
+            "growthRate": 0.5721795761957764,
+            "longevity": 0.5710703185759485
+          },
+          "phase": "paused",
+          "meters": {
+            "energy": 0.8011360089771182,
+            "water": 0.9407471225451189,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 114.57678936507726,
+            "y": 120.16844712011307
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 114.5,
+              "y": 120.5
+            }
+          },
+          "genome": {
+            "bodyHue": 0.9927907946705818,
+            "bodySaturation": 0.3610030735377222,
+            "bodyLightness": 0.5180359779857099,
+            "matePreferenceHue": 0.971038082782179,
+            "mateChoosiness": 0.4084301439579576,
+            "colourDiscrimination": 0.7687218582257628,
+            "speed": 0.4104415839072317,
+            "perceptionRange": 0.5027974616270512,
+            "alertness": 0.5368107394780963,
+            "reactionDelay": 0.522927732206881,
+            "basalEnergyDrain": 0.5580218532122672,
+            "basalWaterDrain": 0.4506417823024094,
+            "basalStaminaDrain": 0.4980466114822775,
+            "sprintStartThreshold": 0.5128830325789749,
+            "sprintStopThreshold": 0.5607490512542427,
+            "sprintSpeedMultiplier": 0.46879632589407266,
+            "sprintStaminaDrain": 0.4808494622353464,
+            "staminaRegen": 0.43296989616937936,
+            "drinkThreshold": 0.44530625492334364,
+            "drinkAmount": 0.4203989928588271,
+            "eatThreshold": 0.48683793041855095,
+            "eatAmount": 0.407222891272977,
+            "grassEatMin": 0.471668109158054,
+            "berryEatMin": 0.4328628126066178,
+            "gestationMultiplier": 0.5768167114816606,
+            "growthRate": 0.5364004736766219,
+            "longevity": 0.41104857744649054
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.7958130388142867,
+            "water": 0.7613325821795548,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 40.26830759198765,
+            "y": 46.95347209322057
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 42.873031364236375,
+              "y": 50.03811662474703
+            }
+          },
+          "genome": {
+            "bodyHue": 0.006567958556115583,
+            "bodySaturation": 0.35655804234556854,
+            "bodyLightness": 0.5117743849288672,
+            "matePreferenceHue": 0.9334151462838054,
+            "mateChoosiness": 0.4984529941342771,
+            "colourDiscrimination": 0.6754362539853901,
+            "speed": 0.58716677185148,
+            "perceptionRange": 0.5092169128358364,
+            "alertness": 0.4154974529519677,
+            "reactionDelay": 0.555205666879192,
+            "basalEnergyDrain": 0.5006255060434341,
+            "basalWaterDrain": 0.5799661476630718,
+            "basalStaminaDrain": 0.5531120755709708,
+            "sprintStartThreshold": 0.4992043256293982,
+            "sprintStopThreshold": 0.5889834182336926,
+            "sprintSpeedMultiplier": 0.4462435814086348,
+            "sprintStaminaDrain": 0.4893748551141471,
+            "staminaRegen": 0.42053383952006695,
+            "drinkThreshold": 0.4337740083225071,
+            "drinkAmount": 0.5780852136667818,
+            "eatThreshold": 0.496254260558635,
+            "eatAmount": 0.5070985951460898,
+            "grassEatMin": 0.5309672068804503,
+            "berryEatMin": 0.5574326501693576,
+            "gestationMultiplier": 0.4862834750674665,
+            "growthRate": 0.5964700575917959,
+            "longevity": 0.4957595071289688
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.42187889873428586,
+            "water": 0.38996350410750424,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 43.7859187116412,
+            "y": 40.561765162583065
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 49.5,
+              "y": 31.5
+            }
+          },
+          "genome": {
+            "bodyHue": 0.7922899035736919,
+            "bodySaturation": 0.5304796995129436,
+            "bodyLightness": 0.47257528747431937,
+            "matePreferenceHue": 0.7427116687782109,
+            "mateChoosiness": 0.4789647889789194,
+            "colourDiscrimination": 0.5262246873695403,
+            "speed": 0.5184776374138892,
+            "perceptionRange": 0.530695737618953,
+            "alertness": 0.4090850609354675,
+            "reactionDelay": 0.4281560390722007,
+            "basalEnergyDrain": 0.5079479303210974,
+            "basalWaterDrain": 0.41132561755366626,
+            "basalStaminaDrain": 0.5557136469054967,
+            "sprintStartThreshold": 0.5867219778243452,
+            "sprintStopThreshold": 0.5846298291813582,
+            "sprintSpeedMultiplier": 0.5304615702945739,
+            "sprintStaminaDrain": 0.40370140727609394,
+            "staminaRegen": 0.5543956298846752,
+            "drinkThreshold": 0.5993707287125289,
+            "drinkAmount": 0.400218827277422,
+            "eatThreshold": 0.47329136594198645,
+            "eatAmount": 0.4011926564387977,
+            "grassEatMin": 0.5989130730275065,
+            "berryEatMin": 0.5899984587915241,
+            "gestationMultiplier": 0.42716328050009905,
+            "growthRate": 0.44379034428857267,
+            "longevity": 0.4788357860874385
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.8355529681267102,
+            "water": 0.9401313627930721,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 111.33297178993351,
+            "y": 45.083380992254526
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 108.5,
+              "y": 46.5
+            }
+          },
+          "genome": {
+            "bodyHue": 0.782060869988054,
+            "bodySaturation": 0.4993297998327762,
+            "bodyLightness": 0.4806390881538391,
+            "matePreferenceHue": 0.5630237369611859,
+            "mateChoosiness": 0.3334128906019032,
+            "colourDiscrimination": 0.6506174328736961,
+            "speed": 0.4707887460011989,
+            "perceptionRange": 0.4222082814667374,
+            "alertness": 0.5279484995175153,
+            "reactionDelay": 0.4966218154411763,
+            "basalEnergyDrain": 0.5480428021866828,
+            "basalWaterDrain": 0.4152845088392496,
+            "basalStaminaDrain": 0.5161354197654873,
+            "sprintStartThreshold": 0.5292620667256415,
+            "sprintStopThreshold": 0.4418713850900531,
+            "sprintSpeedMultiplier": 0.42393688382580874,
+            "sprintStaminaDrain": 0.5583932253532111,
+            "staminaRegen": 0.40318457833491267,
+            "drinkThreshold": 0.5073192022275179,
+            "drinkAmount": 0.5508523303549737,
+            "eatThreshold": 0.42396396067924796,
+            "eatAmount": 0.48725079339928923,
+            "grassEatMin": 0.5085216019768268,
+            "berryEatMin": 0.5210307603701949,
+            "gestationMultiplier": 0.5193972553126514,
+            "growthRate": 0.5835924583021551,
+            "longevity": 0.5623325771652162
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.9421166399406254,
+            "water": 0.8362330410846044,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 113.98527381743146,
+            "y": 1.3252446738777364
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "bodyHue": 0.5714303406514227,
+            "bodySaturation": 0.37282939795404674,
+            "bodyLightness": 0.3767046695575118,
+            "matePreferenceHue": 0.6281573742255568,
+            "mateChoosiness": 0.31624109935946765,
+            "colourDiscrimination": 0.6877860314212739,
+            "speed": 0.5162102221976965,
+            "perceptionRange": 0.5501357962843031,
+            "alertness": 0.5166336998809129,
+            "reactionDelay": 0.5750137061811984,
+            "basalEnergyDrain": 0.4868781405966729,
+            "basalWaterDrain": 0.42018740200437604,
+            "basalStaminaDrain": 0.5417914487887174,
+            "sprintStartThreshold": 0.49397924859076736,
+            "sprintStopThreshold": 0.45601357901468875,
+            "sprintSpeedMultiplier": 0.51252585593611,
+            "sprintStaminaDrain": 0.5518154000397771,
+            "staminaRegen": 0.5694729723036289,
+            "drinkThreshold": 0.47898932253010573,
+            "drinkAmount": 0.5123772779479623,
+            "eatThreshold": 0.4111704203765839,
+            "eatAmount": 0.5437119300011546,
+            "grassEatMin": 0.5334865484852344,
+            "berryEatMin": 0.4145139563828707,
+            "gestationMultiplier": 0.5254682402126492,
+            "growthRate": 0.44878101074136795,
+            "longevity": 0.5312606095802039
+          },
+          "phase": "paused",
+          "meters": {
+            "energy": 0.9442410911822975,
+            "water": 0.9434956990681366,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 106,
+          "position": {
+            "x": 114.16856646848535,
+            "y": 108.30648212256779
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 115.62359986991932,
+              "y": 122.63303650821511
+            }
+          },
+          "genome": {
+            "alertness": 0.4907985861790969,
+            "basalEnergyDrain": 0.49699819500355186,
+            "basalStaminaDrain": 0.522585810237804,
+            "basalWaterDrain": 0.4143586224560285,
+            "berryEatMin": 0.4515176114579208,
+            "bodyHue": 0.04686169665230078,
+            "bodyLightness": 0.5015633782021511,
+            "bodySaturation": 0.3652383335376751,
+            "colourDiscrimination": 0.7040703139330177,
+            "drinkAmount": 0.4761091562178873,
+            "drinkThreshold": 0.5450519400155353,
+            "eatAmount": 0.415787201294251,
+            "eatThreshold": 0.5131550161737817,
+            "gestationMultiplier": 0.5207102266254668,
+            "grassEatMin": 0.45984238520449583,
+            "growthRate": 0.5468424045822131,
+            "longevity": 0.5768992355836823,
+            "mateChoosiness": 0.43668826411605394,
+            "matePreferenceHue": 0.9135406226677913,
+            "perceptionRange": 0.5336813526217774,
+            "reactionDelay": 0.5243941583455013,
+            "speed": 0.4222793010982463,
+            "sprintSpeedMultiplier": 0.3573025508136439,
+            "sprintStaminaDrain": 0.4855045861740289,
+            "sprintStartThreshold": 0.565470343565427,
+            "sprintStopThreshold": 0.4152536374918355,
+            "staminaRegen": 0.4837918719225617
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.5129284615113466,
+            "water": 0.7812518881023721,
+            "stamina": 1,
+            "hp": 0.85
+          }
+        },
+        {
+          "id": 110,
+          "position": {
+            "x": 85.81877143649254,
+            "y": 90.69091018760217
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "alertness": 0.40936802516559156,
+            "basalEnergyDrain": 0.4218155348681633,
+            "basalStaminaDrain": 0.442128204140454,
+            "basalWaterDrain": 0.4481461703118056,
+            "berryEatMin": 0.42187899880546836,
+            "bodyHue": 0.8821093361323871,
+            "bodyLightness": 0.5894161063518932,
+            "bodySaturation": 0.4626550654140587,
+            "colourDiscrimination": 0.7417857101672503,
+            "drinkAmount": 0.5278599857541938,
+            "drinkThreshold": 0.44635739424593585,
+            "eatAmount": 0.5088888274070212,
+            "eatThreshold": 0.5878728328235469,
+            "gestationMultiplier": 0.5219637277667344,
+            "grassEatMin": 0.5612936930119147,
+            "growthRate": 0.5795637218475184,
+            "longevity": 0.4013471992384673,
+            "mateChoosiness": 0.4409260288662882,
+            "matePreferenceHue": 0.764269661752599,
+            "perceptionRange": 0.4590885832191425,
+            "reactionDelay": 0.44334572871474887,
+            "speed": 0.48367853040298375,
+            "sprintSpeedMultiplier": 0.338357497993935,
+            "sprintStaminaDrain": 0.468693010279469,
+            "sprintStartThreshold": 0.5090423534080553,
+            "sprintStopThreshold": 0.5135417964999338,
+            "staminaRegen": 0.5275599288671327
+          },
+          "phase": "moving",
+          "meters": {
+            "energy": 0.9318912479315798,
+            "water": 0.8999951666651199,
+            "stamina": 1,
+            "hp": 0.85
+          }
+        }
+      ]
+    },
+    {
+      "mode": "segregating",
+      "seconds": 0,
+      "population": 80,
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "actors": [
+        {
+          "id": 0,
+          "position": {
+            "x": 19.855153606285487,
+            "y": 85.903397717751
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.9458894022926687,
+            "bodySaturation": 0.46896456996910274,
+            "bodyLightness": 0.5213102349545806,
+            "matePreferenceHue": 0.7524741399288177,
+            "mateChoosiness": 0.4240923038683832,
+            "colourDiscrimination": 0.7283256342634559,
+            "speed": 0.49947979231365025,
+            "perceptionRange": 0.4300479969475418,
+            "alertness": 0.42596896677277984,
+            "reactionDelay": 0.5166334504727275,
+            "basalEnergyDrain": 0.42168655754067,
+            "basalWaterDrain": 0.5924398237839341,
+            "basalStaminaDrain": 0.5982856803573668,
+            "sprintStartThreshold": 0.4148139060009271,
+            "sprintStopThreshold": 0.4964753568638116,
+            "sprintSpeedMultiplier": 0.4245983708184212,
+            "sprintStaminaDrain": 0.5288708087056875,
+            "staminaRegen": 0.5320916040334851,
+            "drinkThreshold": 0.4112722158432007,
+            "drinkAmount": 0.573163824994117,
+            "eatThreshold": 0.5660700449254363,
+            "eatAmount": 0.5361059877555817,
+            "grassEatMin": 0.5586689135991036,
+            "berryEatMin": 0.5377200543414802,
+            "gestationMultiplier": 0.4873677658848464,
+            "growthRate": 0.5558325922582299,
+            "longevity": 0.4646738462615758
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 19.075905536111154,
+            "y": 91.10045228538006
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.8153832158632577,
+            "bodySaturation": 0.45697642196901145,
+            "bodyLightness": 0.4947149912361056,
+            "matePreferenceHue": 0.7633618936873972,
+            "mateChoosiness": 0.4179749400354922,
+            "colourDiscrimination": 0.7466405109968036,
+            "speed": 0.49303037393838167,
+            "perceptionRange": 0.5869963088072836,
+            "alertness": 0.42499228455126287,
+            "reactionDelay": 0.44766259589232504,
+            "basalEnergyDrain": 0.47412837282754483,
+            "basalWaterDrain": 0.43267706157639624,
+            "basalStaminaDrain": 0.4622642852365971,
+            "sprintStartThreshold": 0.51015003323555,
+            "sprintStopThreshold": 0.5508687878493219,
+            "sprintSpeedMultiplier": 0.47565440451726315,
+            "sprintStaminaDrain": 0.45578029728494585,
+            "staminaRegen": 0.5030209746211767,
+            "drinkThreshold": 0.44895958113484086,
+            "drinkAmount": 0.43997563449665905,
+            "eatThreshold": 0.5949852524790913,
+            "eatAmount": 0.5530957263428717,
+            "grassEatMin": 0.5008065820671618,
+            "berryEatMin": 0.41563201416283846,
+            "gestationMultiplier": 0.5218250316102058,
+            "growthRate": 0.5579823658801615,
+            "longevity": 0.4050404661800712
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 21.149324064425144,
+            "y": 90.62293635361907
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.07830044263973823,
+            "bodySaturation": 0.39114371188916264,
+            "bodyLightness": 0.49855846092104916,
+            "matePreferenceHue": 0.8549283017404377,
+            "mateChoosiness": 0.41393784643150866,
+            "colourDiscrimination": 0.708543590363115,
+            "speed": 0.448598778154701,
+            "perceptionRange": 0.505851635383442,
+            "alertness": 0.4646353376097977,
+            "reactionDelay": 0.44173297644592824,
+            "basalEnergyDrain": 0.4629510279279202,
+            "basalWaterDrain": 0.4971546735148877,
+            "basalStaminaDrain": 0.4829921809956431,
+            "sprintStartThreshold": 0.5730536061804742,
+            "sprintStopThreshold": 0.41440306352451445,
+            "sprintSpeedMultiplier": 0.442624109890312,
+            "sprintStaminaDrain": 0.4205034404061735,
+            "staminaRegen": 0.47372556631453333,
+            "drinkThreshold": 0.5680357123259455,
+            "drinkAmount": 0.4553305324167013,
+            "eatThreshold": 0.475783903663978,
+            "eatAmount": 0.5183713257312774,
+            "grassEatMin": 0.47659649793058634,
+            "berryEatMin": 0.5339206930249929,
+            "gestationMultiplier": 0.413147531170398,
+            "growthRate": 0.5721795761957764,
+            "longevity": 0.5710703185759485
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 19.530495147781664,
+            "y": 89.65549117094315
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.9927907946705818,
+            "bodySaturation": 0.3610030735377222,
+            "bodyLightness": 0.5180359779857099,
+            "matePreferenceHue": 0.971038082782179,
+            "mateChoosiness": 0.4084301439579576,
+            "colourDiscrimination": 0.7687218582257628,
+            "speed": 0.4104415839072317,
+            "perceptionRange": 0.5027974616270512,
+            "alertness": 0.5368107394780963,
+            "reactionDelay": 0.522927732206881,
+            "basalEnergyDrain": 0.5580218532122672,
+            "basalWaterDrain": 0.4506417823024094,
+            "basalStaminaDrain": 0.4980466114822775,
+            "sprintStartThreshold": 0.5128830325789749,
+            "sprintStopThreshold": 0.5607490512542427,
+            "sprintSpeedMultiplier": 0.46879632589407266,
+            "sprintStaminaDrain": 0.4808494622353464,
+            "staminaRegen": 0.43296989616937936,
+            "drinkThreshold": 0.44530625492334364,
+            "drinkAmount": 0.4203989928588271,
+            "eatThreshold": 0.48683793041855095,
+            "eatAmount": 0.407222891272977,
+            "grassEatMin": 0.471668109158054,
+            "berryEatMin": 0.4328628126066178,
+            "gestationMultiplier": 0.5768167114816606,
+            "growthRate": 0.5364004736766219,
+            "longevity": 0.41104857744649054
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 24.960335181804226,
+            "y": 91.59623494423712
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.006567958556115583,
+            "bodySaturation": 0.35655804234556854,
+            "bodyLightness": 0.5117743849288672,
+            "matePreferenceHue": 0.9334151462838054,
+            "mateChoosiness": 0.4984529941342771,
+            "colourDiscrimination": 0.6754362539853901,
+            "speed": 0.58716677185148,
+            "perceptionRange": 0.5092169128358364,
+            "alertness": 0.4154974529519677,
+            "reactionDelay": 0.555205666879192,
+            "basalEnergyDrain": 0.5006255060434341,
+            "basalWaterDrain": 0.5799661476630718,
+            "basalStaminaDrain": 0.5531120755709708,
+            "sprintStartThreshold": 0.4992043256293982,
+            "sprintStopThreshold": 0.5889834182336926,
+            "sprintSpeedMultiplier": 0.4462435814086348,
+            "sprintStaminaDrain": 0.4893748551141471,
+            "staminaRegen": 0.42053383952006695,
+            "drinkThreshold": 0.4337740083225071,
+            "drinkAmount": 0.5780852136667818,
+            "eatThreshold": 0.496254260558635,
+            "eatAmount": 0.5070985951460898,
+            "grassEatMin": 0.5309672068804503,
+            "berryEatMin": 0.5574326501693576,
+            "gestationMultiplier": 0.4862834750674665,
+            "growthRate": 0.5964700575917959,
+            "longevity": 0.4957595071289688
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 24.039652186023144,
+            "y": 89.21975292848012
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.7922899035736919,
+            "bodySaturation": 0.5304796995129436,
+            "bodyLightness": 0.47257528747431937,
+            "matePreferenceHue": 0.7427116687782109,
+            "mateChoosiness": 0.4789647889789194,
+            "colourDiscrimination": 0.5262246873695403,
+            "speed": 0.5184776374138892,
+            "perceptionRange": 0.530695737618953,
+            "alertness": 0.4090850609354675,
+            "reactionDelay": 0.4281560390722007,
+            "basalEnergyDrain": 0.5079479303210974,
+            "basalWaterDrain": 0.41132561755366626,
+            "basalStaminaDrain": 0.5557136469054967,
+            "sprintStartThreshold": 0.5867219778243452,
+            "sprintStopThreshold": 0.5846298291813582,
+            "sprintSpeedMultiplier": 0.5304615702945739,
+            "sprintStaminaDrain": 0.40370140727609394,
+            "staminaRegen": 0.5543956298846752,
+            "drinkThreshold": 0.5993707287125289,
+            "drinkAmount": 0.400218827277422,
+            "eatThreshold": 0.47329136594198645,
+            "eatAmount": 0.4011926564387977,
+            "grassEatMin": 0.5989130730275065,
+            "berryEatMin": 0.5899984587915241,
+            "gestationMultiplier": 0.42716328050009905,
+            "growthRate": 0.44379034428857267,
+            "longevity": 0.4788357860874385
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 26.184751617077193,
+            "y": 95.74118168399106
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.782060869988054,
+            "bodySaturation": 0.4993297998327762,
+            "bodyLightness": 0.4806390881538391,
+            "matePreferenceHue": 0.5630237369611859,
+            "mateChoosiness": 0.3334128906019032,
+            "colourDiscrimination": 0.6506174328736961,
+            "speed": 0.4707887460011989,
+            "perceptionRange": 0.4222082814667374,
+            "alertness": 0.5279484995175153,
+            "reactionDelay": 0.4966218154411763,
+            "basalEnergyDrain": 0.5480428021866828,
+            "basalWaterDrain": 0.4152845088392496,
+            "basalStaminaDrain": 0.5161354197654873,
+            "sprintStartThreshold": 0.5292620667256415,
+            "sprintStopThreshold": 0.4418713850900531,
+            "sprintSpeedMultiplier": 0.42393688382580874,
+            "sprintStaminaDrain": 0.5583932253532111,
+            "staminaRegen": 0.40318457833491267,
+            "drinkThreshold": 0.5073192022275179,
+            "drinkAmount": 0.5508523303549737,
+            "eatThreshold": 0.42396396067924796,
+            "eatAmount": 0.48725079339928923,
+            "grassEatMin": 0.5085216019768268,
+            "berryEatMin": 0.5210307603701949,
+            "gestationMultiplier": 0.5193972553126514,
+            "growthRate": 0.5835924583021551,
+            "longevity": 0.5623325771652162
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 26.2173930192159,
+            "y": 94.58409022567996
+          },
+          "intent": {
+            "type": "wander"
+          },
+          "genome": {
+            "bodyHue": 0.5714303406514227,
+            "bodySaturation": 0.37282939795404674,
+            "bodyLightness": 0.3767046695575118,
+            "matePreferenceHue": 0.6281573742255568,
+            "mateChoosiness": 0.31624109935946765,
+            "colourDiscrimination": 0.6877860314212739,
+            "speed": 0.5162102221976965,
+            "perceptionRange": 0.5501357962843031,
+            "alertness": 0.5166336998809129,
+            "reactionDelay": 0.5750137061811984,
+            "basalEnergyDrain": 0.4868781405966729,
+            "basalWaterDrain": 0.42018740200437604,
+            "basalStaminaDrain": 0.5417914487887174,
+            "sprintStartThreshold": 0.49397924859076736,
+            "sprintStopThreshold": 0.45601357901468875,
+            "sprintSpeedMultiplier": 0.51252585593611,
+            "sprintStaminaDrain": 0.5518154000397771,
+            "staminaRegen": 0.5694729723036289,
+            "drinkThreshold": 0.47898932253010573,
+            "drinkAmount": 0.5123772779479623,
+            "eatThreshold": 0.4111704203765839,
+            "eatAmount": 0.5437119300011546,
+            "grassEatMin": 0.5334865484852344,
+            "berryEatMin": 0.4145139563828707,
+            "gestationMultiplier": 0.5254682402126492,
+            "growthRate": 0.44878101074136795,
+            "longevity": 0.5312606095802039
+          },
+          "meters": {
+            "energy": 1,
+            "water": 1,
+            "stamina": 1,
+            "hp": 1
+          }
+        }
+      ]
+    },
+    {
+      "mode": "segregating",
+      "seconds": 60,
+      "population": 80,
+      "births": {
+        "square": 0,
+        "triangle": 0,
+        "circle": 0,
+        "octagon": 0
+      },
+      "actors": [
+        {
+          "id": 0,
+          "position": {
+            "x": 6.547275367934598,
+            "y": 36.26271147274559
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 5.674478446284368,
+              "y": 39.11768077855287
+            }
+          },
+          "genome": {
+            "bodyHue": 0.9458894022926687,
+            "bodySaturation": 0.46896456996910274,
+            "bodyLightness": 0.5213102349545806,
+            "matePreferenceHue": 0.7524741399288177,
+            "mateChoosiness": 0.4240923038683832,
+            "colourDiscrimination": 0.7283256342634559,
+            "speed": 0.49947979231365025,
+            "perceptionRange": 0.4300479969475418,
+            "alertness": 0.42596896677277984,
+            "reactionDelay": 0.5166334504727275,
+            "basalEnergyDrain": 0.42168655754067,
+            "basalWaterDrain": 0.5924398237839341,
+            "basalStaminaDrain": 0.5982856803573668,
+            "sprintStartThreshold": 0.4148139060009271,
+            "sprintStopThreshold": 0.4964753568638116,
+            "sprintSpeedMultiplier": 0.4245983708184212,
+            "sprintStaminaDrain": 0.5288708087056875,
+            "staminaRegen": 0.5320916040334851,
+            "drinkThreshold": 0.4112722158432007,
+            "drinkAmount": 0.573163824994117,
+            "eatThreshold": 0.5660700449254363,
+            "eatAmount": 0.5361059877555817,
+            "grassEatMin": 0.5586689135991036,
+            "berryEatMin": 0.5377200543414802,
+            "gestationMultiplier": 0.4873677658848464,
+            "growthRate": 0.5558325922582299,
+            "longevity": 0.4646738462615758
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6315207934563407,
+            "water": 0.7306391398564934,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 1.9512586903672358,
+            "y": 35.300780659704174
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 1.8430344791484852,
+              "y": 34.992499774832496
+            }
+          },
+          "genome": {
+            "bodyHue": 0.8153832158632577,
+            "bodySaturation": 0.45697642196901145,
+            "bodyLightness": 0.4947149912361056,
+            "matePreferenceHue": 0.7633618936873972,
+            "mateChoosiness": 0.4179749400354922,
+            "colourDiscrimination": 0.7466405109968036,
+            "speed": 0.49303037393838167,
+            "perceptionRange": 0.5869963088072836,
+            "alertness": 0.42499228455126287,
+            "reactionDelay": 0.44766259589232504,
+            "basalEnergyDrain": 0.47412837282754483,
+            "basalWaterDrain": 0.43267706157639624,
+            "basalStaminaDrain": 0.4622642852365971,
+            "sprintStartThreshold": 0.51015003323555,
+            "sprintStopThreshold": 0.5508687878493219,
+            "sprintSpeedMultiplier": 0.47565440451726315,
+            "sprintStaminaDrain": 0.45578029728494585,
+            "staminaRegen": 0.5030209746211767,
+            "drinkThreshold": 0.44895958113484086,
+            "drinkAmount": 0.43997563449665905,
+            "eatThreshold": 0.5949852524790913,
+            "eatAmount": 0.5530957263428717,
+            "grassEatMin": 0.5008065820671618,
+            "berryEatMin": 0.41563201416283846,
+            "gestationMultiplier": 0.5218250316102058,
+            "growthRate": 0.5579823658801615,
+            "longevity": 0.4050404661800712
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6276472107093802,
+            "water": 0.7493219744998435,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 21.595857121587464,
+            "y": 106.03333268606721
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 25.746557157872267,
+              "y": 105.33854072067682
+            }
+          },
+          "genome": {
+            "bodyHue": 0.07830044263973823,
+            "bodySaturation": 0.39114371188916264,
+            "bodyLightness": 0.49855846092104916,
+            "matePreferenceHue": 0.8549283017404377,
+            "mateChoosiness": 0.41393784643150866,
+            "colourDiscrimination": 0.708543590363115,
+            "speed": 0.448598778154701,
+            "perceptionRange": 0.505851635383442,
+            "alertness": 0.4646353376097977,
+            "reactionDelay": 0.44173297644592824,
+            "basalEnergyDrain": 0.4629510279279202,
+            "basalWaterDrain": 0.4971546735148877,
+            "basalStaminaDrain": 0.4829921809956431,
+            "sprintStartThreshold": 0.5730536061804742,
+            "sprintStopThreshold": 0.41440306352451445,
+            "sprintSpeedMultiplier": 0.442624109890312,
+            "sprintStaminaDrain": 0.4205034404061735,
+            "staminaRegen": 0.47372556631453333,
+            "drinkThreshold": 0.5680357123259455,
+            "drinkAmount": 0.4553305324167013,
+            "eatThreshold": 0.475783903663978,
+            "eatAmount": 0.5183713257312774,
+            "grassEatMin": 0.47659649793058634,
+            "berryEatMin": 0.5339206930249929,
+            "gestationMultiplier": 0.413147531170398,
+            "growthRate": 0.5721795761957764,
+            "longevity": 0.5710703185759485
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6490244436987638,
+            "water": 0.72181790865457,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 22.27489050157565,
+            "y": 110.33247287633185
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 31.20032905609639,
+              "y": 109.03312330859022
+            }
+          },
+          "genome": {
+            "bodyHue": 0.9927907946705818,
+            "bodySaturation": 0.3610030735377222,
+            "bodyLightness": 0.5180359779857099,
+            "matePreferenceHue": 0.971038082782179,
+            "mateChoosiness": 0.4084301439579576,
+            "colourDiscrimination": 0.7687218582257628,
+            "speed": 0.4104415839072317,
+            "perceptionRange": 0.5027974616270512,
+            "alertness": 0.5368107394780963,
+            "reactionDelay": 0.522927732206881,
+            "basalEnergyDrain": 0.5580218532122672,
+            "basalWaterDrain": 0.4506417823024094,
+            "basalStaminaDrain": 0.4980466114822775,
+            "sprintStartThreshold": 0.5128830325789749,
+            "sprintStopThreshold": 0.5607490512542427,
+            "sprintSpeedMultiplier": 0.46879632589407266,
+            "sprintStaminaDrain": 0.4808494622353464,
+            "staminaRegen": 0.43296989616937936,
+            "drinkThreshold": 0.44530625492334364,
+            "drinkAmount": 0.4203989928588271,
+            "eatThreshold": 0.48683793041855095,
+            "eatAmount": 0.407222891272977,
+            "grassEatMin": 0.471668109158054,
+            "berryEatMin": 0.4328628126066178,
+            "gestationMultiplier": 0.5768167114816606,
+            "growthRate": 0.5364004736766219,
+            "longevity": 0.41104857744649054
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6551749045609725,
+            "water": 0.7764714047085696,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 0.13992359375646163,
+            "y": 52.53107966778057
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 2.3534390135526415,
+              "y": 55.644999939205505
+            }
+          },
+          "genome": {
+            "bodyHue": 0.006567958556115583,
+            "bodySaturation": 0.35655804234556854,
+            "bodyLightness": 0.5117743849288672,
+            "matePreferenceHue": 0.9334151462838054,
+            "mateChoosiness": 0.4984529941342771,
+            "colourDiscrimination": 0.6754362539853901,
+            "speed": 0.58716677185148,
+            "perceptionRange": 0.5092169128358364,
+            "alertness": 0.4154974529519677,
+            "reactionDelay": 0.555205666879192,
+            "basalEnergyDrain": 0.5006255060434341,
+            "basalWaterDrain": 0.5799661476630718,
+            "basalStaminaDrain": 0.5531120755709708,
+            "sprintStartThreshold": 0.4992043256293982,
+            "sprintStopThreshold": 0.5889834182336926,
+            "sprintSpeedMultiplier": 0.4462435814086348,
+            "sprintStaminaDrain": 0.4893748551141471,
+            "staminaRegen": 0.42053383952006695,
+            "drinkThreshold": 0.4337740083225071,
+            "drinkAmount": 0.5780852136667818,
+            "eatThreshold": 0.496254260558635,
+            "eatAmount": 0.5070985951460898,
+            "grassEatMin": 0.5309672068804503,
+            "berryEatMin": 0.5574326501693576,
+            "gestationMultiplier": 0.4862834750674665,
+            "growthRate": 0.5964700575917959,
+            "longevity": 0.4957595071289688
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.5814439089528491,
+            "water": 0.6857160882003832,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 3.0691573741193428,
+            "y": 62.53123177112072
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 2.785546615703555,
+              "y": 62.37236417226657
+            }
+          },
+          "genome": {
+            "bodyHue": 0.7922899035736919,
+            "bodySaturation": 0.5304796995129436,
+            "bodyLightness": 0.47257528747431937,
+            "matePreferenceHue": 0.7427116687782109,
+            "mateChoosiness": 0.4789647889789194,
+            "colourDiscrimination": 0.5262246873695403,
+            "speed": 0.5184776374138892,
+            "perceptionRange": 0.530695737618953,
+            "alertness": 0.4090850609354675,
+            "reactionDelay": 0.4281560390722007,
+            "basalEnergyDrain": 0.5079479303210974,
+            "basalWaterDrain": 0.41132561755366626,
+            "basalStaminaDrain": 0.5557136469054967,
+            "sprintStartThreshold": 0.5867219778243452,
+            "sprintStopThreshold": 0.5846298291813582,
+            "sprintSpeedMultiplier": 0.5304615702945739,
+            "sprintStaminaDrain": 0.40370140727609394,
+            "staminaRegen": 0.5543956298846752,
+            "drinkThreshold": 0.5993707287125289,
+            "drinkAmount": 0.400218827277422,
+            "eatThreshold": 0.47329136594198645,
+            "eatAmount": 0.4011926564387977,
+            "grassEatMin": 0.5989130730275065,
+            "berryEatMin": 0.5899984587915241,
+            "gestationMultiplier": 0.42716328050009905,
+            "growthRate": 0.44379034428857267,
+            "longevity": 0.4788357860874385
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6117089767319719,
+            "water": 0.7055005612347234,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 40.21124019630491,
+            "y": 113.1871579385555
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 51.250884513174675,
+              "y": 113.20091373443556
+            }
+          },
+          "genome": {
+            "bodyHue": 0.782060869988054,
+            "bodySaturation": 0.4993297998327762,
+            "bodyLightness": 0.4806390881538391,
+            "matePreferenceHue": 0.5630237369611859,
+            "mateChoosiness": 0.3334128906019032,
+            "colourDiscrimination": 0.6506174328736961,
+            "speed": 0.4707887460011989,
+            "perceptionRange": 0.4222082814667374,
+            "alertness": 0.5279484995175153,
+            "reactionDelay": 0.4966218154411763,
+            "basalEnergyDrain": 0.5480428021866828,
+            "basalWaterDrain": 0.4152845088392496,
+            "basalStaminaDrain": 0.5161354197654873,
+            "sprintStartThreshold": 0.5292620667256415,
+            "sprintStopThreshold": 0.4418713850900531,
+            "sprintSpeedMultiplier": 0.42393688382580874,
+            "sprintStaminaDrain": 0.5583932253532111,
+            "staminaRegen": 0.40318457833491267,
+            "drinkThreshold": 0.5073192022275179,
+            "drinkAmount": 0.5508523303549737,
+            "eatThreshold": 0.42396396067924796,
+            "eatAmount": 0.48725079339928923,
+            "grassEatMin": 0.5085216019768268,
+            "berryEatMin": 0.5210307603701949,
+            "gestationMultiplier": 0.5193972553126514,
+            "growthRate": 0.5835924583021551,
+            "longevity": 0.5623325771652162
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6284427039806353,
+            "water": 0.7448848540378593,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 41.47254633864548,
+            "y": 113.59585890075162
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 44.66170896017965,
+              "y": 111.98864416277657
+            }
+          },
+          "genome": {
+            "bodyHue": 0.5714303406514227,
+            "bodySaturation": 0.37282939795404674,
+            "bodyLightness": 0.3767046695575118,
+            "matePreferenceHue": 0.6281573742255568,
+            "mateChoosiness": 0.31624109935946765,
+            "colourDiscrimination": 0.6877860314212739,
+            "speed": 0.5162102221976965,
+            "perceptionRange": 0.5501357962843031,
+            "alertness": 0.5166336998809129,
+            "reactionDelay": 0.5750137061811984,
+            "basalEnergyDrain": 0.4868781405966729,
+            "basalWaterDrain": 0.42018740200437604,
+            "basalStaminaDrain": 0.5417914487887174,
+            "sprintStartThreshold": 0.49397924859076736,
+            "sprintStopThreshold": 0.45601357901468875,
+            "sprintSpeedMultiplier": 0.51252585593611,
+            "sprintStaminaDrain": 0.5518154000397771,
+            "staminaRegen": 0.5694729723036289,
+            "drinkThreshold": 0.47898932253010573,
+            "drinkAmount": 0.5123772779479623,
+            "eatThreshold": 0.4111704203765839,
+            "eatAmount": 0.5437119300011546,
+            "grassEatMin": 0.5334865484852344,
+            "berryEatMin": 0.4145139563828707,
+            "gestationMultiplier": 0.5254682402126492,
+            "growthRate": 0.44878101074136795,
+            "longevity": 0.5312606095802039
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.6155211661676976,
+            "water": 0.736209766390203,
+            "stamina": 1,
+            "hp": 1
+          }
+        }
+      ]
+    },
+    {
+      "mode": "segregating",
+      "seconds": 180,
+      "population": 107,
+      "births": {
+        "square": 17,
+        "triangle": 2,
+        "circle": 13,
+        "octagon": 0
+      },
+      "actors": [
+        {
+          "id": 0,
+          "position": {
+            "x": 115.62359986991932,
+            "y": 122.63303650821511
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "bodyHue": 0.9458894022926687,
+            "bodySaturation": 0.46896456996910274,
+            "bodyLightness": 0.5213102349545806,
+            "matePreferenceHue": 0.7524741399288177,
+            "mateChoosiness": 0.4240923038683832,
+            "colourDiscrimination": 0.7283256342634559,
+            "speed": 0.49947979231365025,
+            "perceptionRange": 0.4300479969475418,
+            "alertness": 0.42596896677277984,
+            "reactionDelay": 0.5166334504727275,
+            "basalEnergyDrain": 0.42168655754067,
+            "basalWaterDrain": 0.5924398237839341,
+            "basalStaminaDrain": 0.5982856803573668,
+            "sprintStartThreshold": 0.4148139060009271,
+            "sprintStopThreshold": 0.4964753568638116,
+            "sprintSpeedMultiplier": 0.4245983708184212,
+            "sprintStaminaDrain": 0.5288708087056875,
+            "staminaRegen": 0.5320916040334851,
+            "drinkThreshold": 0.4112722158432007,
+            "drinkAmount": 0.573163824994117,
+            "eatThreshold": 0.5660700449254363,
+            "eatAmount": 0.5361059877555817,
+            "grassEatMin": 0.5586689135991036,
+            "berryEatMin": 0.5377200543414802,
+            "gestationMultiplier": 0.4873677658848464,
+            "growthRate": 0.5558325922582299,
+            "longevity": 0.4646738462615758
+          },
+          "phase": "moving",
+          "meters": {
+            "energy": 0.8652701385519506,
+            "water": 0.9401205261735425,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 1,
+          "position": {
+            "x": 58.434177631531774,
+            "y": 96.18834691827502
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 50.82852145322306,
+              "y": 134.72322442801246
+            }
+          },
+          "genome": {
+            "bodyHue": 0.8153832158632577,
+            "bodySaturation": 0.45697642196901145,
+            "bodyLightness": 0.4947149912361056,
+            "matePreferenceHue": 0.7633618936873972,
+            "mateChoosiness": 0.4179749400354922,
+            "colourDiscrimination": 0.7466405109968036,
+            "speed": 0.49303037393838167,
+            "perceptionRange": 0.5869963088072836,
+            "alertness": 0.42499228455126287,
+            "reactionDelay": 0.44766259589232504,
+            "basalEnergyDrain": 0.47412837282754483,
+            "basalWaterDrain": 0.43267706157639624,
+            "basalStaminaDrain": 0.4622642852365971,
+            "sprintStartThreshold": 0.51015003323555,
+            "sprintStopThreshold": 0.5508687878493219,
+            "sprintSpeedMultiplier": 0.47565440451726315,
+            "sprintStaminaDrain": 0.45578029728494585,
+            "staminaRegen": 0.5030209746211767,
+            "drinkThreshold": 0.44895958113484086,
+            "drinkAmount": 0.43997563449665905,
+            "eatThreshold": 0.5949852524790913,
+            "eatAmount": 0.5530957263428717,
+            "grassEatMin": 0.5008065820671618,
+            "berryEatMin": 0.41563201416283846,
+            "gestationMultiplier": 0.5218250316102058,
+            "growthRate": 0.5579823658801615,
+            "longevity": 0.4050404661800712
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.49136874790047513,
+            "water": 0.8163639851927188,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 2,
+          "position": {
+            "x": 115.60999385150069,
+            "y": 121.28896864473305
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "bodyHue": 0.07830044263973823,
+            "bodySaturation": 0.39114371188916264,
+            "bodyLightness": 0.49855846092104916,
+            "matePreferenceHue": 0.8549283017404377,
+            "mateChoosiness": 0.41393784643150866,
+            "colourDiscrimination": 0.708543590363115,
+            "speed": 0.448598778154701,
+            "perceptionRange": 0.505851635383442,
+            "alertness": 0.4646353376097977,
+            "reactionDelay": 0.44173297644592824,
+            "basalEnergyDrain": 0.4629510279279202,
+            "basalWaterDrain": 0.4971546735148877,
+            "basalStaminaDrain": 0.4829921809956431,
+            "sprintStartThreshold": 0.5730536061804742,
+            "sprintStopThreshold": 0.41440306352451445,
+            "sprintSpeedMultiplier": 0.442624109890312,
+            "sprintStaminaDrain": 0.4205034404061735,
+            "staminaRegen": 0.47372556631453333,
+            "drinkThreshold": 0.5680357123259455,
+            "drinkAmount": 0.4553305324167013,
+            "eatThreshold": 0.475783903663978,
+            "eatAmount": 0.5183713257312774,
+            "grassEatMin": 0.47659649793058634,
+            "berryEatMin": 0.5339206930249929,
+            "gestationMultiplier": 0.413147531170398,
+            "growthRate": 0.5721795761957764,
+            "longevity": 0.5710703185759485
+          },
+          "phase": "moving",
+          "meters": {
+            "energy": 0.8011360089771182,
+            "water": 0.9407471225451189,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 3,
+          "position": {
+            "x": 114.57678936507726,
+            "y": 120.16844712011307
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 114.5,
+              "y": 120.5
+            }
+          },
+          "genome": {
+            "bodyHue": 0.9927907946705818,
+            "bodySaturation": 0.3610030735377222,
+            "bodyLightness": 0.5180359779857099,
+            "matePreferenceHue": 0.971038082782179,
+            "mateChoosiness": 0.4084301439579576,
+            "colourDiscrimination": 0.7687218582257628,
+            "speed": 0.4104415839072317,
+            "perceptionRange": 0.5027974616270512,
+            "alertness": 0.5368107394780963,
+            "reactionDelay": 0.522927732206881,
+            "basalEnergyDrain": 0.5580218532122672,
+            "basalWaterDrain": 0.4506417823024094,
+            "basalStaminaDrain": 0.4980466114822775,
+            "sprintStartThreshold": 0.5128830325789749,
+            "sprintStopThreshold": 0.5607490512542427,
+            "sprintSpeedMultiplier": 0.46879632589407266,
+            "sprintStaminaDrain": 0.4808494622353464,
+            "staminaRegen": 0.43296989616937936,
+            "drinkThreshold": 0.44530625492334364,
+            "drinkAmount": 0.4203989928588271,
+            "eatThreshold": 0.48683793041855095,
+            "eatAmount": 0.407222891272977,
+            "grassEatMin": 0.471668109158054,
+            "berryEatMin": 0.4328628126066178,
+            "gestationMultiplier": 0.5768167114816606,
+            "growthRate": 0.5364004736766219,
+            "longevity": 0.41104857744649054
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.7958130388142867,
+            "water": 0.7613325821795548,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 4,
+          "position": {
+            "x": 33.138404851827886,
+            "y": 63.24356922711321
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 36.5,
+              "y": 86.5
+            }
+          },
+          "genome": {
+            "bodyHue": 0.006567958556115583,
+            "bodySaturation": 0.35655804234556854,
+            "bodyLightness": 0.5117743849288672,
+            "matePreferenceHue": 0.9334151462838054,
+            "mateChoosiness": 0.4984529941342771,
+            "colourDiscrimination": 0.6754362539853901,
+            "speed": 0.58716677185148,
+            "perceptionRange": 0.5092169128358364,
+            "alertness": 0.4154974529519677,
+            "reactionDelay": 0.555205666879192,
+            "basalEnergyDrain": 0.5006255060434341,
+            "basalWaterDrain": 0.5799661476630718,
+            "basalStaminaDrain": 0.5531120755709708,
+            "sprintStartThreshold": 0.4992043256293982,
+            "sprintStopThreshold": 0.5889834182336926,
+            "sprintSpeedMultiplier": 0.4462435814086348,
+            "sprintStaminaDrain": 0.4893748551141471,
+            "staminaRegen": 0.42053383952006695,
+            "drinkThreshold": 0.4337740083225071,
+            "drinkAmount": 0.5780852136667818,
+            "eatThreshold": 0.496254260558635,
+            "eatAmount": 0.5070985951460898,
+            "grassEatMin": 0.5309672068804503,
+            "berryEatMin": 0.5574326501693576,
+            "gestationMultiplier": 0.4862834750674665,
+            "growthRate": 0.5964700575917959,
+            "longevity": 0.4957595071289688
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.7856726324546541,
+            "water": 0.6846158550468124,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 5,
+          "position": {
+            "x": 53.583155493105025,
+            "y": 32.38596992376003
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 57.5,
+              "y": 16.5
+            }
+          },
+          "genome": {
+            "bodyHue": 0.7922899035736919,
+            "bodySaturation": 0.5304796995129436,
+            "bodyLightness": 0.47257528747431937,
+            "matePreferenceHue": 0.7427116687782109,
+            "mateChoosiness": 0.4789647889789194,
+            "colourDiscrimination": 0.5262246873695403,
+            "speed": 0.5184776374138892,
+            "perceptionRange": 0.530695737618953,
+            "alertness": 0.4090850609354675,
+            "reactionDelay": 0.4281560390722007,
+            "basalEnergyDrain": 0.5079479303210974,
+            "basalWaterDrain": 0.41132561755366626,
+            "basalStaminaDrain": 0.5557136469054967,
+            "sprintStartThreshold": 0.5867219778243452,
+            "sprintStopThreshold": 0.5846298291813582,
+            "sprintSpeedMultiplier": 0.5304615702945739,
+            "sprintStaminaDrain": 0.40370140727609394,
+            "staminaRegen": 0.5543956298846752,
+            "drinkThreshold": 0.5993707287125289,
+            "drinkAmount": 0.400218827277422,
+            "eatThreshold": 0.47329136594198645,
+            "eatAmount": 0.4011926564387977,
+            "grassEatMin": 0.5989130730275065,
+            "berryEatMin": 0.5899984587915241,
+            "gestationMultiplier": 0.42716328050009905,
+            "growthRate": 0.44379034428857267,
+            "longevity": 0.4788357860874385
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.7844845694050413,
+            "water": 0.8708260015247751,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 6,
+          "position": {
+            "x": 54.39426532360598,
+            "y": 32.18217371782006
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "bodyHue": 0.782060869988054,
+            "bodySaturation": 0.4993297998327762,
+            "bodyLightness": 0.4806390881538391,
+            "matePreferenceHue": 0.5630237369611859,
+            "mateChoosiness": 0.3334128906019032,
+            "colourDiscrimination": 0.6506174328736961,
+            "speed": 0.4707887460011989,
+            "perceptionRange": 0.4222082814667374,
+            "alertness": 0.5279484995175153,
+            "reactionDelay": 0.4966218154411763,
+            "basalEnergyDrain": 0.5480428021866828,
+            "basalWaterDrain": 0.4152845088392496,
+            "basalStaminaDrain": 0.5161354197654873,
+            "sprintStartThreshold": 0.5292620667256415,
+            "sprintStopThreshold": 0.4418713850900531,
+            "sprintSpeedMultiplier": 0.42393688382580874,
+            "sprintStaminaDrain": 0.5583932253532111,
+            "staminaRegen": 0.40318457833491267,
+            "drinkThreshold": 0.5073192022275179,
+            "drinkAmount": 0.5508523303549737,
+            "eatThreshold": 0.42396396067924796,
+            "eatAmount": 0.48725079339928923,
+            "grassEatMin": 0.5085216019768268,
+            "berryEatMin": 0.5210307603701949,
+            "gestationMultiplier": 0.5193972553126514,
+            "growthRate": 0.5835924583021551,
+            "longevity": 0.5623325771652162
+          },
+          "phase": "moving",
+          "meters": {
+            "energy": 0.948629388997358,
+            "water": 0.9457268642251827,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 7,
+          "position": {
+            "x": 18.665390838935437,
+            "y": 34.19325502197831
+          },
+          "intent": {
+            "type": "rest",
+            "foodType": null,
+            "target": null
+          },
+          "genome": {
+            "bodyHue": 0.5714303406514227,
+            "bodySaturation": 0.37282939795404674,
+            "bodyLightness": 0.3767046695575118,
+            "matePreferenceHue": 0.6281573742255568,
+            "mateChoosiness": 0.31624109935946765,
+            "colourDiscrimination": 0.6877860314212739,
+            "speed": 0.5162102221976965,
+            "perceptionRange": 0.5501357962843031,
+            "alertness": 0.5166336998809129,
+            "reactionDelay": 0.5750137061811984,
+            "basalEnergyDrain": 0.4868781405966729,
+            "basalWaterDrain": 0.42018740200437604,
+            "basalStaminaDrain": 0.5417914487887174,
+            "sprintStartThreshold": 0.49397924859076736,
+            "sprintStopThreshold": 0.45601357901468875,
+            "sprintSpeedMultiplier": 0.51252585593611,
+            "sprintStaminaDrain": 0.5518154000397771,
+            "staminaRegen": 0.5694729723036289,
+            "drinkThreshold": 0.47898932253010573,
+            "drinkAmount": 0.5123772779479623,
+            "eatThreshold": 0.4111704203765839,
+            "eatAmount": 0.5437119300011546,
+            "grassEatMin": 0.5334865484852344,
+            "berryEatMin": 0.4145139563828707,
+            "gestationMultiplier": 0.5254682402126492,
+            "growthRate": 0.44878101074136795,
+            "longevity": 0.5312606095802039
+          },
+          "phase": "moving",
+          "meters": {
+            "energy": 0.9176346912492739,
+            "water": 0.9384497356390794,
+            "stamina": 1,
+            "hp": 1
+          }
+        },
+        {
+          "id": 106,
+          "position": {
+            "x": 113.40483391283426,
+            "y": 108.33578374762878
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 115.62359986991932,
+              "y": 122.63303650821511
+            }
+          },
+          "genome": {
+            "alertness": 0.4598301732772961,
+            "basalEnergyDrain": 0.5734548356756568,
+            "basalStaminaDrain": 0.45532164251897483,
+            "basalWaterDrain": 0.4973040995188057,
+            "berryEatMin": 0.5541297696065157,
+            "bodyHue": 0.031014062366448103,
+            "bodyLightness": 0.5046365710720421,
+            "bodySaturation": 0.387304026694037,
+            "colourDiscrimination": 0.7755072787264361,
+            "drinkAmount": 0.37298627637792375,
+            "drinkThreshold": 0.5903155800513923,
+            "eatAmount": 0.5248958621360361,
+            "eatThreshold": 0.39940394363831727,
+            "gestationMultiplier": 0.40980078687891364,
+            "grassEatMin": 0.48619030670262875,
+            "growthRate": 0.5489990691747516,
+            "longevity": 0.5784538649814204,
+            "mateChoosiness": 0.38972589364275334,
+            "matePreferenceHue": 0.9699103542882948,
+            "perceptionRange": 0.5191982120135799,
+            "reactionDelay": 0.4303565304493532,
+            "speed": 0.3813668215321377,
+            "sprintSpeedMultiplier": 0.4646050815284252,
+            "sprintStaminaDrain": 0.4605262780981138,
+            "sprintStartThreshold": 0.49621803289279337,
+            "sprintStopThreshold": 0.5548311094241217,
+            "staminaRegen": 0.36141372701153157
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.5169619097708927,
+            "water": 0.7829375924487987,
+            "stamina": 1,
+            "hp": 0.85
+          }
+        },
+        {
+          "id": 110,
+          "position": {
+            "x": 62.17806164611526,
+            "y": 102.94298221613192
+          },
+          "intent": {
+            "type": "seek",
+            "foodType": null,
+            "target": {
+              "x": 54.77184964691508,
+              "y": 129.19675237217425
+            }
+          },
+          "genome": {
+            "alertness": 0.3996752151567489,
+            "basalEnergyDrain": 0.5345684327045456,
+            "basalStaminaDrain": 0.4635356255155057,
+            "basalWaterDrain": 0.33200353460852056,
+            "berryEatMin": 0.5495001909974963,
+            "bodyHue": 0.8505097701493651,
+            "bodyLightness": 0.5847765711368993,
+            "bodySaturation": 0.4435605976171792,
+            "colourDiscrimination": 0.7588634355040267,
+            "drinkAmount": 0.43595244200900196,
+            "drinkThreshold": 0.3860865797614679,
+            "eatAmount": 0.5264867316931485,
+            "eatThreshold": 0.5954029973829166,
+            "gestationMultiplier": 0.5465589020261541,
+            "grassEatMin": 0.5856866698618978,
+            "growthRate": 0.5320511926338076,
+            "longevity": 0.41079704568721354,
+            "mateChoosiness": 0.40610988545231524,
+            "matePreferenceHue": 0.7765769107453524,
+            "perceptionRange": 0.6049655911605805,
+            "reactionDelay": 0.5013383673597127,
+            "speed": 0.47475826401263477,
+            "sprintSpeedMultiplier": 0.49683391908649355,
+            "sprintStaminaDrain": 0.507332686255686,
+            "sprintStartThreshold": 0.5103056242549792,
+            "sprintStopThreshold": 0.5670869019813836,
+            "staminaRegen": 0.4927362707164138
+          },
+          "phase": null,
+          "meters": {
+            "energy": 0.5997170840166945,
+            "water": 0.8932599078319112,
+            "stamina": 1,
+            "hp": 0.85
+          }
+        }
+      ]
+    }
+  ],
+  "readOnlyActors": true,
+  "mobileHistory": true,
+  "reset": true
+}

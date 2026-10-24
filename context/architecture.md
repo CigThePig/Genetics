@@ -200,3 +200,34 @@ Recovery belongs to animals that attempted mating. Successful/failed parental co
 Global/per-species matingAttempts and matingFailures counters count pairs once, consume no RNG and reset with their owning simulation. Pregnancy is conception, birth is completed offspring, and neither alone measures replacement. Detailed cohort/opportunity histories and potential-pair-loss reconstruction are offline only; they never give animals census knowledge.
 
 Future wound eligibility belongs in the shared reproductive predicate, mobility penalties in movement/traits. Do not overload recovery as a juvenile or injury clock. Preserve tick order, pregnancy ownership and explicit lethal-event attribution. See tracks/2026-10-22-demographic-replacement/track12-readiness.md.
+
+## Quantitative locus inheritance and observation (2026-10-23)
+
+The default functional genome now uses haploid quantitative-locus segregation:
+each locus copies either parental normalized value with probability one-half,
+then retains existing inheritance noise, mutation and mutation-cost coupling.
+There are no hidden diploid functional alleles, dominance, habitat-assigned
+values or organism-level fitness scores. The original implementation retained trait mapping and state-based tradeoffs; the continuation below broadens alertness expression. Both birth paths use the same inheritance function; the copied
+paternal flat genome continues to survive paternal death during gestation.
+
+`creatureGenomeInheritanceMode: 'blended'` preserves the previous random/midpoint
+blend and circular hue interpolation. The mix-chance knob applies only to that
+mode. Seedless/standalone callers without the new setting retain legacy fallback.
+The inheritance mode is captured by `world.inheritanceMode` at world construction. Changing the editor setting marks a rebuild pending; both birth paths retain the active world treatment until rebuild. It does not rewrite live traits. Old settings merge with new-world defaults; select blending
+explicitly for historical replay. The app persists settings rather than complete
+live-world saves. Neutral diagnostic markers remain separate diploid loci.
+
+`evolution-metrics.js` adds seven quantitative gene histograms/moments to the existing
+10-second colour snapshot. Histories remain at most 120 snapshots plus founders,
+owned/reset by the simulation. Rendering and UI read them without sampling RNG or
+changing actors. Empty samples have null mean/variance; a monomorphic sample has
+zero variance. Hue retains separate circular statistics. These are descriptive
+population snapshots, not selection or adaptation classifiers.
+
+### Inherited vigilance continuation (PR #144)
+
+The alertness locus now maps through the existing phenotype multiplier to .2–1.8 of baseline alertness. Herding resolves the escape acquisition distance as the configured buffer times clamped phenotype/baseline, with a two-tile floor. Only observed predators or expiring local warnings supply danger positions. An escape persists to 1.25 times acquisition distance, retaining the existing direction commitment. Production integration immediately paces an accepted escape as fleeing; a second stationary assessment cannot veto it. Actions defer feeding/drinking during flight. This creates a resource opportunity cost rather than an arbitrary fitness penalty. Predator count, fertility, lifespan and mutation defaults are unchanged.
+
+The inspector reports actual flight and buffer; the same bounded history includes inherited vigilance. The standalone legacy state helper remains available, but production escape authority belongs to herding/integration. Disabling herding clears the derived buffer. See the continuation report for constructed selection, negative habitat-transfer results and ordinary-world limits; graphs do not classify adaptation.
+
+Threat observations retain their existing finite lifetime independently of whether the animal currently chooses escape. Leaving the escape buffer clears steering, while the copied danger position/hop count expires with its timer; re-entry and local warnings can still use valid observations.

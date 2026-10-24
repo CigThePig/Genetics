@@ -1,0 +1,7 @@
+{
+  "baselineSnapshotBytes": 2300,
+  "finalSnapshotBytes": 5240,
+  "maxRollingSnapshots": 120,
+  "founderSnapshotRetained": true,
+  "unit": "serialized UTF-8 JSON bytes; not heap allocation"
+}

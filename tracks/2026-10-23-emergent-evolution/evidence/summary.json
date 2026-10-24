@@ -1,0 +1,2015 @@
+{
+  "seeds": [
+    1,
+    42,
+    1337,
+    2,
+    7,
+    19
+  ],
+  "wild": [
+    {
+      "mode": "baseline",
+      "seed": 1,
+      "ticks": 72000,
+      "commit": "b0985754ef70fd4bc6517bafa16e522bbb134000",
+      "seconds": 1200,
+      "hash": "1177b16bf8b8746272faabf58851fb598ca8eb930ba96775005b1ac06de07c1e",
+      "species": {
+        "square": {
+          "final": 34,
+          "maxGenerationEver": 7,
+          "births": 114,
+          "matureOffspring": 105,
+          "censoredImmature": 6,
+          "completedCareers": 116,
+          "founderMatureChildrenMean": 2.1944444444444446,
+          "founderSelectionDifferential": {
+            "speed": -0.0016752347496826747,
+            "perceptionRange": -0.0020155078164136864,
+            "basalEnergyDrain": 0.0007114952931974727,
+            "growthRate": -0.0024014847815487794,
+            "longevity": 0.00041007307666240944
+          },
+          "endpointSpeed": {
+            "n": 34,
+            "mean": 0.5456183142033665,
+            "variance": 0.0031661856818618835
+          },
+          "activityFractions": {
+            "wander": 0.15558188280324434,
+            "graze": 0.09960812904401713,
+            "seek": 0.703782010389137,
+            "eat": 0.019994532033172332,
+            "mate": 0.007600473890458398,
+            "drink": 0.013432971839970838
+          },
+          "deaths": {
+            "thirst": 38,
+            "starvation": 20,
+            "predation": 14,
+            "age": 44
+          },
+          "offspringWithMatureChildren": 72
+        },
+        "circle": {
+          "final": 92,
+          "maxGenerationEver": 7,
+          "births": 191,
+          "matureOffspring": 178,
+          "censoredImmature": 13,
+          "completedCareers": 135,
+          "founderMatureChildrenMean": 2.6666666666666665,
+          "founderSelectionDifferential": {
+            "speed": 0.001276387899027509,
+            "perceptionRange": 0.004323859312474643,
+            "basalEnergyDrain": -0.002634961869464214,
+            "growthRate": 0.00036595968154473635,
+            "longevity": 0.0026633003131589783
+          },
+          "endpointSpeed": {
+            "n": 92,
+            "mean": 0.5275036980636543,
+            "variance": 0.003118733766444743
+          },
+          "activityFractions": {
+            "wander": 0.18834440785262938,
+            "graze": 0.17707981799774242,
+            "seek": 0.5985360687977843,
+            "drink": 0.01427856585944864,
+            "eat": 0.012905403046559528,
+            "mate": 0.00885573644583571
+          },
+          "deaths": {
+            "thirst": 19,
+            "starvation": 13,
+            "predation": 12,
+            "age": 91
+          },
+          "offspringWithMatureChildren": 133
+        },
+        "triangle": {
+          "final": 0,
+          "maxGenerationEver": 1,
+          "births": 1,
+          "matureOffspring": 1,
+          "censoredImmature": 0,
+          "completedCareers": 5,
+          "founderMatureChildrenMean": 0.5,
+          "founderSelectionDifferential": {
+            "speed": 0.005277133767958686,
+            "perceptionRange": 0.029645347408950418,
+            "basalEnergyDrain": -0.0022663289913907314,
+            "growthRate": 0.047410591680090874,
+            "longevity": 0.0465982553665526
+          },
+          "endpointSpeed": {
+            "n": 0,
+            "mean": null,
+            "variance": null
+          },
+          "activityFractions": {
+            "wander": 0.0015296367112810707,
+            "rest": 0.07801147227533461,
+            "seek": 0.7812619502868069,
+            "drink": 0.011472275334608031,
+            "eat": 0.0076481835564053535,
+            "hunt": 0.11510516252390057,
+            "mate": 0.00497131931166348
+          },
+          "deaths": {
+            "age": 5
+          },
+          "offspringWithMatureChildren": 0
+        },
+        "octagon": {
+          "final": 5,
+          "maxGenerationEver": 6,
+          "births": 10,
+          "matureOffspring": 9,
+          "censoredImmature": 1,
+          "completedCareers": 9,
+          "founderMatureChildrenMean": 1.75,
+          "founderSelectionDifferential": {
+            "speed": 0.004175067353727524,
+            "perceptionRange": -0.0070418130589781636,
+            "basalEnergyDrain": 0.0016578420630789514,
+            "growthRate": -0.00760332206264136,
+            "longevity": -0.009365907193361112
+          },
+          "endpointSpeed": {
+            "n": 5,
+            "mean": 0.3797661152573435,
+            "variance": 0.0022248665651073392
+          },
+          "activityFractions": {
+            "wander": 0.0011376564277588168,
+            "rest": 0.16349748090362426,
+            "seek": 0.7393141556964082,
+            "drink": 0.013326832439460427,
+            "hunt": 0.07281001137656427,
+            "mate": 0.00520071509832602,
+            "eat": 0.004713148057857956
+          },
+          "deaths": {
+            "age": 9
+          },
+          "offspringWithMatureChildren": 6
+        }
+      }
+    },
+    {
+      "mode": "baseline",
+      "seed": 42,
+      "ticks": 72000,
+      "commit": "b0985754ef70fd4bc6517bafa16e522bbb134000",
+      "seconds": 1200,
+      "hash": "b01c8108a38aa6cb88c644308e12c3e92d14e397e09e8902b12080c63eeeaadf",
+      "species": {
+        "square": {
+          "final": 70,
+          "maxGenerationEver": 8,
+          "births": 153,
+          "matureOffspring": 140,
+          "censoredImmature": 10,
+          "completedCareers": 119,
+          "founderMatureChildrenMean": 2,
+          "founderSelectionDifferential": {
+            "speed": 2.7753154024923177e-07,
+            "perceptionRange": 0.006388728966056856,
+            "basalEnergyDrain": 0.011065208177185704,
+            "growthRate": -0.005711933706576633,
+            "longevity": -0.007977965877055071
+          },
+          "endpointSpeed": {
+            "n": 70,
+            "mean": 0.517380363938845,
+            "variance": 0.004583132607285376
+          },
+          "activityFractions": {
+            "wander": 0.18629034543342118,
+            "graze": 0.15327722519765366,
+            "seek": 0.6169627929383094,
+            "drink": 0.013474453795800392,
+            "mate": 0.009280512340956105,
+            "eat": 0.020714670293859275
+          },
+          "deaths": {
+            "thirst": 13,
+            "starvation": 8,
+            "predation": 25,
+            "age": 73
+          },
+          "offspringWithMatureChildren": 101
+        },
+        "circle": {
+          "final": 80,
+          "maxGenerationEver": 8,
+          "births": 186,
+          "matureOffspring": 171,
+          "censoredImmature": 15,
+          "completedCareers": 142,
+          "founderMatureChildrenMean": 2.5277777777777777,
+          "founderSelectionDifferential": {
+            "speed": 0.0018399717408756344,
+            "perceptionRange": -0.003983091391390969,
+            "basalEnergyDrain": 0.00029012118220289596,
+            "growthRate": -0.0022039868638331073,
+            "longevity": 0.011785903744347292
+          },
+          "endpointSpeed": {
+            "n": 80,
+            "mean": 0.47709442988563994,
+            "variance": 0.006382996428469739
+          },
+          "activityFractions": {
+            "wander": 0.21844347225420216,
+            "graze": 0.14325351139765138,
+            "seek": 0.5978586230716095,
+            "drink": 0.013585079438176375,
+            "mate": 0.014966612940363803,
+            "eat": 0.011892700897996777
+          },
+          "deaths": {
+            "thirst": 11,
+            "starvation": 3,
+            "predation": 29,
+            "age": 99
+          },
+          "offspringWithMatureChildren": 119
+        },
+        "triangle": {
+          "final": 6,
+          "maxGenerationEver": 6,
+          "births": 16,
+          "matureOffspring": 15,
+          "censoredImmature": 1,
+          "completedCareers": 14,
+          "founderMatureChildrenMean": 2.25,
+          "founderSelectionDifferential": {
+            "speed": 0.0040657955816843505,
+            "perceptionRange": -0.008486150415976335,
+            "basalEnergyDrain": -0.006390043926270017,
+            "growthRate": 2.5982250614675628e-05,
+            "longevity": 0.00019061601617270663
+          },
+          "endpointSpeed": {
+            "n": 6,
+            "mean": 0.46750894010270655,
+            "variance": 0.00048328352678252265
+          },
+          "activityFractions": {
+            "wander": 0.0004946209966613083,
+            "rest": 0.15630023494497342,
+            "seek": 0.7167058241622357,
+            "hunt": 0.10053171757141091,
+            "eat": 0.003956967973290466,
+            "drink": 0.012612835414863362,
+            "mate": 0.009397798936564858
+          },
+          "deaths": {
+            "thirst": 1,
+            "age": 13
+          },
+          "offspringWithMatureChildren": 11
+        },
+        "octagon": {
+          "final": 4,
+          "maxGenerationEver": 6,
+          "births": 12,
+          "matureOffspring": 12,
+          "censoredImmature": 0,
+          "completedCareers": 12,
+          "founderMatureChildrenMean": 2.5,
+          "founderSelectionDifferential": {
+            "speed": -0.012801185497082757,
+            "perceptionRange": -0.0012305461568757892,
+            "basalEnergyDrain": 0.0020496177487074885,
+            "growthRate": -0.015662317972164663,
+            "longevity": 0.004257522572297723
+          },
+          "endpointSpeed": {
+            "n": 4,
+            "mean": 0.7030363158694521,
+            "variance": 0.004160738576279427
+          },
+          "activityFractions": {
+            "wander": 0.0006417661404184315,
+            "rest": 0.17019638043896804,
+            "seek": 0.7504813246053138,
+            "drink": 0.015017327685791297,
+            "hunt": 0.055833654216403544,
+            "eat": 0.004364009754845334,
+            "mate": 0.0034655371582595304
+          },
+          "deaths": {
+            "age": 12
+          },
+          "offspringWithMatureChildren": 8
+        }
+      }
+    },
+    {
+      "mode": "baseline",
+      "seed": 1337,
+      "ticks": 72000,
+      "commit": "b0985754ef70fd4bc6517bafa16e522bbb134000",
+      "seconds": 1200,
+      "hash": "2e7a9f8d11cfd5f0068fc31a75dff101b618963cbe6d12da48debc5354e8d770",
+      "species": {
+        "square": {
+          "final": 89,
+          "maxGenerationEver": 8,
+          "births": 180,
+          "matureOffspring": 160,
+          "censoredImmature": 16,
+          "completedCareers": 127,
+          "founderMatureChildrenMean": 2.388888888888889,
+          "founderSelectionDifferential": {
+            "speed": 0.007221847373597601,
+            "perceptionRange": 0.0028189515264208653,
+            "basalEnergyDrain": -0.00016377251237287282,
+            "growthRate": 0.001699561094089086,
+            "longevity": -0.0007993690891537897
+          },
+          "endpointSpeed": {
+            "n": 89,
+            "mean": 0.4893699254341306,
+            "variance": 0.0034810442127970616
+          },
+          "activityFractions": {
+            "wander": 0.25298593719899826,
+            "graze": 0.12025621267578501,
+            "seek": 0.5752985937198998,
+            "drink": 0.014568483914467347,
+            "eat": 0.020371797341552686,
+            "mate": 0.01651897514929686
+          },
+          "deaths": {
+            "thirst": 3,
+            "starvation": 4,
+            "predation": 31,
+            "age": 89
+          },
+          "offspringWithMatureChildren": 118
+        },
+        "circle": {
+          "final": 113,
+          "maxGenerationEver": 8,
+          "births": 197,
+          "matureOffspring": 177,
+          "censoredImmature": 19,
+          "completedCareers": 120,
+          "founderMatureChildrenMean": 2.388888888888889,
+          "founderSelectionDifferential": {
+            "speed": -0.00023153839200895643,
+            "perceptionRange": 0.002372483509768375,
+            "basalEnergyDrain": -0.00760347616151269,
+            "growthRate": -0.0009044455058417333,
+            "longevity": 0.007080331389901717
+          },
+          "endpointSpeed": {
+            "n": 113,
+            "mean": 0.4636832904836594,
+            "variance": 0.003694239063197101
+          },
+          "activityFractions": {
+            "wander": 0.22118898535881382,
+            "graze": 0.17250529550057028,
+            "seek": 0.5634296222154977,
+            "drink": 0.014617909266544075,
+            "mate": 0.0162822094457764,
+            "eat": 0.011975978212797654
+          },
+          "deaths": {
+            "thirst": 2,
+            "starvation": 1,
+            "predation": 25,
+            "age": 92
+          },
+          "offspringWithMatureChildren": 130
+        },
+        "triangle": {
+          "final": 4,
+          "maxGenerationEver": 5,
+          "births": 10,
+          "matureOffspring": 10,
+          "censoredImmature": 0,
+          "completedCareers": 10,
+          "founderMatureChildrenMean": 1.75,
+          "founderSelectionDifferential": {
+            "speed": 0.0032901228538581573,
+            "perceptionRange": -0.0013287997521859163,
+            "basalEnergyDrain": 0.003302463104150166,
+            "growthRate": -0.012540379652221323,
+            "longevity": 0.023333998473494155
+          },
+          "endpointSpeed": {
+            "n": 4,
+            "mean": 0.4501777426404012,
+            "variance": 0.0026703228343419715
+          },
+          "activityFractions": {
+            "wander": 0.0008447135013374631,
+            "rest": 0.16500070392791777,
+            "seek": 0.7461635928480923,
+            "drink": 0.013515416021399409,
+            "hunt": 0.06504293960298466,
+            "eat": 0.003801210756018584,
+            "mate": 0.005631423342249754
+          },
+          "deaths": {
+            "age": 10
+          },
+          "offspringWithMatureChildren": 7
+        },
+        "octagon": {
+          "final": 13,
+          "maxGenerationEver": 6,
+          "births": 24,
+          "matureOffspring": 22,
+          "censoredImmature": 2,
+          "completedCareers": 15,
+          "founderMatureChildrenMean": 2.75,
+          "founderSelectionDifferential": {
+            "speed": 0.0031531985288231756,
+            "perceptionRange": -0.0033467338801446145,
+            "basalEnergyDrain": -0.007091418991331033,
+            "growthRate": -0.0021465210730887696,
+            "longevity": -0.0004773219645192728
+          },
+          "endpointSpeed": {
+            "n": 13,
+            "mean": 0.4657363565595655,
+            "variance": 0.0029342224920121157
+          },
+          "activityFractions": {
+            "wander": 0.0004312575470070726,
+            "rest": 0.20217353803691565,
+            "seek": 0.7087286527514232,
+            "drink": 0.013455235466620665,
+            "hunt": 0.059427289977574606,
+            "mate": 0.012333965844402278,
+            "eat": 0.003450060376056581
+          },
+          "deaths": {
+            "age": 15
+          },
+          "offspringWithMatureChildren": 16
+        }
+      }
+    },
+    {
+      "mode": "baseline",
+      "seed": 2,
+      "ticks": 72000,
+      "commit": "b0985754ef70fd4bc6517bafa16e522bbb134000",
+      "seconds": 1200,
+      "hash": "5cfcc323b7b512d645538ce5bb7ad079426e8839c44d19d792dee3b9030eb989",
+      "species": {
+        "square": {
+          "final": 134,
+          "maxGenerationEver": 8,
+          "births": 229,
+          "matureOffspring": 204,
+          "censoredImmature": 24,
+          "completedCareers": 131,
+          "founderMatureChildrenMean": 2.611111111111111,
+          "founderSelectionDifferential": {
+            "speed": -0.002827825983430343,
+            "perceptionRange": -0.004907557260917739,
+            "basalEnergyDrain": -0.00017737552306745785,
+            "growthRate": -0.006061239946571928,
+            "longevity": 0.001030865628090627
+          },
+          "endpointSpeed": {
+            "n": 134,
+            "mean": 0.48972317880928357,
+            "variance": 0.0034383064184241104
+          },
+          "activityFractions": {
+            "wander": 0.18010424872926625,
+            "graze": 0.23164585649072444,
+            "seek": 0.5367514541942308,
+            "eat": 0.020428865890376957,
+            "drink": 0.014288335149951977,
+            "mate": 0.01678123954544964
+          },
+          "deaths": {
+            "thirst": 8,
+            "starvation": 10,
+            "predation": 19,
+            "age": 94
+          },
+          "offspringWithMatureChildren": 145
+        },
+        "circle": {
+          "final": 133,
+          "maxGenerationEver": 9,
+          "births": 245,
+          "matureOffspring": 219,
+          "censoredImmature": 23,
+          "completedCareers": 148,
+          "founderMatureChildrenMean": 2.8333333333333335,
+          "founderSelectionDifferential": {
+            "speed": 0.0018836539903704375,
+            "perceptionRange": 0.0038470453609334987,
+            "basalEnergyDrain": -0.002284451705948487,
+            "growthRate": 0.0028601188557313972,
+            "longevity": 0.0032134724733743347
+          },
+          "endpointSpeed": {
+            "n": 133,
+            "mean": 0.488242292447856,
+            "variance": 0.002820673027939426
+          },
+          "activityFractions": {
+            "wander": 0.18530984921026414,
+            "graze": 0.2254978769501591,
+            "seek": 0.5503486831287662,
+            "drink": 0.014459952219288318,
+            "mate": 0.011722717116907989,
+            "eat": 0.01266092137461432
+          },
+          "deaths": {
+            "thirst": 9,
+            "starvation": 6,
+            "predation": 19,
+            "age": 114
+          },
+          "offspringWithMatureChildren": 160
+        },
+        "triangle": {
+          "final": 1,
+          "maxGenerationEver": 4,
+          "births": 5,
+          "matureOffspring": 5,
+          "censoredImmature": 0,
+          "completedCareers": 8,
+          "founderMatureChildrenMean": 1.25,
+          "founderSelectionDifferential": {
+            "speed": -0.007499082828871906,
+            "perceptionRange": 0.01008847756311293,
+            "basalEnergyDrain": -0.021075146603397987,
+            "growthRate": -0.005913314274512249,
+            "longevity": -0.003211386862676635
+          },
+          "endpointSpeed": {
+            "n": 1,
+            "mean": 0.5276631836724787,
+            "variance": 0
+          },
+          "activityFractions": {
+            "wander": 0.0008804754567466431,
+            "rest": 0.1430772617213295,
+            "seek": 0.7688751926040062,
+            "drink": 0.01386748844375963,
+            "hunt": 0.06427470834250495,
+            "eat": 0.004842615012106538,
+            "mate": 0.004182258419546555
+          },
+          "deaths": {
+            "age": 8
+          },
+          "offspringWithMatureChildren": 4
+        },
+        "octagon": {
+          "final": 4,
+          "maxGenerationEver": 5,
+          "births": 12,
+          "matureOffspring": 11,
+          "censoredImmature": 1,
+          "completedCareers": 12,
+          "founderMatureChildrenMean": 2,
+          "founderSelectionDifferential": {
+            "speed": -0.015443727007368568,
+            "perceptionRange": 0.006385079078609079,
+            "basalEnergyDrain": -0.003331495705060694,
+            "growthRate": 0.007408601295901485,
+            "longevity": 0.004101088276365739
+          },
+          "endpointSpeed": {
+            "n": 4,
+            "mean": 0.4330115379607811,
+            "variance": 0.0012930117470414616
+          },
+          "activityFractions": {
+            "wander": 0.0009487666034155598,
+            "rest": 0.15586879913255625,
+            "seek": 0.7228246137164543,
+            "drink": 0.015451341827053402,
+            "hunt": 0.0962320412035782,
+            "eat": 0.0033884521550555705,
+            "mate": 0.00528598536188669
+          },
+          "deaths": {
+            "starvation": 1,
+            "age": 11
+          },
+          "offspringWithMatureChildren": 8
+        }
+      }
+    },
+    {
+      "mode": "baseline",
+      "seed": 7,
+      "ticks": 72000,
+      "commit": "b0985754ef70fd4bc6517bafa16e522bbb134000",
+      "seconds": 1200,
+      "hash": "a75c8ad978fda6c875adb9d18b1d0c92d2d000ee2f60b38d80824654121ad1f8",
+      "species": {
+        "square": {
+          "final": 116,
+          "maxGenerationEver": 8,
+          "births": 208,
+          "matureOffspring": 184,
+          "censoredImmature": 21,
+          "completedCareers": 128,
+          "founderMatureChildrenMean": 2.5555555555555554,
+          "founderSelectionDifferential": {
+            "speed": 0.00709330997821217,
+            "perceptionRange": -0.0005705554494386811,
+            "basalEnergyDrain": 0.0013477264508686693,
+            "growthRate": -0.004835633874380463,
+            "longevity": 0.0077566377246630624
+          },
+          "endpointSpeed": {
+            "n": 116,
+            "mean": 0.499131536590531,
+            "variance": 0.0027509989008339094
+          },
+          "activityFractions": {
+            "wander": 0.21245467480607702,
+            "graze": 0.19749162344517374,
+            "seek": 0.540299261027218,
+            "drink": 0.014722081975489971,
+            "eat": 0.020402074631661084,
+            "mate": 0.014630284114380134
+          },
+          "deaths": {
+            "thirst": 9,
+            "starvation": 5,
+            "predation": 26,
+            "age": 88
+          },
+          "offspringWithMatureChildren": 137
+        },
+        "circle": {
+          "final": 153,
+          "maxGenerationEver": 9,
+          "births": 261,
+          "matureOffspring": 226,
+          "censoredImmature": 30,
+          "completedCareers": 144,
+          "founderMatureChildrenMean": 2.4444444444444446,
+          "founderSelectionDifferential": {
+            "speed": -0.002241938767103435,
+            "perceptionRange": 0.0038042819525486715,
+            "basalEnergyDrain": -0.0004711552361976734,
+            "growthRate": -0.0035702341209127852,
+            "longevity": 0.0013230682457703313
+          },
+          "endpointSpeed": {
+            "n": 153,
+            "mean": 0.5110438674293013,
+            "variance": 0.004577673686271851
+          },
+          "activityFractions": {
+            "wander": 0.19259456842812403,
+            "graze": 0.23451191922784348,
+            "seek": 0.5271134030803276,
+            "drink": 0.014670578821018939,
+            "mate": 0.018968021101923475,
+            "eat": 0.012141509340762476
+          },
+          "deaths": {
+            "thirst": 9,
+            "starvation": 3,
+            "predation": 33,
+            "age": 99
+          },
+          "offspringWithMatureChildren": 171
+        },
+        "triangle": {
+          "final": 17,
+          "maxGenerationEver": 6,
+          "births": 28,
+          "matureOffspring": 23,
+          "censoredImmature": 5,
+          "completedCareers": 15,
+          "founderMatureChildrenMean": 3,
+          "founderSelectionDifferential": {
+            "speed": -0.009363074088469092,
+            "perceptionRange": 0.0014129974258442757,
+            "basalEnergyDrain": -0.004334155900869552,
+            "growthRate": -0.0033310161515449632,
+            "longevity": -0.00832059853710232
+          },
+          "endpointSpeed": {
+            "n": 17,
+            "mean": 0.4745761742772303,
+            "variance": 0.0021056105564063485
+          },
+          "activityFractions": {
+            "wander": 0.0005671690163668773,
+            "rest": 0.18708475125587426,
+            "seek": 0.7216820612542537,
+            "hunt": 0.06303678496191865,
+            "drink": 0.013693080538000325,
+            "eat": 0.004132231404958678,
+            "mate": 0.00980392156862745
+          },
+          "deaths": {
+            "age": 15
+          },
+          "offspringWithMatureChildren": 17
+        },
+        "octagon": {
+          "final": 2,
+          "maxGenerationEver": 4,
+          "births": 9,
+          "matureOffspring": 9,
+          "censoredImmature": 0,
+          "completedCareers": 11,
+          "founderMatureChildrenMean": 2.25,
+          "founderSelectionDifferential": {
+            "speed": 0.0007244895264092444,
+            "perceptionRange": 0.006911133507835732,
+            "basalEnergyDrain": 0.00799632851008536,
+            "growthRate": -0.010259188701295274,
+            "longevity": -0.005669292626488576
+          },
+          "endpointSpeed": {
+            "n": 2,
+            "mean": 0.5922595735402094,
+            "variance": 0.0004463588520316369
+          },
+          "activityFractions": {
+            "wander": 0.0005976393246675631,
+            "rest": 0.14955924099805767,
+            "seek": 0.7324069923800987,
+            "hunt": 0.09158822650530404,
+            "drink": 0.01344688480502017,
+            "mate": 0.008516360376512775,
+            "eat": 0.00388465561033916
+          },
+          "deaths": {
+            "age": 11
+          },
+          "offspringWithMatureChildren": 5
+        }
+      }
+    },
+    {
+      "mode": "baseline",
+      "seed": 19,
+      "ticks": 72000,
+      "commit": "b0985754ef70fd4bc6517bafa16e522bbb134000",
+      "seconds": 1200,
+      "hash": "282ba9d4ed2aca77cda6730d4413816cd5081955885879e8b30030ab4fa53cf8",
+      "species": {
+        "square": {
+          "final": 146,
+          "maxGenerationEver": 8,
+          "births": 246,
+          "matureOffspring": 216,
+          "censoredImmature": 29,
+          "completedCareers": 136,
+          "founderMatureChildrenMean": 2.4166666666666665,
+          "founderSelectionDifferential": {
+            "speed": -0.004125306987465993,
+            "perceptionRange": 0.004371513873053345,
+            "basalEnergyDrain": -0.006641170173576572,
+            "growthRate": -0.0048086591779478716,
+            "longevity": 0.005595930783841685
+          },
+          "endpointSpeed": {
+            "n": 146,
+            "mean": 0.4917188731814212,
+            "variance": 0.0036199069052471906
+          },
+          "activityFractions": {
+            "wander": 0.16638772663877266,
+            "graze": 0.22186690575811915,
+            "seek": 0.5598625224148237,
+            "eat": 0.020930464235903567,
+            "mate": 0.01683602311217374,
+            "drink": 0.014116357840207212
+          },
+          "deaths": {
+            "thirst": 10,
+            "starvation": 5,
+            "predation": 15,
+            "age": 106
+          },
+          "offspringWithMatureChildren": 158
+        },
+        "circle": {
+          "final": 169,
+          "maxGenerationEver": 9,
+          "births": 297,
+          "matureOffspring": 265,
+          "censoredImmature": 30,
+          "completedCareers": 164,
+          "founderMatureChildrenMean": 3.0833333333333335,
+          "founderSelectionDifferential": {
+            "speed": -0.010402018906738808,
+            "perceptionRange": 0.0007020033081411303,
+            "basalEnergyDrain": -0.0048747251263341895,
+            "growthRate": -0.002578530056149053,
+            "longevity": 0.0017147507595790534
+          },
+          "endpointSpeed": {
+            "n": 169,
+            "mean": 0.47177874922428287,
+            "variance": 0.003965170945734659
+          },
+          "activityFractions": {
+            "wander": 0.1653731597310867,
+            "graze": 0.19748106544123906,
+            "seek": 0.5975406348395881,
+            "eat": 0.013130797378946473,
+            "mate": 0.013530763339290272,
+            "drink": 0.012943579269849374
+          },
+          "deaths": {
+            "thirst": 20,
+            "starvation": 12,
+            "predation": 18,
+            "age": 114
+          },
+          "offspringWithMatureChildren": 198
+        },
+        "triangle": {
+          "final": 4,
+          "maxGenerationEver": 5,
+          "births": 10,
+          "matureOffspring": 10,
+          "censoredImmature": 0,
+          "completedCareers": 10,
+          "founderMatureChildrenMean": 2,
+          "founderSelectionDifferential": {
+            "speed": 0.006935291091213047,
+            "perceptionRange": 0.007852023874875103,
+            "basalEnergyDrain": 0.007144955126568653,
+            "growthRate": 0.009816398186376363,
+            "longevity": 0.01491264784708618
+          },
+          "endpointSpeed": {
+            "n": 4,
+            "mean": 0.4793640482877707,
+            "variance": 0.0019465268446820566
+          },
+          "activityFractions": {
+            "wander": 0.000940144155437167,
+            "rest": 0.13350047007207771,
+            "seek": 0.773111877154497,
+            "drink": 0.015512378564713256,
+            "hunt": 0.0637731118771545,
+            "mate": 0.00799122532121592,
+            "eat": 0.0051707928549044185
+          },
+          "deaths": {
+            "age": 10
+          },
+          "offspringWithMatureChildren": 9
+        },
+        "octagon": {
+          "final": 2,
+          "maxGenerationEver": 4,
+          "births": 9,
+          "matureOffspring": 9,
+          "censoredImmature": 0,
+          "completedCareers": 11,
+          "founderMatureChildrenMean": 2.5,
+          "founderSelectionDifferential": {
+            "speed": -0.009726550732739259,
+            "perceptionRange": 0.014952404825016807,
+            "basalEnergyDrain": 0.007193906037136932,
+            "growthRate": -0.0005437493720091835,
+            "longevity": 0.010685093535576007
+          },
+          "endpointSpeed": {
+            "n": 2,
+            "mean": 0.4301725474150755,
+            "variance": 0.0005226917142963943
+          },
+          "activityFractions": {
+            "wander": 0.000970873786407767,
+            "rest": 0.13559870550161812,
+            "seek": 0.7330097087378641,
+            "hunt": 0.11067961165048544,
+            "eat": 0.002750809061488673,
+            "drink": 0.01407766990291262,
+            "mate": 0.002912621359223301
+          },
+          "deaths": {
+            "thirst": 3,
+            "age": 8
+          },
+          "offspringWithMatureChildren": 5
+        }
+      }
+    },
+    {
+      "mode": "final",
+      "seed": 1,
+      "ticks": 72000,
+      "commit": "da9764494cb015f8257dcc4c7d326b02224de2cc",
+      "seconds": 1200,
+      "hash": "c087624c1e0c3aa3e0d13a678e5da6dc2092f70314858e3831fa3096efc1a6b6",
+      "species": {
+        "square": {
+          "final": 107,
+          "maxGenerationEver": 8,
+          "births": 194,
+          "matureOffspring": 179,
+          "censoredImmature": 15,
+          "completedCareers": 123,
+          "founderMatureChildrenMean": 2.3055555555555554,
+          "founderSelectionDifferential": {
+            "speed": -0.01177853411743035,
+            "perceptionRange": 0.001275505400571364,
+            "basalEnergyDrain": 0.002003295440990427,
+            "growthRate": -0.0025146955655391823,
+            "longevity": -0.0037931541348570352
+          },
+          "endpointSpeed": {
+            "n": 107,
+            "mean": 0.49015170867341595,
+            "variance": 0.005097043255884424
+          },
+          "activityFractions": {
+            "wander": 0.23306386958845537,
+            "graze": 0.19196508106182078,
+            "seek": 0.5235391056476038,
+            "eat": 0.021056030643149832,
+            "mate": 0.015689025476572242,
+            "drink": 0.014686887582398004
+          },
+          "deaths": {
+            "thirst": 4,
+            "starvation": 3,
+            "predation": 13,
+            "age": 103
+          },
+          "offspringWithMatureChildren": 135
+        },
+        "circle": {
+          "final": 90,
+          "maxGenerationEver": 9,
+          "births": 160,
+          "matureOffspring": 140,
+          "censoredImmature": 20,
+          "completedCareers": 106,
+          "founderMatureChildrenMean": 2.138888888888889,
+          "founderSelectionDifferential": {
+            "speed": -0.001955166127173835,
+            "perceptionRange": 0.0014541043688289235,
+            "basalEnergyDrain": 0.005598209635220175,
+            "growthRate": -0.00011950099007873582,
+            "longevity": 0.004086586518494029
+          },
+          "endpointSpeed": {
+            "n": 90,
+            "mean": 0.5516006873198268,
+            "variance": 0.0041879323142664186
+          },
+          "activityFractions": {
+            "wander": 0.16449000071679448,
+            "graze": 0.22062934556662606,
+            "seek": 0.5789835854060641,
+            "drink": 0.014407569349867392,
+            "eat": 0.012271521754712925,
+            "mate": 0.009217977205935058
+          },
+          "deaths": {
+            "thirst": 28,
+            "starvation": 12,
+            "predation": 2,
+            "age": 64
+          },
+          "offspringWithMatureChildren": 101
+        },
+        "triangle": {
+          "final": 0,
+          "maxGenerationEver": 2,
+          "births": 5,
+          "matureOffspring": 5,
+          "censoredImmature": 0,
+          "completedCareers": 9,
+          "founderMatureChildrenMean": 1.75,
+          "founderSelectionDifferential": {
+            "speed": 0.0014546264079399185,
+            "perceptionRange": -0.007995035422832808,
+            "basalEnergyDrain": 0.004255028524702165,
+            "growthRate": -0.009293183389984638,
+            "longevity": -0.00490302088104988
+          },
+          "endpointSpeed": {
+            "n": 0,
+            "mean": null,
+            "variance": null
+          },
+          "activityFractions": {
+            "wander": 0.0012497396375755051,
+            "rest": 0.11747552593209748,
+            "seek": 0.75255155176005,
+            "drink": 0.014580295771714226,
+            "eat": 0.007706727765048948,
+            "hunt": 0.10310352009997917,
+            "mate": 0.0033326390335346803
+          },
+          "deaths": {
+            "age": 9
+          },
+          "offspringWithMatureChildren": 3
+        },
+        "octagon": {
+          "final": 0,
+          "maxGenerationEver": 1,
+          "births": 1,
+          "matureOffspring": 1,
+          "censoredImmature": 0,
+          "completedCareers": 5,
+          "founderMatureChildrenMean": 0.5,
+          "founderSelectionDifferential": {
+            "speed": -0.04994289544411007,
+            "perceptionRange": 0.0001103911199606955,
+            "basalEnergyDrain": 0.02143230091314763,
+            "growthRate": -0.00611381249036641,
+            "longevity": -0.05148626876762136
+          },
+          "endpointSpeed": {
+            "n": 0,
+            "mean": null,
+            "variance": null
+          },
+          "activityFractions": {
+            "wander": 0.0023391812865497076,
+            "rest": 0.05964912280701754,
+            "seek": 0.8003898635477583,
+            "drink": 0.01091617933723197,
+            "hunt": 0.12085769980506822,
+            "mate": 0.0015594541910331384,
+            "eat": 0.0042884990253411305
+          },
+          "deaths": {
+            "starvation": 1,
+            "age": 4
+          },
+          "offspringWithMatureChildren": 0
+        }
+      }
+    },
+    {
+      "mode": "final",
+      "seed": 42,
+      "ticks": 72000,
+      "commit": "da9764494cb015f8257dcc4c7d326b02224de2cc",
+      "seconds": 1200,
+      "hash": "2291e55066139f1bc6fc44cd2b03b57be9237cf8e187a996d0149315578582f7",
+      "species": {
+        "square": {
+          "final": 106,
+          "maxGenerationEver": 8,
+          "births": 205,
+          "matureOffspring": 184,
+          "censoredImmature": 19,
+          "completedCareers": 135,
+          "founderMatureChildrenMean": 2.638888888888889,
+          "founderSelectionDifferential": {
+            "speed": 0.00043016652692362545,
+            "perceptionRange": 0.005387287759576143,
+            "basalEnergyDrain": 0.00021588843416597836,
+            "growthRate": -0.0029809884821766497,
+            "longevity": 0.0020357707965770744
+          },
+          "endpointSpeed": {
+            "n": 106,
+            "mean": 0.5035969287211535,
+            "variance": 0.005982065564152562
+          },
+          "activityFractions": {
+            "wander": 0.19437944255847422,
+            "graze": 0.18574426243916373,
+            "seek": 0.5723388594091603,
+            "drink": 0.01424914582028718,
+            "mate": 0.014062379838062907,
+            "eat": 0.01922590993485163
+          },
+          "deaths": {
+            "thirst": 6,
+            "starvation": 4,
+            "predation": 22,
+            "age": 103
+          },
+          "offspringWithMatureChildren": 133
+        },
+        "circle": {
+          "final": 129,
+          "maxGenerationEver": 8,
+          "births": 229,
+          "matureOffspring": 209,
+          "censoredImmature": 17,
+          "completedCareers": 136,
+          "founderMatureChildrenMean": 2.5,
+          "founderSelectionDifferential": {
+            "speed": 0.006561079869667696,
+            "perceptionRange": -0.0007488537797082917,
+            "basalEnergyDrain": -0.00047345979837698504,
+            "growthRate": 0.004628748709025465,
+            "longevity": 0.014568405138949525
+          },
+          "endpointSpeed": {
+            "n": 129,
+            "mean": 0.4714577232127605,
+            "variance": 0.006607274264047087
+          },
+          "activityFractions": {
+            "wander": 0.23233082706766917,
+            "graze": 0.19250152408047144,
+            "seek": 0.5361816703921967,
+            "drink": 0.014194269457427352,
+            "mate": 0.012334891282259704,
+            "eat": 0.012456817719975614
+          },
+          "deaths": {
+            "thirst": 12,
+            "starvation": 6,
+            "predation": 21,
+            "age": 97
+          },
+          "offspringWithMatureChildren": 151
+        },
+        "triangle": {
+          "final": 3,
+          "maxGenerationEver": 7,
+          "births": 10,
+          "matureOffspring": 10,
+          "censoredImmature": 0,
+          "completedCareers": 11,
+          "founderMatureChildrenMean": 1.75,
+          "founderSelectionDifferential": {
+            "speed": 0.00022357628747288194,
+            "perceptionRange": 0.01134707535716839,
+            "basalEnergyDrain": -0.0053657757068452105,
+            "growthRate": 0.005077894609088807,
+            "longevity": 0.022615170997700496
+          },
+          "endpointSpeed": {
+            "n": 3,
+            "mean": 0.43503570523113005,
+            "variance": 0.00025994936110329455
+          },
+          "activityFractions": {
+            "wander": 0.0006875214850464077,
+            "rest": 0.1534891715366105,
+            "seek": 0.7200068752148505,
+            "hunt": 0.10209694052939154,
+            "eat": 0.0039532485390168445,
+            "drink": 0.013922310072189756,
+            "mate": 0.005843932622894466
+          },
+          "deaths": {
+            "thirst": 2,
+            "age": 9
+          },
+          "offspringWithMatureChildren": 6
+        },
+        "octagon": {
+          "final": 5,
+          "maxGenerationEver": 6,
+          "births": 12,
+          "matureOffspring": 11,
+          "censoredImmature": 1,
+          "completedCareers": 11,
+          "founderMatureChildrenMean": 2,
+          "founderSelectionDifferential": {
+            "speed": -0.008586141804698855,
+            "perceptionRange": 0.0026848530978895724,
+            "basalEnergyDrain": 0.0009153030347078817,
+            "growthRate": -0.01908496416290295,
+            "longevity": -0.0021154651301912297
+          },
+          "endpointSpeed": {
+            "n": 5,
+            "mean": 0.43902272468339654,
+            "variance": 0.0002610617677872796
+          },
+          "activityFractions": {
+            "wander": 0.0006963788300835655,
+            "rest": 0.12590529247910864,
+            "seek": 0.7211699164345404,
+            "drink": 0.01309192200557103,
+            "hunt": 0.13022284122562675,
+            "eat": 0.003342618384401114,
+            "mate": 0.005571030640668524
+          },
+          "deaths": {
+            "age": 11
+          },
+          "offspringWithMatureChildren": 8
+        }
+      }
+    },
+    {
+      "mode": "final",
+      "seed": 1337,
+      "ticks": 72000,
+      "commit": "da9764494cb015f8257dcc4c7d326b02224de2cc",
+      "seconds": 1200,
+      "hash": "02d3d855bb7f4fda2d0db99d59188d4280875d6defb9b459fca96fcde733ba1e",
+      "species": {
+        "square": {
+          "final": 111,
+          "maxGenerationEver": 8,
+          "births": 215,
+          "matureOffspring": 198,
+          "censoredImmature": 14,
+          "completedCareers": 140,
+          "founderMatureChildrenMean": 2.5555555555555554,
+          "founderSelectionDifferential": {
+            "speed": 0.005763999001935083,
+            "perceptionRange": -0.002820606032276296,
+            "basalEnergyDrain": -0.0015660698336080747,
+            "growthRate": 0.008612368131677262,
+            "longevity": 0.004695488956918847
+          },
+          "endpointSpeed": {
+            "n": 111,
+            "mean": 0.47921161925059375,
+            "variance": 0.006402749613663078
+          },
+          "activityFractions": {
+            "wander": 0.23177113991245438,
+            "graze": 0.16274067018418828,
+            "seek": 0.5556578229181159,
+            "drink": 0.01421278508513758,
+            "eat": 0.021126534456371672,
+            "mate": 0.01449104744373214
+          },
+          "deaths": {
+            "thirst": 12,
+            "starvation": 9,
+            "predation": 28,
+            "age": 91
+          },
+          "offspringWithMatureChildren": 148
+        },
+        "circle": {
+          "final": 69,
+          "maxGenerationEver": 8,
+          "births": 177,
+          "matureOffspring": 165,
+          "censoredImmature": 9,
+          "completedCareers": 144,
+          "founderMatureChildrenMean": 2.5833333333333335,
+          "founderSelectionDifferential": {
+            "speed": -0.0017537220893594774,
+            "perceptionRange": 0.0027159364702092903,
+            "basalEnergyDrain": -0.004478540601238867,
+            "growthRate": -0.0012616420120892258,
+            "longevity": 0.005303783291962461
+          },
+          "endpointSpeed": {
+            "n": 69,
+            "mean": 0.5007098031599424,
+            "variance": 0.008432100255849274
+          },
+          "activityFractions": {
+            "wander": 0.20253656514360482,
+            "graze": 0.18636887720070994,
+            "seek": 0.5715303597569665,
+            "drink": 0.013965358655801842,
+            "mate": 0.013939448899483101,
+            "eat": 0.01165939034343382
+          },
+          "deaths": {
+            "thirst": 18,
+            "starvation": 6,
+            "predation": 41,
+            "age": 79
+          },
+          "offspringWithMatureChildren": 119
+        },
+        "triangle": {
+          "final": 10,
+          "maxGenerationEver": 7,
+          "births": 19,
+          "matureOffspring": 18,
+          "censoredImmature": 1,
+          "completedCareers": 13,
+          "founderMatureChildrenMean": 2.75,
+          "founderSelectionDifferential": {
+            "speed": -0.0010752957314252853,
+            "perceptionRange": -0.005122799848587323,
+            "basalEnergyDrain": 0.0036315591032193284,
+            "growthRate": -0.0007827279369601037,
+            "longevity": 0.0016781231875276914
+          },
+          "endpointSpeed": {
+            "n": 10,
+            "mean": 0.5004656280577182,
+            "variance": 0.003186891644504948
+          },
+          "activityFractions": {
+            "wander": 0.0005887547836326171,
+            "rest": 0.16818761652438427,
+            "seek": 0.736630360121676,
+            "drink": 0.015013246982631734,
+            "hunt": 0.06613678736139732,
+            "eat": 0.0047100382690609364,
+            "mate": 0.008733195957217152
+          },
+          "deaths": {
+            "age": 13
+          },
+          "offspringWithMatureChildren": 14
+        },
+        "octagon": {
+          "final": 24,
+          "maxGenerationEver": 7,
+          "births": 37,
+          "matureOffspring": 31,
+          "censoredImmature": 6,
+          "completedCareers": 17,
+          "founderMatureChildrenMean": 3.5,
+          "founderSelectionDifferential": {
+            "speed": -0.006303824426140581,
+            "perceptionRange": 0.0033164991198906257,
+            "basalEnergyDrain": 0.005691020701280136,
+            "growthRate": 0.005044872998925198,
+            "longevity": -0.003510943450964976
+          },
+          "endpointSpeed": {
+            "n": 24,
+            "mean": 0.43842040079762223,
+            "variance": 0.0062473533353523585
+          },
+          "activityFractions": {
+            "wander": 0.0005945303210463733,
+            "rest": 0.2066323160258951,
+            "seek": 0.71548421191703,
+            "drink": 0.014400845554234378,
+            "hunt": 0.051195666534548816,
+            "mate": 0.008059188796406394,
+            "eat": 0.003633240850838948
+          },
+          "deaths": {
+            "thirst": 1,
+            "age": 16
+          },
+          "offspringWithMatureChildren": 22
+        }
+      }
+    },
+    {
+      "mode": "final",
+      "seed": 2,
+      "ticks": 72000,
+      "commit": "da9764494cb015f8257dcc4c7d326b02224de2cc",
+      "seconds": 1200,
+      "hash": "a4ea8b8c65fb5c7228bc856cfa40cfce91d552d494b125936d0e5000451b97eb",
+      "species": {
+        "square": {
+          "final": 160,
+          "maxGenerationEver": 9,
+          "births": 291,
+          "matureOffspring": 259,
+          "censoredImmature": 30,
+          "completedCareers": 167,
+          "founderMatureChildrenMean": 2.861111111111111,
+          "founderSelectionDifferential": {
+            "speed": -0.002444112672736254,
+            "perceptionRange": -0.003941117522084259,
+            "basalEnergyDrain": -0.002065162077076965,
+            "growthRate": -0.005785327692749254,
+            "longevity": 0.0025168485869803137
+          },
+          "endpointSpeed": {
+            "n": 160,
+            "mean": 0.4932403224646695,
+            "variance": 0.006846551887528663
+          },
+          "activityFractions": {
+            "wander": 0.1765115146455159,
+            "graze": 0.2857788909761358,
+            "seek": 0.4874243372991025,
+            "eat": 0.019941904960690184,
+            "drink": 0.014028038683642942,
+            "mate": 0.016315313434912684
+          },
+          "deaths": {
+            "thirst": 28,
+            "starvation": 17,
+            "predation": 15,
+            "age": 107
+          },
+          "offspringWithMatureChildren": 188
+        },
+        "circle": {
+          "final": 114,
+          "maxGenerationEver": 8,
+          "births": 208,
+          "matureOffspring": 176,
+          "censoredImmature": 26,
+          "completedCareers": 130,
+          "founderMatureChildrenMean": 2.1944444444444446,
+          "founderSelectionDifferential": {
+            "speed": -0.0011700098520359137,
+            "perceptionRange": -0.004231315067528385,
+            "basalEnergyDrain": 0.0024541110801248323,
+            "growthRate": 0.0033933874395016272,
+            "longevity": -0.002198830122224993
+          },
+          "endpointSpeed": {
+            "n": 114,
+            "mean": 0.5011833250057769,
+            "variance": 0.0068077136676950225
+          },
+          "activityFractions": {
+            "wander": 0.19224477787584585,
+            "graze": 0.26371285672256545,
+            "seek": 0.5006295969402765,
+            "drink": 0.014686672550750221,
+            "mate": 0.01732274198293616,
+            "eat": 0.011403353927625773
+          },
+          "deaths": {
+            "thirst": 14,
+            "starvation": 12,
+            "predation": 23,
+            "age": 81
+          },
+          "offspringWithMatureChildren": 122
+        },
+        "triangle": {
+          "final": 4,
+          "maxGenerationEver": 5,
+          "births": 9,
+          "matureOffspring": 8,
+          "censoredImmature": 1,
+          "completedCareers": 9,
+          "founderMatureChildrenMean": 2,
+          "founderSelectionDifferential": {
+            "speed": 0.002669487660750758,
+            "perceptionRange": 0.006399170897202544,
+            "basalEnergyDrain": 0.0023424890940078047,
+            "growthRate": -0.008097379701212104,
+            "longevity": 0.0026129079749807604
+          },
+          "endpointSpeed": {
+            "n": 4,
+            "mean": 0.4462185419339221,
+            "variance": 5.608936421322731e-05
+          },
+          "activityFractions": {
+            "wander": 0.0008480325644504749,
+            "rest": 0.1282225237449118,
+            "seek": 0.7650949796472184,
+            "drink": 0.01729986431478969,
+            "hunt": 0.07683175033921302,
+            "eat": 0.005257801899592945,
+            "mate": 0.006445047489823609
+          },
+          "deaths": {
+            "age": 9
+          },
+          "offspringWithMatureChildren": 5
+        },
+        "octagon": {
+          "final": 3,
+          "maxGenerationEver": 5,
+          "births": 8,
+          "matureOffspring": 7,
+          "censoredImmature": 1,
+          "completedCareers": 9,
+          "founderMatureChildrenMean": 1.5,
+          "founderSelectionDifferential": {
+            "speed": 0.0017740966907391909,
+            "perceptionRange": 0.029879522490470323,
+            "basalEnergyDrain": -0.03333236899537345,
+            "growthRate": -0.022925057863661447,
+            "longevity": -0.02947972922896347
+          },
+          "endpointSpeed": {
+            "n": 3,
+            "mean": 0.565039542191662,
+            "variance": 0.00015564051541132212
+          },
+          "activityFractions": {
+            "wander": 0.0009033423667570009,
+            "rest": 0.12935862691960254,
+            "seek": 0.7557362240289069,
+            "drink": 0.014995483288166215,
+            "hunt": 0.08473351400180669,
+            "eat": 0.007046070460704607,
+            "mate": 0.007226738934056007
+          },
+          "deaths": {
+            "age": 9
+          },
+          "offspringWithMatureChildren": 5
+        }
+      }
+    },
+    {
+      "mode": "final",
+      "seed": 7,
+      "ticks": 72000,
+      "commit": "da9764494cb015f8257dcc4c7d326b02224de2cc",
+      "seconds": 1200,
+      "hash": "4f51b94290a2adb35f78edbc3e74c23bf9587fd1d127a820bc7282a599dd8b5d",
+      "species": {
+        "square": {
+          "final": 103,
+          "maxGenerationEver": 7,
+          "births": 188,
+          "matureOffspring": 169,
+          "censoredImmature": 16,
+          "completedCareers": 121,
+          "founderMatureChildrenMean": 2.1666666666666665,
+          "founderSelectionDifferential": {
+            "speed": 0.0034354051375068972,
+            "perceptionRange": -0.003318889179907747,
+            "basalEnergyDrain": 0.001034051419880555,
+            "growthRate": -0.007876584503270334,
+            "longevity": 0.0017350113768583864
+          },
+          "endpointSpeed": {
+            "n": 103,
+            "mean": 0.5038984323688105,
+            "variance": 0.007399620754372335
+          },
+          "activityFractions": {
+            "wander": 0.16306590605656027,
+            "graze": 0.2140308289841,
+            "seek": 0.5712950600801068,
+            "drink": 0.014540599587328559,
+            "eat": 0.02138609054496905,
+            "mate": 0.01568151474693531
+          },
+          "deaths": {
+            "thirst": 9,
+            "starvation": 9,
+            "predation": 16,
+            "age": 87
+          },
+          "offspringWithMatureChildren": 123
+        },
+        "circle": {
+          "final": 128,
+          "maxGenerationEver": 9,
+          "births": 215,
+          "matureOffspring": 187,
+          "censoredImmature": 25,
+          "completedCareers": 123,
+          "founderMatureChildrenMean": 2.3055555555555554,
+          "founderSelectionDifferential": {
+            "speed": 0.0005477251269613292,
+            "perceptionRange": 0.002406518527108936,
+            "basalEnergyDrain": 0.00033181328806464183,
+            "growthRate": -0.0015754089762899937,
+            "longevity": -0.000582442834609842
+          },
+          "endpointSpeed": {
+            "n": 128,
+            "mean": 0.49085414696648516,
+            "variance": 0.0065956287790809595
+          },
+          "activityFractions": {
+            "wander": 0.22429864304518288,
+            "graze": 0.15354717705944163,
+            "seek": 0.5829143457579626,
+            "drink": 0.014755895013953699,
+            "mate": 0.011761781554001378,
+            "eat": 0.012722157569457783
+          },
+          "deaths": {
+            "thirst": 7,
+            "starvation": 5,
+            "predation": 26,
+            "age": 85
+          },
+          "offspringWithMatureChildren": 139
+        },
+        "triangle": {
+          "final": 5,
+          "maxGenerationEver": 5,
+          "births": 12,
+          "matureOffspring": 12,
+          "censoredImmature": 0,
+          "completedCareers": 11,
+          "founderMatureChildrenMean": 2.5,
+          "founderSelectionDifferential": {
+            "speed": -0.0009071844792924999,
+            "perceptionRange": 0.01077009713277216,
+            "basalEnergyDrain": 0.003204091219231431,
+            "growthRate": 0.0005383745604194412,
+            "longevity": -0.0025060360087081346
+          },
+          "endpointSpeed": {
+            "n": 5,
+            "mean": 0.43177340790163726,
+            "variance": 0.0010632813996871292
+          },
+          "activityFractions": {
+            "wander": 0.0005101390128810101,
+            "rest": 0.14487947965820686,
+            "seek": 0.7448029588062747,
+            "hunt": 0.08952939676061727,
+            "drink": 0.011733197296263232,
+            "eat": 0.003188368830506313,
+            "mate": 0.005356459635250606
+          },
+          "deaths": {
+            "thirst": 2,
+            "age": 9
+          },
+          "offspringWithMatureChildren": 8
+        },
+        "octagon": {
+          "final": 3,
+          "maxGenerationEver": 6,
+          "births": 11,
+          "matureOffspring": 11,
+          "censoredImmature": 0,
+          "completedCareers": 12,
+          "founderMatureChildrenMean": 2.25,
+          "founderSelectionDifferential": {
+            "speed": 0.011443007059602273,
+            "perceptionRange": 0.0005421134889022627,
+            "basalEnergyDrain": -0.0016326141815321549,
+            "growthRate": -0.02480505513958642,
+            "longevity": -0.0013407392427325915
+          },
+          "endpointSpeed": {
+            "n": 3,
+            "mean": 0.5220108069929605,
+            "variance": 0.0003654191437343457
+          },
+          "activityFractions": {
+            "wander": 0.0009534186870062653,
+            "rest": 0.18237537455734132,
+            "seek": 0.7472078452737674,
+            "hunt": 0.04535548896758376,
+            "drink": 0.01470988831381095,
+            "mate": 0.003949877417597385,
+            "eat": 0.005448106782892944
+          },
+          "deaths": {
+            "thirst": 1,
+            "age": 11
+          },
+          "offspringWithMatureChildren": 8
+        }
+      }
+    },
+    {
+      "mode": "final",
+      "seed": 19,
+      "ticks": 72000,
+      "commit": "da9764494cb015f8257dcc4c7d326b02224de2cc",
+      "seconds": 1200,
+      "hash": "53e9acecce7a4ebc527a8f06efdc976f587ad8a31ff9886763248b3f196c38c9",
+      "species": {
+        "square": {
+          "final": 60,
+          "maxGenerationEver": 8,
+          "births": 159,
+          "matureOffspring": 152,
+          "censoredImmature": 7,
+          "completedCareers": 135,
+          "founderMatureChildrenMean": 2.25,
+          "founderSelectionDifferential": {
+            "speed": -0.002297892288253167,
+            "perceptionRange": -0.004674565568451361,
+            "basalEnergyDrain": -0.003569610934865519,
+            "growthRate": 0.003710057195218497,
+            "longevity": 0.0026409899310013696
+          },
+          "endpointSpeed": {
+            "n": 60,
+            "mean": 0.5274955368439357,
+            "variance": 0.008493534973055872
+          },
+          "activityFractions": {
+            "wander": 0.16465879581291998,
+            "graze": 0.18160522581854202,
+            "seek": 0.6069927448933151,
+            "eat": 0.020333038845608116,
+            "mate": 0.012636200572912483,
+            "drink": 0.013773994056702273
+          },
+          "deaths": {
+            "thirst": 23,
+            "starvation": 15,
+            "predation": 18,
+            "age": 79
+          },
+          "offspringWithMatureChildren": 115
+        },
+        "circle": {
+          "final": 118,
+          "maxGenerationEver": 9,
+          "births": 230,
+          "matureOffspring": 206,
+          "censoredImmature": 24,
+          "completedCareers": 148,
+          "founderMatureChildrenMean": 2.8055555555555554,
+          "founderSelectionDifferential": {
+            "speed": -0.0035325445719903703,
+            "perceptionRange": 0.0040220398848007655,
+            "basalEnergyDrain": -0.003947012005650508,
+            "growthRate": -0.006079262371415317,
+            "longevity": -0.0023258281421255633
+          },
+          "endpointSpeed": {
+            "n": 118,
+            "mean": 0.49571995547518805,
+            "variance": 0.00740366799778355
+          },
+          "activityFractions": {
+            "wander": 0.18068405962136772,
+            "graze": 0.1772169916831039,
+            "seek": 0.6028834617809138,
+            "eat": 0.01294304247920776,
+            "mate": 0.011661955792341949,
+            "drink": 0.014610488643064847
+          },
+          "deaths": {
+            "thirst": 10,
+            "starvation": 11,
+            "predation": 24,
+            "age": 103
+          },
+          "offspringWithMatureChildren": 144
+        },
+        "triangle": {
+          "final": 3,
+          "maxGenerationEver": 6,
+          "births": 8,
+          "matureOffspring": 7,
+          "censoredImmature": 1,
+          "completedCareers": 9,
+          "founderMatureChildrenMean": 0.75,
+          "founderSelectionDifferential": {
+            "speed": 0.0016027123667300414,
+            "perceptionRange": 0.017121548267702236,
+            "basalEnergyDrain": 0.05104917834202449,
+            "growthRate": 0.046543561694367463,
+            "longevity": 0.036808645496300085
+          },
+          "endpointSpeed": {
+            "n": 3,
+            "mean": 0.5928387743933127,
+            "variance": 5.117605659813065e-05
+          },
+          "activityFractions": {
+            "wander": 0.0019036740909956216,
+            "rest": 0.11688558918713117,
+            "seek": 0.7496668570340758,
+            "drink": 0.012754616409670664,
+            "hunt": 0.10355987055016182,
+            "mate": 0.007614696363982486,
+            "eat": 0.007614696363982486
+          },
+          "deaths": {
+            "thirst": 1,
+            "age": 8
+          },
+          "offspringWithMatureChildren": 5
+        },
+        "octagon": {
+          "final": 5,
+          "maxGenerationEver": 5,
+          "births": 13,
+          "matureOffspring": 13,
+          "censoredImmature": 0,
+          "completedCareers": 12,
+          "founderMatureChildrenMean": 3,
+          "founderSelectionDifferential": {
+            "speed": -5.551115123125783e-17,
+            "perceptionRange": 0.0,
+            "basalEnergyDrain": 0.0,
+            "growthRate": 0.0,
+            "longevity": -1.1102230246251565e-16
+          },
+          "endpointSpeed": {
+            "n": 5,
+            "mean": 0.4181009703204036,
+            "variance": 0.00024432924208300674
+          },
+          "activityFractions": {
+            "wander": 0.0007628734901462174,
+            "rest": 0.15219326128417038,
+            "seek": 0.7382072472981563,
+            "hunt": 0.08862047043865226,
+            "eat": 0.0034329307056579785,
+            "drink": 0.01182453909726637,
+            "mate": 0.0049586776859504135
+          },
+          "deaths": {
+            "age": 12
+          },
+          "offspringWithMatureChildren": 8
+        }
+      }
+    }
+  ],
+  "controlled": [
+    {
+      "mode": "blended",
+      "mutation": false,
+      "pressure": "neutral",
+      "nSeeds": 10,
+      "meanSpeed": 0.5014432018963267,
+      "rangeSpeed": [
+        0.49833918231420465,
+        0.5081354473829702
+      ],
+      "meanVariance": 1.715059381406222e-08
+    },
+    {
+      "mode": "blended",
+      "mutation": false,
+      "pressure": "energy",
+      "nSeeds": 10,
+      "meanSpeed": 0.48152481369337996,
+      "rangeSpeed": [
+        0.478097789140703,
+        0.4867699627476685
+      ],
+      "meanVariance": 1.5128352182348136e-08
+    },
+    {
+      "mode": "blended",
+      "mutation": false,
+      "pressure": "deadline",
+      "nSeeds": 10,
+      "meanSpeed": 0.5218409210669497,
+      "rangeSpeed": [
+        0.5190297470419822,
+        0.5243051174177085
+      ],
+      "meanVariance": 1.1686395543564617e-08
+    },
+    {
+      "mode": "blended",
+      "mutation": false,
+      "pressure": "reversal",
+      "nSeeds": 10,
+      "meanSpeed": 0.5217531029016128,
+      "rangeSpeed": [
+        0.5189375503194538,
+        0.5242963186298683
+      ],
+      "meanVariance": 1.2772730723771566e-08
+    },
+    {
+      "mode": "blended",
+      "mutation": true,
+      "pressure": "neutral",
+      "nSeeds": 10,
+      "meanSpeed": 0.4983691862625896,
+      "rangeSpeed": [
+        0.4819011393025136,
+        0.5186029876662064
+      ],
+      "meanVariance": 0.003774759957146062
+    },
+    {
+      "mode": "blended",
+      "mutation": true,
+      "pressure": "energy",
+      "nSeeds": 10,
+      "meanSpeed": 0.3010758455656513,
+      "rangeSpeed": [
+        0.2851873884496273,
+        0.3217209481714305
+      ],
+      "meanVariance": 0.003716932985242206
+    },
+    {
+      "mode": "blended",
+      "mutation": true,
+      "pressure": "deadline",
+      "nSeeds": 10,
+      "meanSpeed": 0.704113193532044,
+      "rangeSpeed": [
+        0.6894981862177256,
+        0.7240595076815703
+      ],
+      "meanVariance": 0.0037153026520926422
+    },
+    {
+      "mode": "blended",
+      "mutation": true,
+      "pressure": "reversal",
+      "nSeeds": 10,
+      "meanSpeed": 0.48618325886942204,
+      "rangeSpeed": [
+        0.4770302303354004,
+        0.5010249843753223
+      ],
+      "meanVariance": 0.0038012638520473047
+    },
+    {
+      "mode": "segregating",
+      "mutation": false,
+      "pressure": "neutral",
+      "nSeeds": 10,
+      "meanSpeed": 0.5048516521313183,
+      "rangeSpeed": [
+        0.4895688161179887,
+        0.5162995672024802
+      ],
+      "meanVariance": 0.003171747744255839
+    },
+    {
+      "mode": "segregating",
+      "mutation": false,
+      "pressure": "energy",
+      "nSeeds": 10,
+      "meanSpeed": 0.419853068349208,
+      "rangeSpeed": [
+        0.4173361474455812,
+        0.4283780929219476
+      ],
+      "meanVariance": 0.00036494830245024706
+    },
+    {
+      "mode": "segregating",
+      "mutation": false,
+      "pressure": "deadline",
+      "nSeeds": 10,
+      "meanSpeed": 0.5824263844508818,
+      "rangeSpeed": [
+        0.5787423389451112,
+        0.5872151608531377
+      ],
+      "meanVariance": 0.00028094129997185236
+    },
+    {
+      "mode": "segregating",
+      "mutation": false,
+      "pressure": "reversal",
+      "nSeeds": 10,
+      "meanSpeed": 0.5281129956321978,
+      "rangeSpeed": [
+        0.5077589952435365,
+        0.553658466853015
+      ],
+      "meanVariance": 0.001961965440482815
+    },
+    {
+      "mode": "segregating",
+      "mutation": true,
+      "pressure": "neutral",
+      "nSeeds": 10,
+      "meanSpeed": 0.4944370276278286,
+      "rangeSpeed": [
+        0.4694738601051364,
+        0.5198642332382549
+      ],
+      "meanVariance": 0.042699549157800505
+    },
+    {
+      "mode": "segregating",
+      "mutation": true,
+      "pressure": "energy",
+      "nSeeds": 10,
+      "meanSpeed": 0.06896349744580874,
+      "rangeSpeed": [
+        0.060795983780571286,
+        0.08429075320575381
+      ],
+      "meanVariance": 0.005301769384454499
+    },
+    {
+      "mode": "segregating",
+      "mutation": true,
+      "pressure": "deadline",
+      "nSeeds": 10,
+      "meanSpeed": 0.9145646257936128,
+      "rangeSpeed": [
+        0.9094448391319585,
+        0.9240451971425302
+      ],
+      "meanVariance": 0.006893054986069371
+    },
+    {
+      "mode": "segregating",
+      "mutation": true,
+      "pressure": "reversal",
+      "nSeeds": 10,
+      "meanSpeed": 0.2388128908463753,
+      "rangeSpeed": [
+        0.163232970714625,
+        0.30893167270820066
+      ],
+      "meanVariance": 0.020231394471743103
+    }
+  ]
+}

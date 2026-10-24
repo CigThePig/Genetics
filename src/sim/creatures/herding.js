@@ -18,6 +18,7 @@ export function updateCreatureHerding(args) {
         c.herding.targetOffset = null;
         c.herding.smoothedOffset = { x: 0, y: 0 };
         c.herding.isThreatened = false;
+        c.herding.escapeDistance = null;
         c.herding.nearbyThreats = 0;
         c.herding.nearestThreatDistance = null;
         c.herding.threatDecayTicks = 0;

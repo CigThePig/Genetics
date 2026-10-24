@@ -408,3 +408,27 @@ Rules:
 - scripts/check-demographic-replay.mjs, benchmark-demography.mjs, publish-demographic-evidence.py: passive-counter replay, equal workloads and source/diagnostic-validated hosted evidence publication.
 - tests/demography.test.js, test_demography_report.py: all-species recovery, movement/access, counters and censoring regressions.
 - scripts/browser-startup.cjs, tests/browser-startup.test.js: bounded ANSI-aware Vite readiness and cleanup regressions for Chromium tooling.
+
+## Emergent evolution investigation (2026-10-23)
+
+- tracks/2026-10-23-emergent-evolution/
+  - Causal diagnosis, neutral/selection/reversal assays, source-pinned wild records, browser evidence and limitations.
+- src/sim/creatures/genetics.js
+  - Configurable quantitative parental-locus segregation or legacy blending; mutation and trait tradeoffs remain separate.
+- src/sim/evolution-metrics.js, colour-metrics.js, src/ui/colour-evolution.js
+  - Passive six-gene distributions extend existing bounded world history and mobile founder/earlier comparison.
+- scripts/controlled-evolution.mjs, evolution-mechanisms.mjs, investigate-evolution.mjs
+  - Explicit imposed-selection controls, actual-engine reproductive tradeoff fixtures and read-only lifetime/turnover observer.
+- scripts/summarize-evolution.py, plot-evolution.py, verify-evolution-browser.cjs
+  - Complete-matrix/config validation, descriptive comparisons, figures and optional browser checks.
+- tests/evolution.test.js
+  - Segregation, legacy fallback, mutation/config, passive bounded history and phenotype-to-reproduction ablations.
+
+## PR #144 continuation tools
+
+- scripts/natural-evolution.mjs: full-engine habitat, reciprocal genome-transfer and vigilance-ablation experiments.
+- scripts/analyze-natural-evolution.py: source/config/runner audit, founder fitness and paired-world uncertainty.
+- scripts/threat-choice.mjs: controlled perception, escape and feeding-opportunity fixtures.
+- scripts/profile-evolution.mjs: equal-workload hot-path and bounded history profiling.
+- scripts/plot-natural-evolution.py: scientific figures from audited records and browser traces.
+- tracks/2026-10-23-emergent-evolution/continuation.md: methods, results, limitations and reproduction instructions.

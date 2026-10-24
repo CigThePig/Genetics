@@ -1,0 +1,3461 @@
+{
+  "description": "Constructed local parental pairs; fixed maturity, conception probability 1, one-tick gestation, no mutation. Energy pulse: .78 reserves and 8 seconds recovery without food. Deadline: one moving male, stationary female 20 tiles away, mating evaluated after 3.5 seconds. Production metabolism/movement/reproduction/inheritance, with cost or speed-mapping ablations.",
+  "results": [
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 42,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "square",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            13,
+            12
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "circle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            19,
+            18
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "triangle",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            1,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 0.5701520000000166,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 22.685045071533093,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 8.4,
+          "drain": 0.003731
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.1,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.003731
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.1,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 0.6950479999999775,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 0,
+      "pregnancies": 0,
+      "offspring": []
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "energy",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        },
+        {
+          "energy": 0.5426000000000237,
+          "position": {
+            "x": 5,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.007175
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": false,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.864895172261015,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 11.6,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    },
+    {
+      "seed": 1337,
+      "species": "octagon",
+      "speed": 0.9,
+      "environment": "deadline",
+      "ablate": true,
+      "before": [
+        {
+          "energy": 1,
+          "position": {
+            "x": 24.7201510259637,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        },
+        {
+          "energy": 1,
+          "position": {
+            "x": 25,
+            "y": 5
+          },
+          "speed": 10,
+          "drain": 0.010619
+        }
+      ],
+      "births": 1,
+      "pregnancies": 1,
+      "offspring": [
+        {
+          "speed": 0.9,
+          "parents": [
+            7,
+            6
+          ]
+        }
+      ]
+    }
+  ]
+}

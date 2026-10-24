@@ -25,6 +25,22 @@ export const resolveThreatRange = (config) =>
     ? Math.max(1, config.creatureSimpleHerdingThreatRange)
     : 12;
 
+// Alertness is a vigilance policy as well as reaction speed. Caution buys distance
+// at the opportunity cost of interrupted feeding/drinking. No unobserved threats.
+export const resolveEscapeDistance = (creature, config) => {
+  const base = Number.isFinite(config?.creatureBehaviorAlertToFleeThreshold)
+    ? Math.max(0, config.creatureBehaviorAlertToFleeThreshold)
+    : 8;
+  const reference =
+    Number.isFinite(config?.creatureAlertnessBase) && config.creatureAlertnessBase > 0
+      ? config.creatureAlertnessBase
+      : 0.5;
+  const level = Number.isFinite(creature?.traits?.alertness)
+    ? Math.max(0, Math.min(1, creature.traits.alertness))
+    : reference;
+  return Math.max(2, (base * level) / reference);
+};
+
 export const resolveThreatPropagationRadius = (config) =>
   Number.isFinite(config?.creatureThreatPropagationRadius)
     ? Math.max(1, config.creatureThreatPropagationRadius)

@@ -21,7 +21,8 @@ export const metaPerception1 = {
   },
   creatureAlertnessBase: {
     label: 'Alertness Base',
-    description: 'Baseline alertness level.',
+    description:
+      'Baseline reaction alertness. Inherited alertness also scales the individual escape buffer relative to this baseline.',
     min: 0,
     max: 1,
     step: 0.05,

@@ -4,7 +4,8 @@ import { pathToFileURL } from 'node:url';
 import { resolve } from 'node:path';
 import { performance } from 'node:perf_hooks';
 import { createHash } from 'node:crypto';
-const roots = process.argv.slice(2);
+const allowBehaviorChange = process.argv.includes('--allow-behavior-change');
+const roots = process.argv.slice(2).filter((arg) => arg !== '--allow-behavior-change');
 assert.equal(roots.length, 2);
 for (let trial = 0; trial < 3; trial++)
   for (const count of [80, 240, 480]) {
@@ -17,12 +18,15 @@ for (let trial = 0; trial < 3; trial++)
         creaturePredatorCount: Math.round(count / 10)
       });
       const times = [];
+      const initialCount = sim.state.creatures.length;
       for (let i = 0; i < 720; i++) {
         const start = performance.now();
         sim.tick();
         if (i >= 120) times.push(performance.now() - start);
       }
       times.sort((a, b) => a - b);
+      if (allowBehaviorChange)
+        assert.equal(sim.state.creatures.length, initialCount, 'Equal actor workload changed');
       const hash = createHash('sha256').update(JSON.stringify(sim.state.creatures)).digest('hex');
       hashes.push(hash);
       console.log(
@@ -40,9 +44,10 @@ for (let trial = 0; trial < 3; trial++)
         })
       );
     }
-    assert.equal(
-      hashes[0],
-      hashes[1],
-      'Equal workload actor states diverged before juvenile maturation'
-    );
+    if (!allowBehaviorChange)
+      assert.equal(
+        hashes[0],
+        hashes[1],
+        'Equal workload actor states diverged before juvenile maturation'
+      );
   }

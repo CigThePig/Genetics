@@ -47,6 +47,8 @@ export function applyCreatureActions({ creatures, config, world, metrics }) {
     if (!meters || !creature.position || meters.hp <= 0) {
       continue;
     }
+    // Escape takes precedence over an intent chosen before this tick's alarm.
+    if (creature.herding?.isThreatened) continue;
     const drinkAmount = resolveActionAmount(creature?.traits?.drinkAmount, fallbackDrinkAmount);
     const eatAmount = resolveActionAmount(creature?.traits?.eatAmount, fallbackEatAmount);
     const drinkAmountPerTick = drinkAmount * tickScale;

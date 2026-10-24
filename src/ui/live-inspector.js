@@ -410,13 +410,20 @@ export function createLiveInspector({ container, ticksPerSecond = 60, onFollowTo
       idle: '😴 Idle'
     };
 
-    const currentActivity =
-      intentLabels[intentType] || priorityLabels[priority] || `${priority} / ${intentType}`;
+    const currentActivity = creature.herding?.isThreatened
+      ? '🏃 Escaping observed danger'
+      : intentLabels[intentType] || priorityLabels[priority] || `${priority} / ${intentType}`;
 
     behaviorBody.append(
       row('Activity', currentActivity),
       row('Priority', priority),
       row('Alertness', pct(creature.alertness?.level)),
+      row(
+        'Escape buffer',
+        Number.isFinite(creature.herding?.escapeDistance)
+          ? `${creature.herding.escapeDistance.toFixed(1)} tiles`
+          : '—'
+      ),
       row('Sprinting', creature.sprinting ? '🏃 Yes' : 'No')
     );
 

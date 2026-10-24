@@ -443,3 +443,13 @@ Verification:
 ## Authorized maintenance — Predator extinction investigation
 
 `tracks/2026-10-21-predator-ecology/` investigates generation replacement on corrected main, repairs premature resource interruption/visible-mate barriers, adds bounded observed social contacts and accurate consumption/predation accounting, and preserves ten-seed/two-lifespan plus extended evidence. It reduces census extinction without guaranteeing viability. Track 12 combat remains unimplemented; broader long-term ecological balance remains open.
+
+## Authorized investigation — Emergent evolution (2026-10-23)
+
+`tracks/2026-10-23-emergent-evolution/` tests inheritance contraction, mutation,
+selection response, reproductive tradeoffs and wild turnover on current main.
+It adds configurable quantitative parental-locus segregation and passive inherited
+distributions to existing history. It preserves full seed comparisons, failures,
+source-pinned raw evidence and explicit limits: sustained habitat adaptation,
+predator persistence and improved perceived intelligence remain unproved.
+Track 12 combat and unrelated roadmap mechanics are not included.

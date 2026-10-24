@@ -50,6 +50,7 @@ export function createConfigPanel({
     'hotspotSeed',
     'colourInitialVariation',
     'creatureGenomeDefaults',
+    'creatureGenomeInheritanceMode',
     'creatureCount',
     'creaturePredatorCount',
     ...Object.keys(configMeta).filter((key) => key.startsWith('creatureSpawn'))

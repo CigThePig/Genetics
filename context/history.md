@@ -117,3 +117,27 @@ mate-contact replacement test to require a reachable retained goal. Local verify
 3,600-tick invariant smoke runs pass. No population balancing or Track 12 implementation.
 See context/repository-review-2026-10-23.md for scope, reproductions and limits. Dedicated
 PR requested; no merge or deployment authorized.
+
+## 2026-10-23 — Emergent evolution and inherited alternatives
+
+Investigated current main b098575 after PR #143. Blending contracts inherited alternatives, but current mutation/noise maintains variance: the claim that default evolution simply stops is rejected. Controlled selection/reversal tests support simple quantitative haploid-locus segregation; production-engine cost/movement ablations demonstrate that inherited capabilities can already alter actual reproduction under contrasting conditions. Default inheritance now copies either parent's locus before existing noise/mutation, with legacy blending selectable. Flat genomes, paternal conception copies, phenotype costs, demographics, world size and local behavior authority remain unchanged.
+
+Extended existing bounded history with six inherited distributions, sample counts and mean/SD. Added read-only lifetime/turnover research tools, complete-matrix/config/founder validation, figures and reproducible browser checks. Experimental source is preserved in a small incremental Git bundle. Evidence: tracks/2026-10-23-emergent-evolution/evidence.md; causal diagnosis and rejected alternatives are alongside it.
+
+Validation: 311 JavaScript tests, ESLint, formatting and production build; 12 Python report tests; three canonical 36,000-tick invariant soaks; 14 field recordings totaling 1,080,000 ticks; 160 controlled plus 160 weak-pressure assays; 96 actual-engine fixtures. Actual Chromium desktop/390×844 controls, histories, reset and read-only rendering pass with no page errors. Eighteen equal-workload benchmark trials retain matching pre-birth actor hashes. Mean tick medians at 80/240/480 actors are 2.387/6.937/19.369 ms baseline versus 2.309/6.799/20.082 ms revised. No speedup/physical-phone certification; both high-density revisions exceed a 60 TPS mean budget.
+
+Wild variation and outcomes remain mixed. Herbivore speed variance is broader on average, but predator variance/persistence does not uniformly improve. Seed 1 loses an octagon lineage that survives baseline; circle reproductive output falls across the six paired worlds. The 30-minute seed-1337 revised world retains both predators with higher recorded predation, a different ecological history rather than proven adaptation. No general habitat adaptation, new intelligent policy, ecological equilibrium or complete resolution of the experiential goal is claimed. PR remains unmerged; no deployment authorized.
+
+## 2026-10-23 — PR #144 ecological-selection continuation
+
+- Fixed configured-TPS recording, active-world inheritance isolation/rebuild prompts and source fingerprint/cleanliness verification; all three review threads were resolved.
+- Connected existing inherited alertness to local escape distance, resource interruption and inspector/history visibility without additional genes or population protection.
+- Completed 91 full-engine records / 3,564,000 ticks with matched controls, reciprocal transfers, neutral-marker context and complete life histories. Constructed ecological selection is demonstrated; ordinary sustained adaptation and reliable habitat home advantage remain unproven.
+- Added reproducible audit, figures, browser traces, source bundle and performance evidence. Local full verification: 318 JS tests, lint/format/build and 20 Python regressions; desktop/390-pixel checks and birth-inclusive actor replay passed. Default performance is similar, while the 480-actor uninstrumented comparison is slower and both variants exceed 60 TPS. See the track continuation report for exact measurements and limitations.
+
+## 2026-10-23 — PR #144 code review follow-up
+
+- Preserve finite danger observations independently of the individual escape decision.
+- Correct flight activity recording and bind reciprocal transfers and runner provenance to the registered historical protocol.
+- Verified 320 JS tests, 24 Python tests, lint/format/build, three 3,600-tick invariant soaks, all 91 archived records and 168 artifact checksums. Archived analysis is unchanged. Browser launch was unavailable (missing Chromium).
+- Detailed findings and historical-evidence limitations: [review](../tracks/2026-10-23-emergent-evolution/review.md). Existing PR remains unmerged.
