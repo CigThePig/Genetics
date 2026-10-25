@@ -471,3 +471,10 @@ Rules:
 - `creature-lab.html`, `src/render/creatures/lab.js`: responsive seeded population/family/extreme/pose/silhouette studio and deterministic seek API.
 - `scripts/bake-creature-art.mjs`, `verify-creature-provenance.mjs`, `verify-creature-art-browser.mjs`, `verify-creature-touch.mjs`, `verify-creature-ecology.mjs`: reproducible compile, license/source checks, renderer/live-loop measurements, touch/visual evidence and observed long replay.
 - `tests/creature-art.test.js`, `tracks/2026-10-25-creature-art/`: generation, inheritance, colour, motion, clipping, cache/lifecycle/read-only regressions and measured evidence.
+
+## Terrain resolution (2026-10-25)
+
+- `src/render/terrain-detail.js`: deterministic 16/8/4-pixel-per-cell terrain chunks, bounded viewport admission/LRU and static transparent shading over live ecological colours.
+- `src/render/pixel-foliage.js`: small bounded procedural bush/berry atlas in the creature pixel style.
+- `src/render/terrain-cache.js`: unchanged authoritative shared-colour overview/grass raster; no simulation writes.
+- `tests/terrain-resolution.test.js`, `scripts/verify-terrain-resolution-browser.mjs`: detail determinism, colour boundaries, edge chunks, memory/reset, grass-independent texture reuse, foliage and paired browser evidence.
