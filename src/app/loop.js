@@ -32,6 +32,7 @@ export function createAppLoop({
     getUI().setMetrics?.(summary);
     getGraphsPanel().recordMetrics(summary);
     getInspector().update({
+      elapsedSeconds: sim.state.elapsedSeconds,
       creatures: sim.state?.creatures,
       tick: sim.state?.tick,
       world: sim.state?.world,
@@ -85,6 +86,7 @@ export function createAppLoop({
 
       const tInspector = perf?.start('frame.ui.inspector');
       getInspector().update({
+        elapsedSeconds: sim.state.elapsedSeconds,
         creatures: sim.state?.creatures,
         tick: sim.state?.tick,
         world: sim.state?.world,

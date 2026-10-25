@@ -1,0 +1,103 @@
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> genetics@0.0.0 verify
+> node scripts/verify-creature-provenance.mjs && npm test && npm run lint && npm run format:check && npm run build
+
+Verified 61 unchanged upstream files at a2207c4bd6f1be51d426684cf58f11668def7579, including the distributed MIT license.
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> genetics@0.0.0 test
+> vitest run --pool=threads --poolOptions.threads.singleThread
+
+
+ RUN  v2.1.9 /workspace/scratch/273e59d83e0f/Genetics
+
+ ✓ tests/colour-ecology.test.js (38 tests) 9466ms
+   ✓ replay, ecology and bounded observation > replays all colour state, histories and offspring in herd mode false 4883ms
+   ✓ replay, ecology and bounded observation > replays all colour state, histories and offspring in herd mode true 4104ms
+ ✓ tests/creatures.test.js (15 tests) 128ms
+ ✓ tests/behaviour-foundation.test.js (34 tests) 4726ms
+   ✓ integrated seeded scenarios > replays pursuit and recovery for seed 1 1390ms
+   ✓ integrated seeded scenarios > replays pursuit and recovery for seed 42 1248ms
+   ✓ integrated seeded scenarios > replays pursuit and recovery for seed 1337 1220ms
+   ✓ integrated seeded scenarios > returns to normal goals after a threat disappears 784ms
+ ✓ tests/ecology.test.js (30 tests) 29ms
+ ✓ tests/audit-simulation.test.js (24 tests) 991ms
+   ✓ repository audit: simulation isolation > replays independent and interleaved worlds (simple mode true) 458ms
+   ✓ repository audit: simulation isolation > replays independent and interleaved worlds (simple mode false) 374ms
+ ✓ tests/phase-completion.test.js (17 tests) 1228ms
+   ✓ phase compatibility checks > replays the same authoritative behavior with either legacy worker flag 1129ms
+ ✓ tests/spatial-ecology.test.js (16 tests) 316ms
+ ✓ tests/review-followup.test.js (18 tests) 10ms
+ ✓ tests/creature-art.test.js (13 tests) 3149ms
+   ✓ upstream anatomy compilation and browser rasterization > keeps all directions inside the measured pose envelope, including long reptilian tails 919ms
+   ✓ bounded presentation ownership > remains read-only and does not affect a seeded simulation or its next random draw 1910ms
+ ✓ tests/evolution.test.js (13 tests) 4966ms
+   ✓ passive inherited distributions > sampling cannot change actors or advance the simulation RNG 617ms
+   ✓ research sampling uses simulation seconds > samples activity and distributions consistently at 30 and 60 TPS 3812ms
+ ✓ tests/lived-experience.test.js (10 tests) 203ms
+ ✓ tests/regional-terrain.test.js (21 tests) 7319ms
+   ✓ environmental geography > retains large diverse connected habitats and reachable water across 32 seeds 1231ms
+   ✓ geography integration invariants > routes runoff downhill without cycles at 120 × 160 658ms
+   ✓ geography integration invariants > routes runoff downhill without cycles at 240 × 320 2636ms
+   ✓ geography integration invariants > routes runoff downhill without cycles at 180 × 240 1507ms
+   ✓ geography integration invariants > isolates initialization streams and resets to the same tick trajectory 381ms
+ ✓ tests/demography.test.js (20 tests) 1227ms
+ ✓ tests/audit-rendering.test.js (7 tests) 24ms
+ ✓ tests/maintenance-behaviour.test.js (5 tests) 15ms
+ ✓ tests/config-validation.test.js (25 tests) 6ms
+ ✓ tests/audit-app.test.js (6 tests) 3ms
+ ✓ tests/world-review.test.js (6 tests) 268ms
+ ✓ tests/world-latest-review.test.js (4 tests) 34ms
+ ✓ tests/sim.test.js (5 tests) 789ms
+   ✓ sim scaffold > keeps individual destinations on land and local group IDs observable 366ms
+ ✓ tests/world-tooling-review.test.js (2 tests) 266ms
+ ✓ tests/hunting.test.js (1 test) 0ms
+ ✓ tests/threat-choice.test.js (4 tests) 1408ms
+   ✓ inherited vigilance and escape opportunity cost > replays with independent worlds and resets all inherited policy state 1322ms
+ ✓ tests/targeting.test.js (2 tests) 0ms
+ ✓ tests/browser-startup.test.js (4 tests) 4ms
+ ✓ tests/carcasses.test.js (2 tests) 0ms
+ ✓ tests/genetics.test.js (1 test) 196ms
+ ✓ tests/observatory-ui.test.js (8 tests) 616ms
+ ✓ tests/life-story-ui.test.js (3 tests) 77ms
+
+ Test Files  29 passed (29)
+      Tests  354 passed (354)
+   Start at  12:32:23
+   Duration  40.22s (transform 1.26s, setup 0ms, collect 2.11s, tests 37.47s, environment 258ms, prepare 92ms)
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> genetics@0.0.0 lint
+> eslint .
+
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> genetics@0.0.0 format:check
+> prettier . --check
+
+Checking formatting...
+All matched files use Prettier code style!
+npm warn Unknown env config "http-proxy". This will stop working in the next major version of npm.
+
+> genetics@0.0.0 build
+> vite build
+
+vite v5.4.21 building for production...
+transforming...
+✓ 127 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                        0.57 kB │ gzip:   0.34 kB
+dist/creature-lab.html                 3.94 kB │ gzip:   1.46 kB
+dist/assets/app-CAHKPr5A.css          47.69 kB │ gzip:   9.46 kB
+dist/assets/creatures-6uF-whxE.js      2.57 kB │ gzip:   1.40 kB
+dist/assets/app-DWQOfIyw.js          334.05 kB │ gzip:  91.92 kB
+dist/assets/raster-9fFQrYfV.js     1,337.97 kB │ gzip: 263.15 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.09s

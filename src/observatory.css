@@ -1023,3 +1023,24 @@ input[type='range'] {
   color: var(--text-secondary);
   font-size: 12px;
 }
+
+.creature-portrait {
+  margin: 0 0 12px;
+  display: grid;
+  justify-items: center;
+  background: var(--surface, #eeeae0);
+  border-radius: 8px;
+  padding: 8px;
+}
+.creature-portrait canvas {
+  max-width: 100%;
+  image-rendering: pixelated;
+}
+.creature-portrait figcaption {
+  font-size: 11px;
+  color: var(--text-muted);
+  text-align: center;
+}
+.creature-portrait[hidden] {
+  display: none;
+}

@@ -1,0 +1,16 @@
+{"w":120,"h":160,"count":1}
+{"w":120,"h":160,"count":25}
+{"w":120,"h":160,"count":100}
+{"w":120,"h":160,"count":250}
+{"w":120,"h":160,"count":500}
+{"w":180,"h":240,"count":1}
+{"w":180,"h":240,"count":25}
+{"w":180,"h":240,"count":100}
+{"w":180,"h":240,"count":250}
+{"w":180,"h":240,"count":500}
+{"w":240,"h":320,"count":1}
+{"w":240,"h":320,"count":25}
+{"w":240,"h":320,"count":100}
+{"w":240,"h":320,"count":250}
+{"w":240,"h":320,"count":500}
+{"startupMs":967,"rows":90,"live":[{"mobileEmulated":false,"cpuThrottle":1,"count":80,"speed":1,"ticks":252,"tps":59.80918023448468,"fps":56.48644799923553,"p50":16.700000000000728,"p95":16.799999999999272,"p99":16.80000000000291,"longFrames":0,"cache":{"frames":1090,"bytes":9984000,"generated":1250,"failed":0,"pending":0}},{"mobileEmulated":false,"cpuThrottle":1,"count":80,"speed":2,"ticks":505,"tps":119.46724704880151,"fps":56.30337583686091,"p50":16.700000000000728,"p95":16.799999999999272,"p99":33.29999999999927,"longFrames":0,"cache":{"frames":1365,"bytes":12579840,"generated":2882,"failed":0,"pending":4}},{"mobileEmulated":true,"cpuThrottle":4,"count":80,"speed":1,"ticks":255,"tps":59.14689304849662,"fps":12.29327581007969,"p50":83.29999999999927,"p95":100,"p99":100.09999999999854,"longFrames":48,"cache":{"frames":1365,"bytes":12579840,"generated":2997,"failed":0,"pending":5}},{"mobileEmulated":true,"cpuThrottle":4,"count":80,"speed":2,"ticks":437,"tps":92.85031339636673,"fps":3.8244980346329545,"p50":283.29999999999563,"p95":366.70000000000437,"p99":366.70000000000437,"longFrames":15,"cache":{"frames":1365,"bytes":12579840,"generated":3014,"failed":0,"pending":0}}],"errors":[]}

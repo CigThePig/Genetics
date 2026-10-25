@@ -2,7 +2,9 @@
 
 No active implementation track.
 
-The [Observatory UI redesign](../tracks/2026-10-24-observatory-ui/plan.md) is
-implemented and locally verified. See [evidence](../tracks/2026-10-24-observatory-ui/evidence.md)
-for desktop/mobile screenshots, checks and limitations. Pull-request publication
-is the closeout step; merging and deployment are not part of this assignment.
+The [procedural creature art overhaul](../tracks/2026-10-25-creature-art/plan.md)
+is implemented, validated and published in [PR #147](https://github.com/CigThePig/Genetics/pull/147),
+which remains open and unmerged. Hosted Verify passed on implementation commit
+`cbe8e72`; Codex review completed with no findings. The final follow-up records
+closeout only. See the [evidence report](../tracks/2026-10-25-creature-art/evidence.md)
+for measurements, screenshots, exact ecological replay and remaining mobile limits.

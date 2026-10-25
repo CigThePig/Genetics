@@ -163,3 +163,11 @@ Corrected danger-route departure discounts and reinforced-memory eviction. Prese
   checks at five sizes plus touch tap/drag/pinch/animal-selection flows. No page
   errors. See the track evidence for screenshots, reproduction and limitations.
 - No simulation rules changed; no new runtime dependencies or remote fonts.
+
+## 2026-10-25 — Procedural creature art and inherited identity
+
+- Adapted idlerunner00's MIT-licensed Procedural Pixel Creatures at pinned revision `a2207c4`: unchanged C# anatomy/motion core compiled into continuous targets and a targeted browser analytical raster port. Preserved source hashes, full license and original-creator attribution.
+- Four anatomical families driven by actual inherited genes and phenotype colour; actual motion/time/lifecycle animation, culling, bounded FIFO/LRU caches, narrow-screen and density LOD, stable inspector portraits and a responsive seekable visual laboratory.
+- Fixed inspected shading/proportion/framing problems, clipped reptilian tails and measured 500-actor close-up cache thrashing. Authoritative simulation source remains unchanged.
+- Verification: 354 JavaScript tests, 24 Python report tests, 17 upstream tests, build/lint/format/provenance, touch/browser visual inspection, 90 renderer configurations and 216,000 paired simulation ticks with exact final actor/summary hashes.
+- Published [PR #147](https://github.com/CigThePig/Genetics/pull/147), left open/unmerged. Hosted Verify passed on implementation `cbe8e72`; Codex review completed with no findings. See [evidence](../tracks/2026-10-25-creature-art/evidence.md) for raw records, artwork and limits: cold generation can hitch, dense poses may defer and throttled mobile performance remains poor. No physical-device or universal 60-FPS claim.

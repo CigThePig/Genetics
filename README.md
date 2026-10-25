@@ -108,3 +108,18 @@ animal interrupts feeding or drinking to escape. Its buffer appears in the
 inspector; caution can buy distance while costing resource opportunities.
 [Ecological selection, reciprocal transfers and remaining limits](tracks/2026-10-23-emergent-evolution/continuation.md)
 reports what was demonstrated and why ordinary habitat adaptation remains unproven.
+
+## Procedural animals
+
+All four species now use code-generated anatomy and animation adapted from
+[Procedural Pixel Creatures by idlerunner00](https://github.com/idlerunner00/procedural-pixel-creatures)
+(MIT, copyright 2026 idlerunner00). Its original anatomy builders and motor compile
+continuous anatomical targets; the browser renders each animal from its inherited
+Genetics traits. There is no separate breeding or ecological engine.
+
+Open `creature-lab.html` beside the application for seeded populations, inherited
+families, trait extremes, silhouettes and animation previews. Existing geometric
+species names remain the ecological identifiers.
+
+[Attribution and licenses](THIRD_PARTY_NOTICES.md) ·
+[Architecture, reproduction and evidence](tracks/2026-10-25-creature-art/blueprint.md)

@@ -1,0 +1,7 @@
+
+> genetics@0.0.0 test:soak
+> node scripts/verify-simulation.mjs --ticks=36000
+
+{"seed":1,"ticks":36000,"maxPopulation":183,"deathsFirstMinute":0,"medianDeathSeconds":519.65,"population":162,"species":[83,5,70,4],"pregnancies":209,"births":175,"chases":78,"kills":23,"deaths":93,"hash":"e54574500d8fdc22c1fc82fad30d49c4c48f5f20358b5cd35db897a361055c30"}
+{"seed":42,"ticks":36000,"maxPopulation":178,"deathsFirstMinute":0,"medianDeathSeconds":520.65,"population":164,"species":[77,5,75,7],"pregnancies":196,"births":176,"chases":65,"kills":27,"deaths":92,"hash":"f28d316f56bdced2a070b234f85ab79b2e176a2b8d1a1d5302fc533d59f8954f"}
+{"seed":1337,"ticks":36000,"maxPopulation":162,"deathsFirstMinute":0,"medianDeathSeconds":527.25,"population":126,"species":[53,9,59,5],"pregnancies":176,"births":146,"chases":102,"kills":35,"deaths":100,"hash":"cf77ceb5cc4238045717131a95da06c8bc73543581527777d98a17e06a84f48b"}

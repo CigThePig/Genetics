@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Genetics · Creature field studio</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #eeeae0;
+        color: #27382d;
+        font: 15px system-ui;
+      }
+      header {
+        padding: 24px 30px;
+        border-bottom: 1px solid #c8cbbd;
+      }
+      h1 {
+        font: 32px Georgia;
+        margin: 0 0 8px;
+      }
+      p {
+        margin: 8px 0;
+        max-width: 850px;
+        line-height: 1.5;
+      }
+      nav {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 18px;
+      }
+      label {
+        display: grid;
+        gap: 5px;
+      }
+      input,
+      select,
+      button {
+        font: inherit;
+        color: inherit;
+        border: 1px solid #a6b2a0;
+        border-radius: 6px;
+        padding: 10px;
+        background: #faf9f4;
+        min-height: 44px;
+      }
+      button {
+        cursor: pointer;
+      }
+      a {
+        color: #315d42;
+      }
+      main {
+        padding: 20px;
+      }
+      canvas {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: auto;
+        image-rendering: pixelated;
+      }
+      .note {
+        font-size: 13px;
+      }
+      footer {
+        padding: 20px 30px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Creature field studio</h1>
+      <p>
+        Four families from Procedural Pixel Creatures. Every individual below comes from an ordinary
+        Genetics genome. Seeds show uncurated samples; the family row uses Genetics’ real
+        inheritance function.
+      </p>
+      <nav>
+        <label>Seed<input id="seed" type="number" value="42" /></label
+        ><label
+          >View<select id="view">
+            <option value="population">Uncurated population</option>
+            <option value="family">Parents & offspring</option>
+            <option value="extremes">Inherited trait extremes</option>
+          </select></label
+        >
+        <label
+          >Behaviour<select id="state">
+            <option>walk</option>
+            <option>run</option>
+            <option>idle</option>
+            <option>action</option>
+            <option>rest</option>
+            <option>hit</option>
+          </select></label
+        >
+        <label
+          >Ground<select id="ground">
+            <option value="#b8bf83">Plains</option>
+            <option value="#57734d">Forest</option>
+            <option value="#ccb477">Sand</option>
+            <option value="#92938a">Rock</option>
+            <option value="#eeeae0">Paper</option>
+          </select></label
+        >
+        <label
+          >Presentation<select id="style">
+            <option value="colour">Inherited colour</option>
+            <option value="silhouette">Silhouette</option>
+          </select></label
+        ><button id="pause">Pause animation</button><button id="turn">Turn animals</button
+        ><a href="./">Return to ecosystem</a>
+      </nav>
+      <p class="note">
+        Labels retain Squares, Circles, Triangles and Octagons. New family names describe their
+        artwork; anatomy adds no new abilities.
+      </p>
+    </header>
+    <main>
+      <canvas
+        id="gallery"
+        width="1200"
+        height="900"
+        aria-label="Procedural creature comparison gallery"
+      ></canvas>
+    </main>
+    <footer>
+      Derived from
+      <a href="https://github.com/idlerunner00/procedural-pixel-creatures"
+        >idlerunner00 / Procedural Pixel Creatures</a
+      >
+      · MIT · Upstream a2207c4. <span id="status"></span>
+    </footer>
+    <script type="module" src="/src/render/creatures/lab.js"></script>
+  </body>
+</html>
