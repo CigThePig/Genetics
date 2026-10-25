@@ -86,3 +86,10 @@ The same seeded founder genomes are used for before/after screenshots. Inspector
 | Animation sequence             | [Eight-frame locomotion GIF](evidence/locomotion.gif)                                                                                                                                                          |
 
 The GIF is captured from the actual seekable procedural studio. It is diagnostic locomotion, not footage of an ecological chase. A dedicated natural pursuit/flight recording, physical-phone performance, live nonlethal hit reactions, dynamic browser IK/spring chains and a separate death clip are not claimed. The current lethal capture/death owner is preserved. See [architecture](blueprint.md) for the port's exact scope, omitted source capabilities and maintenance instructions.
+
+## Publication and automated review
+
+[PR #147](https://github.com/CigThePig/Genetics/pull/147) is open and unmerged.
+The published implementation tree is byte-identical to the locally staged and verified tree (`0d2ce02fc5d5bfd8a4b6d939bf9180cf215f2169`).
+Hosted [Verify run 40212890936](https://github.com/CigThePig/Genetics/actions/runs/40212890936) passed on implementation commit `cbe8e72a5a408b37722de7515a839aae5d69cb40`, including the existing research-source import/report checks.
+Codex review of that commit completed on 2026-10-25 with **no findings**. The follow-up commit changes closeout documents only; it does not alter production code or quantitative results.
