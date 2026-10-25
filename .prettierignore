@@ -24,3 +24,6 @@ tools/creature-baker/vendor/
 
 # Raw benchmark output and browser evidence retain measurement precision.
 tracks/2026-10-25-creature-art/evidence/
+
+# Raw terrain resolution measurements and screenshots
+tracks/2026-10-25-terrain-resolution/evidence/

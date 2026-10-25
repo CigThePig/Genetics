@@ -2,9 +2,8 @@
 
 No active implementation track.
 
-The [procedural creature art overhaul](../tracks/2026-10-25-creature-art/plan.md)
-is implemented, validated and published in [PR #147](https://github.com/CigThePig/Genetics/pull/147),
-which remains open and unmerged. Hosted Verify passed on implementation commit
-`cbe8e72`; Codex review completed with no findings. The final follow-up records
-closeout only. See the [evidence report](../tracks/2026-10-25-creature-art/evidence.md)
-for measurements, screenshots, exact ecological replay and remaining mobile limits.
+The [terrain resolution update](../tracks/2026-10-25-terrain-resolution/plan.md) is
+implemented, locally verified and published in [PR #148](https://github.com/CigThePig/Genetics/pull/148),
+left open and unmerged. See its [evidence report](../tracks/2026-10-25-terrain-resolution/evidence.md)
+for before/after artwork, performance, cache bounds and cold-view limitations.
+Hosted CI and automated-review status are recorded in the PR.

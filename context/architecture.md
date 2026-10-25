@@ -261,3 +261,7 @@ unbounded ancestry graph. Family navigation derives living relatives from copied
 parent IDs and does not grant animals knowledge of relatives. Cumulative travelled
 distance is in tiles. Event timestamps use accumulated simulated seconds so later
 TPS edits do not relabel the past. Reset replaces world archives and actor stories.
+
+## Terrain presentation resolution (2026-10-25)
+
+The one-pixel-per-cell shared-colour raster remains the overview and ecological-colour authority. Normal/close views overlay deterministic procedural texture chunks, normally 16 logical pixels per tile to match 48-pixel creature art over a three-tile canvas. Zoom and viewport working-set admission reduce detail to 8 or 4 pixels per tile when needed. Exact water/land cells, terrain colours, grass/resource values and simulation RNG are unchanged. Texture shading is a bounded cosmetic approximation around those colours. Detailed canvases are renderer-owned with a 12 MiB RGBA LRU; the finite pixel foliage atlas adds at most 960 KiB. Transient pixel buffers/browser canvas overhead are additional. Transparent black/white texture pixels have at most 18/255 opacity (about 7%), bounding displayed RGB deviation to 18/255 per channel. Live grass colours update underneath cached texture; grass changes never rebuild detailed art. First views and topology edits can exceed a frame budget. World changes/destroy release detailed presentation caches. No full-world high-resolution canvas is allocated.

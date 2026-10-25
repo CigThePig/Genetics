@@ -174,8 +174,10 @@ export function createRenderer(container, { camera }) {
   return {
     canvas,
     creatureStats: creatureView.stats,
+    terrainStats: drawTerrain.detailStats,
     destroy() {
       creatureView.clear();
+      drawTerrain.destroy();
       window.removeEventListener('resize', resizeToContainer);
       canvas.width = 1;
       canvas.height = 1;
