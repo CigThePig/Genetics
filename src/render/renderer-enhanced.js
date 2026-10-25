@@ -1,6 +1,6 @@
 import { createTerrainCache } from './terrain-cache.js';
 import { createTerrainView } from './terrain-view.js';
-import { SPECIES } from '../sim/species.js';
+import { createCreatureView } from './creatures/view.js';
 import { createNoise } from '../sim/noise.js';
 import { getActivePerf } from '../metrics/perf-registry.js';
 
@@ -100,8 +100,15 @@ export function createRenderer(container, { camera }) {
     getViewport
   });
 
-  const drawCreatures = (state, world, creatures, config) => {
-    if (!world || !Array.isArray(creatures) || creatures.length === 0) return;
+  const creatureView = createCreatureView({
+    maxResolution: () => (Math.min(viewportWidth, viewportHeight) < 600 ? 48 : 80)
+  });
+
+  const drawCreatures = (state, world, creatures, config, seconds) => {
+    if (!world || !Array.isArray(creatures) || creatures.length === 0) {
+      creatureView.begin(world, 0);
+      return;
+    }
 
     const tileSize = resolveTileSize(config);
     const width = viewportWidth;
@@ -114,8 +121,8 @@ export function createRenderer(container, { camera }) {
     const originX = -(world.width * tileSize) / 2;
     const originY = -(world.height * tileSize) / 2;
 
-    const baseRadius = tileSize * 0.45;
-    const minRadius = 4 / state.zoom;
+    const baseRadius = tileSize * 2.5;
+    const minRadius = 24 / state.zoom;
     const markerRadius = Math.max(baseRadius, minRadius);
 
     const minWorldX = -(width / 2 + state.x) / state.zoom - markerRadius;
@@ -128,84 +135,20 @@ export function createRenderer(container, { camera }) {
     const minTileY = (minWorldY - originY) / tileSize;
     const maxTileY = (maxWorldY - originY) / tileSize;
 
-    const drawCreatureShape = (species, x, y, radius, colors) => {
-      // Shadow
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-      ctx.beginPath();
-
-      switch (species) {
-        case SPECIES.SQUARE: {
-          const size = radius * 1.5;
-          ctx.ellipse(x + 1, y + 2, size * 0.45, size * 0.25, 0, 0, Math.PI * 2);
-          break;
-        }
-        case SPECIES.TRIANGLE: {
-          ctx.ellipse(x + 1, y + 3, radius * 0.7, radius * 0.3, 0, 0, Math.PI * 2);
-          break;
-        }
-        default:
-          ctx.ellipse(x + 1, y + 2, radius * 0.7, radius * 0.35, 0, 0, Math.PI * 2);
-      }
-      ctx.fill();
-
-      // Body is the inherited phenotype; shape/outline remain the species cue.
-      ctx.fillStyle = colors;
-      ctx.beginPath();
-
-      switch (species) {
-        case SPECIES.SQUARE: {
-          const size = radius * 1.5;
-          const half = size / 2;
-          const corner = size * 0.15;
-          ctx.moveTo(x - half + corner, y - half);
-          ctx.lineTo(x + half - corner, y - half);
-          ctx.quadraticCurveTo(x + half, y - half, x + half, y - half + corner);
-          ctx.lineTo(x + half, y + half - corner);
-          ctx.quadraticCurveTo(x + half, y + half, x + half - corner, y + half);
-          ctx.lineTo(x - half + corner, y + half);
-          ctx.quadraticCurveTo(x - half, y + half, x - half, y + half - corner);
-          ctx.lineTo(x - half, y - half + corner);
-          ctx.quadraticCurveTo(x - half, y - half, x - half + corner, y - half);
-          break;
-        }
-        case SPECIES.TRIANGLE: {
-          const h = radius * 1.6;
-          ctx.moveTo(x, y - h * 0.55);
-          ctx.lineTo(x + radius * 0.9, y + h * 0.45);
-          ctx.lineTo(x - radius * 0.9, y + h * 0.45);
-          ctx.closePath();
-          break;
-        }
-        case SPECIES.OCTAGON: {
-          const sides = 8;
-          const inset = radius * 0.85;
-          for (let i = 0; i < sides; i++) {
-            const angle = Math.PI / 8 + (i * Math.PI * 2) / sides;
-            const px = x + Math.cos(angle) * inset;
-            const py = y + Math.sin(angle) * inset;
-            if (i === 0) ctx.moveTo(px, py);
-            else ctx.lineTo(px, py);
-          }
-          ctx.closePath();
-          break;
-        }
-        default:
-          ctx.arc(x, y, radius, 0, Math.PI * 2);
-      }
-
-      ctx.fill();
-
-      // Outline
-      ctx.strokeStyle = 'rgba(40, 40, 40, 0.4)';
-      ctx.lineWidth = 1 / state.zoom;
-      ctx.stroke();
-
-      // Highlight
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
-      ctx.beginPath();
-      ctx.arc(x - radius * 0.3, y - radius * 0.3, radius * 0.25, 0, Math.PI * 2);
-      ctx.fill();
-    };
+    let visibleCount = 0;
+    for (const creature of creatures) {
+      const p = creature?.position;
+      if (
+        Number.isFinite(p?.x) &&
+        Number.isFinite(p?.y) &&
+        p.x >= minTileX &&
+        p.x <= maxTileX &&
+        p.y >= minTileY &&
+        p.y <= maxTileY
+      )
+        visibleCount++;
+    }
+    creatureView.begin(world, visibleCount);
 
     for (const creature of creatures) {
       const position = creature?.position;
@@ -216,9 +159,13 @@ export function createRenderer(container, { camera }) {
 
       const centerX = originX + x * tileSize;
       const centerY = originY + y * tileSize;
-      const colors = creature.traits?.bodyCss ?? '#86a66b';
-
-      drawCreatureShape(creature.species, centerX, centerY, markerRadius, colors);
+      creatureView.draw(ctx, creature, {
+        x: centerX,
+        y: centerY,
+        tileSize,
+        zoom: state.zoom,
+        seconds
+      });
     }
 
     ctx.restore();
@@ -226,6 +173,14 @@ export function createRenderer(container, { camera }) {
 
   return {
     canvas,
+    creatureStats: creatureView.stats,
+    destroy() {
+      creatureView.clear();
+      window.removeEventListener('resize', resizeToContainer);
+      canvas.width = 1;
+      canvas.height = 1;
+      wrapper.remove();
+    },
     render(sim, { immediate = false } = {}) {
       const perf = getActivePerf();
       const tTotal = perf?.start('render.total');
@@ -237,7 +192,13 @@ export function createRenderer(container, { camera }) {
         perf?.end('render.terrain', tTerrain);
 
         const tCreatures = perf?.start('render.creatures');
-        drawCreatures(state, sim.state?.world, sim.state?.creatures, sim.config);
+        drawCreatures(
+          state,
+          sim.state?.world,
+          sim.state?.creatures,
+          sim.config,
+          sim.state?.elapsedSeconds ?? 0
+        );
         perf?.end('render.creatures', tCreatures);
 
         const roll = Number.isFinite(sim.state?.lastRoll) ? sim.state.lastRoll.toFixed(4) : '--';

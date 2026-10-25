@@ -288,6 +288,7 @@ export function bootApplication(app) {
 
       // Initial update to show creature data immediately
       inspector.update({
+        elapsedSeconds: sim.state.elapsedSeconds,
         creatures: sim.state?.creatures,
         tick: sim.state?.tick,
         world: sim.state?.world,

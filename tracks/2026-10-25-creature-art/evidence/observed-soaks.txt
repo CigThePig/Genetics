@@ -1,0 +1,3 @@
+{"seed":1,"ticks":36000,"renderVisits":7586,"hash":"e54574500d8fdc22c1fc82fad30d49c4c48f5f20358b5cd35db897a361055c30","identical":true,"cache":{"frames":620,"bytes":6669056,"generated":620,"failed":0,"pending":198}}
+{"seed":42,"ticks":36000,"renderVisits":7570,"hash":"f28d316f56bdced2a070b234f85ab79b2e176a2b8d1a1d5302fc533d59f8954f","identical":true,"cache":{"frames":634,"bytes":5827584,"generated":634,"failed":0,"pending":213}}
+{"seed":1337,"ticks":36000,"renderVisits":6859,"hash":"cf77ceb5cc4238045717131a95da06c8bc73543581527777d98a17e06a84f48b","identical":true,"cache":{"frames":717,"bytes":6993152,"generated":717,"failed":0,"pending":176}}

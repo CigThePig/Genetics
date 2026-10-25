@@ -462,3 +462,12 @@ Rules:
   - Interaction regressions and optional desktop/touch-browser screenshot verification.
 - tracks/2026-10-24-observatory-ui/
   - Design, implementation plan, validation notes and before/after screenshots.
+
+## Procedural creature art (2026-10-25)
+
+- `tools/creature-baker/`: licensed, hash-pinned original Procedural Pixel Creatures Core and Genetics anatomy/motor compiler; no Godot/browser runtime dependency.
+- `src/render/creatures/appearance.js`, `anatomy.js`, `raster.js`, `view.js`: inherited input mapping, compiled posed geometry, analytical raster port and renderer-owned bounded presentation caches.
+- `src/ui/creature-portrait.js`: stable inspector portrait; existing family and focus controls retain their nodes.
+- `creature-lab.html`, `src/render/creatures/lab.js`: responsive seeded population/family/extreme/pose/silhouette studio and deterministic seek API.
+- `scripts/bake-creature-art.mjs`, `verify-creature-provenance.mjs`, `verify-creature-art-browser.mjs`, `verify-creature-touch.mjs`, `verify-creature-ecology.mjs`: reproducible compile, license/source checks, renderer/live-loop measurements, touch/visual evidence and observed long replay.
+- `tests/creature-art.test.js`, `tracks/2026-10-25-creature-art/`: generation, inheritance, colour, motion, clipping, cache/lifecycle/read-only regressions and measured evidence.

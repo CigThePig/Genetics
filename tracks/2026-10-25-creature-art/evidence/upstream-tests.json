@@ -1,0 +1,131 @@
+{
+  "suite": "procedural-pixel-creatures",
+  "environment": "console-harness Unix 6.18.55.0",
+  "frameworkVersion": "1.0.0",
+  "generatorVersion": 2,
+  "total": 17,
+  "failed": 0,
+  "results": [
+    {
+      "name": "math.deterministic_kernels",
+      "passed": true,
+      "ms": 6.27,
+      "metrics": {
+        "maxTrigError": 0
+      }
+    },
+    {
+      "name": "random.golden_sequences",
+      "passed": true,
+      "ms": 5.3,
+      "notes": [
+        "pcg32(42): 1210624746,4125136630,2074946571,3309376910"
+      ]
+    },
+    {
+      "name": "genome.sampling_is_deterministic",
+      "passed": true,
+      "ms": 51.84
+    },
+    {
+      "name": "genome.streams_are_independent",
+      "passed": true,
+      "ms": 62.42
+    },
+    {
+      "name": "genome.quantized_json_roundtrip",
+      "passed": true,
+      "ms": 61.99
+    },
+    {
+      "name": "serializer.rejects_invalid_input",
+      "passed": true,
+      "ms": 6.05
+    },
+    {
+      "name": "serializer.migration_chain",
+      "passed": true,
+      "ms": 1.39
+    },
+    {
+      "name": "genetics.mutation_deterministic_and_locked",
+      "passed": true,
+      "ms": 4.43
+    },
+    {
+      "name": "genetics.crossover_and_compatibility",
+      "passed": true,
+      "ms": 3.81
+    },
+    {
+      "name": "genetics.regenerate_respects_locks",
+      "passed": true,
+      "ms": 1.6
+    },
+    {
+      "name": "anatomy.valid_for_3_seeds_per_family",
+      "passed": true,
+      "ms": 25.49,
+      "metrics": {
+        "anatomies": 27,
+        "repairs": 0,
+        "maxCanvasW": 218,
+        "maxCanvasH": 268
+      }
+    },
+    {
+      "name": "render.deterministic_and_golden",
+      "passed": true,
+      "ms": 221.4,
+      "notes": [
+        "values: quadruped:genome=b347eafec5ed47ed quadruped=c24f96a97be5a1f5 quadruped:walk=37257c62ce5e5420 biped:genome=5ef08293f551f95a biped=9d5f6ba037ea81f1 biped:walk=5f13d3534d41b54f reptile:genome=53993ac7a73b23b3 reptile=5207d3574a0a7b7b reptile:walk=56604dac7c734731 arthropod:genome=17a527c0f16e660e arthropod=653189d69a32ee55 arthropod:walk=a4df8330c029a0a1 winged:genome=773625d175b173b9 winged=1ddf0f2d627a3dc8 winged:walk=d1ba207325472d3f serpent:genome=b6bd6dcb29822ee6 serpent=76e6faaf990bc548 serpent:walk=228b7ca9a57b9021 aquatic:genome=44b268859a62d96f aquatic=d8ea4b1e8583f131 aquatic:walk=52c411ea737c831e amorphous:genome=96fa889d3f873a1e amorphous=29545e9a6eb3f823 amorphous:walk=62f57528386e2cbb plantfolk:genome=5e86703c03aa3251 plantfolk=0365c2d8cc0518cb plantfolk:walk=acc0ea74aee3ec28"
+      ],
+      "metrics": {
+        "goldenChecked": 27
+      }
+    },
+    {
+      "name": "motion.framerate_independent",
+      "passed": true,
+      "ms": 236.03
+    },
+    {
+      "name": "motion.planted_feet_do_not_slide",
+      "passed": true,
+      "ms": 511.58,
+      "metrics": {
+        "maxPlantedSlidePx": 0,
+        "contactSamples": 25979,
+        "maxSlopeContactErrorPx": 0
+      }
+    },
+    {
+      "name": "motion.states_and_directions_stay_in_canvas",
+      "passed": true,
+      "ms": 9678.96,
+      "metrics": {
+        "framesChecked": 5040,
+        "overflowFrames": 0
+      }
+    },
+    {
+      "name": "motion.turning_in_place_reorients_body",
+      "passed": true,
+      "ms": 815.39,
+      "metrics": {
+        "creatures": 36,
+        "trailBodies": 4
+      }
+    },
+    {
+      "name": "anatomy.extreme_genes_build_move_and_render",
+      "passed": true,
+      "ms": 10880.63,
+      "metrics": {
+        "cases": 81,
+        "framesChecked": 2916,
+        "maxCanvas": 304
+      }
+    }
+  ]
+}

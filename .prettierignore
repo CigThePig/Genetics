@@ -17,3 +17,10 @@ tracks/2026-10-23-emergent-evolution/evidence/
 
 # Generated observatory screenshots and browser results
 tracks/2026-10-24-observatory-ui/evidence/
+
+# Reproducible upstream geometry; keep compact generated data and original source.
+src/render/creatures/anatomy.js
+tools/creature-baker/vendor/
+
+# Raw benchmark output and browser evidence retain measurement precision.
+tracks/2026-10-25-creature-art/evidence/

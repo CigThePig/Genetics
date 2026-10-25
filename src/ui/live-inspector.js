@@ -1,3 +1,4 @@
+import { createCreaturePortrait } from './creature-portrait.js';
 import { labelButton } from './observatory.js';
 import { createLifeStoryCard } from './life-story.js';
 import { camouflageAt } from '../sim/creatures/visibility.js';
@@ -136,6 +137,7 @@ export function createLiveInspector({
   followBtn.addEventListener('click', () => setFollowing(!isFollowing));
 
   const clearTracking = () => {
+    portrait.clear();
     trackedCreatureId = null;
     isFollowing = false;
     followBtn.classList.remove('active');
@@ -287,6 +289,8 @@ export function createLiveInspector({
 
   let lifeCard = null;
   let displayedLife = null;
+  const portrait = createCreaturePortrait();
+  let currentSeconds = 0;
   const details = document.createElement('div');
   let displayedCreatureId = null;
   const sectionOrder = ['colour', 'status', 'vitals', 'behavior', 'traits', 'hunting', 'genetics'];
@@ -325,6 +329,9 @@ export function createLiveInspector({
       content.replaceChildren(lifeCard.element, details);
     }
     lifeCard.update({ creature, creatures: currentCreatures, deceased });
+    portrait.update(creature, currentWorld, currentSeconds);
+    if (!deceased && portrait.element.parentNode !== lifeCard.element)
+      lifeCard.element.prepend(portrait.element);
   };
   let currentTick = 0;
   const buildCreatureDisplay = (creature, tick) => {
@@ -748,7 +755,9 @@ export function createLiveInspector({
     /**
      * Called every tick/frame to update the display.
      */
-    update({ creatures, tick, world, config }) {
+    update({ creatures, tick, world, config, elapsedSeconds }) {
+      currentSeconds = elapsedSeconds ?? tick / currentTicksPerSecond;
+      if (world && world !== currentWorld) portrait.clear();
       currentTick = tick;
       currentWorld = world ?? currentWorld;
       currentConfig = config ?? currentConfig;

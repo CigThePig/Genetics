@@ -10,7 +10,7 @@ module.exports = {
     ecmaVersion: 'latest',
     sourceType: 'module'
   },
-  ignorePatterns: ['dist/', 'coverage/', 'node_modules/'],
+  ignorePatterns: ['src/render/creatures/anatomy.js', 'dist/', 'coverage/', 'node_modules/'],
   rules: {
     // Allow intentionally unused args/vars by prefixing with `_`.
     'no-unused-vars': ['error', { argsIgnorePattern: '^_', varsIgnorePattern: '^_' }]

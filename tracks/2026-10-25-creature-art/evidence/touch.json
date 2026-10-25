@@ -1,0 +1,14 @@
+{
+  "viewport": [
+    390,
+    844
+  ],
+  "selected": 8,
+  "follow": true,
+  "pinch": {
+    "before": 2,
+    "after": 3.12
+  },
+  "actorsUnchanged": true,
+  "errors": []
+}

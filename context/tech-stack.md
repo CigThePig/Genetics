@@ -42,3 +42,11 @@ Predator ecology diagnostics retain Node built-ins and the existing test/build s
 World-generation diagnostics use Node built-ins, the existing Vite/Vitest toolchain and optional externally supplied Playwright/Chromium. Python atlas/trajectory helpers are optional. No new runtime/npm dependency. See tracks/2026-10-21-world-generation/evidence.md for reproduction and qualification, including the resolved publication-time outage and recovered browser artifacts.
 
 PR #145 review regressions add jsdom 24 as a development-only dependency so persistent inspector nodes, focus, scroll state and family lifecycle are exercised by `npm run verify`. Optional external Playwright still covers actual held mouse/touch input across animation frames. `scripts/benchmark-life-story.mjs` is a Node observer-only scaling probe; it makes no full-engine/mobile performance claim.
+
+## Optional creature-art development tools
+
+The deployed application remains JavaScript/Canvas2D/Vite with no new npm runtime dependency.
+Rebuilding the checked-in procedural geometry uses .NET 8 and the MIT-licensed upstream
+Core under `tools/creature-baker/`. Ordinary `npm ci`, verification, Pages builds and
+runtime do not require .NET. Browser evidence scripts accept an externally installed
+Playwright/Chromium via environment variables; these are not production dependencies.
