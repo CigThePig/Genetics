@@ -1,3 +1,9 @@
 # Active track
 
-[Terrain pixel resolution](../tracks/2026-10-25-terrain-resolution/plan.md): implement detailed presentation at the creature-art scale, retaining the authoritative low-resolution ecological colour cache. Next: chunked terrain detail, pixel foliage and browser visual review.
+No active implementation track.
+
+The [terrain resolution update](../tracks/2026-10-25-terrain-resolution/plan.md) is
+implemented, locally verified and published in [PR #148](https://github.com/CigThePig/Genetics/pull/148),
+left open and unmerged. See its [evidence report](../tracks/2026-10-25-terrain-resolution/evidence.md)
+for before/after artwork, performance, cache bounds and cold-view limitations.
+Hosted CI and automated-review status are recorded in the PR.

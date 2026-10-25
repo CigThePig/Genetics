@@ -68,3 +68,7 @@ node scripts/verify-terrain-resolution-browser.mjs
 ```
 
 Use `--baseline` from a clean baseline worktree and `TERRAIN_EVIDENCE_DIR` pointing to this evidence folder for paired output. Browser dependencies are external to the app.
+
+## Publication
+
+Published as [PR #148](https://github.com/CigThePig/Genetics/pull/148), open and unmerged. The implementation tree `a3d846435a714505b5080a9067562d7242152022` matched the locally staged, verified files exactly. The follow-up commit records closeout documentation only; hosted CI and automated-review status are maintained in the PR description.

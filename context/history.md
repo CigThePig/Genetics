@@ -171,3 +171,11 @@ Corrected danger-route departure discounts and reinforced-memory eviction. Prese
 - Fixed inspected shading/proportion/framing problems, clipped reptilian tails and measured 500-actor close-up cache thrashing. Authoritative simulation source remains unchanged.
 - Verification: 354 JavaScript tests, 24 Python report tests, 17 upstream tests, build/lint/format/provenance, touch/browser visual inspection, 90 renderer configurations and 216,000 paired simulation ticks with exact final actor/summary hashes.
 - Published [PR #147](https://github.com/CigThePig/Genetics/pull/147), left open/unmerged. Hosted Verify passed on implementation `cbe8e72`; Codex review completed with no findings. See [evidence](../tracks/2026-10-25-creature-art/evidence.md) for raw records, artwork and limits: cold generation can hitch, dense poses may defer and throttled mobile performance remains poor. No physical-device or universal 60-FPS claim.
+
+## 2026-10-25 — Match map and creature pixel resolution
+
+- Added 16-pixel-per-tile procedural texture chunks for grass, forest litter, stone, sand, water and wet edges; replaced smooth berry bushes with a bounded pixel foliage atlas.
+- Retained the original shared-colour/grass raster underneath static transparent texture. No simulation source or ecology changes; grass growth causes no detailed-art rebuild.
+- Terrain canvas LRU is bounded at 12 MiB with viewport/zoom admission and world/reset/destroy cleanup; distant overview stays lightweight. Cold views can hitch.
+- Validation: 360 JavaScript tests, 24 Python tests, full build/lint/format/provenance, inspected canonical-seed desktop/narrow screenshots and twelve paired renderer cases. Short headless live samples retain approximately 59–60 FPS and 60/120 TPS; physical-phone performance is unverified.
+- Published [PR #148](https://github.com/CigThePig/Genetics/pull/148), left open/unmerged. [Evidence and reproduction](../tracks/2026-10-25-terrain-resolution/evidence.md).
